@@ -1,0 +1,12 @@
+{
+  "name": {
+    "en": "iOrnament",
+    "de": "iOrnament",
+    "es": "iOrnament"
+  },
+  "description": {
+    "en": "",
+    "de": "Zeichnen Sie symmetrische Ornamente! Erstaunlicherweise gibt es, sofern ein Flächenornament Verschiebesymmetrien in mindestens zwei Richtungen aufweist, genau 17 strukturell unterschiedliche Typen solcher Ornamente. Man spricht von den 17 kristallographischen Gruppen",
+    "es": ""
+  }
+}

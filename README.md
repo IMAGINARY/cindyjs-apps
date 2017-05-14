@@ -42,27 +42,14 @@ To Do.
 
 A library for themeing that can be modularly applied to Cindy apps should be added to this package.
 
-## Applications included
+## Adding new apps
 
-### Kaleidoskope
-To do.
-### ImageSpiral
-To do.
-### SphereChaos
-To do.
-### Doppelpendel
-To do.
-### Solitaire
-To do.
-### Ausparken
-To do.
-### iOrnament
-To do.
-### PolytopeMorpher
-To do.
-### PlatonicSolids
-To do.
-### Tree
-To do.
-### Fish
-To do.
+The directory *sample* has a template of the files needed to add a new application.
+
+## Application adaptation
+
+Some standard steps performed to adapt apps:
+
+- Make sure the app's canvas is wrapped in `<div class="app"></div>`
+- In the CreateCindy call, on the **ports** attribute add `fill: "window"`
+- Use a <canvas> with no width or height

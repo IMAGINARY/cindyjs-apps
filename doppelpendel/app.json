@@ -1,0 +1,12 @@
+{
+  "name": {
+    "en": "Double pendulum",
+    "de": "Doppelpendel",
+    "es": "Péndulo doble"
+  },
+  "description": {
+    "en": "",
+    "de": "An einem Pendel ist ein weiteres Pendel aufgehängt. Dadurch entsteht ein einfaches System, das <em>deterministisches Chaos</em> aufweist. Wie sich das System mit der Zeit verhält, hängt stark von der Startposition, den Längen und Massen der beiden Pendel ab.",
+    "es": ""
+  }
+}

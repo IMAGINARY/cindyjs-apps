@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Ein Baum</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/Cindy3D.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <script id='app_cinderella_10_csdraw' type='text/x-cindyscript'>
+            t1=map(A,B,B,C);
+            t2=map(A,B,B,D);
+            col(x):=(0.6*x,(1-x)*.8,0);
+
+
+            tree(a,b,n):=(
+                          if(n>0&|a_[1,2]/a_3,b_[1,2]/b_3|>.15,
+                             draw(a,b,size->n*1*2,color->col(n/nn));
+                             tree(t1*a,t1*b,n-1);
+                             tree(t2*a,t2*b,n-1);
+                             );
+                          );
+            nn=12;
+           // drawimage((-15,-11),(15,-11),"back");
+
+            tree(A.homog,B.homog,nn);
+
+
+        </script>
+
+  <script id='app_cinderella_10_csinit' type='text/x-cindyscript'>
+
+        reset():=(
+
+A.xy=(0,-8);
+B.xy=(0,-4.5);
+C.xy=(1.5,-2);
+D.xy=(-1.6,-2.5);
+    );
+        </script>
+
+  <script type="text/javascript">
+    (function(){
+      var uid = 'app_cinderella_10_CSCanvas_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
+      document.write( "<canvas id=\"" + uid + "\"></canvas>" );
+
+      var gslp=[
+
+        {name:"A", type:"Free",size:6, pos:[0,-8],color:[1,1,1]},
+        {name:"B", type:"Free",size:6, pos:[0,-4.5],color:[1,1,1]},
+        {name:"C", type:"Free",size:6, pos:[1.5,-2],color:[1,1,1]},
+        {name:"D", type:"Free",size:6, pos:[-1.6,-2.5],color:[1,1,1]},
+      ];
+      var cdy10=createCindy({canvasname:uid,
+        scripts:"app_cinderella_10_cs*",
+        ports: [{
+          id: uid,
+          background: "rgba(0,0,0,0)",
+          transform: [{visibleRect: [-10, 10, 10, -10]}],
+          fill: "window"
+        }],
+        geometry:gslp});
+    })();
+  </script>
+</div>
+</body>
+</html>

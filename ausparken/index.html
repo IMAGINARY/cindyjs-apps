@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Ausparken</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/Cindy3D.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <script id="app_cinderella_06_cstick" type="text/x-cindyscript">
+
+
+    move=animation_startindex;
+    if(move_2=="Push",push(move_1));
+    if(move_2=="Pull",pull(move_1));
+    startindex=startindex+1;
+    if(startindex>length(animation),
+    //TODO WHY DOES STOPANIM NOT WORK
+    pauseanimation();
+    special=[];
+    solved=false;
+    )
+    	</script>
+
+
+  <script id="app_cinderella_06_csmouseup" type="text/x-cindyscript">
+
+      upaction();
+
+    </script>
+  <script id="app_cinderella_06_csdraw" type="text/x-cindyscript">
+
+    allthedrawing();
+
+    ;
+    </script>
+  <script id="app_cinderella_06_csmousedown" type="text/x-cindyscript">
+    if(downpending,
+      upaction();
+    );
+    if(|mouse().x-N.x|<2,
+    err("HITIT");
+       nn=mouse().xy;
+       sel=round(|M,nn|/|M,L|*(n-1));
+       N.xy=sel*(L-M)/(n-1)+M;
+    );
+    downpending=true;
+    downaction();
+
+
+    </script>
+  <script id="app_cinderella_06_csmousedrag" type="text/x-cindyscript">
+
+
+
+    if(moving,
+
+      move=(mouse().xy-pos)/2;
+      rmove=round(move);
+      dir=special_2-special_1;
+      if((dir_1~=0) & (|rmove.y,move.y|<0.2),move=rmove);
+      if((dir_2~=0) & (|rmove.x,move.x|<0.2),move=rmove);
+      if(special_1_1==special_2_1,move_1=0;move_2=restrict(interval,move_2));
+      if(special_1_2==special_2_2,move_2=0;move_1=restrict(interval,move_1));
+
+      special_1=oldcar_1+move;
+      special_2=oldcar_2+move;
+
+    );
+    if(special!=[],
+
+
+
+      if(!solved&special_3=="my"&special_1_1>4&special_1_1<6,
+         solved=true;
+         solvedsequence();
+         moving=false;
+
+      )
+    );
+
+    ;
+    </script>
+  <script id="app_cinderella_06_csinit" type="text/x-cindyscript">
+
+    downpending=false;
+
+    upaction():=(
+    if(moving,
+    //  move=(mouse().xy-pos)/2;
+      special_1=round(special_1);
+      special_2=round(special_2);
+      alldata=alldata++[special];
+      moving=false;
+      if(round(move)!=(0,0),
+       if(special_3!="my",
+        // playtone(60,channel->9),
+         if(special_1==(5,4),
+         //  playtone(67,channel->9),
+         //  playtone(62,channel->9);
+         )
+        )
+      );
+
+      special=[];
+
+    );
+    downpending=false;
+
+    );
+
+    downaction():=(
+    hotlist=select(1..length(alldata),ishot(mouse().xy,alldata_#));
+    moving=false;
+    if(length(hotlist)==1,
+      sel=hotlist_1;
+      special=alldata_sel;
+      rest=1..length(alldata)--[sel];
+      alldata=apply(rest,alldata_#);
+      moving=true;
+      pos=mouse().xy;
+      oldcar=special;
+      interval=getinterval(special);
+
+    );
+
+
+    );
+
+
+    sel=0;
+    selold=0;
+    d=.84;
+    dd=.9;
+    N.xy=M.xy;
+    pl(a,b):=(
+       fillpolygon(
+         [[a+dd,b+dd],[a-dd,b-dd],[a-dd,b+dd]],color->(1,1,1)*.7);
+       fillpolygon(
+         [[a+dd,b+dd],[a+dd,b-dd],[a-dd,b-dd]],color->(1,1,1)*.3);
+       fillpolygon(
+         [[a+d,b+d],[a+d,b-d],[a-d,b-d],[a-d,b+d]],color->(1,1,1)*.6);
+
+    );
+
+    drawcar(B,A,name):=(
+      diff=B-A;
+      p1=diff/|diff|;
+      p2=perp(p1);
+      p2=p2*1.1;
+      p1=p1*1;
+      drawimage(A-p1+p2,B+p1+p2,A-p1-p2,name);
+      drawimage(A-p1+p2,B+p1+p2,A-p1-p2,"a6",alpha->0.3);
+    );
+
+
+    drawtruck(A,B,name):=(
+      diff=B-A;
+      p1=diff/|diff|;
+      p2=perp(p1);
+      p2=p2*1.2;
+      p1=p1*1;
+      drawimage(A-p1+p2,B+p1+p2,A-p1-p2,name);
+      drawimage(A-p1+p2,B+p1+p2,A-p1-p2,"t7",alpha->0.3);
+    );
+
+    drawmy(A,B,name):=(
+      diff=B-A;
+      p1=diff/|diff|;
+      p2=perp(p1);
+      p2=p2*1.1;
+      p1=p1*1;
+      drawimage(A-p1+p2,B+p1+p2,A-p1-p2,name);
+    );
+
+    drawobj(obj,al):=(
+      drawobj(obj_1*2+(1,1),obj_2*2+(1,1),obj_3,al)
+    );
+    drawobj(a,b,name,al):=(
+      alpha(al);
+      if(name_1=="a",drawcar(a,b,name));
+      if(name_1=="t",drawtruck(a,b,name));
+      if(name_1=="m",drawmy(a,b,name));
+      alpha(1);
+    );
+
+
+    randomize():=(
+      l=apply(1..12,random());
+      carsl=sort(1..12,l_#);
+      l=apply(1..7,random());
+      trucksl=sort(1..7,l_#);
+    );
+
+    car(i):="a"+carsl_i;
+    truck(i):="t"+trucksl_i;
+
+
+
+
+    devlevel(lev):=(
+      randomize();
+      cars=apply(1..length(lev_1),[lev_1_#_1,lev_1_#_2,car(#)]);
+      trucks=apply(1..length(lev_2),[lev_2_#_1,lev_2_#_2,truck(#)]);
+      my=apply(1..length(lev_3),[lev_3_#_1,lev_3_#_2,"my"]);
+      alldata=cars++trucks++my;
+    );
+
+
+
+
+
+
+
+
+
+
+
+    ishot(p,car):=(
+      a=car_1*2+(1,1);
+      b=car_2*2+(1,1);
+      diff=(b-a);
+      diff=diff/|diff|;
+      st=a-diff;
+      en=b+diff;
+    //  draw(st,en);
+      lot=meet(join(st,en),perp(join(st,en),p)).xy;
+      |st,en|>|lot,en| & |st,en|>|lot,st| & |lot,p|<1;
+
+    );
+
+    restrict(int,a):=(
+      min(max(int_1,a),int_2)
+    );
+
+    special=[];
+
+    accident(a1,a2,b1,b2):=(
+      la=[a1,(a1+a2)/2,a2];
+      lb=[b1,(b1+b2)/2,b2];
+      cr=false;
+      apply(la,a,apply(lb,b,cr=or(cr,|a,b|<0.1)));
+      cr;
+    );
+
+    crash(p1,p2):=(
+
+      cr=false;
+      forall(alldata,
+        cr=or(cr,accident(p1,p2,#_1,#_2));
+      );
+      cr=or(cr,contains(p1++p2,0));
+      cr=or(cr,contains(p1++p2,7));
+      cr;
+    );
+
+    vert(car):=(
+
+      min=0;
+      while(!crash(car_1-(min+1,0),car_2-(min+1,0)),min=min+1);
+      max=0;
+      while(!crash(car_1+(max+1,0),car_2+(max+1,0)),max=max+1);
+      [-min,max]
+    );
+
+
+    hor(car):=(
+      min=0;
+      while(!crash(car_1-(0,min+1),car_2-(0,min+1)),min=min+1);
+      max=0;
+      while(!crash(car_1+(0,max+1),car_2+(0,max+1)),max=max+1);
+      [-min,max]
+    );
+
+    getinterval(car):=(
+      if(car_1_1==car_2_1,erg=hor(car));
+      if(car_1_2==car_2_2,erg=vert(car));
+      erg;
+    );
+
+    solved=false;
+
+
+    ;
+
+
+    level1=[
+    [
+      [[1,1],[1,2]],
+      [[1,6],[2,6]],
+      [[5,2],[6,2]]
+    ],
+    [
+      [[1,3],[1,5]],
+      [[3,1],[5,1]],
+      [[4,3],[4,5]],
+      [[6,4],[6,6]]
+    ],
+    [
+      [[2,4],[3,4]]
+     ]
+    ];
+
+
+
+    level3=[
+     [[[2,1],[2,2]],[[3,1],[4,1]],[[2,3],[3,3]]],
+     [[[4,2],[4,4]],[[6,1],[6,3]]],
+     [[[2,4],[3,4]]]
+    ];
+
+
+    level10=[
+    [
+      [[1,1],[2,1]],
+      [[4,1],[4,2]],
+      [[5,1],[6,1]],
+      [[1,5],[2,5]],
+      [[1,6],[2,6]],
+      [[3,5],[3,6]],
+      [[5,6],[6,6]]
+    ],
+    [
+      [[1,2],[1,4]],
+      [[2,3],[4,3]],
+      [[6,2],[6,4]]
+    ],
+    [
+       [[2,4],[3,4]]
+    ]
+    ];
+
+
+    level11=[
+    [
+      [[3,2],[3,3]],
+      [[6,1],[6,2]],
+      [[2,6],[3,6]]
+    ],
+    [
+      [[1,4],[1,6]],
+      [[4,4],[4,6]],
+      [[3,1],[5,1]],
+      [[4,3],[6,3]]
+    ],
+    [
+      [[2,4],[3,4]]
+     ]
+    ];
+
+
+
+
+    level14=[
+    [
+      [[1,1],[2,1]],
+      [[1,3],[1,4]],
+      [[1,6],[2,6]],
+      [[2,3],[2,4]],
+      [[3,1],[3,2]],
+      [[3,3],[4,3]],
+      [[3,5],[3,6]],
+      [[5,2],[6,2]],
+      [[5,3],[5,4]],
+      [[5,5],[6,5]],
+      [[6,3],[6,4]]
+    ],
+    [
+    ],
+    [
+      [[3,4],[4,4]]
+     ]
+    ];
+
+
+
+
+    level27=[
+    [
+
+      [[1,5],[1,6]],
+      [[2,5],[3,5]],
+      [[2,6],[3,6]],
+      [[3,1],[3,2]],
+      [[3,3],[3,4]],
+      [[4,3],[5,3]]
+    ],
+    [
+      [[4,1],[6,1]],
+      [[4,4],[4,6]],
+      [[6,2],[6,4]]
+    ],
+    [
+      [[1,4],[2,4]]
+     ]
+    ];
+
+
+    level40=[
+    [
+
+      [[1,1],[2,1]],
+      [[3,1],[3,2]],
+      [[4,1],[5,1]],
+      [[4,2],[4,3]],
+      [[5,2],[6,2]],
+      [[2,4],[2,5]],
+      [[3,4],[3,5]],
+      [[2,6],[3,6]],
+      [[5,5],[5,6]]
+    ],
+    [
+      [[1,3],[3,3]],
+      [[1,4],[1,6]],
+      [[6,3],[6,5]]
+    ],
+    [
+      [[4,4],[5,4]]
+     ]
+    ];
+
+
+
+    levels=[level1,level3,level10,level11,level14,level27,level40];
+
+
+    devlevel(levels_(sel+1));
+
+
+
+    ;
+
+
+    allthedrawing():=(
+    clrscr();
+    drawtext(M+(.5,0),"leicht",color->(1,1,1),size->26);
+    drawtext(L+(.5,0),"schwer",color->(1,1,1),size->26);
+  //  drawtext(M+(-0.2,-1),"Schwierigkeitsgrad",color->(1,1,1),size->26);
+
+    fillpolygon(apply([A,B,C,D,E,F],#+(.03,-.03)),color->(1,1,1)*.0);
+
+    connect(apply([A,B,C,D,E,F],#+(.03,-.03)),size->17,color->(1,1,1)*.7);
+    connect(apply([A,B,C,D,E,F],#-(.03,-.03)),size->17,color->(1,1,1)*.3);
+    connect([A,B,C,D,E,F],size->13,color->(1,1,1)*.6);
+
+    repeat(6,i,
+      repeat(6,j,
+        pl(2*i+1,2*j+1);
+      )
+    );
+
+    n=length(levels);
+    apply(1..n,#,
+      h=L.y+(#-1)*(M.y-L.y)/(n-1);
+      draw((M.x-.2,h),(M.x+.2,h),color->(1,1,1));
+    );
+
+    sel=round(|M,N|/|M,L|*(n-1));
+    N.xy=sel*(L-M)/(n-1)+M;
+    if(sel!=selold,
+      devlevel(levels_(sel+1));
+      solved=false;
+    );
+
+    selold=sel;
+    apply(alldata,c,drawobj(c,1));
+
+    if(special!=[],
+     drawobj(special,.9);
+    );
+    );
+
+    antiprismc(a,b,c):=(
+      regional(d);
+      xx=|a-b|^2;
+      yy=|a-c|^2;
+      xx=|a-b|^2;
+      yy=|a-c|^2;
+      if(yy==0,
+         d=b,
+         d=((a*b*xx)-(b*c*xx)-(a*c*yy)+(b*c*yy))/(a*xx-c*xx-a*yy+b*yy)
+      );
+    );
+
+    tractrix(a,b,c):=(
+      rb=a+(b-a)*2;
+      rd=antiprismc(a,rb,c);
+      (c+rd)/2;
+    );
+
+
+    push(p):=(
+      pa=special_1;
+      pb=special_2;
+      pc=pb+p;
+      pd=gauss(tractrix(complex(pb),complex(pa),complex(pc)));
+      special=[pd,pc,special_3]
+
+    );
+
+    pull(p):=(
+      pa=special_2;
+      pb=special_1;
+      pc=pb+p;
+      pd=gauss(tractrix(complex(pb),complex(pa),complex(pc)));
+      special=[pc,pd,special_3]
+
+    );
+
+    solvedsequence():=(
+    	if(solved,
+    	animation=apply(1..round((8-special_1_1)/0.2),((0.2,0),"Push"))
+    	++apply(1..15,((0,0.2),"Pull"))
+    	++apply(1..23,((0,-0.2),"Push"))
+    	++apply(1..10,w=#*90°/10,((0,-0.2),"Push"))
+    	++apply(1..40,((-.3,0),"Push"));
+    	startindex=1;
+      	playanimation()
+      );
+    //  solved=false;
+    //  special=[];
+    );
+reset():=(
+    N.homog=(4, 0.2861021, 0.201765);
+
+    //COPY PASTE
+    sel=round(|M,N|/|M,L|*(n-1));
+    N.xy=sel*(L-M)/(n-1)+M;
+    special=[];
+
+    devlevel(levels_(sel+1));
+    solved=false;
+
+    selold=sel;
+    apply(alldata,c,drawobj(c,1));
+
+    if(special!=[],
+     drawobj(special,.9);
+    );
+);
+
+
+    </script>
+
+  <script type="text/javascript">
+
+  </script>
+
+  <script type="text/javascript">
+    (function(){
+      var uid = 'app_cinderella_06_CSCanvas_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
+      document.write( "<canvas id=\"" + uid + "\"></canvas>" );
+
+      var cdy06 = createCindy({
+        scripts: "app_cinderella_06_cs*",
+        defaultAppearance: {},
+        images: {
+          a1:  "img/a1.png",
+          a10: "img/a10.png",
+          a11: "img/a11.png",
+          a12: "img/a12.png",
+          a2:  "img/a2.png",
+          a3:  "img/a3.png",
+          a4:  "img/a4.png",
+          a5:  "img/a5.png",
+          a6:  "img/a6.png",
+          a7:  "img/a7.png",
+          a8:  "img/a8.png",
+          a9:  "img/a9.png",
+          my:  "img/my.png",
+          t1:  "img/t1.png",
+          t2:  "img/t2.png",
+          t3:  "img/t3.png",
+          t4:  "img/t4.png",
+          t5:  "img/t5.png",
+          t6:  "img/t6.png",
+          t7:  "img/t7.png"
+        },
+        ports: [{
+          id: uid,
+          background: "rgba(0,0,0,0)",
+          transform: [{visibleRect: [-0.7280283924068959, 15.687837617026014, 23.320393343872503, -2.3484786851835353]}],
+          fill: "window"
+        }],
+        geometry: [
+          {name: "A", type: "Free", pos: [4, 2.896551724137931, 0.27586206896551724], pinned: true, color: [0.011764707, 0.654902, 0.7372549], visible: false},
+          {name: "B", type: "Free", pos: [4, 4, 0.27586206896551724], pinned: true, color: [0.011764707, 0.654902, 0.7372549], visible: false},
+          {name: "C", type: "Free", pos: [-0.41379310344827586, -4, -0.27586206896551724], pinned: true, color: [0.011764707, 0.654902, 0.7372549], visible: false},
+          {name: "D", type: "Free", pos: [4, 4, 2.6666666666666665], pinned: true, color: [0.011764707, 0.654902, 0.7372549], visible: false},
+          {name: "E", type: "Free", pos: [4, 0.41379310344827586, 0.27586206896551724], pinned: true, color: [0.011764707, 0.654902, 0.7372549], visible: false},
+          {name: "F", type: "Free", pos: [4, 2.0689655172413794, 0.27586206896551724], pinned: true, color: [0.011764707, 0.654902, 0.7372549], visible: false},
+          {name: "G", type: "Free", pos: [4, 2.4539413505743948, 0.27378461313468927], pinned: true, color: [1, 0, 0], visible: false},
+          {name: "H", type: "Free", pos: [4, 2.153071813333942, 0.24021679789814773], pinned: true, color: [1, 0, 0], visible: false},
+          {name: "a", type: "Segment", args: ["G", "H"], pos: [3.6900479683254696e-16, -0.4462773538912901, 4], overlap: 1, size: 1, color: [1, 1, 1], visible: false},
+          {name: "K", type: "PointOnLine", args: ["a"], pos: [4, 2.2181043779580167, 0.2474724381124468], pinned: true, color: [1, 0, 0], visible: false},
+          {name: "b", type: "Segment", args: ["G", "K"], pos: [9.41517364566149e-16, -0.4462773538912905, 4], size: 4, color: [1, 1, 1], visible: false},
+          {name: "L", type: "Free", pos: [4, 2.883018915215197, 0.2017656373068423], pinned: true, color: [1, 0, 0], visible: false},
+          {name: "M", type: "Free", pos: [4, 0.28610216985784337, 0.2017656373068423], pinned: true, color: [1, 0, 0], visible: false},
+          {name: "c", type: "Segment", args: ["L", "M"], pos: [-0.2017656373068423, 0, 4], size: 3, color: [1, 1, 1]},
+          {name: "N", type: "PointOnLine", args: ["c"], pos: [4, 0.2861021698578434, 0.2017656373068423], narrow: 200, size: 11, color: [1, 1, 1]},
+          {name: "Dummy", type: "Free", pos: [0, 0.355889724310776, -0.2506265664160401], pinned: false, color: [1, 0, 0], visible: false}
+        ]
+      });
+    })();
+  </script>
+</div>
+</body>
+</html>

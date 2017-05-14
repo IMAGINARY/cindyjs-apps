@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Solitaire-Spiel</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/Cindy3D.js"></script>
+</head>
+<body>
+<div class="app">
+  <script id="app_cinderella_05_csmouseup" type="text/x-cindyscript">
+upaction();
+    </script>
+  <script id="app_cinderella_05_csdraw" type="text/x-cindyscript">
+    if(!animating,
+        drawstuff(mouse().xy),
+        drawstuff(animpos)
+        );
+
+      diff=mouse().xy-pos;
+      goalpos=special+diff;
+
+    fillpoly(rect,color->gray(if(pressed,.3,.5)));
+    drawpoly(rect,color->gray(.8),size->4);
+
+    drawimage(rect_1+(.5,.5),rect_2+(-.5,.5),"replay",alpha->.7);
+
+    ;
+    </script>
+  <script id="app_cinderella_05_csmousedown" type="text/x-cindyscript">
+    mpo=mouse().xy;
+    if(mpo.x>rect_1_1 & mpo.x<rect_2_1 &
+       mpo.y>rect_1_2 & mpo.y<rect_3_2,pressed=true);
+
+    found=select(active,|mouse().xy,#.xy|<2);
+
+    moving=false;
+    if(length(found)==1&!movingfilm,
+    //  playtone(60,channel->9);
+      special=found_1;
+      active=active--[special];
+      pos=mouse().xy;
+      moving=true;
+
+      lastmouse=mouse().xy;
+    );
+    timestamp=seconds();
+    waiting=true;
+    waiting=false;//TOTGELEGT
+    //playanimation();
+    </script>
+  <script id="app_cinderella_05_csmousedrag" type="text/x-cindyscript">
+    timestamp=seconds();
+
+    mpo=mouse().xy;
+    if(mpo.x>rect_1_1 & mpo.x<rect_2_1 &
+       mpo.y>rect_1_2 & mpo.y<rect_3_2&!moving,pressed=true,pressed=false);
+
+      lastmouse=mouse().xy;
+
+
+    ;
+    </script>
+  <script id="app_cinderella_05_csinit" type="text/x-cindyscript">
+    upaction():=(
+    if(pressed,reset());
+        pressed=false;
+    if(moving,
+
+      diff=lastmouse-pos;
+      goalpos=special+diff;
+
+
+
+      hits=select(pegs,|goalpos,#.xy|<2);
+      hits2=select(active,|goalpos,#.xy|<2);
+      if(length(hits)==1 &length(hits2)==0 ,
+        hit=hits_1;
+        middle=select(active,|(goalpos+special)/2,#.xy|<2);
+        if(abs(|special-hit|/unit-2)<0.1&length(middle)==1,
+          active=active++hits;
+          active=active--middle;
+         // playtone(62,channel->9,velocity->.4);
+        special=[];
+        moving=false;
+
+          ,
+          moveback();
+       //   active=active++[special];
+        );
+        ,
+          moveback();
+        //  active=active++[special];
+
+      ) ;
+     // special=[];
+     // moving=false;
+    );
+
+
+    );
+
+    animating=false;
+
+    //KNOPF POSITION
+    rect=[[23,-4],[26,-4],[26,-1],[23,-1]];
+    pressed=false;
+    unit=4.54;
+    pegs=[[17.88,-11],[8.8,4.72],[-0.28,-11],[4.26,-3.14],[13.34,-3.14],[15.61,-7.07],[8.8,-3.14],[8.8,-11],[6.53,-7.07],[1.99,-7.07],[4.26,-11],[13.34,-11],[6.53,0.79],[11.07,0.79],[11.07,-7.07]] ;
+    moving=false;
+      pos=(0,0);
+
+    active=pegs--[pegs_4];
+    special=[];
+    drawpeg(p):=(
+     gsave();
+     clip(circle(p+(0.2,-0.2),2.4));
+     drawimage(A,B,"boardB");
+     grestore();
+    );
+
+    drawspecial(pp):=(
+
+      if(special!=[],
+        gsave();
+        diff=pp-pos;
+
+        off=(0,-0.1);
+        fill(circle(special+diff+off,1.75),color->(.5,0,0),alpha->.1);
+        fill(circle(special+diff+off,1.7),color->(.5,0,0),alpha->.1);
+        fill(circle(special+diff+off,1.65),color->(.5,0,0),alpha->.1);
+        fill(circle(special+diff+off,1.6),color->(.5,0,0),alpha->.1);
+        fill(circle(special+diff+off,1.55),color->(.5,0,0),alpha->.1);
+        fill(circle(special+diff+off,1.5),color->(.5,0,0),alpha->.1);
+        clip(circle(special+diff,2.4));
+        drawimage(A+diff,B+diff,"boardAX");
+        fill(circle(special+diff,1.5),color->(0,0,0),alpha->.1);
+        grestore();
+      );
+    );
+
+
+
+    drawstuff(mp):=(
+    //clrscr();
+
+     drawimage(A,B,"boardC");
+     apply(active,p,drawpeg(p));
+     drawspecial(mp);
+     if(special!=[],
+      posmo= possiblemoves(special);
+      apply(posmo,
+        drawpos(#);
+      );
+     );
+     if(!moving&!stillpossible(),
+       drawtext((-4,4),"Ende:",color->(1,1,1),size->30);
+       drawtext((-4,2.0),length(active)+" sind übrig",color->(1,1,1),size->30);
+     );
+    );
+
+    drawpos(#):=(
+        off=(.1,-.1);
+        drawcircle(#+off,2,color->(0,0.5,0.2),size->9*3,alpha->0.1);
+        drawcircle(#+off,2,color->(0,0.5,0.2),size->7*3,alpha->0.1);
+        drawcircle(#+off,2,color->(0,0.5,0.2),size->5*3,alpha->0.1);
+        drawcircle(#+off,2,color->(0,0.5,0.2),size->3*3,alpha->0.1);
+        drawcircle(#+off,2,color->(0,0.5,0.2),size->1*3,alpha->0.1);
+    );
+movingfilm=false;
+waiting=false;
+    moveback():=(
+      diff=mouse().xy-pos;
+      nn=round(|diff|/2);
+      animation=apply(1..nn,q=#/nn;(q)*pos+(1-q)*mouse().xy);
+      animation=animation++[animation_(-1)];
+      startindex=1;
+      movingfilm=true;
+      playanimation();
+    //  drawstuff(pos);
+    );
+
+    movebackX():=(
+       drawstuff(pos);
+       active=active++[special];
+       special=[];
+
+    );
+
+
+    possiblemoves(sp):=(
+      ll=[];
+      apply(pegs--active,p,
+        if(  abs(|p-sp|/unit-2)<0.1,
+          if(length(select(active,|#-(p+sp)/2|<0.1))==1,ll=ll++[p])
+        )
+      );
+      ll;
+    );
+
+
+    stillpossible():=(
+      erg=false;
+      forall(active,try,
+         if(possiblemoves(try)!=[],erg=true)
+      );
+
+      erg;
+    );
+
+    reset():=(
+
+    err("RESET");
+       pegs=[[17.88,-11],[8.8,4.72],[-0.28,-11],[4.26,-3.14],[13.34,-3.14],[15.61,-7.07],[8.8,-3.14],[8.8,-11],[6.53,-7.07],[1.99,-7.07],[4.26,-11],[13.34,-11],[6.53,0.79],[11.07,0.79],[11.07,-7.07]] ;
+       active=pegs--[pegs_(randomint(15)+1)];
+       special=[];
+    )
+
+
+
+    ;
+    </script>
+
+  <script id="app_cinderella_05_cstick" type="text/x-cindyscript">
+    if(waiting,
+       if(seconds()-timestamp>.5,
+          waiting=false;
+         // upaction();
+       )
+    );
+    if(movingfilm,
+
+    animating=true;
+
+    animpos=animation_startindex;
+
+    //drawstuff(move);
+
+    startindex=startindex+1;
+    if(startindex>length(animation),
+       movingfilm=false;
+       stopanimation();
+       animating=false;
+       active=active++[special];
+       special=[];
+       drawstuff(move);
+       )
+    );
+    	</script>
+  <script type="text/javascript">
+    (function(){
+      var uid = 'app_cinderella_05_CSCanvas_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
+      document.write( "<canvas id=\"" + uid + "\"></canvas>" );
+
+      var cdy05 = createCindy({
+        scripts: "app_cinderella_05_cs*",
+        defaultAppearance: {},
+        images: {
+          balls: "img/balls.png",
+          boardAX: "img/boardAX.png",
+          boardB: "img/boardB.png",
+          boardC: "img/boardC.png",
+          replay: "img/replay.png"
+        },
+        ports: [{
+          id: uid,
+          background: "rgba(0,0,0,0)",
+          transform: [{visibleRect: [-10.635445120621503, 13.61908146108596, 30.41961350747239, -17.17221250998446]}],
+          fill: "window"
+        }],
+        geometry: [
+          {name: "A", type: "Free", pos: [-1.75, -4, 0.25], pinned: true, color: [1, 0, 0], labeled: true, visible: false},
+          {name: "B", type: "Free", pos: [4, -2.6666666666666665, 0.16666666666666666], pinned: true, color: [1, 0, 0], labeled: true, visible: false},
+          {name: "C", type: "Free", pos: [4, -2.6181818181818177, 0.45454545454545453], color: [1, 0, 0], labeled: true, visible: false},
+          {name: "D", type: "Free", pos: [4, -2.460850111856823, 0.2237136465324385], color: [1, 0, 0], labeled: true, visible: false}
+        ]
+      });
+    })();
+  </script>
+</div>
+</body>
+</html>
