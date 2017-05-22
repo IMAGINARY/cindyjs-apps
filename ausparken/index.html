@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
   <script type="text/javascript" src="../common/js/Cindy.js"></script>
   <script type="text/javascript" src="../common/js/Cindy3D.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.2.0.min.js"></script>
 </head>
 <body>
 <div class="app">
@@ -437,8 +438,8 @@
 
     allthedrawing():=(
     clrscr();
-    drawtext(M+(.5,0),"leicht",color->(1,1,1),size->26);
-    drawtext(L+(.5,0),"schwer",color->(1,1,1),size->26);
+    drawtext(M+(.5,0),international("DIFFICULTY_EASY"),color->(1,1,1),size->26);
+    drawtext(L+(.5,0),international("DIFFICULTY_HARD"),color->(1,1,1),size->26);
   //  drawtext(M+(-0.2,-1),"Schwierigkeitsgrad",color->(1,1,1),size->26);
 
     fillpolygon(apply([A,B,C,D,E,F],#+(.03,-.03)),color->(1,1,1)*.0);
@@ -555,6 +556,16 @@ reset():=(
       var uid = 'app_cinderella_06_CSCanvas_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
       document.write( "<canvas id=\"" + uid + "\"></canvas>" );
 
+      var ready = createCindy.waitFor('i18n');
+      var translations = {};
+      IMAGINARY.i18n.init().then(function(lang){
+        translations[lang] = IMAGINARY.i18n.getStrings();
+        ready();
+      }).catch(function(err){
+        console.log("Error loading translation: " + err);
+        throw err;
+      });
+
       var cdy06 = createCindy({
         scripts: "app_cinderella_06_cs*",
         defaultAppearance: {},
@@ -603,8 +614,11 @@ reset():=(
           {name: "c", type: "Segment", args: ["L", "M"], pos: [-0.2017656373068423, 0, 4], size: 3, color: [1, 1, 1]},
           {name: "N", type: "PointOnLine", args: ["c"], pos: [4, 0.2861021698578434, 0.2017656373068423], narrow: 200, size: 11, color: [1, 1, 1]},
           {name: "Dummy", type: "Free", pos: [0, 0.355889724310776, -0.2506265664160401], pinned: false, color: [1, 0, 0], visible: false}
-        ]
+        ],
+        language: IMAGINARY.i18n.getLang(),
+        translations: translations
       });
+      window.cindy = cdy06;
     })();
   </script>
 </div>

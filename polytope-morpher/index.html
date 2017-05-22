@@ -8,6 +8,7 @@
   <script type="text/javascript" src="../common/js/Cindy.js"></script>
   <script type="text/javascript" src="../common/js/Cindy3D.js"></script>
   <script type="text/javascript" src="../common/js/quickhull3d/quickhull3d.nocache.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.2.0.min.js"></script>
 </head>
 <body>
 <div class="app">
@@ -306,9 +307,9 @@ repeat(round(colspan/3°)-1,i,
 
 
 //drawtext((14,9.5),"Starter:",color->(1,1,1),size->33);
-drawtext((14,-2.5),"Flächen schrumpfen",color->(1,1,1),size->20);
-drawtext((14,-4.5),"Punkte auf Kante verschieben",color->(1,1,1),size->20);
-drawtext((14,-0.5),"Flächenmitten herausziehen",color->(1,1,1),size->20);
+drawtext((14,-2.5),international("SHRINK_FACETS"),color->(1,1,1),size->20);
+drawtext((14,-4.5),international("MOVE_POINTS"),color->(1,1,1),size->20);
+drawtext((14,-0.5),international("MOVE_FACETS"),color->(1,1,1),size->20);
 off=(-.05,0);
 w=1.8;
 
@@ -931,6 +932,16 @@ damping=1;
       var uid = 'app_cinderella_08_CSCanvas_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
       document.write( "<canvas id=\"" + uid + "\"></canvas>" );
 
+      var ready = createCindy.waitFor('i18n');
+      var translations = {};
+      IMAGINARY.i18n.init().then(function(lang){
+        translations[lang] = IMAGINARY.i18n.getStrings();
+        ready();
+      }).catch(function(err){
+        console.log("Error loading translation: " + err);
+        throw err;
+      });
+
       var cdy08 = createCindy({
         scripts: "app_cinderella_08_cs*",
         defaultAppearance: {},
@@ -979,7 +990,9 @@ damping=1;
           {name: "B8", type: "Free", pos: [4, -1.8993963782696177, 0.2012072434607646], pinned: true, color: [1, 1, 1]},
           {name: "C8", type: "Free", pos: [23, 8], pinned: true, color: [1, 1, 1], visible: false},
           {name: "Dummy", type: "Free", pos: [0, 0, 1], pinned: false, color: [1, 1, 1], visible: false}
-        ]
+        ],
+        language: IMAGINARY.i18n.getLang(),
+        translations: translations
       });
     })();
   </script>

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
   <script type="text/javascript" src="../common/js/Cindy.js"></script>
   <script type="text/javascript" src="../common/js/Cindy3D.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.2.0.min.js"></script>
 </head>
 <body>
 <div class="app">
@@ -156,8 +157,8 @@ upaction();
       );
      );
      if(!moving&!stillpossible(),
-       drawtext((-4,4),"Ende:",color->(1,1,1),size->30);
-       drawtext((-4,2.0),length(active)+" sind übrig",color->(1,1,1),size->30);
+       drawtext((-4,4),international("GAME_OVER"),color->(1,1,1),size->30);
+       drawtext((-4,2.0),length(active)+" "+international("N_LEFT"),color->(1,1,1),size->30);
      );
     );
 
@@ -254,6 +255,16 @@ waiting=false;
       var uid = 'app_cinderella_05_CSCanvas_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
       document.write( "<canvas id=\"" + uid + "\"></canvas>" );
 
+      var ready = createCindy.waitFor('i18n');
+      var translations = {};
+      IMAGINARY.i18n.init().then(function(lang){
+        translations[lang] = IMAGINARY.i18n.getStrings();
+        ready();
+      }).catch(function(err){
+        console.log("Error loading translation: " + err);
+        throw err;
+      });
+
       var cdy05 = createCindy({
         scripts: "app_cinderella_05_cs*",
         defaultAppearance: {},
@@ -275,7 +286,9 @@ waiting=false;
           {name: "B", type: "Free", pos: [4, -2.6666666666666665, 0.16666666666666666], pinned: true, color: [1, 0, 0], labeled: true, visible: false},
           {name: "C", type: "Free", pos: [4, -2.6181818181818177, 0.45454545454545453], color: [1, 0, 0], labeled: true, visible: false},
           {name: "D", type: "Free", pos: [4, -2.460850111856823, 0.2237136465324385], color: [1, 0, 0], labeled: true, visible: false}
-        ]
+        ],
+        language: IMAGINARY.i18n.getLang(),
+        translations: translations
       });
     })();
   </script>

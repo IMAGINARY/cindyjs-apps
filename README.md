@@ -32,9 +32,17 @@ To only install one or more apps (instead of the whole collection) copy the app 
 
 ## i18n
 
-To Do.
+The apps can be loaded in a different language by passing the language code through the `lang` query string parameter.
+For instance:
 
-A library for i18n that can be modularly applied to Cindy apps for easy translation should be added to this package.
+`index.html?lang=de`
+
+The default language is always english by default. 
+
+To add translations simply drop a `<iso language code>.json` file inside the appropriate `tr` directory.
+
+The [i18n4js](https://github.com/IMAGINARY/i18n4js) library (by IMAGINARY) is used to read the language code from the query string and use it to dynamically 
+load a translation file from the `<appname>/tr` directory.
 
 ## Themeing
 
@@ -53,3 +61,39 @@ Some standard steps performed to adapt apps:
 - Make sure the app's canvas is wrapped in `<div class="app"></div>`
 - In the CreateCindy call, on the **ports** attribute add `fill: "window"`
 - Use a <canvas> with no width or height
+
+### Making CindyJS apps translatable
+
+1. **Make strings translatable**
+
+    Change all hard-coded strings to calls to the `international` function passing a unique string id as parameter:
+  
+    `international("DIFFICULTY_EASY")`
+  
+1. **Include the i18n4js library**
+
+    Add the following to the header below the other `<script>` elements:
+    
+    `<script type="text/javascript" src="../common/js/i18n4js-1.2.0.min.js"></script>`
+
+1. **Add the following snippet before the call to createCindy:**
+
+    ```
+    var ready = createCindy.waitFor('i18n');
+    var translations = {};
+    IMAGINARY.i18n.init().then(function(lang){
+      translations[lang] = IMAGINARY.i18n.getStrings();
+      ready();
+    }).catch(function(err){
+      console.log("Error loading translation: " + err);
+      throw err;
+    });
+    ```
+    
+1. **Add the following options to the call to createCindy:**
+
+    ```
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations
+    ```
+    
