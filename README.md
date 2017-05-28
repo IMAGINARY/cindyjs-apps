@@ -97,3 +97,16 @@ Some standard steps performed to adapt apps:
     translations: translations
     ```
     
+# License
+
+This compilation, adaptations, instructions and the i18n4js library:
+
+Copyright 2017 IMAGINARY gGmbH.
+
+Licensed under the Apache 2 license.
+
+The CindyJS library:
+
+Copyright 2013-2017 Jürgen Richter-Gebert
+
+See the README file in the individual app folders for their own copyright and license information.
