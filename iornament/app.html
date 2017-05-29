@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>iOrnament</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/Cindy3D.js"></script>
+</head>
+<body>
+<div class="app-fixedsize">
+
+  <script type="text/javascript" src="js/WebGLAdaptor.js"></script>
+
+  <script id='shader-fs-declare' type='x-shader/x-fragment'>
+	precision highp float;
+
+	uniform float time;
+	uniform float speed;
+	uniform vec2 resolution;
+	uniform vec2 mouse;
+	uniform vec2 translate;
+	uniform float scale;
+	uniform sampler2D u_image0;
+	uniform sampler2D u_image1;
+    vec3 colors[8];
+	varying vec2 v_texCoord;
+
+	</script>
+
+
+
+
+  <script id='shader-fs-pre' type='x-shader/x-fragment'>
+
+
+	vec2 position;
+
+	float pi;
+
+
+
+	vec3 rgb2hsv(vec3 c)
+	{
+		vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+		vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+		vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+		float d = q.x - min(q.w, q.y);
+		float e = 1.0e-10;
+		return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+	}
+
+	vec3 hsv2rgb(vec3 c)
+	{
+		vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+		vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+		return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+	}
+
+
+
+
+
+
+
+
+
+	vec2 addc(vec2 a, vec2 b){
+		return vec2(a.x+b.x,a.y+b.y);
+	}
+
+	vec2 subc(vec2 a, vec2 b){
+		return vec2(a.x-b.x,a.y-b.y);
+	}
+
+	vec2 negc(vec2 a){
+		return vec2(-a.x,-a.y);
+	}
+
+	vec2 multc(vec2 a, vec2 b){
+		return vec2(a.x*b.x-a.y*b.y+0.0000000000000001,a.y*b.x+a.x*b.y);
+	}
+
+	vec2 invc(vec2 a){
+		float n=a.x*a.x+a.y*a.y;
+		return vec2(a.x/n,-a.y/n);
+	}
+
+	vec2 divc(vec2 a, vec2 b){
+		return multc(a,invc(b));
+	}
+
+
+
+
+
+
+
+	</script>
+
+
+
+  <script id='shader-fs-main' type='x-shader/x-fragment'>
+
+  </script>
+
+
+
+
+  <script id='shader-fs-post' type='x-shader/x-fragment'>
+
+
+	void main( void ) {
+        position = ((gl_FragCoord.xy-translate )/ scale);
+        vec2 z=divc(vec2(position.x,position.y)-posb,(posa-posb))*2.0;
+        z=z/str;
+       // z=mod(z,2.0);
+        vec4 annotcol= texture2D(u_image0, z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));
+        vec4 piccol= texture2D(u_image1, z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));//*(2.0-(position.x+11.0)/11.0);
+        gl_FragColor =annotcol*annotcol.a+(1.0-annotcol.a)*piccol;
+
+
+    }
+
+
+	</script>
+
+
+
+  <script id="app_cinderella_07_csmouseupX" type="text/x-cindyscript">
+
+//	stopWebGL();
+if(dragging,
+   strokelist=strokelist++[stroke];
+);
+
+dragging=false;
+
+hits=select(1..ncols,y,
+   |colpos_y,mouse().xy|<1
+);
+if(length(hits)==1,pencolor=hits_1;color=cols_pencolor;setdot());
+
+hits=select(1..17,y,
+   |grouppos_y,mouse().xy|<1
+);
+if(length(hits)==1,
+  group=hits_1;
+  setgr(groups_group);
+  resetdraw();
+);
+
+
+hits=select(1..6,y,
+   |buttonpos_y,mouse().xy|<.7
+);
+if(length(hits)==1,
+  hit=hits_1;
+  if(buttons_hit=="trash",
+    strokelist=[];
+    reset();
+  );
+  if(buttons_hit=="undo",
+    undo();
+  );
+  if(buttons_hit=="redo",
+    redo();
+  );
+  if(buttons_hit=="fund",
+    fundsel=!fundsel;
+  );
+  if(buttons_hit=="glow",
+    glowing=!glowing;
+    if(glowing,glow(),noglow());
+  );
+  if(buttons_hit=="sym",
+    symannot=!symannot;
+   // if(symannot,glow(),noglow());
+  );
+);
+
+
+</script>
+  <script id="app_cinderella_07_csdraw" type="text/x-cindyscript">
+Z.size=9;
+Zsat.size=9;
+Zdark.size=9;
+Zalpha.size=9;
+Zblur.size=9;
+D.xy=(0,0);
+if(|D-F|>7.8,F.xy=D+(F-D)/|F-D|*7.8);
+if(|D-F|<2,F.xy=D+(F-D)/|F-D|*2);
+
+fillcircle((0,0),100);
+
+Dummy.xy=(-10,-10);
+if(Z.x<X.x,Z.xy=X.xy);
+if(Z.x>Y.x,Z.xy=Y.xy);
+if(Zsat.x<Xsat.x,Zsat.xy=Xsat.xy);
+if(Zsat.x>Ysat.x,Zsat.xy=Ysat.xy);
+if(Zdark.x<Xdark.x,Zdark.xy=Xdark.xy);
+if(Zdark.x>Y.x,Zdark.xy=Ydark.xy);
+if(Zalpha.x<Xalpha.x,Zalpha.xy=Xalpha.xy);
+if(Zalpha.x>Y.x,Zalpha.xy=Yalpha.xy);
+if(Zblur.x<Xblur.x,Zblur.xy=Xblur.xy);
+if(Zblur.x>Yblur.x,Zblur.xy=Yblur.xy);
+size=(|X,Z|/|X,Y|)^1.5*2+.3;
+color=cols_pencolor;
+setdot();
+
+sat=|Xsat,Zsat|/|Xsat,Ysat|;
+dark=|Xdark,Zdark|/|Xdark,Ydark|;
+alpha=(|Xalpha,Zalpha|/|Xalpha,Yalpha|)^2*.95+.05;
+blur=(|Xblur,Zblur|/|Xblur,Yblur|);
+E.xy=D+gauss(complex(F-D)*i);
+
+setcols(sat,dark);
+
+quadrat=[D.xy,F.xy,E.xy];
+
+
+
+
+cell=quadrat;
+bas=inverse(transpose([cell_2-cell_1,cell_3-cell_1]));
+
+wsi=11;
+predrawing();
+posa=F.xy;
+posb=D.xy;
+
+ drawtile();
+
+javascript("callhandle()");
+
+renderWebGL();
+//drawimage((-wsi,-wsi),(wsi,-wsi),"WEBGL");
+
+
+
+mati=inverse(bas);
+if(group>12,
+   mati=mati*transpose(((1,0),(0.5,sqrt(3/4))));
+);
+
+rr=round(1/(|posa-posb|/2))+1;
+ct=0;
+apply(-5..5,xxx,
+apply(-5..5,yyy,
+  pp=mati*(xxx,yyy)*rr;
+  if(or(pp.x>-0.1,pp.y<0.1)&pp.x<20&pp.y>-20,
+    drawimage((-wsi,0)+pp,(0,0)+pp,"WEBGL");ct=ct+1;
+    )
+  )
+);
+
+
+
+drawing();
+
+//drawtext((-9,9),">>> "+ct,color->(1,1,1));
+
+
+
+
+
+//javascript("initTexture()");
+</script>
+  <script id="app_cinderella_07_csmousedown" type="text/x-cindyscript">
+//	startWebGL();
+
+if(dragging,
+   strokelist=strokelist++[stroke];
+);
+
+dragging=false;
+
+hits=select(1..ncols,y,
+   |colpos_y,mouse().xy|<2
+);
+hits=sort(hits,|colpos_#,mouse().xy|);
+if(length(hits)>=1,pencolor=hits_1;color=cols_pencolor;setdot());
+
+hits=select(1..17,y,
+   |grouppos_y,mouse().xy|<1
+);
+hits=sort(hits,|grouppos_#,mouse().xy|);
+
+resetdr=false;
+if(length(hits)>=1,
+  resetdr=true;
+  group=hits_1;
+  setgr(groups_group);
+  resetdraw();
+);
+
+
+hits=select(1..6,y,
+   |buttonpos_y,mouse().xy|<.7
+);
+if(length(hits)==1,
+  hit=hits_1;
+  if(buttons_hit=="trash",
+    strokelist=[];
+    reset();
+  );
+  if(buttons_hit=="undo",
+    undo();
+  );
+  if(buttons_hit=="redo",
+    redo();
+  );
+  if(buttons_hit=="fund",
+    fundsel=!fundsel;
+  );
+  if(buttons_hit=="glow",
+    glowing=!glowing;
+    if(glowing,glow(),noglow());
+  );
+  if(buttons_hit=="sym",
+    symannot=!symannot;
+   // if(symannot,glow(),noglow());
+  );
+);
+
+
+if(!resetdr,
+
+st=mouse().xy;
+  st=bas*(st-cell_1);
+
+dragging=(mouse().x<10 );
+
+if(|mouse().xy,F.xy|<1&fundsel,dragging=false);
+if(|mouse().xy,D.xy|<1&fundsel,dragging=false);
+if(dragging,
+  clearredo();
+  backup();
+);
+stroke=[[size,alpha,cols_pencolor,glowing,blur],[st]];
+);
+//draggingAction(st,st);
+
+</script>
+
+  <script id="app_cinderella_07_csmousedrag" type="text/x-cindyscript">
+en=mouse().xy;
+  en=bas*(en-cell_1);
+
+if(dragging,
+ stroke_2=stroke_2++[en];
+);
+
+draggingAction(st,en);
+
+if(mover()==F,
+  dis=|F,D|;
+  if(dis<1,F.xy=D+(F-D)/dis*1);
+);
+
+if(mover()==D,
+    F.xy=D+olddist;
+);
+
+olddist=F-D;
+
+
+
+st=en;
+
+</script>
+  <script id="app_cinderella_07_csinit" type="text/x-cindyscript">
+createimage("WEBGL",1170,1170);
+use("WebGLExperiments");
+WebGLvariables(posa->"point",posb->"point",str->"point");
+dragging=false;
+setstr(x,y):=(
+ str=(x,y);
+ strx=(x,0);
+ stry=(0,y);
+);
+setstr(1,1);
+WebGLcode();
+
+createimage("pen",300,300);
+
+ncols=15;
+
+precols=[
+hue(0),
+hue(0.12),
+hue(0.16),
+hue(0.33),
+
+hue(0.5),
+hue(0.56),
+hue(0.65),
+hue(0.75),
+
+hue(0.85),
+hue(0.92),
+
+(1,1,1),
+(1,1,1)*.75,
+
+(1,1,1)*.5,
+(1,1,1)*.25,
+(0,0,0)
+
+];
+pp(v):=(v.y,-v.x);
+
+
+draggingActionInLoop(st,en):=(
+
+  n=round(|en-st|*50)+1;
+  apply(1..(n),l=#/n;
+     drawpt(l*st+(1-l)*en);
+  )
+);
+
+
+
+draggingAction(st,en):=(
+
+
+
+if(dragging,
+ sc2=|D-F|;
+   canvas(A,B,C,"tile",
+     n=round(|en-st|*50)+1;
+     apply(1..(n),l=#/n;
+       drawpt(l*st+(1-l)*en);
+
+     )
+     );
+ );
+);
+
+setcols(sat,dark):=(
+  cols=precols;
+  repeat(10,
+     cols_#=(cols_#*sat+(1-sat)*(1,1,1))*dark;
+  );
+);
+
+pencolor=1;
+
+groups=["p1","p2","pm","pg","cm","pmm","pmg","pgg","cmm","p4","p4m","p4g","p3","p3m1","p31m","p6","p6m"];
+
+strokelist=[];
+buttons=["fund","sym","glow","undo","redo","trash"];
+
+group=17;
+
+
+res=1000;
+
+
+
+stroke=[];
+frac(x):=x-floor(x);
+
+drawsinglept(p):=(
+  p=(frac(p.x/str.x)*str.x,frac(p.y/str.y)*str.y);
+
+//  p=(frac(p.x),frac(p.y));
+  sisc=size*.25;
+  drawsinglept2(p);
+  if(p.x<sisc, drawsinglept2(p+strx));
+  if(p.y<sisc, drawsinglept2(p+stry));
+  if(1-p.x<sisc, drawsinglept2(p-strx));
+  if(1-p.y<sisc, drawsinglept2(p-stry));
+  if(p.x<sisc & p.y<sisc, drawsinglept2(p+strx+stry));
+  if(1-p.x<sisc & p.y<sisc,drawsinglept2(p-strx+stry));
+  if(p.x<sisc & 1-p.y<sisc, drawsinglept2(p+strx-stry));
+  if(1-p.x<sisc & 1-p.y<sisc, drawsinglept2(p-strx-stry));
+);
+
+
+setdot():=(
+            sc1=|A-B|;
+            sc2=|D-F|;
+            sc=sc1*.4;
+
+clearimage("pen");
+    canvas((-1,-1),(1,-1),"pen",
+      apply(-10..10,
+        fillcircle((0,0),(.06+#*0.005*blur)*sc,color->color,alpha->.01+(1-blur)*.07);
+      )
+    );
+    setglow();
+    if(color==(0,0,0),setglow(false);)
+);
+
+setdot2():=(
+size=|X,Z|/|X,Y|;
+            sc1=|A-B|;
+            sc2=|D-F|;
+            sc=sc1/sc2*(size*1+.1)*.5;
+
+clearimage("pen");
+    canvas((-1,-1),(1,-1),"pen",
+          fillcircle((0,0),.1*sc,color->cols_pencolor,alpha->1);
+    )
+);
+
+
+
+setdot();
+
+drawsinglept2(p):=(
+    p=p*sc1+A.xy;
+    sc=sc1*(size*1+.1)*.025;
+
+    drawimage(p,"pen",alpha->alpha,scale->sc);
+);
+
+m1=((0,1),(-1,0));
+m2=((-1,0),(0,-1));
+m3=((0,-1),(1,0));
+m4=((0,1),(1,0));
+m5=((-1,0),(0,1));
+m6=((1,0),(0,-1));
+m7=((0,-1),(-1,0));
+mid=(0.5,0.5);
+midy=(0,0.5);
+midx=(0.5,0);
+
+mr6=((cos(60°),sin(60°)),(-sin(60°),cos(60°)));
+
+mr31=((cos(120°),sin(120°)),(-sin(120°),cos(120°)));
+mr32=mr31*mr31;
+
+
+setgr(name):=(
+  tiletype="sq";
+
+  if(name=="p1",
+    gr():=(
+      drawsinglept(p);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="p2",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m2*(p-mid)+mid);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="pm",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m5*(p-mid)+mid);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="pg",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m5*(p-mid)+midx);
+    );
+    setstr(1,1);
+  );
+
+
+  if(name=="cm",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m4*(p-mid)+mid);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="pmm",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m2*(p-mid)+mid);
+      drawsinglept(m5*(p-mid)+mid);
+      drawsinglept(m6*(p-mid)+mid);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="pmg",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m2*(p-mid)+mid+midx);
+      drawsinglept(m5*(p-mid)+mid);
+      drawsinglept(m6*(p-mid)+mid+midx);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="pgg",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m2*(p-mid)+mid+midx+midy);
+      drawsinglept(m5*(p-mid)+mid+midy);
+      drawsinglept(m6*(p-mid)+mid+midx);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="cmm",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m2*(p-mid)+mid);
+      drawsinglept(m4*(p-mid)+mid);
+      drawsinglept(m7*(p-mid)+mid);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="p4",
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m1*(p-mid)+mid);
+      drawsinglept(m2*(p-mid)+mid);
+      drawsinglept(m3*(p-mid)+mid);
+    );
+    setstr(1,1);
+  );
+
+
+
+  if(name=="p4m",
+
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m1*(p-mid)+mid);
+      drawsinglept(m2*(p-mid)+mid);
+      drawsinglept(m3*(p-mid)+mid);
+      drawsinglept(m4*(p-mid)+mid);
+      drawsinglept(m5*(p-mid)+mid);
+      drawsinglept(m6*(p-mid)+mid);
+      drawsinglept(m7*(p-mid)+mid);
+    );
+    setstr(1,1);
+  );
+
+  if(name=="p4g",
+
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(m2*(p-mid)+mid);
+      drawsinglept(m4*(p-mid)+mid);
+      drawsinglept(m7*(p-mid)+mid);
+
+      drawsinglept(m1*(p-mid));
+      drawsinglept(m3*(p-mid));
+      drawsinglept(m5*(p-mid));
+      drawsinglept(m6*(p-mid));
+
+
+    );
+    setstr(1,1);
+  );
+
+   if(name=="p3",
+    tiletype="r60";
+
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(mr31*p);
+      drawsinglept(mr32*p);
+      drawsinglept(p+str/2);
+      drawsinglept(mr31*p+str/2);
+      drawsinglept(mr32*p+str/2);
+
+    );
+    setstr(1,2*sqrt(3/4));
+  );
+
+  if(name=="p3m1",
+    tiletype="r60";
+
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(mr31*p);
+      drawsinglept(mr32*p);
+      drawsinglept(p+str/2);
+      drawsinglept(mr31*p+str/2);
+      drawsinglept(mr32*p+str/2);
+      drawsinglept(m5*p);
+      drawsinglept(mr31*m5*p);
+      drawsinglept(mr32*m5*p);
+      drawsinglept(m5*p+str/2);
+      drawsinglept(mr31*m5*p+str/2);
+      drawsinglept(mr32*m5*p+str/2);
+
+    );
+    setstr(1,2*sqrt(3/4));
+  );
+
+   if(name=="p31m",
+    tiletype="r60";
+
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(mr31*p);
+      drawsinglept(mr32*p);
+      drawsinglept(p+str/2);
+      drawsinglept(mr31*p+str/2);
+      drawsinglept(mr32*p+str/2);
+      q=(m6*(p-strx/6)+strx/6);
+      drawsinglept(q);
+      drawsinglept(mr31*q);
+      drawsinglept(mr32*q);
+      drawsinglept(q+str/2);
+      drawsinglept(mr31*q+str/2);
+      drawsinglept(mr32*q+str/2);
+
+    );
+    setstr(1,2*sqrt(3/4));
+  );
+
+    if(name=="p6m",
+    tiletype="r60";
+
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(mr31*p);
+      drawsinglept(mr32*p);
+      drawsinglept(p+str/2);
+      drawsinglept(mr31*p+str/2);
+      drawsinglept(mr32*p+str/2);
+      q=mr6*p;
+      drawsinglept(q);
+      drawsinglept(mr31*q);
+      drawsinglept(mr32*q);
+      drawsinglept(q+str/2);
+      drawsinglept(mr31*q+str/2);
+      drawsinglept(mr32*q+str/2);
+
+      p=m5*p;
+
+      drawsinglept(p);
+      drawsinglept(mr31*p);
+      drawsinglept(mr32*p);
+      drawsinglept(p+str/2);
+      drawsinglept(mr31*p+str/2);
+      drawsinglept(mr32*p+str/2);
+      q=mr6*p;
+      drawsinglept(q);
+      drawsinglept(mr31*q);
+      drawsinglept(mr32*q);
+      drawsinglept(q+str/2);
+      drawsinglept(mr31*q+str/2);
+      drawsinglept(mr32*q+str/2);
+
+    );
+    setstr(1,2*sqrt(3/4));
+  );
+
+
+    if(name=="p6",
+    tiletype="r60";
+
+    gr():=(
+      drawsinglept(p);
+      drawsinglept(mr31*p);
+      drawsinglept(mr32*p);
+      drawsinglept(p+str/2);
+      drawsinglept(mr31*p+str/2);
+      drawsinglept(mr32*p+str/2);
+      q=mr6*p;
+      drawsinglept(q);
+      drawsinglept(mr31*q);
+      drawsinglept(mr32*q);
+      drawsinglept(q+str/2);
+      drawsinglept(mr31*q+str/2);
+      drawsinglept(mr32*q+str/2);
+
+    );
+    setstr(1,2*sqrt(3/4));
+  );
+
+    C.xy=A-pp(B-A)*str_2;
+
+
+
+);
+
+
+setgr("p4g");
+
+drawpt(p):=(
+//  p=bas*(p-cell_1);
+//  p=(p.x-floor(p.x),p.y-floor(p.y));
+  gr();
+);
+
+predrawing():=(
+
+            sc1=|A-B|;
+            sc2=|D-F|;
+            FF=D+(0,|D-F|);
+
+            EE=D+(|D-F|,0);
+            tr=map(D.xy,F.xy,D.xy,FF);
+            tri=inverse(tr);
+            sc=sc1/sc2*(size*2+.2);
+
+            shi=0.004;
+            shi=0.0;
+
+);
+
+anpol2(p,n,w,col):=(
+   ww=360°/(2*n);
+   drawpoly(apply(0..2*n,p+(cos(#*ww+w),sin(#*ww+w))*.05*if(or(#==1,#==3),.7,1.4)),size->1.4*.5,color->(0,0,0));
+   drawpoly(apply(0..2*n,p+(cos(#*ww+w),sin(#*ww+w))*.05*if(or(#==1,#==3),.7,1.4)),size->.5,color->col);
+
+);
+
+
+anpol(p,n,w,col):=(
+   ww=360°/n;
+   w=w+45°;
+   drawpoly(apply(0..n,p+(cos(#*ww+w),sin(#*ww+w))*.05),size->1.4*.5,color->(0,0,0));
+
+   drawpoly(apply(0..n,p+(cos(#*ww+w),sin(#*ww+w))*.05),size->.5,color->col);
+
+);
+
+adashed(p1,p2,col,n):=(
+   d=1/n;
+   apply(0..n,l=#*d;
+   fillcircle(p1*l+p2*(1-l),.012,color->(0,0,0));
+   fillcircle(p1*l+p2*(1-l),.008,color->col)
+   );
+);
+
+afull(p1,p2,col):=(
+  draw(p1,p2,color->(0,0,0),size->.5*.5);
+  draw(p1,p2,color->col,size->.3*.5)
+);
+
+acolb1=(.6,0.6,1);
+acolb2=(.3,0.3,1);
+
+acolr1=(1,.6,0.6);
+acolr2=(1,.3,0.3);
+
+acolg1=(.6,1,0.6);
+acolg2=(.3,1,0.3);
+
+acolge1=(1,.8,0.2);
+acolge2=(1,.8,0);
+acoltu2=(0.7,1,1);
+
+acolw1=(.8,.8,.8);
+
+
+annotp1():=();
+annotp2():=(
+    anpol2((0,0),2,45°,acolb1);
+    anpol2((0,1),2,45°,acolb1);
+    anpol2((1,0),2,45°,acolb1);
+    anpol2((1,1),2,45°,acolb1);
+    anpol2((.5,.5),2,45°,acolr1);
+    anpol2((0,.5),2,45°,acolg1);
+    anpol2((1,.5),2,45°,acolg1);
+    anpol2((.5,0),2,45°,acolge1);
+    anpol2((.5,1),2,45°,acolge1);
+
+);
+annotpm():=(
+    afull((0,0),(0,1),acolb2);
+    afull((1,0),(1,1),acolb2);
+    afull((.5,0),(.5,1),acolr2);
+
+);
+annotpg():=(
+    adashed((0,0),(0,1),acolb2,20);
+    adashed((1,0),(1,1),acolb2,20);
+    adashed((.5,0),(.5,1),acolr2,20);
+
+);
+annotcm():=(
+    afull((0,0),(1,1),acolb2);
+    adashed((.5,0),(1,.5),acolr2,10);
+    adashed((.5,1),(0,.5),acolr2,10);
+
+);
+annotpmm():=(
+    afull((0,1),(1,1),acolb2);
+    afull((0,0),(1,0),acolb2);
+    afull((0,.5),(1,.5),acolg2);
+    afull((.5,0),(.5,1),acolge2);
+    afull((1,0),(1,1),acolr2);
+    afull((0,0),(0,1),acolr2);
+    anpol2((.5,.5),2,0°,acolw1);
+    anpol2((0,.5),2,0°,acolw1);
+    anpol2((1,.5),2,0°,acolw1);
+    anpol2((.5,0),2,0°,acolw1);
+    anpol2((.5,1),2,0°,acolw1);
+    anpol2((0,0),2,0°,acolw1);
+    anpol2((1,0),2,0°,acolw1);
+    anpol2((0,1),2,0°,acolw1);
+    anpol2((1,1),2,0°,acolw1);
+
+);
+annotcmm():=(
+    afull((0,0),(1,1),acolr2);
+    afull((1,0),(0,1),acolg2);
+    adashed((.5,0),(1,.5),acolb2,13);
+    adashed((.5,1),(0,.5),acolb2,13);
+    adashed((1,.5),(.5,1),acolge2,13);
+    adashed((0,.5),(.5,0),acolge2,13);
+    anpol2((.5,.5),2,45°,acolg1);
+    anpol2((0,0),2,45°,acolb1);
+    anpol2((1,0),2,45°,acolb1);
+    anpol2((0,1),2,45°,acolb1);
+    anpol2((1,1),2,45°,acolb1);
+    anpol2((.5,1),2,45°,acolr1);
+    anpol2((.5,0),2,45°,acolr1);
+    anpol2((1,.5),2,45°,acolr1);
+    anpol2((0,.5),2,45°,acolr1);
+
+);
+annotpmg():=(
+    afull((0,0),(0,1),acolr2);
+    afull((1,0),(1,1),acolr2);
+    afull((.5,0),(.5,1),acolr2);
+    adashed((0,0),(1,0),acolg2,20);
+    adashed((0,1),(1,1),acolg2,20);
+    adashed((0,.5),(1,.5),acolb2,20);
+    anpol2((.25,0),2,90°,acoltu2);
+    anpol2((.25,1),2,90°,acoltu2);
+    anpol2((.75,0),2,90°,acoltu2);
+    anpol2((.75,1),2,90°,acoltu2);
+    anpol2((.25,.5),2,90°,acolge1);
+    anpol2((.75,.5),2,90°,acolge1);
+
+
+);
+annotpgg():=(
+    adashed((0,0),(1,0),acolg2,20);
+    adashed((0,1),(1,1),acolg2,20);
+    adashed((0,.5),(1,.5),acolg2,20);
+    adashed((0,0),(0,1),acolb2,20);
+    adashed((1,0),(1,1),acolb2,20);
+    adashed((.5,0),(.5,1),acolb2,20);
+    anpol2((.25,.25),2,90°,acolge1);
+    anpol2((.75,.75),2,90°,acolge1);
+    anpol2((.25,.75),2,90°,acolr1);
+    anpol2((.75,.25),2,90°,acolr1);
+
+);
+annotp4():=(
+    anpol((0,0),4,45°,acolr1);
+    anpol((1,0),4,45°,acolr1);
+    anpol((0,1),4,45°,acolr1);
+    anpol((1,1),4,45°,acolr1);
+    anpol((.5,.5),4,45°,acolb1);
+    anpol2((1,.5),2,0°,acolge1);
+    anpol2((0,.5),2,0°,acolge1);
+    anpol2((.5,1),2,90°,acolge1);
+    anpol2((.5,0),2,90°,acolge1);
+
+);
+annotp4m():=(
+
+    afull((0,0),(0,1),acolr2);
+    afull((1,0),(1,1),acolr2);
+    afull((0,0),(1,0),acolr2);
+    afull((0,1),(1,1),acolr2);
+    afull((.5,0),(.5,1),acolb2);
+    afull((0,.5),(1,.5),acolb2);
+
+    afull((0,0),(1,1),acolge2);
+    afull((0,1),(1,0),acolge2);
+
+    adashed((.5,0),(1,.5),acolg2,13);
+    adashed((.5,1),(1,.5),acolg2,13);
+    adashed((.5,1),(0,.5),acolg2,13);
+    adashed((.5,0),(0,.5),acolg2,13);
+
+
+    anpol((0,0),4,45°,acolr1);
+    anpol((1,0),4,45°,acolr1);
+    anpol((0,1),4,45°,acolr1);
+    anpol((1,1),4,45°,acolr1);
+    anpol((.5,.5),4,45°,acolb1);
+    anpol2((1,.5),2,0°,acolge1);
+    anpol2((0,.5),2,0°,acolge1);
+    anpol2((.5,1),2,90°,acolge1);
+    anpol2((.5,0),2,90°,acolge1);
+);
+annotp4g():=(
+    afull((0,0),(1,1),acolb2);
+    afull((0,1),(1,0),acolb2);
+    adashed((.5,1),(.5,0),acolr2,20);
+    adashed((1,.5),(0,.5),acolr2,20);
+    adashed((.5,0),(0,.5),acolg2,13);
+    adashed((.5,1),(0,.5),acolg2,13);
+    adashed((.5,1),(1,.5),acolg2,13);
+    adashed((.5,0),(1,.5),acolg2,13);
+
+    anpol((0,.5),4,45°,acolr1);
+    anpol((1,.5),4,45°,acolr1);
+    anpol((.5,0),4,45°,acolr1);
+    anpol((.5,1),4,45°,acolr1);
+    anpol2((0,0),2,45°,acolb1);
+    anpol2((0,1),2,45°,acolb1);
+    anpol2((1,0),2,45°,acolb1);
+    anpol2((1,1),2,45°,acolb1);
+    anpol2((.5,.5),2,90°+45°,acolb1);
+);
+annotp3():=(
+    tt=sqrt(3/4);
+    anpol((0,0),3,45°,acolr1);
+    anpol((1,0),3,45°,acolr1);
+    anpol((0,tt*2),3,45°,acolr1);
+    anpol((1,tt*2),3,45°,acolr1);
+    anpol((.5,tt),3,45°,acolr1);
+    anpol((0,tt*2/3),3,45°,acolg1);
+    anpol((1,tt*2/3),3,45°,acolg1);
+    anpol((.5,tt*5/3),3,45°,acolg1);
+    anpol((0.5,tt*1/3),3,45°,acolb1);
+    anpol((0,tt*4/3),3,45°,acolb1);
+    anpol((1,tt*4/3),3,45°,acolb1);
+
+
+);
+annotp3m1():=(
+    tt=sqrt(3/4);
+
+    afull((0,0),(0,2*tt),acolge2);
+    afull((1,0),(1,2*tt),acolge2);
+    afull((.5,0),(.5,2*tt),acolge2);
+    afull((0,0),(1,2/3*tt),acolge2);
+    afull((0,2/3*tt),(1,4/3*tt),acolge2);
+    afull((0,4/3*tt),(1,2*tt),acolge2);
+    afull((1,0),(0,2/3*tt),acolge2);
+    afull((1,2/3*tt),(0,4/3*tt),acolge2);
+    afull((1,4/3*tt),(0,2*tt),acolge2);
+
+    adashed((1/4,0),(1/4,2*tt),acolb2,30);
+    adashed((3/4,0),(3/4,2*tt),acolb2,30);
+    adashed((.5,0),(1,1/3*tt),acolb2,10);
+    adashed((.5,0),(0,1/3*tt),acolb2,10);
+    adashed((0,1/3*tt),(1,3/3*tt),acolb2,20);
+    adashed((1,1/3*tt),(0,3/3*tt),acolb2,20);
+    adashed((0,5/3*tt),(1,3/3*tt),acolb2,20);
+    adashed((1,5/3*tt),(0,3/3*tt),acolb2,20);
+    adashed((0,5/3*tt),(1,7/3*tt),acolb2,20);
+    adashed((1,5/3*tt),(0,7/3*tt),acolb2,20);
+
+
+    anpol((0,0),3,45°,acolr1);
+    anpol((1,0),3,45°,acolr1);
+    anpol((0,tt*2),3,45°,acolr1);
+    anpol((1,tt*2),3,45°,acolr1);
+    anpol((.5,tt),3,45°,acolr1);
+    anpol((0,tt*2/3),3,45°,acolg1);
+    anpol((1,tt*2/3),3,45°,acolg1);
+    anpol((.5,tt*5/3),3,45°,acolg1);
+    anpol((0.5,tt*1/3),3,45°,acolb1);
+    anpol((0,tt*4/3),3,45°,acolb1);
+    anpol((1,tt*4/3),3,45°,acolb1);
+
+
+);
+annotp31m():=(
+    tt=sqrt(3/4);
+    afull((0,0),(1,0),acolge2);
+    afull((0,2*tt),(1,2*tt),acolge2);
+    afull((0,tt),(1,tt),acolge2);
+    afull((0,0),(1,2*tt),acolge2);
+    afull((1,0),(0,2*tt),acolge2);
+    adashed((0,1/2*tt),(1,1/2*tt),acolb2,20);
+    adashed((0,3/2*tt),(1,3/2*tt),acolb2,20);
+    adashed((0.5,0),(0,tt),acolb2,20);
+    adashed((0.5,0),(1,tt),acolb2,20);
+    adashed((0.5,2*tt),(0,tt),acolb2,20);
+    adashed((0.5,2*tt),(1,tt),acolb2,20);
+
+
+    anpol((0,0),3,45°,acolr1);
+    anpol((1,0),3,45°,acolr1);
+    anpol((0,tt*2),3,45°,acolr1);
+    anpol((1,tt*2),3,45°,acolr1);
+    anpol((.5,tt),3,45°,acolr1);
+    anpol((0,tt*2/3),3,45°+180°,acolb1);
+    anpol((1,tt*2/3),3,45°+180°,acolb1);
+    anpol((.5,tt*5/3),3,45°+180°,acolb1);
+    anpol((0.5,tt*1/3),3,45°,acolb1);
+    anpol((0,tt*4/3),3,45°,acolb1);
+    anpol((1,tt*4/3),3,45°,acolb1);
+
+
+);
+annotp6():=(
+    tt=sqrt(3/4);
+    anpol((0,0),6,45°,acolr1);
+    anpol((1,0),6,45°,acolr1);
+    anpol((0,tt*2),6,45°,acolr1);
+    anpol((1,tt*2),6,45°,acolr1);
+    anpol((.5,tt),6,45°,acolr1);
+    anpol((0,tt*2/3),3,45°,acolb1);
+    anpol((1,tt*2/3),3,45°,acolb1);
+    anpol((.5,tt*5/3),3,45°,acolb1);
+    anpol((0.5,tt*1/3),3,45°,acolb1);
+    anpol((0,tt*4/3),3,45°,acolb1);
+    anpol((1,tt*4/3),3,45°,acolb1);
+
+    anpol2((0,tt),2,0°,acolg1);
+    anpol2((1,tt),2,0°,acolg1);
+    anpol2((.5,2*tt),2,0°,acolg1);
+    anpol2((.5,0),2,0°,acolg1);
+    anpol2((.25,tt/2),2,-120°,acolg1);
+    anpol2((.75,tt/2),2,120°,acolg1);
+    anpol2((.25,3*tt/2),2,120°,acolg1);
+    anpol2((.75,3*tt/2),2,-120°,acolg1);
+
+
+);
+annotp6m():=(
+
+    tt=sqrt(3/4);
+
+    afull((0,0),(0,2*tt),acolge2);
+    afull((1,0),(1,2*tt),acolge2);
+    afull((.5,0),(.5,2*tt),acolge2);
+    afull((0,0),(1,2/3*tt),acolge2);
+    afull((0,2/3*tt),(1,4/3*tt),acolge2);
+    afull((0,4/3*tt),(1,2*tt),acolge2);
+    afull((1,0),(0,2/3*tt),acolge2);
+    afull((1,2/3*tt),(0,4/3*tt),acolge2);
+    afull((1,4/3*tt),(0,2*tt),acolge2);
+
+    afull((0,0),(1,0),acolr2);
+    afull((0,2*tt),(1,2*tt),acolr2);
+    afull((0,tt),(1,tt),acolr2);
+    afull((0,0),(1,2*tt),acolr2);
+    afull((1,0),(0,2*tt),acolr2);
+
+    adashed((1/4,0),(1/4,2*tt),acolb2,30);
+    adashed((3/4,0),(3/4,2*tt),acolb2,30);
+    adashed((.5,0),(1,1/3*tt),acolb2,10);
+    adashed((.5,0),(0,1/3*tt),acolb2,10);
+    adashed((0,1/3*tt),(1,3/3*tt),acolb2,20);
+    adashed((1,1/3*tt),(0,3/3*tt),acolb2,20);
+    adashed((0,5/3*tt),(1,3/3*tt),acolb2,20);
+    adashed((1,5/3*tt),(0,3/3*tt),acolb2,20);
+    adashed((0,5/3*tt),(1,7/3*tt),acolb2,20);
+    adashed((1,5/3*tt),(0,7/3*tt),acolb2,20);
+
+    adashed((0,1/2*tt),(1,1/2*tt),acolg2,20);
+    adashed((0,3/2*tt),(1,3/2*tt),acolg2,20);
+    adashed((.5,0),(1,tt),acolg2,20);
+    adashed((.5,0),(0,tt),acolg2,20);
+    adashed((.5,2*tt),(1,tt),acolg2,20);
+    adashed((.5,2*tt),(0,tt),acolg2,20);
+
+
+
+    anpol((0,0),6,45°,acolr1);
+    anpol((1,0),6,45°,acolr1);
+    anpol((0,tt*2),6,45°,acolr1);
+    anpol((1,tt*2),6,45°,acolr1);
+    anpol((.5,tt),6,45°,acolr1);
+    anpol((0,tt*2/3),3,45°,acolb1);
+    anpol((1,tt*2/3),3,45°,acolb1);
+    anpol((.5,tt*5/3),3,45°,acolb1);
+    anpol((0.5,tt*1/3),3,45°,acolb1);
+    anpol((0,tt*4/3),3,45°,acolb1);
+    anpol((1,tt*4/3),3,45°,acolb1);
+
+    anpol2((0,tt),2,0°,acolg1);
+    anpol2((1,tt),2,0°,acolg1);
+    anpol2((.5,2*tt),2,0°,acolg1);
+    anpol2((.5,0),2,0°,acolg1);
+    anpol2((.25,tt/2),2,-120°,acolg1);
+    anpol2((.75,tt/2),2,120°,acolg1);
+    anpol2((.25,3*tt/2),2,120°,acolg1);
+    anpol2((.75,3*tt/2),2,-120°,acolg1);
+);
+
+
+
+
+drawsym():=(
+    if(symannot,
+        canvas((0,0),(1,0),"annot",
+          if(groups_group=="p1",annotp1());
+          if(groups_group=="p2",annotp2());
+          if(groups_group=="pm",annotpm());
+          if(groups_group=="pg",annotpg());
+          if(groups_group=="cm",annotcm());
+          if(groups_group=="pmm",annotpmm());
+          if(groups_group=="pmg",annotpmg());
+          if(groups_group=="pgg",annotpgg());
+          if(groups_group=="cmm",annotcmm());
+          if(groups_group=="p4",annotp4());
+          if(groups_group=="p4m",annotp4m());
+          if(groups_group=="p4g",annotp4g());
+        );
+        canvas((0,0),(1,0),(0,sqrt(3/4)*2),"annot",
+          if(groups_group=="p3",annotp3());
+          if(groups_group=="p3m1",annotp3m1());
+          if(groups_group=="p31m",annotp31m());
+          if(groups_group=="p6",annotp6());
+          if(groups_group=="p6m",annotp6m());
+        );
+      );
+
+);
+
+drawtile():=(
+        clearimage("annot");
+        drawsym();
+        if(fundsel,
+            if(tiletype=="sq",
+              pol=polygon([D.xy,F.xy,E+F-D,E.xy]);
+              fillbounds=polygon([[-11,-11],[-11,11],[10,11],[10,-11]])--pol;
+              fill(fillbounds,alpha->0.5,color->(0,0,0));
+              draw(pol,color->(1,1,1));
+              canvas(D,F,"annot",
+                draw(pol,color->(1,1,1),size->3,alpha->.7);
+              );
+
+
+            );
+
+            if(tiletype=="r60",
+              verx=F-D;
+              very=E-D;
+              tri=verx*0.5+sqrt(3/4)*very;
+              pol=polygon([D.xy,F.xy,F+tri,D+tri]);
+              fillbounds=polygon([[-11,-11],[-11,11],[10,11],[10,-11]])--pol;
+              fill(fillbounds,alpha->0.5,color->(0,0,0));
+              draw(pol,color->(1,1,1));
+              canvas(D,F,"annot",
+                draw(D,F,color->(1,1,1),size->2,alpha->.7);
+                draw(D+(E-D)/2,F+(E-D)/2,color->(1,1,1),size->2,alpha->
+                .7);
+                draw(D,-D+E+F,color->(1,1,1),size->2,alpha->.7);
+              );
+             );
+      D.visible=true;
+      F.visible=true;
+      D.pinned=false;
+      F.pinned=false;
+,
+      D.visible=false;
+      F.visible=false;
+      D.pinned=true;
+      F.pinned=true;
+
+      );
+);
+
+drawtile2():=(
+        if(fundsel,
+            if(tiletype=="sq",
+              pol=polygon([D.xy,F.xy,E+F-D,E.xy]);
+              fillbounds=polygon([[-11,-11],[-11,11],[10,11],[10,-11]])--pol;
+              fill(fillbounds,alpha->0.5,color->(0,0,0));
+              draw(pol,color->(1,1,1));
+            );
+
+            if(tiletype=="r60",
+              verx=F-D;
+              very=E-D;
+              tri=verx*0.5+sqrt(3/4)*very;
+              pol=polygon([D.xy,F.xy,F+tri,D+tri]);
+              fillbounds=polygon([[-11,-11],[-11,11],[10,11],[10,-11]])--pol;
+              fill(fillbounds,alpha->0.5,color->(0,0,0));
+              draw(pol,color->(1,,1,1));
+             );
+      );
+);
+
+
+
+drawing():=(
+	        drawtile2();
+            fillpoly([[10,-100],[20,-100],[20,100],[10,100]],color->(1,1,1)*.05);
+            drawpoly([[10,-100],[20,-100],[20,100],[10,100]],color->(1,1,1)*.3);
+            xx=0;
+            yy=0;
+
+            colpos=[];
+
+            apply(1..ncols,y,
+                  pos=(xx*1.5+11,yy*1.5+10);
+                  apply(1..2,al,
+                        fillcircle(pos,.5-.02*al,color->cols_y,alpha->.9)
+                        );
+                  if(pencolor==y,
+                     drawcircle(pos,.55,size->5,color->(1,1,1),alpha->1),
+                     drawcircle(pos,.55,size->5,color->(1,1,1)*.3,alpha->1)
+
+                     );
+
+                  colpos=colpos++[pos];
+
+                  xx=xx+1;
+                  if(xx==5,xx=0;yy=yy-1);
+                  );
+
+
+                  grouppos=[];
+            xx=0;
+            yy=0;
+            apply(1..17,y,
+                  pos=(xx*1.5+11,yy*1.5-2.8);
+                  if(group==y,
+
+                    drawimage(pos,groups_y,scale->.38,alpha->1),
+                    drawimage(pos,groups_y,scale->.38,alpha->.4)
+                    );
+
+                  grouppos=grouppos++[pos];
+
+                  xx=xx+1;
+                  if(xx==5,xx=0;yy=yy-1);
+                  );
+
+            buttonpos=[];
+
+            xx=0;
+            yy=0;
+            apply(1..length(buttons),y,
+                  pos=(xx*1.35+10.8,yy*1.5-9.8);
+                    al=0.9;
+                    img=buttons_y;
+                    if( buttons_y=="redo" & redolist==[], al=0.4);
+                    if( buttons_y=="undo" & backind==0, al=0.4);
+                    if( buttons_y=="fund" & fundsel, img="fundh");
+                    if( buttons_y=="glow" & !glowing, img="noglow");
+                    if( buttons_y=="sym" & !symannot, img="nosym");
+                    drawimage(pos,img,scale->.70,alpha->al);
+
+
+                  buttonpos=buttonpos++[pos];
+
+                  xx=xx+1;
+                  if(xx==6,xx=0;yy=yy+1);
+                  );
+
+
+            drawimage(X-(1,0),"size",scale->.56,alpha->.8);
+            drawimage(Xsat-(1,0),"sat",scale->.56,alpha->.8);
+            drawimage(Xdark-(1,0),"dark",scale->.56,alpha->.8);
+            drawimage(Xalpha-(1,0),"alpha",scale->.56,alpha->.8);
+            drawimage(Xblur-(1,0),"blur",scale->.56,alpha->.8);
+            if(length(strokelist)<5,drawimage((-10.5,-10.5),(-4,-10.5),"iO",scale->.4,alpha->.8));
+//draw((10,-8.4),(20,-8.4),color->(1,1,1)*.5);
+            );
+
+
+quadrat=[D.xy,F.xy,E.xy];
+
+copyimage(a,b):=(
+   canvas((0,0),(1,0),b,
+     drawimage((0,0),(1,0),a);
+   );
+);
+
+cell=quadrat;
+bas=transpose([cell_2-cell_1,cell_3-cell_1]);
+tilesize=512;
+createimage("tile",tilesize,tilesize);
+createimage("annot",tilesize,tilesize);
+
+
+backind=0;
+backs=["back1","back2","back3","back4","back5","back6","back7","back8","back9","back10"];
+
+apply(backs,createimage(#,tilesize,tilesize));
+
+backmax=length(backs);
+strokeind=0;
+redolist=[];
+
+
+backup():=(
+  backind=backind+1;
+  if(backind>backmax,backind=backmax);
+  apply(reverse(1..(backmax-1)),copyimage(backs_#,backs_(#+1)));
+  copyimage("tile","back1");
+);
+
+undo():=(
+    if(backind>0,
+     backind=backind-1;
+
+     redolist=redolist++[strokelist_(-1)];
+     strokelist=apply(1..(length(strokelist)-1),strokelist_#);
+     noglow();
+     copyimage("back1","tile");
+
+     apply(1..(backmax-1),copyimage(backs_(#+1),backs_#));
+     if(glowing,glow(),noglow());
+    );
+);
+
+clearredo():=(
+ redolist=[]
+);
+
+redo():=(
+     if(redolist!=[],
+      backup();
+      strox=redolist_(-1);
+      redolist=apply(1..(length(redolist)-1),redolist_#);
+      strokelist=strokelist++[strox];
+      size=strox_1_1;
+      alpha=strox_1_2;
+      color=strox_1_3;
+      blur=strox_1_5;
+      glowing=strox_1_4;
+      setglow(strox_1_4);
+      setdot();
+      canvas(A,B,C,"tile",
+
+        apply(1..length(strox_2)-1,
+          draggingActionInLoop(strox_2_#,strox_2_(#+1));
+        );
+      );
+     );
+);
+
+
+noglow():=
+javascript("var ti=document.getElementById('tile');var context = ti.getContext('2d');context.globalCompositeOperation = 'source-over'");
+
+glow():=
+javascript("var ti=document.getElementById('tile');var context = ti.getContext('2d');context.globalCompositeOperation = 'lighter'");
+
+setglow():=if(glowing,glow(),noglow());
+setglow(glowing):=if(glowing,glow(),noglow());
+
+
+//javascript("document.getElementById('back4').style.display='inline';");
+//javascript("document.getElementById('back3').style.display='inline';");
+//javascript("document.getElementById('back2').style.display='inline';");
+//javascript("document.getElementById('back1').style.display='inline';");
+//javascript("document.getElementById('tile').style.display='inline';");
+//javascript("document.getElementById('annot').style.display='inline';");
+//javascript("document.getElementById('pen').style.display='inline';");
+
+reset():=(
+  err("RESET ORNAMENT");
+  backind=0;
+  redolist=[];
+  clearimage("tile");
+  canvas(A,B,"tile",
+         fillcircle((0,0),100,color->(0,0,0));
+        );
+
+   sc2=|D-F|;
+   C.xy=A-pp(B-A)*str_2;
+
+   canvas(A,B,C,"tile",
+
+    apply(strokelist,strox,
+     size=strox_1_1;
+     alpha=strox_1_2;
+     color=strox_1_3;
+      blur=strox_1_5;
+      glowing=strox_1_4;
+      setglow(strox_1_4);
+     setdot();
+     apply(1..(length(strox_2)-1),
+       draggingActionInLoop(strox_2_#,strox_2_(#+1));
+     );
+   );
+  );
+);
+reset();
+
+
+resetdraw():=(
+  clearimage("tile");
+  backind=0;
+  redolist=[];
+  canvas(A,B,"tile",
+         fillcircle((0,0),100,color->(0,0,0));
+        );
+
+   sc2=|D-F|;
+   C.xy=A-pp(B-A)*str_2;
+   strokecount=1;
+   linecount=1;
+   playanimation();
+
+);
+
+fundsel=false;
+glowing=false;
+symannot=false;
+
+</script>
+
+  <script id="app_cinderella_07_cstick" type="text/x-cindyscript">
+
+    if(strokecount>length(strokelist),pauseanimation(),
+        canvas(A,B,C,"tile",
+            strox=strokelist_strokecount;
+     size=strox_1_1;
+     alpha=strox_1_2;
+     color=strox_1_3;
+      blur=strox_1_5;
+      glowing=strox_1_4;
+     setglow(strox_1_4);
+     setdot();
+     if(linecount==1,backup());
+     apply(linecount..min((length(strox_2)-1),linecount+10),
+
+       draggingActionInLoop(strox_2_#,strox_2_(#+1));
+       linecount=#;
+     );
+
+      if(linecount> length(strox_2)-1,
+        strokecount=strokecount+1;linecount=1,
+        linecount=linecount+1;
+      );
+    );
+);
+
+
+</script>
+
+
+
+  <script type="text/javascript">
+
+    var callhandle=function(){
+
+      setuptexture(document.getElementById("tile"),1,false);
+      setuptexture(document.getElementById("annot"),0,true);
+    }
+
+
+    var ypos=4.8;
+    var ydiff=1.3;
+    (function(){
+      var uid = 'app_cinderella_07_iOrnament_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
+      document.write( "<canvas id=\"" + uid + "\" width=\"1560\" height=\"1170\"></canvas>" );
+
+      var cdy07 = createCindy({
+        scripts: "app_cinderella_07_cs*",
+        defaultAppearance: {},
+        ports: [{
+          id: uid,
+          transform: [{visibleRect: [-8.5, 11, 16, -11]}],
+          width: 1560,
+          height: 1170
+        }],
+        geometry: [
+          {"name": "A","type": "Free","pos": [-10,-10],"color": [1,0,0],"visible":false,"pinned":true},
+          {"name": "B","type": "Free","pos": [10,-10],"color": [1,0,0],"pinned":true,"visible":false},
+          {"name": "C","type": "Free","pos": [-10,10],"color": [1,0,0],"pinned":true,"visible":false},
+          {"name": "D","type": "Free","pos": [0,0],"color": [.4,.4,.4],"pinned":true,"visible":true,"narrow":100},
+          {"name": "E","type": "Free","pos": [1,0],"color": [.4,.4,.4],"pinned":true,"visible":false},
+          {"name": "F","type": "Free","pos": [5.5,1.5],"color": [1,1,1],"pinned":false,"visible":true,"narrow":100},
+
+          {"name": "X","type": "Free","pos": [ 12.5,ypos],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "Y","type": "Free","pos": [ 17.5,ypos],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "r","type": "Segment","args": ["X","Y"],"color": [.6,.6,.6],"visible":true,size:1.5},
+          {"name": "Z","type": "PointOnLine","pos": [ 14,ypos],"args":["r"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
+          {"name": "rx","type": "Segment","args": ["X","Z"],"color": [1,1,1],"visible":true,size:2.5},
+
+          {"name": "Xsat","type": "Free","pos": [ 12.5,ypos-ydiff],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "Ysat","type": "Free","pos": [ 17.5,ypos-ydiff],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "rsat","type": "Segment","args": ["Xsat","Ysat"],"color": [.6,.6,.6],"visible":true,size:1.5},
+          {"name": "Zsat","type": "PointOnLine","pos": [ 17,ypos-ydiff],"args":["rsat"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
+          {"name": "rxsat","type": "Segment","args": ["Xsat","Zsat"],"color": [1,1,1],"visible":true,size:2.5},
+
+          {"name": "Xdark","type": "Free","pos": [ 12.5,ypos-ydiff*2],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "Ydark","type": "Free","pos": [ 17.5,ypos-ydiff*2],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "rdark","type": "Segment","args": ["Xdark","Ydark"],"color": [.6,.6,.6],"visible":true,size:1.5},
+          {"name": "Zdark","type": "PointOnLine","pos": [ 17.5,ypos-ydiff*2],"args":["rdark"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
+          {"name": "rxdark","type": "Segment","args": ["Xdark","Zdark"],"color": [1,1,1],"visible":true,size:2.5},
+
+          {"name": "Xalpha","type": "Free","pos": [ 12.5,ypos-ydiff*3],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "Yalpha","type": "Free","pos": [ 17.5,ypos-ydiff*3],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "ralpha","type": "Segment","args": ["Xalpha","Yalpha"],"color": [.6,.6,.6],"visible":true,size:1.5},
+          {"name": "Zalpha","type": "PointOnLine","pos": [ 17.5,ypos-ydiff*3],"args":["ralpha"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
+          {"name": "rxalpha","type": "Segment","args": ["Xalpha","Zalpha"],"color": [1,1,1],"visible":true,size:2.5},
+
+          {"name": "Xblur","type": "Free","pos": [ 12.5,ypos-ydiff*4],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "Yblur","type": "Free","pos": [ 17.5,ypos-ydiff*4],"color": [1,1,1],"pinned":true,"visible":false},
+          {"name": "rblur","type": "Segment","args": ["Xblur","Yblur"],"color": [.6,.6,.6],"visible":true,size:1.5},
+          {"name": "Zblur","type": "PointOnLine","pos": [ 13,ypos-ydiff*4],"args":["rblur"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
+          {"name": "rxblur","type": "Segment","args": ["Xblur","Zblur"],"color": [1,1,1],"visible":true,size:2.5},
+
+
+
+
+          {"name": "Dummy","type": "Free","pos": [0,0],"color": [1,0,0],"visible":false,"pinned":false},
+        ],
+        images:{
+          "trash":"img/Trash.png",
+          "fund":"img/Fund.png",
+          "fundh":"img/FundHig.png",
+          "undo":"img/Undo.png",
+          "redo":"img/Redo.png",
+          "sat":"img/SSat.png",
+          "blur":"img/SBlur.png",
+          "alpha":"img/SAlpha.png",
+          "size":"img/SBlurX.png",
+          "dark":"img/SDark.png",
+          "dot":"img/qParticle.png",
+          "cm":"img/qcm.png",
+          "cmm":"img/qcmm.png",
+          "p1":"img/qp1.png",
+          "p2":"img/qp2.png",
+          "p3":"img/qp3.png",
+          "p3m1":"img/qp3m1.png",
+          "p4":"img/qp4.png",
+          "p4g":"img/qp4g.png",
+          "p4m":"img/qp4m.png",
+          "p6":"img/qp6.png",
+          "p6m":"img/qp6m.png",
+          "p31m":"img/qp31m.png",
+          "pg":"img/qpg.png",
+          "pgg":"img/qpgg.png",
+          "pm":"img/qpm.png",
+          "pmg":"img/qpmg.png",
+          "pmm":"img/qpmm.png",
+          "iO":"img/iO6.png",
+          "glow":"img/GlowPen1B.png",
+          "noglow":"img/GlowPen1.png",
+          "sym":"img/MathButtonB.png",
+          "nosym":"img/MathButton.png"
+
+        }
+      });
+    })();
+  </script>
+
+  <script>
+
+
+
+    var setuptexture=function(image,slot,mipmap){
+      var gl=handle.gl;
+      var currentProgram=handle.currentProgram;
+      gl.useProgram(currentProgram);
+
+      var texCoordBuffer = gl.createBuffer();
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+
+
+
+      // Create a texture.
+      var texture = gl.createTexture();
+      if(slot==0){
+        gl.activeTexture(gl.TEXTURE0);
+        gl.uniform1i(gl.getUniformLocation(currentProgram, "u_image0"), 0);
+      }
+      if(slot==1){
+        gl.activeTexture(gl.TEXTURE1);
+        gl.uniform1i(gl.getUniformLocation(currentProgram, "u_image1"), 1);
+      }
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+
+      // Set the parameters so we can render any size image.
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      if(mipmap){
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+        gl.generateMipmap(gl.TEXTURE_2D);
+      };
+
+      //   gl.bindTexture(gl.TEXTURE_2D, null);
+    };
+
+
+
+
+  </script>
+</body>
+</html>

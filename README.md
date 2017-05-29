@@ -30,6 +30,12 @@ within its directory.
 
 To only install one or more apps (instead of the whole collection) copy the app directory and the **common** directory.
 
+## Embedding
+
+Each app includes an app.html file in which it runs at a fixed size and an index.html file that embeds the app in a 
+container that resizes to fill the whole window by using the cindy-viewer library. See the "viewer/README.md" file
+for instructions to embed the apps in your own pages / apps in containers of any size.
+
 ## i18n
 
 The apps can be loaded in a different language by passing the language code through the `lang` query string parameter.
@@ -56,11 +62,12 @@ The directory *sample* has a template of the files needed to add a new applicati
 
 ## Application adaptation
 
-Some standard steps performed to adapt apps:
+Some standard steps performed to adapt fixed size apps (those that require a specific resolution to work well):
 
-- Make sure the app's canvas is wrapped in `<div class="app"></div>`
-- In the CreateCindy call, on the **ports** attribute add `fill: "window"`
+- Make sure the app's canvas is wrapped in `<div class="app-fixedsize"></div>`
+- In the CreateCindy call, on the **ports** attribute add the `width` and `height` attributes.
 - Use a <canvas> with no width or height
+- Create an index.html that loads the app through the cindy-viewer
 
 ### Making CindyJS apps translatable
 
