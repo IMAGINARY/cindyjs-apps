@@ -1,3 +1,112 @@
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 100;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-Thin.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 100;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-ThinItalic.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 200;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-ExtraLight.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 200;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-ExtraLightItalic.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-Light.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 300;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-LightItalic.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-Regular.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 400;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-Italic.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-Medium.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 500;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-MediumItalic.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-SemiBold.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 600;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-SemiBoldItalic.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-Bold.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 700;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-BoldItalic.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 800;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-ExtraBold.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 800;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-ExtraBoldItalic.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: normal;
+  font-weight: 900;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-Black.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "fira-sans-condensed";
+  font-style: italic;
+  font-weight: 900;
+  src: url("../fonts/Fira_Sans_Condensed/FiraSansCondensed-BlackItalic.ttf") format("truetype"); }
+
 html {
   width: 100%;
   height: 100%;
@@ -53,4 +162,31 @@ body {
 .app-exp canvas {
   margin: 0 auto;
   display: block;
+}
+
+.credits {
+  text-align: center;
+  font-family: "Fira Sans Condensed";
+  text-transform: uppercase;
+  font-size: 3vh;
+  line-height: 4.5vh;
+  color: #fff;
+}
+
+.credits h1 {
+  font-size: 5vh;
+  margin: 5vh 0;
+}
+
+.credits p {
+  margin-bottom: 4.5vh;
+}
+
+.credits .normalcaps {
+  text-transform: none;
+}
+
+.credits .qr {
+  height: 27vh;
+  margin: 3vh;
 }
