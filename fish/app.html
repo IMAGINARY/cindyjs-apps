@@ -20,13 +20,17 @@
                feed=false;
         </script>
 
-  <script id='app_cinderella_11_csinit' type='cindyscript'>
-             playanimation();
-                              feed=false;
 
-               pts=allmasses()--[K,L,J];
+  <script id='app_cinderella_11_csinit' type='cindyscript'>
+
+pond1=[[-9.5,-9.5],[-9.5,9.5],[9.5,9.5],[9.5,-9.5]];
+
+playanimation();
+feed=false;
+pts=allmasses()--[K,L,J];
 pts=select(pts,(#.size)<9);
-apply(pts,#:"vold"=#.v);
+// This line below caused errors
+ // apply(pts,#:"vold"=#.v);
 apply(pts,#.pinned=true);
 
       sizes=apply(pts,random()*.6+.5);
@@ -41,6 +45,7 @@ resume():=(
   playanimation();
 );
         </script>
+
 
   <script id='app_cinderella_11_csmove' type='cindyscript'>
 
@@ -123,6 +128,7 @@ forall(pts,m,
 );
 
 
+fillpoly(pond1,color->[0,0.2470588235,0.4117647059]);
 
 nn=length(pts);
 forall(1..nn,p=pts_#;
@@ -165,18 +171,15 @@ drawtext(U1+(.0,-.5),international("SPEED"),size->22,color->(1,1,1));
       document.write( "<canvas id=\"" + uid + "\"></canvas>" );
 
       var nn=30;
-      var b=10;
+      var b=9;
       var gslp=[
-        {name:"B", type:"Free", pos:[-b,b],color:[0,0,0],size:3,pinned:true},
-        {name:"C", type:"Free", pos:[-b,-b],color:[0,0,0],size:3,pinned:true},
-        {name:"D", type:"Free", pos:[b,-b],color:[0,0,0],size:3,pinned:true},
-        {name:"E", type:"Free", pos:[b,b],color:[0,0,0],size:3,pinned:true},
+        {name:"B", type:"Free", pos:[-b,b],color:[0,0.2470588235,0.4117647059],alpha:0,size:0,pinned:true},
+        {name:"C", type:"Free", pos:[-b,-b],color:[0,0.2470588235,0.4117647059],alpha:0,size:0,pinned:true},
+        {name:"D", type:"Free", pos:[b,-b],color:[0,0.2470588235,0.4117647059],alpha:0,size:0,pinned:true},
+        {name:"E", type:"Free", pos:[b,b],color:[0,0.2470588235,0.4117647059],alpha:0,size:0,pinned:true},
         {name:"K", type:"Free", pos:[-6,-2],color:[.7,.7,1],size:13,narrow:100},
         {name:"J", type:"Free", pos:[4,3],color:[.7,.7,1],size:13,narrow:100},
         {name:"L", type:"Free", pos:[-2,7],color:[.7,.7,1],size:13,narrow:100},
-
-
-
         {name:"S1", type:"Free", pos:[10.5,6],color:[0,0,0],pinned:true,size:2},
         {name:"S2", type:"Free", pos:[16,6],color:[0,0,0],pinned:true,size:2},
         {name:"S", type:"Free", pos:[12.5,6],color:[1,0.5,0.5],pinned:false,size:9,narrow:100},
@@ -195,10 +198,10 @@ drawtext(U1+(.0,-.5),international("SPEED"),size->22,color->(1,1,1));
         {name:"U", type:"Free", pos:[12,-2],color:[0.5,0.5,1],pinned:false,size:9,narrow:100},
         {name:"r", type:"Segment", args:["U1","U2"],color:[1,1,1],pinned:false,size:4},
 
-        {name:"a", type:"Segment", args:["B","C"],color:[1,1,1],size:1 },
-        {name:"b", type:"Segment", args:["C","D"],color:[1,1,1],size:1 },
-        {name:"c", type:"Segment", args:["D","E"],color:[1,1,1],size:1 },
-        {name:"d", type:"Segment", args:["E","B"],color:[1,1,1],size:1 }
+        {name:"a", type:"Segment", args:["B","C"],color:[0,0,0],size:0 },
+        {name:"b", type:"Segment", args:["C","D"],color:[0,0,0],size:0 },
+        {name:"c", type:"Segment", args:["D","E"],color:[0,0,0],size:0 },
+        {name:"d", type:"Segment", args:["E","B"],color:[0,0,0],size:0 }
 
 
 
