@@ -1,4 +1,9 @@
 {
+  "id": "app-id",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
   "name": {
     "en": "App name",
     "de": "App name",
