@@ -1,12 +1,19 @@
 {
+  "id": "platonic-solids",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
   "name": {
     "en": "Platonic Solids",
     "de": "Platonische Körper",
-    "es": "Sólidos platónicos"
+    "es": "Sólidos platónicos",
+    "ch": "正多面体"
   },
   "description": {
     "en": "",
     "de": "Hier können platonische Körper ineinander geschachtelt werden. Man achte auf die Vielfalt an Querbeziehungen, die sich durch die Art des Schachtelns ergeben.",
-    "es": ""
+    "es": "",
+    "ch": ""
   }
 }

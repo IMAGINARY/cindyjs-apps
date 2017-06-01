@@ -1,12 +1,19 @@
 {
+  "id": "kaleidoskop",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
   "name": {
     "en": "Kaleidoscope",
     "de": "Kaleidoskop",
-    "es": "Caleidoscopio"
+    "es": "Caleidoscopio",
+    "ch": "万花筒"
   },
   "description": {
     "en": "",
     "de": "Bei diesem Kaleidoskop mit 3 Spiegeln ergeben sich Muster, die sich ins Unendliche fortsetzen. Am großen Schiebeschalter kann man einstellen, wie oft gespiegelt werden soll. An den Punkten läßt sich die Position von Bild und Kaleidoskop verändern.",
-    "es": ""
+    "es": "",
+    "ch": ""
   }
 }

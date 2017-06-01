@@ -1,12 +1,19 @@
 {
+  "id": "fish",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
   "name": {
     "en": "Swarm simulator",
     "de": "Schwarmsimulator",
-    "es": "Cardumen"
+    "es": "Cardumen",
+    "ch": "群体模拟器"
   },
   "description": {
     "en": "",
     "de": "Das Schwarmverhalten entsteht dadurch, dass jeder Fisch einfachen Regeln folgt: anderen Fischen und Hindernissen ausweichen, zu den Nachbarfischen und mit ihnen schwimmen, oder einfach weiter schwimmen. Über die Schieberegel kann man die Parameter dieser Regeln anpassen.",
-    "es": ""
+    "es": "",
+    "ch": ""
   }
 }

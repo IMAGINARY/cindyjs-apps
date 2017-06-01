@@ -1,12 +1,19 @@
 {
+  "id": "polytope-morpher",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
   "name": {
     "en": "Polyhedra",
     "de": "Polyeder basteln",
-    "es": "Poliedros"
+    "es": "Poliedros",
+    "ch": "多面体"
   },
   "description": {
     "en": "",
     "de": "Ausgehend von einem platonischen Körper kann man durch das Anwenden von drei Operationen neue symmetrische Körper erzeugen. Ein Druck auf den Zauberstab übernimmt das aktuelle Objekt als neuen Ausgangspunkt für die Verformungen.",
-    "es": ""
+    "es": "",
+    "ch": ""
   }
 }

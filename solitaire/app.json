@@ -1,12 +1,19 @@
 {
+  "id": "solitaire",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
   "name": {
     "en": "Solitaire",
     "de": "Solitaire-Spiel",
-    "es": "Solitario"
+    "es": "Solitario",
+    "ch": "纸牌"
   },
   "description": {
     "en": "",
     "de": "In jedem Spielzug überspringt man mit einer Kugel eine andere, die dann weggenommen wird. Nach 13 Zügen soll nur noch eine Kugel übrig bleiben. Das Ganze ist gar nicht so einfach. Profis schaffen es, den letzten Spielstein dort zu positionieren, wo zu Beginn das Loch war.",
-    "es": ""
+    "es": "",
+    "ch": ""
   }
 }

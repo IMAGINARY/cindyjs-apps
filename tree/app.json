@@ -1,12 +1,19 @@
 {
+  "id": "tree",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
   "name": {
     "en": "A Tree",
     "de": "Ein Baum",
-    "es": "Árbol"
+    "es": "Árbol",
+    "ch": "树"
   },
   "description": {
     "en": "",
     "de": "",
-    "es": ""
+    "es": "",
+    "ch": ""
   }
 }

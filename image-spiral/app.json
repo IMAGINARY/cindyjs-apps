@@ -1,12 +1,19 @@
 {
+  "id": "image-spiral",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
   "name": {
     "en": "Spiral",
     "de": "Spirale",
-    "es": "Espiral"
+    "es": "Espiral",
+    "ch": "螺旋线"
   },
   "description": {
     "en": "",
     "de": "Ein Bild wird um ein Zentrum gedreht und gestaucht oder gestreckt, das nennt man eine <em>Drehstreckung</em>. Das so veränderte Bild wird wieder gedreht und um denselben Faktor gestaucht oder gestreckt und so weiter. Dadurch entstehen wie von selbst faszinierende Bilder.",
-    "es": ""
+    "es": "",
+    "ch": ""
   }
 }
