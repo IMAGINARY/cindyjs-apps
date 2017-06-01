@@ -8,12 +8,14 @@
     "en": "Light beam",
     "de": "Lichtstrahl",
     "es": "Rayo de luz",
-    "ch": "光束"
+    "ch": "光束",
+    "ru": "Луч света"
   },
   "description": {
     "en": "",
     "de": "Wenn sich ein Lichtstrahl zwischen kreisförmigen Spiegeln reflektiert, entsteht deterministisches Chaos: eine kleine Änderung kann unvorhersehbare Auswirkungen haben. Was passiert, wenn der Lichtstrahl im Inneren eines Kreises startet?",
     "es": "",
-    "ch": ""
+    "ch": "",
+    "ru": ""
   }
 }

@@ -8,12 +8,14 @@
     "en": "A Tree",
     "de": "Ein Baum",
     "es": "Árbol",
-    "ch": "树"
+    "ch": "树",
+    "ru": "Дерево"
   },
   "description": {
     "en": "",
     "de": "",
     "es": "",
-    "ch": ""
+    "ch": "",
+    "ru": ""
   }
 }
