@@ -1,0 +1,67 @@
+.main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  @include outer-container;
+  position: relative;
+}
+
+.col-full,
+.col-12 {
+  @include span-columns(12);
+}
+
+.col-11 {
+  @include span-columns(11);
+}
+
+.col-10 {
+  @include span-columns(10);
+}
+
+.col-9 {
+  @include span-columns(9);
+}
+
+.col-8 {
+  @include span-columns(8);
+}
+
+.col-7 {
+  @include span-columns(7);
+}
+
+.col-6 {
+  @include span-columns(6);
+}
+
+.col-5 {
+  @include span-columns(5);
+}
+
+.col-4 {
+  @include span-columns(4);
+}
+
+.col-3 {
+  @include span-columns(3);
+}
+
+.col-2 {
+  @include span-columns(2);
+}
+
+.col-1 {
+  @include span-columns(1);
+}
+
+@include responsive($xs) {
+  .col-11, .col-10, .col-9, .col-8, .col-7,
+  .col-6, .col-5, .col-4, .col-3, .col-2, .col-1 {
+
+    @include span-columns(12);
+  }
+}

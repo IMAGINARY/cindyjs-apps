@@ -1,0 +1,41 @@
+$base-font-size: 2.3vh;
+$base-line-height: 1.2em;
+
+$large-line-height: 25px;
+
+// Base (morphological) styles
+
+@mixin smallText {
+  @include FiraSansCondensed;
+  font-size: 1.7vh;
+  line-height: $base-line-height;
+}
+
+@mixin regularText {
+  @include FiraSansCondensed;
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+}
+
+@mixin largeHeading {
+  font-size: 5vh;
+  line-height: 5vh;
+  text-transform: uppercase;
+}
+
+@mixin mediumHeading {
+  @include FiraSansCondensed;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-size: 3vh;
+  line-height: 3vh;
+}
+
+@mixin smallHeading {
+  @include FiraSansCondensed;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 3vh;
+  line-height: 3vh;
+}

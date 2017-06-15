@@ -1,0 +1,63 @@
+@mixin image-replace {
+  display: block;
+  text-indent: -100em;
+  white-space: nowrap;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+
+@mixin image-replace-src($image, $width, $height) {
+  background-image: url($image);
+  width: $width;
+  height: $height;
+}
+
+@mixin opacity($opacity) {
+  filter: unquote("progid:DXImageTransform.Microsoft.Alpha(Opacity=#{round($opacity * 100)})");
+  opacity: $opacity;
+}
+
+@mixin unselectable {
+  -webkit-touch-callout: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+@mixin clearfix {
+  &:before, &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+/* http://sonspring.com/journal/clearing-floats */
+
+.clear {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+/* Clearfix */
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+/* For IE 6/7 only */
+.clearfix {
+    *zoom: 1;
+}

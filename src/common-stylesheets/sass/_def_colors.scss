@@ -1,0 +1,16 @@
+$color-white-real: #fff;
+$color-black-real: #000;
+
+$color-white: $color-white-real;
+$color-black: $color-black-real;
+
+$color-background: $color-black;
+$color-text: $color-white;
+$color-text-dim: $color-black;
+$color-link: $color-white;
+$color-link-hover: $color-white;
+
+@mixin neg {
+  color: $color-white;
+  -webkit-font-smoothing: antialiased !important;
+}

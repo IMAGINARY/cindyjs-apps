@@ -1,0 +1,30 @@
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-Thin", 100, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-ThinItalic", 100, italic, $file-formats: ttf);
+
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-ExtraLight", 200, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-ExtraLightItalic", 200, italic, $file-formats: ttf);
+
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-Light", 300, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-LightItalic", 300, italic, $file-formats: ttf);
+
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-Regular", 400, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-Italic", 400, italic, $file-formats: ttf);
+
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-Medium", 500, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-MediumItalic", 500, italic, $file-formats: ttf);
+
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-SemiBold", 600, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-SemiBoldItalic", 600, italic, $file-formats: ttf);
+
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-Bold", 700, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-BoldItalic", 700, italic, $file-formats: ttf);
+
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-ExtraBold", 800, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-ExtraBoldItalic", 800, italic, $file-formats: ttf);
+
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-Black", 900, normal, $file-formats: ttf);
+@include font-face("fira-sans-condensed", "../fonts/Fira_Sans_Condensed/FiraSansCondensed-BlackItalic", 900, italic, $file-formats: ttf);
+
+@mixin FiraSansCondensed {
+  font-family: 'fira-sans-condensed', 'sans-serif';
+}
