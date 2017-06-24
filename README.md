@@ -81,7 +81,7 @@ Some standard steps performed to adapt fixed size apps (those that require a spe
 
     Add the following to the header below the other `<script>` elements:
     
-    `<script type="text/javascript" src="../common/js/i18n4js-1.2.0.min.js"></script>`
+    `<script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>`
 
 1. **Add the following snippet before the call to createCindy:**
 
