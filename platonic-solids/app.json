@@ -8,14 +8,14 @@
     "en": "Platonic Solids",
     "de": "Platonische Körper",
     "es": "Sólidos platónicos",
-    "ch": "正多面体",
+    "zh": "正多面体",
     "ru": "Платоновские тела"
   },
   "description": {
     "en": "",
     "de": "Hier können platonische Körper ineinander geschachtelt werden. Man achte auf die Vielfalt an Querbeziehungen, die sich durch die Art des Schachtelns ergeben.",
     "es": "",
-    "ch": "",
+    "zh": "",
     "ru": ""
   }
 }

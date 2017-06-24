@@ -8,14 +8,14 @@
     "en": "Car park",
     "de": "Ausparken",
     "es": "Estacionamiento",
-    "ch": "停车场",
+    "zh": "停车场",
     "ru": "Распарковка"
   },
   "description": {
     "en": "",
     "de": "Wer schafft es, das rote Rennauto auszuparken? Leider stehen einige Autos im Weg, denen wiederum andere Autos im Weg stehen. Dieses Knobelspiel wurde 1970 von Nobuyuki Yoshigahara erfunden.",
     "es": "",
-    "ch": "",
+    "zh": "",
     "ru": ""
   }
 }
