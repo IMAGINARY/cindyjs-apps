@@ -687,7 +687,7 @@ p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, table, address, fieldset, figure
     text-transform: none; }
   .credits .longtext {
     font-family: 'fira-sans-condensed', 'sans-serif';
-    font-size: 2.3vh;
+    font-size: 2vh;
     line-height: 1.2em;
     text-transform: none;
     max-width: 80%;

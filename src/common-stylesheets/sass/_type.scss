@@ -7,7 +7,7 @@ $large-line-height: 25px;
 
 @mixin smallText {
   @include FiraSansCondensed;
-  font-size: 1.7vh;
+  font-size: 2vh;
   line-height: $base-line-height;
 }
 

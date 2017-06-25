@@ -27,7 +27,7 @@
   }
 
   .longtext {
-    @include regularText;
+    @include smallText;
     text-transform: none;
     max-width: 80%;
     margin-left: 10%;
