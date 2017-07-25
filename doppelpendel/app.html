@@ -40,8 +40,8 @@ restrict(G,minpt,maxpt);
 drawpoly(button1,color->gray(.8),size->4);
 fillpoly(button2,color->gray(if(pressed2,.3,.5)));
 drawpoly(button2,color->gray(.8),size->4);
-drawtext(button1_1+(2,.5),if(pressed1,international("STOP"),international("START")),color->(1,1,1),size->34);
-drawtext(button2_1+(2,.5),international("TRACE"),color->(1,1,1),size->34);
+drawtext(button1_1+(3,.5),if(pressed1,international("STOP"),international("START")),color->(1,1,1),size->34, align->"mid");
+drawtext(button2_1+(3,.5),international("TRACE"),color->(1,1,1),size->34, align->"mid");
 draw(F,G, arrow->true,size->7,color->(1,1,1));
 
 if(pressed2,
