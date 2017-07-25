@@ -1,0 +1,19 @@
+{
+  "id": "whitney",
+  "version": "1.4.0",
+  "main": "app.html",
+  "width": 1024,
+  "height": 768,
+  "name": {
+    "en": "Whitney Music Box",
+    "de": "Whitney Spieluhr",
+    "es": "Caja musical de Whitney",
+    "ru": "Музыкальная Шкатулка Уитни",
+    "ro": "Cutia muzicală Whitney"
+  },
+  "description": {
+    "en": "",
+    "de": "",
+    "es": ""
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "euclidian-rhythm",
+  "version": "1.4.0",
+  "main": "app.html",
+  "width": 1024,
+  "height": 768,
+  "name": {
+    "en": "Euclidean Rhythm",
+    "de": "Euklidischer Rhythmus",
+    "es": "Ritmo Euclidiano",
+    "ru": "Ритм Евклида",
+    "ro": "Ritm euclidian"
+  },
+  "description": {
+    "en": "",
+    "de": "",
+    "es": ""
+  }
+}

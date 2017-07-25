@@ -23,12 +23,44 @@ Since these apps come from the CindyJS distribution or external sources our modi
  be applied on top of the original sources with as little modification to them as possible. We should strive to
  easily incorporate any updates and enhancements to the originals.
 
+
+## Apps included
+
+### Classic apps
+
+- ausparken
+- doppelpendel
+- fish
+- image-spiral
+- iornament
+- kaleidoskop
+- platonic-solids
+- polytope-morpher
+- solitaire
+- sphere-chaos
+- tree
+
+### Music apps
+
+- euclidian-rhythm
+- pachelbel-canon
+- mozart-dice
+- whitney
+- sequenzer
+
+### Auxiliary apps
+
+- info
+- sample
+
 ## Installation
 
 Just copy the files to the public folder of a web server. Run an app by opening its main file (index.html) from
 within its directory.
 
 To only install one or more apps (instead of the whole collection) copy the app directory and the **common** directory.
+
+The music apps require you also copy the **common-music** directory.
 
 ## Embedding
 

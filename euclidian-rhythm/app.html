@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Euclidean Rhythm</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common-music/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common-music/js/midi/MIDI.js"></script>
+  <script type="text/javascript" src="../common-music/js/midi-plugin.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/drumset-mp3.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
+</head>
+<body>
+<div class="app-fixedsize app-fixedsize-med">
+<div id="CSCanvas"></div>
+<script id="csmouseup" type="text/x-cindyscript">
+moving=[];
+
+if(|mouse().xy,G.xy|<2,
+  if(isrunning,
+    stopanimation();isrunning=false;
+  ,
+    playanimation();isrunning=true;
+  );
+
+)
+
+
+;
+;
+</script>
+<script id="cssimulationstart" type="text/x-cindyscript">
+t0=seconds();
+t=0;
+ot=-.0001;
+sq=[];
+
+to=-.0001;
+
+//-t0;
+
+seco=seconds();
+
+
+isrunning=true;
+
+
+
+;
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+N.xy=(-7,-25);
+X.xy=(23,-25);
+Y.xy=(23,25);
+Z.xy=(-7,25);
+
+fill(polygon(screenbounds())--polygon((N,X,Y,Z))
+,color->(.6,.8,.8)*.8,alpha->1);
+fill(polygon((N,X,Y,Z)),color->(.6,.8,.8));
+
+//draw(polygon((N,X,Y,Z)),color->(0,0,0),size->2);
+
+if(isrunning,
+  drawimage(G.xy,"stop",scale->.5),
+  drawimage(G.xy,"play",scale->.5)
+);
+
+
+
+dir=(0,1);
+st=(0,0);
+L.xy=round(L);
+ll=round(L.xy);
+len=round(L.x);
+
+drawtext(L+(.5,.5),len,size->16);
+xx=movers_3;
+yy=movers_4;
+
+xx=(xx-F);
+xx=xx/|xx|;
+
+yy=(yy-M);
+yy=yy/|yy|;
+
+
+sh=arctan2(xx.x,xx.y)/360°;
+sh2=arctan2(yy.x,yy.y)/360°;
+
+sh=round(sh*len)/len;
+sh2=round(sh2*len)/len;
+
+xx=(cos(sh*2*pi),sin(sh*2*pi));
+yy=(cos(sh2*2*pi),sin(sh2*2*pi));
+
+xx=F+xx*2;
+yy=M+yy*2;
+
+vol1=|Q,U|/|Q,R|;
+vol2=|S,V|/|S,T|;
+vol3=|P1,P5|/|P1,P2|;
+vol4=|P3,P6|/|P3,P4|;
+
+
+bb=movers_1;
+bb_1=L.x;
+dd=movers_2;
+dd_1=L.x;
+if(bb_2<A.y,bb_2=A.y);
+if(bb_2>A.y+bb.x,bb_2=A.y+bb.x);
+if(dd.y<C.y,dd_2=C.y);
+if(dd.y>C.y+dd.x,dd_2=C.y+dd.x);
+
+apply(1..len,w=#/(len)*360°;
+  draw(F+2*(cos(w),sin(w)),color->(0,0,0),size->1.5);
+  draw(M+2*(cos(w),sin(w)),color->(0,0,0),size->1.5);
+);
+
+A.xy=round(A);
+bb=round(bb);
+dd=round(dd);
+del=bb.y/bb.x;
+del2=(dd.y-C.y)/(dd.x-C.x);
+draw(ll,bb,dashtype->3,color->(0,0,0),size->1.5);
+draw(A,(ll.x,A.y),color->(0,0,0),size->1.5);
+draw(bb,(ll.x,A.y),color->(0,0,0),size->1.5);
+draw(dd,(ll.x,C.y),color->(0,0,0),size->1.5);
+draw(C,(ll.x,C.y),color->(0,0,0),size->1.5);
+
+drawtext(bb+(.5,.5),bb.y,size->16);
+drawtext(dd+(.5,.5),dd.y-C.y,size->16);
+
+
+
+pat1=[];
+apply((A.x)..round(bb.x-1),
+  w1=floor(del*#+1+sh+.00000000001);
+  w2=floor(del*(#-1)+1+sh+.00000000001);
+  fillpolygon(((#,0),(#+1,0),(#+1,w1),(#,w1)),alpha->.4,color->(1,.4,.4));
+   if(w1>w2,
+    fillpolygon(((#,w2),(#+1,w2),(#+1,w1),(#,w1)),alpha->0.9,color->(.7,0,0));
+    pat1=pat1++[#];
+   );
+);
+
+B.xy=bb;
+D.xy=dd;
+
+pat2=[];
+apply((C.x)..round(dd.x-1),
+  w1=floor(del2*#+1+sh2+.00000000001);
+  w2=floor(del2*(#-1)+1+sh2+.00000000001);
+  fillpolygon(((#,0)+C,(#+1,0)+C,(#+1,w1)+C,(#,w1)+C),alpha->0.2);
+   if(w1>w2,
+    fillpolygon(((#,w2)+C,(#+1,w2)+C,(#+1,w1)+C,(#,w1)+C),alpha->0.9,color->((.2,.3,.8)));
+    pat2=pat2++[#];
+   );
+);
+
+fillcircle(P0,8,color->(.6,.8,.8)*.7);
+
+/*
+erg=[];
+apply(0..len-1,w=#/(len)*360°;
+  if(contains(pat2,#),
+    erg=erg++[P0+8*(cos(w),sin(w))]
+  );
+);
+
+fillpolygon(erg,color->(.6,.8,.8)*.7);
+drawpolygon(erg,color->(1,1,1));
+
+erg=[];
+apply(0..len-1,w=#/(len)*360°;
+  if(contains(pat1,#),
+    erg=erg++[P0+5*(cos(w),sin(w))]
+  );
+);
+
+
+fillpolygon(erg,color->(.6,.8,.8)*.65);
+drawpolygon(erg,color->(1,1,1));
+*/
+
+fillcircle(P0,5,color->(.6,.8,.8)*.6);
+
+erg=[];
+apply(0..len-1,w=#/(len)*360°;
+  if(contains(pat1,#),
+    erg=erg++[P0+5*(cos(w),sin(w))]
+  );
+);
+
+
+fillpolygon(erg,color->(.6,.8,.8)*.55);
+drawpolygon(erg,color->(1,1,1));
+
+
+drawcircle(P0,5,color->(.7,0,0)*.6,size->2);
+drawcircle(P0,8,color->(.2,.3,.8)*.6,size->2);
+
+
+
+draw(bb,color->(1,1,1));
+draw(dd,color->(1,1,1));
+draw(A+(0,sh),bb+(0,sh),size->2,color->(0,0,0));
+draw(C+(0,sh2),dd+(0,sh2),size->2,color->(0,0,0));
+
+if(isrunning,
+  t=-(seco-seconds())*.4*|H,P|*4+t;
+);
+//-t0;
+
+seco=seconds();
+
+tt=((t/len)-floor(t/len))*len;
+
+if(isrunning,
+ if(to<=0&tt>=0&tt<1,
+   playtone(30,channel->9,velocity->vol3)
+ );
+
+
+ if(or((floor(to)!=floor(tt)&to>0),(to<=0&tt>=0&tt<1)),
+   beat=floor(tt);
+   playtone(76,channel->9,velocity->vol4*.4);
+   if(contains(pat1,beat),
+     sq=sq++[[A.xy+(beat,floor(del*beat+sh+.00000000001)),8]];
+
+      playtone(62,channel->9,velocity->vol1)
+   );
+   if(contains(pat2,beat),
+      sq=sq++[[C.xy+(beat,floor(del2*beat+sh2+.00000000001)),8]];
+
+      playtone(64,channel->9,velocity->vol2)
+   );
+ );
+
+ apply(1..length(sq),
+    pp=sq_#_1;
+    fillpolygon((pp,pp+(0,1),pp+(1,1),pp+(1,0)),alpha->0.9,color->(.0,.7,0),
+    alpha->sq_#_2/8);
+    sq_#_2=sq_#_2-1;
+ );
+
+ sq=select(sq,#_2>0);
+
+
+
+);
+to=tt;
+
+if(to>len-1,to=to-len);
+//err(to+" "+tt);
+
+draw(A+(tt,0));
+draw(C+(tt,0));
+
+movers_1=bb;
+movers_2=dd;
+movers_3=xx;
+movers_4=yy;
+
+drawcircle(F,2,color->(0,0,0));
+drawcircle(M,2,color->(0,0,0));
+drawall(movers,size->6,color->(1,1,0));
+
+w=t/len*360°;
+draw(P0,P0+(cos(w),sin(w))*10,color->(0,0,0),size->3);
+draw(P0+(11,0),P0+(10,0),color->(0,0,0),size->1+10*exp(-5*(+w/pi/2-floor(w/pi/2-.0001))));
+
+apply(0..len-1,w=#/(len)*360°;
+  if(!contains(pat1,#),
+    draw(P0+5*(cos(w),sin(w)),color->(0,0,0),size->1.5),
+    draw(P0+5*(cos(w),sin(w)),color->(0,0,0),size->5,color->(0.7,.0,0))
+  );
+  if(!contains(pat2,#),
+    draw(P0+8*(cos(w),sin(w)),color->(0,0,0),size->1.5),
+    draw(P0+8*(cos(w),sin(w)),color->(0,0,0),size->5,color->((.2,.3,.8)))
+  );
+);
+
+
+apply(sq,s,
+  w=s_1_1/len*360°;
+  if(s_1_2>-0.5,
+    draw(P0+5*(cos(w),sin(w)),size->6,color->(.0,.7,0),
+    alpha->s_2/8)
+   ,
+    draw(P0+8*(cos(w),sin(w)),size->6,color->(.0,.7,0),
+    alpha->s_2/8)
+  )
+);
+
+
+
+
+//drawtext((0,3),t,size->30);
+
+
+
+
+
+
+
+;
+</script>
+<script id="cstick" type="text/x-cindyscript">
+a
+
+
+
+;
+</script>
+<script id="csmousedown" type="text/x-cindyscript">
+mpos=mouse().xy;
+moving=select(1..4,|movers_#,mpos|<0.5);
+
+
+
+;
+</script>
+<script id="csmousedrag" type="text/x-cindyscript">
+if(moving!=[],
+  movers_(moving_1)_1=mouse().x;
+  movers_(moving_1)_2=mouse().y;
+);
+
+
+
+
+
+;
+</script>
+
+<script id="csinit" type="text/x-cindyscript">
+use("midi");
+//instrument(33, channel->0); // Acoustic Bass
+//instrument(1, channel->2); // Acoustic Grand Piano
+//instrument(25, channel->3); // Acoustic Guitar (nylon)
+instrument(128, channel->9); // Vibraphone
+loadinstruments([128]);
+t0=seconds();
+t=0;
+ot=0;
+to=-.0001;
+
+
+//-t0;
+
+seco=seconds();
+
+
+isrunning=false;
+
+
+pa=(0,1);
+pb=(0,2);
+pc=(0,3);
+pd=(0,4);
+
+movers=(pa,pb,pc,pd);
+movers=((L.x,A.y+7),(L.x,C.y+10),F+(2,0),M+(2,0));
+
+
+//initmidi(["gunshot","woodblock"]);
+
+
+;
+</script>
+<script id="cssimulationstop" type="text/x-cindyscript">
+isrunning=false;
+//seco=seconds();
+//t=0;
+
+
+
+
+;
+</script>
+
+<script type="text/javascript">
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+    initCindy();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  function initCindy() {
+    cdy=createCindy({
+      scripts: "cs*",
+      defaultAppearance: {
+        dimDependent: 0.7,
+        fontFamily: "sans-serif",
+        lineSize: 1,
+        pointSize: 5.0,
+        textsize: 12.0
+      },
+      angleUnit: "°",
+      geometry: [
+        {name: "A", type: "Free", pos: [0.0, 0.0], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0},
+        {name: "F", type: "Free", pos: [-1.0909090909090908, -4.0, -0.36363636363636365], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "C", type: "Free", pos: [0.0, -4.0, 0.23529411764705882], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "E", type: "Free", pos: [0.2, -4.0, 0.2], color: [0.0, 0.0, 0.0], visible: false, size: 2.0,narrow:true},
+        {name: "K", type: "Free", pos: [3.2, -4.0, 0.2], color: [0.0, 0.0, 0.0], size: 2.0,narrow:true},
+        {name: "a", type: "Segment", color: [0.0, 0.0, 0.0], args: ["E", "K"], size: 2},
+        {name: "L", type: "PointOnSegment", pos: [3.2000000000000006, -4.0, 0.20000000000000004], color: [1.0, 1.0, 1.0], args: ["a"],narrow:true,size:8},
+        {name: "M", type: "Free", pos: [1.7142857142857142, -4.0, 0.5714285714285714], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "H", type: "Free", pos: [28,-16], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "O", type: "Free", pos: [43,-16], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "b", type: "Segment", color: [0.0, 0.0, 0.0], args: ["H", "O"], size: 4},
+        {name: "P", type: "PointOnSegment",size:8, pos: [32,-15], color: [1.0, 1.0, 1.0], args: ["b"],narrow:true},
+        {name: "Q", type: "Free", pos: [4.0, -0.0, 0.21052631578947367], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "R", type: "Free", pos: [4.0, 2.1052631578947367, 0.21052631578947367], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "c", type: "Segment", color: [0.0, 0.0, 0.0], args: ["Q", "R"]},
+        {name: "S", type: "Free", pos: [4.0, -3.5789473684210527, 0.21052631578947367], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "T", type: "Free", pos: [4.0, -1.263157894736842, 0.21052631578947367], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "d", type: "Segment", color: [0.0, 0.0, 0.0], args: ["S", "T"]},
+        {name: "U", type: "PointOnSegment", pos: [4.0, 1.1, 0.21052631578947367], color: [1.0, 1.0, 1.0], args: ["c"], size: 6.0,narrow:true},
+        {name: "V", type: "PointOnSegment", pos: [4.0, -2.2, 0.21052631578947367], color: [1.0, 1.0, 1.0], args: ["d"], size: 6.0,narrow:true},
+        {name: "W", type: "Free", pos: [0.0, -4.0, 0.2], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0,narrow:true},
+        {name: "e", type: "Segment", color: [0.0, 0.0, 0.0], args: ["E", "W"], size: 2,narrow:true},
+        {name: "B", type: "Free", pos: [4.0, 1.75, 0.25], color: [1.0, 1.0, 1.0], visible: false, size: 0.0,narrow:true},
+        {name: "D", type: "Free", pos: [4.0, -1.75, 0.25], color: [1.0, 1.0, 1.0], visible: false, size: 0.0,narrow:true},
+        {name: "G", type: "Free", pos: [29,-20], color: [1.0, 0.0, 0.0], visible: false, labeled: true,narrow:true},
+        {name: "N", type: "Free", pos: [-0.36363636363636365, -4.0, 0.18181818181818182], color: [1.0, 0.0, 0.0], visible: false, labeled: true,narrow:true},
+        {name: "X", type: "Free", pos: [3.8181818181818183, -4.0, 0.18181818181818182], color: [1.0, 0.0, 0.0], visible: false, labeled: true,narrow:true},
+        {name: "Y", type: "Free", pos: [4.0, 3.4285714285714284, 0.19047619047619047], color: [1.0, 0.0, 0.0], visible: false, labeled: true,narrow:true},
+        {name: "Z", type: "Free", pos: [0.4444444444444444, -4.0, -0.2222222222222222], color: [1.0, 0.0, 0.0], visible: false, labeled: true,narrow:true},
+        {name: "P0", type: "Free", pos: [35,6], color: [0.0, 0.0, 0.0], pinned: true, size: 3.0, printname: "$P_{0}$",narrow:true},
+        {name: "P1", type: "Free", pos: [28,-12], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0, printname: "$P_{1}$",narrow:true},
+        {name: "P2", type: "Free", pos: [43,-12], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0, printname: "$P_{2}$",narrow:true},
+        {name: "f", type: "Segment", color: [0.0, 0.0, 0.0], args: ["P1", "P2"], size: 4},
+        {name: "P3", type: "Free", pos: [28,-8], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0, printname: "$P_{3}$",narrow:true},
+        {name: "P4", type: "Free", pos: [43,-8], color: [0.0, 0.0, 0.0], pinned: true, size: 2.0, printname: "$P_{4}$",narrow:true},
+        {name: "g", type: "Segment", color: [0.0, 0.0, 0.0], args: ["P3", "P4"], size: 4},
+        {name: "P5", type: "PointOnSegment", pos: [33,-8], color: [1.0, 1.0, 1.0], args: ["f"], size: 6.0, printname: "$P_{5}$",narrow:true},
+        {name: "P6", type: "PointOnSegment", pos: [31,-8], color: [1.0, 1.0, 1.0], args: ["g"], size: 6.0, printname: "$P_{6}$",narrow:true},
+        {name: "Text0", type: "Text", color: [0.0, 0.0, 0.0], args: ["H"], text: IMAGINARY.i18n.t("TEMPO"), dock: {to: "H", offset: [0.9483269808941941, 9.437204573756162]},size:16},
+        {name: "Text1", type: "Text", pos: [4.0, -1.7919075144508672, 0.15956146729207207], color: [0.0, 0.0, 0.0], text: IMAGINARY.i18n.t("BASS_VOLUME"),dock: {to: "P1", offset: [0.9483269808941941, 9.437204573756162]},size:16},
+        {name: "Text2", type: "Text", pos: [4.0, -0.9942196531791908, 0.15956146729207207], color: [0.0, 0.0, 0.0], text: IMAGINARY.i18n.t("TICK_VOLUME"),dock: {to: "P3", offset: [0.9483269808941941, 9.437204573756162]},size:16},
+        {name: "Text3", type: "Text", color: [0.0, 0.0, 0.0], args: ["W"], text: IMAGINARY.i18n.t("BEATS_AXIS"), dock: {to: "W", offset: [-1.0, -18.958661584715287]},size:16},
+        {name: "Text4", type: "Text", pos: [0,15], color: [0.0, 0.0, 0.0], text: IMAGINARY.i18n.t("HINT_ADJUST_RHYTHM"), textsize: 16.0,size:24}
+      ],
+      autoplay: false,
+      use:["midi"],
+      ports: [{
+        id: "CSCanvas",
+        transform: [{visibleRect: [-4, 17, 45, -23]}],
+        background: "rgb(168,176,192)",
+        width: 1024,
+        height: 768
+      }],
+      cinderella: {build: 1847, version: [2, 9, 1847]},
+      images: {
+        stop: "../common-music/img/Stop.png",
+        play: "../common-music/img/Play.png"
+      },
+      language: IMAGINARY.i18n.getLang(),
+      translations: translations
+    });
+  }
+
+</script>
+</div>
+</body>
+</html>

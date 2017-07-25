@@ -1,0 +1,19 @@
+{
+  "id": "mozart-dice",
+  "version": "1.4.0",
+  "main": "app.html",
+  "width": 1024,
+  "height": 768,
+  "name": {
+    "en": "Mozart's Dice",
+    "de": "Mozarts Würfel",
+    "es": "Dados de Mozart",
+    "ru": "Кубики Моцарта",
+    "ro": "Zarul lui Mozart"
+  },
+  "description": {
+    "en": "",
+    "de": "",
+    "es": ""
+  }
+}

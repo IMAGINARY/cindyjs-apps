@@ -669,6 +669,13 @@ p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, table, address, fieldset, figure
     width: 1560px;
     height: 1170px; }
 
+.app-fixedsize-med {
+  width: 1024px;
+  height: 768px; }
+  .app-fixedsize-med canvas {
+    width: 1024px;
+    height: 768px; }
+
 .credits {
   padding: 5vh;
   text-align: center;

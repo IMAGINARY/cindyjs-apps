@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Whitney Music Box</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common-music/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common-music/js/midi/MIDI.js"></script>
+  <script type="text/javascript" src="../common-music/js/midi-plugin.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_grand_piano-mp3.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/vibraphone-mp3.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_bass-mp3.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_guitar_nylon-mp3.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
+</head>
+<body>
+<div class="app-fixedsize app-fixedsize-med">
+<div id="CSCanvas"></div>
+<script id="csmouseup" type="text/x-cindyscript">
+if(|mouse().xy,posplay|<2,play());
+if(|mouse().xy,pospause|<2,pause());
+if(|mouse().xy,posstop|<2,stop());
+
+if(|mouse().xy,postype1|<4,type=!type);
+if(|mouse().xy,poschrome|<4,
+   chroma=true;
+   penta=false;
+   map=reverse(map1);
+   n=length(map);
+   dots=zerovector(n);
+   dim=zerovector(n);
+   channel=2;
+   sp=1;
+   rep=12;
+   ssca=1;
+);
+if(|mouse().xy,pospenta|<4,
+   chroma=false;
+   penta=true;
+   map=reverse(map2);
+   n=length(map);
+   dots=zerovector(n);
+   dim=zerovector(n);
+   channel=1;
+   sp=5;
+   rep=5;
+   ssca=2;
+);
+
+;
+;
+</script>
+<script id="cssimulationstart" type="text/x-cindyscript">
+t0=seconds();
+
+
+
+
+
+;
+</script>
+<script id="cstick" type="text/x-cindyscript">
+
+
+
+
+;
+</script>
+<script id="csmousedown" type="text/x-cindyscript">
+
+
+;
+</script>
+<script id="csmousedrag" type="text/x-cindyscript">
+
+
+;
+</script>
+
+<script id="csdraw" type="text/x-cindyscript">
+speed=(|G,K|/|G,H|*5+.4)*.01*sp;
+
+gsave();
+translate((20,0));
+scale(1.3);
+draw((0,0),color->(1,1,1));
+t=seconds();
+if(play & !paused,
+  midiposition=midiposition+(t-ot)*speed;
+);
+ot=t;
+s=midiposition;
+apply(1..n,
+ta=n-#+1;
+if(type,ta=#);
+p=#*(cos(s*ta),sin(s*ta))*.2*ssca;
+
+
+
+t1=s*#/(2*pi);
+t2=so*#/(2*pi);
+t1=t1-floor(t1);
+t2=t2-floor(t2);
+dim_#=dim_#*.98;
+if(t1<t2&play,playtone(map_ta,channel->channel);dim_ta=1);
+fillcircle(p,
+    (1+#*.2)*(.1+(dim_#)^3*.04)*ssca,
+    color->(hue(#/rep)+(1,1,1)*dim_#)
+    );
+fillcircle(p,
+    (1+#*.2)*.02*ssca,
+    color->(0,0,0)
+    );
+
+;
+;
+);
+so=s;
+draw((0,0),(20,0),color->(1,1,1),size->2);
+grestore();
+
+drawimage(posplay+(-2,-2),posplay+(2,-2),"play");
+drawimage(pospause+(-2,-2),pospause+(2,-2),"pause",scale->0.5);
+drawimage(posstop+(-2,-2),posstop+(2,-2),"stop",scale->0.5);
+
+
+drawimage(postype1+(-4,-4),postype1+(4,-4),if(type,"type1","type2"),scale->0.5);
+//drawimage(postype2+(-4,-4),postype2+(4,-4),"type2",scale->0.5);
+drawimage(poschrome+(-3,-3),poschrome+(3,-3),"chromatic",scale->0.5,alpha->if(chroma,1,.3));
+drawimage(pospenta+(-3,-3),pospenta+(3,-3),"pentatonic",scale->0.5,alpha->if(penta,1,.3));
+drawtext(poschrome+(0,-4),international("CHROMATIC"),size->16,alpha->if(chroma,1,.3),color->(1,1,1), align->"mid");
+drawtext(pospenta+(0,-4),international("PENTATONIC"),size->16,alpha->if(penta,1,.3),color->(1,1,1), align->"mid");
+drawtext(postype1+(0,-5),international("SPEED_TYPE"),size->16,color->(1,1,1), align->"mid");
+
+
+</script>
+
+<script id="csinit" type="text/x-cindyscript">
+
+use("midi");
+posplay=(-14-2,-20);
+pospause=(-10-2,-20);
+posstop=(-6-2,-20);
+
+
+postype1=(-12-2,18);
+postype2=(-2-2,18);
+
+poschrome=(-12-2,7);
+pospenta=(-12-2,-3);
+chroma=true;
+penta=false;
+type=true;
+
+loadinstruments([33, 1, 25, 12]);
+instrument(33, channel->0); // Acoustic Bass
+instrument(1, channel->2); // Acoustic Grand Piano
+instrument(25, channel->3); // Acoustic Guitar (nylon)
+instrument(12, channel->1); // Vibraphone
+
+
+shift(l,n):=apply(l,#+n);
+map1=40..110;
+tones2=[0,2,4,5,7,9,11];
+tones2=[0,2,4,7,9];
+map2=   shift(tones2,30)
+      ++shift(tones2,30+12)
+      ++shift(tones2,30+12*2)
+      ++shift(tones2,30+12*3)
+      ++shift(tones2,30+12*4)
+      ++shift(tones2,30+12*5)
+      ++shift(tones2,30+12*6);
+
+map=reverse(map1);
+n=length(map);
+dots=zerovector(n);
+dim=zerovector(n);
+speed=.02;
+
+t0=seconds();
+t=0;
+ot=0;
+to=-.0001;
+
+
+//-t0;
+sp=1;
+channel=2;
+rep=12;
+
+ssca=1;
+play=false;
+paused=false;
+playanimation();
+ot=seconds();
+t=seconds();
+midiposition=0;
+play():=(
+  play=true;
+  paused=false;
+
+  ot=seconds();
+  t=seconds();
+);
+stop():=(
+  play=false;
+  paused=false;
+  midiposition=0;
+);
+pause():=(
+  paused=true;
+);
+
+
+
+
+</script>
+<script id="cssimulationstop" type="text/x-cindyscript">
+isrunning=false;
+
+
+;
+</script>
+
+<script type="text/javascript">
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  cdy=createCindy({
+    scripts: "cs*",
+    defaultAppearance: {
+      dimDependent: 0.7,
+      fontFamily: "sans-serif",
+      lineSize: 1,
+      pointSize: 5.0,
+      textsize: 12.0
+    },
+    angleUnit: "°",
+    geometry: [
+      {name: "G", type: "Free", pos: [-16-2,-16], color: [0.0, 0.0, 0.0], size: 2.0,pinned:true},
+      {name: "H", type: "Free", pos: [-4-2,-16], color: [0.0, 0.0, 0.0], size: 2.0,pinned:true},
+      {name: "e", type: "Segment", color: [0.7, 0.7, 0.7], args: ["G", "H"], size: 2},
+      {name: "K", type: "PointOnSegment", pos: [-12-2,-16], color: [1.0, 1.0, 1.0], args: ["e"], text_fontfamily: "STSong", textsize: 18.0, textitalics: true,narrow:40}
+    ],
+    images:{
+      "play":"../common-music/img/Play.png",
+      "stop":"../common-music/img/Stop.png",
+      "pause":"../common-music/img/Pause.png",
+      "type1":"img/Type1.png",
+      "type2":"img/Type2.png",
+      "chromatic":"img/Piano.png",
+      "pentatonic":"img/Chimes.png"
+    },
+    autoplay: false,
+    ports: [{
+      id: "CSCanvas",
+      width: 1024,
+      height: 768,
+      transform: [{visibleRect: [-20,5,45,-5]}],
+      background: "rgb(0,0,0)"
+    }],
+    cinderella: {build: 1847, version: [2, 9, 1847]},
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations
+  });
+
+</script>
+</div>
+</body>
+</html>

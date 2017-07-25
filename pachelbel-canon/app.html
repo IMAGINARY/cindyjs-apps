@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Pachelbel's Canon</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common-music/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common-music/js/midi/MIDI.js"></script>
+  <script type="text/javascript" src="../common-music/js/midi-plugin.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_grand_piano-mp3.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/vibraphone-mp3.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_bass-mp3.js"></script>
+  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_guitar_nylon-mp3.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
+</head>
+<body>
+<div class="app-fixedsize app-fixedsize-med">
+<div id="CSCanvas"></div>
+
+<script id="csinit" type="text/x-cindyscript">
+posplay=(-14-2,-20);
+pospause=(-10-2,-20);
+posstop=(-6-2,-20);
+
+posinst11=(16,11);
+posinst12=(16,15);
+posinst13=(16,19);
+
+posinst21=(0,11);
+posinst22=(0,15);
+posinst23=(0,19);
+
+posinst31=(-16,11);
+posinst32=(-16,15);
+posinst33=(-16,19);
+
+instr1=1;
+instr2=2;
+instr3=3;
+
+use("midi");
+play=false;
+paused=false;
+
+
+played = false;
+melody = [["fis'",1],["e'",1],["d'",1],["cis'",1],["h",1],["a",1],["h",1],["cis'",1],
+  ["d'",1],["cis'",1],["h",1],["a",1],["g",1],["fis",1],["g",1],["e",1],
+  ["d",1/2],["fis",1/2],["a",1/2],["g",1/2],["fis",1/2],["d",1/2],["fis",1/2],["e",1/2],
+      ["d",1/2],["H",1/2],["d",1/2],["a",1/2],["g",1/2],["h",1/2],["a",1/2],["g",1/2],
+  ["fis",1/2],["d",1/2],["e",1/2],["cis'",1/2],["d'",1/2],["fis'",1/2],["a'",1/2],["a",1/2],
+      ["h",1/2],["g",1/2],["a",1/2],["fis",1/2],["d",1/2],["d'",1/2],["d'",3/4],["cis",1/4],
+  ["d'",1/4],["cis'",1/4],["d'",1/4],["d",1/4],["cis",1/4],["a",1/4],["e",1/4],["fis",1/4],
+      ["d",1/4],["d'",1/4],["cis'",1/4],["h",1/4],["cis'",1/4],["fis'",1/4],["a'",1/4],["h'",1/4],
+      ["g'",1/4],["fis'",1/4],["e'",1/4],["g'",1/4],["fis'",1/4],["e'",1/4],["d'",1/4],["cis'",1/4],
+      ["h",1/4],["a",1/4],["g",1/4],["fis",1/4],["e",1/4],["g",1/4],["fis",1/4],["e",1/4],
+  ["d",1/4],["e",1/4],["fis",1/4],["g",1/4],["a",1/4],["e",1/4],["a",1/4],["g",1/4],
+      ["fis",1/4],["h",1/4],["a",1/4],["g",1/4],["a",1/4],["g",1/4],["fis",1/4],["e",1/4],
+      ["d",1/4],["H",1/4],["h",1/4],["cis'",1/4],["d'",1/4],["cis'",1/4],["h",1/4],["a",1/4],
+      ["g",1/4],["fis",1/4],["e",1/4],["h",1/4],["a",1/4],["h",1/4],["a",1/4],["g",1/4],
+  ["fis",1/2],["fis'",1/2],["e",3/2],["d'",1/2],["fis'",1],
+      ["h'",1],["a'",1],["h'",1],["cis''",1],
+  ["d''",1/2],["d'",1/2],["cis'",3/2],["h",1/2],["d'",1],
+      ["d'",3/2],["d'",1/2],["d'",1/2],["g'",1/2],["e'",1/2],["a'",1/2],
+  ["a'",1/4],["fis'",1/8],["g'",1/8],["a'",1/4],["fis'",1/8],["g'",1/8],["a'",1/8],
+      ["a",1/8],["h",1/8],["cis'",1/8],["d'",1/8],["e'",1/8],["fis'",1/8],["g'",1/8],
+      ["fis'",1/4],["d'",1/8],["e'",1/8],["fis'",1/4],
+      ["fis",1/8],["g",1/8],["a",1/8],["h",1/8],["a",1/8],["g",1/8],["a",1/8],["fis",1/8],["g",1/8],["a",1/8],
+   ["g",1/4],["h",1/8],["a",1/8],["g",1/4],["fis",1/8],["e",1/8],["fis",1/8],
+      ["e",1/8],["d",1/8],["e",1/8],["fis",1/8],["g",1/8],["a",1/8],["h",1/8],
+      ["g",1/4],["h",1/8],["a",1/8],["h",1/4],
+      ["cis'",1/8],["d'",1/8],["a",1/8],["h",1/8],["cis'",1/8],["d'",1/8],["e'",1/8],["fis'",1/8],["g'",1/8],["a'",1/8],
+  ["fis'",1/4],["d'",1/8],["e'",1/8],["fis'",1/4],["e'",1/8],["d'",1/8],["e'",1/8],
+      ["cis'",1/8],["d'",1/8],["e'",1/8],["fis'",1/8],["e'",1/8],["d'",1/8],["cis'",1/8],
+      ["d'",1/4],["h",1/8],["cis'",1/8],["d'",1/4],
+      ["d",1/8],["e",1/8],["fis",1/8],["g",1/8],["fis",1/8],["e",1/8],["fis",1/8],["d'",1/8],["cis'",1/8],["d'",1/8],
+  ["h",1/4],["d'",1/8],["cis'",1/8],["h",1/4],["a",1/8],["g",1/8],["a",1/8],
+      ["g",1/8],["fis",1/8],["g",1/8],["a",1/8],["h",1/8],["cis'",1/8],["d'",1/8],
+      ["h",1/4],["d'",1/8],["cis'",1/8],["d'",1/4],
+      ["cis'",1/8],["h",1/8],["cis'",1/8],["d'",1/8],["e'",1/8],["d'",1/8],["cis'",1/8],["d'",1/8],["h",1/8],["cis'",1/8],
+  ["d'",1/2],[-1,1/2],["cis'",1/2],[-1,1/2],["h",1/2],[-1,1/2],["d'",1/2],[-1,1/2],
+  ["d",1/2],[-1,1/2],["d",1/2],[-1,1/2],["d",1/2],[-1,1/2],["e",1/2],[-1,1/2],
+  [-1,1/2],["a",1/2],[-1,1/2],["a",1/2],[-1,1/2],["fis",1/2],[-1,1/2],["a",1/2],
+  [-1,1/2],["g",1/2],[-1,1/2],["fis",1/2],[-1,1/2],["g",1/2],[-1,1/2],["e'",1/2],
+  ["fis'",1/4],["fis",1/4],["g",1/4],["fis",1/4],["e",1/4],["e'",1/4],["fis'",1/4],["e'",1/4],
+      ["d'",1/4],["fis",1/4],["d",1/4],["h",1/4],["a'",1/4],["A",1/4],["G",1/4],["A",1/4],
+      ["H",1/4],["h",1/4],["cis'",1/4],["h",1/4],["a",1/4],["A",1/4],["G",1/4],["A",1/4],
+      ["H",1/4],["h",1/4],["a",1/4],["h",1/4],["cis'",1/4],["cis",1/4],["H",1/4],["cis",1/4],
+  ["d",1/4],["d'",1/4],["e'",1/4],["d'",1/4],["cis'",1/4],["cis",1/4],["d",1/4],["cis",1/4],
+      ["H",1/4],["h",1/4],["a",1/4],["h",1/4],["cis'",1/4],["cis",1/4],["fis",1/4],["e",1/4],
+      ["d",1/4],["d'",1/4],["e'",1/4],["g'",1/4],["fis'",1/4],["fis",1/4],["a",1/4],["fis'",1/4],
+      ["d'",1/4],["g'",1/4],["fis'",1/4],["g'",1/4],["e'",1/4],["a",1/4],["g",1/4],["a",1/4],
+  ["fis",1/4],["a",1/4],["a",1/4],["a",1/4],["a",1/4],["a",1/4],["a",1/4],["a",1/4],
+      ["fis",1/4],["fis",1/4],["fis",1/4],["fis",1/4],["fis",1/4],["fis",1/4],["a",1/4],["a",1/4],
+      ["g",1/4],["g",1/4],["g",1/4],["d'",1/4],["d'",1/4],["d'",1/4],["d'",1/4],["d'",1/4],
+      ["d'",1/4],["d'",1/4],["h",1/4],["h",1/4],["a",1/4],["a",1/4],["e'",1/4],["cis'",1/4],
+  ["a",1/4],["fis'",1/4],["fis'",1/4],["fis'",1/4],["e'",1/4],["e'",1/4],["e'",1/4],["e'",1/4],
+      ["d'",1/4],["d'",1/4],["d'",1/4],["d'",1/4],["a'",1/4],["a'",1/4],["a'",1/4],["a'",1/4],
+      ["h'",1/4],["h'",1/4],["h'",1/4],["h'",1/4],["a'",1/4],["a'",1/4],["a'",1/4],["a'",1/4],
+      ["h'",1/4],["h'",1/4],["h'",1/4],["h'",1/4],["cis''",1/4],["cis'",1/4],["cis'",1/4],["cis'",1/4],
+  ["d'",1/4],["d",1/8],["e",1/8],["fis",1/4],["d",1/4],["cis",1/4],["cis'",1/8],["d'",1/8],["e'",1/4],["d'",1/4],
+      ["h",1/4],["H",1/8],["cis",1/8],["d",1/4],["H",1/4],["cis",1/4],["a",1/8],["g",1/8],["fis",1/4],["e",1/4],
+      ["d",1/4],["g",1/8],["fis",1/8],["e",1/4],["g",1/4],["fis",1/4],["d",1/8],["e",1/8],["fis",1/4],["a",1/4],
+      ["g",1/4],["h",1/8],["a",1/8],["g",1/4],["fis",1/4],["e",1/4],["a",1/8],["g",1/8],["fis",1/4],["e",1/4],
+  ["fis",1/4],["d'",1/8],["cis'",1/8],["d'",1/4],["fis",1/4],["a",1/4],["a",1/8],["h",1/8],["cis'",1/4],["a",1/4],
+      ["fis",1/4],["d'",1/8],["e'",1/8],["fis'",1/4],["d'",1/4],["fis'",1/4],["fis'",1/8],["e'",1/8],["d'",1/4],["cis'",1/4],
+      ["h",1/4],["h",1/8],["a",1/8],["h",1/4],["cis'",1/4],["d'",1/4],["fis'",1/8],["e'",1/8],["d'",1/4],["fis'",1/4],
+      ["g'",1/4],["d'",1/8],["cis'",1/8],["h",1/4],["h",1/4],["a",1/4],["e",1/4],["a",1/4],["a",1/4],
+  ["a",3/2],["a",1/2],["d",3/2],["a",1/2],["g",1],["a",1],["g",1/2],["d",1/2],["d",3/4],["cis",1/4],
+  ["d",1/2],["d'",1/2],["cis'",1],["h",1],["a",1],["d",3/4],["e",1/4],["fis",1],["h",1],["e",3/4],["e",1/4],
+  ["fis",3/4],["fis'",1/4],["fis'",1/4],["g'",1/4],["fis'",1/4],["e'",1/4],
+      ["d'",3/4],["d'",1/4],["d'",1/4],["e'",1/4],["d'",1/4],["cis'",1/4],
+      ["h",1],["d'",1],["d'",1/4],["c'",1/4],["h",1/4],["c'",1/4],["a",3/4],["a",1/4],
+  ["a",3/4],["a'",1/4],["a'",1/4],["h'",1/4],["a'",1/4],["g'",1/4],
+      ["fis'",3/4],["fis'",1/4],["fis'",1/4],["g'",1/4],["fis'",1/4],["e'",1/4],
+      ["d'",1/4],["c'",1/4],["h",1/4],["c'",1/4],["a",3/4],["a",1/4],["g",1/2],["d'",1/2],["cis'",3/4],["cis'",1/4],
+  ["d'",1/2],["d'",1],["cis'",1],["h",1],["a",1],["g",1],["fis",1+1/4],["e",1/4],["e",1],
+  ["fis",1/2],["fis'",1],["e'",1/2],["d'",1/2],["d''",1],["c''",1/2],
+      ["h'",1],["d''",1/2],["a'",1/2],["h'",1],["a'",1],
+  ["a'",1],["a",3/4],["g",1/4],["fis",1],["fis'",3/4],["e'",1/4],
+      ["d'",3/2],["d'",1/2],["d'",1],["cis'",1],
+  ["d'",1/2],["d",1/2],["cis",1/2],["cis'",1/2],["h",1/2],["H",1/2],["A",1/2],["a",1/2],
+      ["g",1/2],["g'",1/2],["fis'",1/2],["fis",1/2],["e",1/2],["h",1/2],["e",1/2],["e'",1/2],
+  ["fis'",1/2],["fis",1/2],["e",1/2],["e'",1/2],["d'",1/2],["d",1/2],["cis",1/2],["cis'",1/2],
+      ["h",1/2],["h'",1/2],["a'",1/2],["a",1/2],["g",3/4],["e'",1/4],["a",1/2],["a",1/2],["a",2]
+];
+sizes=zerovector(length(melody));
+
+trans(mel):=apply(mel,#,
+erg=(-1,#_2);
+if(#_1=="C'",erg_1=48-12);
+if(#_1=="Cis'",erg_1=49-12);
+if(#_1=="D'",erg_1=50-12);
+if(#_1=="Dis'",erg_1=51-12);
+if(#_1=="E'",erg_1=52-12);
+if(#_1=="F'",erg_1=53-12);
+if(#_1=="Fis'",erg_1=54-12);
+if(#_1=="G'",erg_1=55-12);
+if(#_1=="Gis'",erg_1=56-12);
+if(#_1=="A'",erg_1=57-12);
+if(#_1=="B'",erg_1=58-12);
+if(#_1=="H'",erg_1=59-12);
+if(#_1=="C'",erg_1=48);
+if(#_1=="Cis",erg_1=49);
+if(#_1=="D",erg_1=50);
+if(#_1=="Dis",erg_1=51);
+if(#_1=="E",erg_1=52);
+if(#_1=="F",erg_1=53);
+if(#_1=="Fis",erg_1=54);
+if(#_1=="G",erg_1=55);
+if(#_1=="Gis",erg_1=56);
+if(#_1=="A",erg_1=57);
+if(#_1=="B",erg_1=58);
+if(#_1=="H",erg_1=59);
+if(#_1=="c",erg_1=48+12);
+if(#_1=="cis",erg_1=49+12);
+if(#_1=="d",erg_1=50+12);
+if(#_1=="dis",erg_1=51+12);
+if(#_1=="e",erg_1=52+12);
+if(#_1=="f",erg_1=53+12);
+if(#_1=="fis",erg_1=54+12);
+if(#_1=="g",erg_1=55+12);
+if(#_1=="gis",erg_1=56+12);
+if(#_1=="a",erg_1=57+12);
+if(#_1=="b",erg_1=58+12);
+if(#_1=="h",erg_1=59+12);
+if(#_1=="c'",erg_1=48+12*2);
+if(#_1=="cis'",erg_1=49+12*2);
+if(#_1=="d'",erg_1=50+12*2);
+if(#_1=="dis'",erg_1=51+12*2);
+if(#_1=="e'",erg_1=52+12*2);
+if(#_1=="f'",erg_1=53+12*2);
+if(#_1=="fis'",erg_1=54+12*2);
+if(#_1=="g'",erg_1=55+12*2);
+if(#_1=="gis'",erg_1=56+12*2);
+if(#_1=="a'",erg_1=57+12*2);
+if(#_1=="b'",erg_1=58+12*2);
+if(#_1=="h'",erg_1=59+12*2);
+if(#_1=="c''",erg_1=48+12*3);
+if(#_1=="cis''",erg_1=49+12*3);
+if(#_1=="d''",erg_1=50+12*3);
+if(#_1=="dis''",erg_1=51+12*3);
+if(#_1=="e''",erg_1=52+12*3);
+if(#_1=="f''",erg_1=53+12*3);
+if(#_1=="fis''",erg_1=54+12*3);
+if(#_1=="g''",erg_1=55+12*3);
+if(#_1=="gis''",erg_1=56+12*3);
+if(#_1=="a''",erg_1=57+12*3);
+if(#_1=="b''",erg_1=58+12*3);
+if(#_1=="h''",erg_1=59+12*3);
+erg;
+);
+melody2=trans(melody);
+
+s=0;
+all=apply(melody2,
+t=s;
+s=s+#_2;
+[#_1,t]
+);
+
+
+bass = flatten(apply(1..28,([["D",1],["A'",1],["H'",1],["Fis'",1],["G'",1],["D'",1],["G'",1],["A'",1]])),levels->1)++[["D",2]];
+bass2=trans(bass);
+s=0;
+
+allb=apply(bass2,
+t=s;
+s=s+#_2;
+[#_1,t]
+);
+
+instrument(33, channel->0); // Acoustic Bass
+instrument(12, channel->1); // Vibraphone
+instrument(1, channel->2); // Acoustic Grand Piano
+instrument(25, channel->3); // Acoustic Guitar (nylon)
+instrument(80, channel->4); // Occarina
+instrument(9, channel->5); // Celesta
+loadinstruments([33, 1, 25, 12]);
+
+notes = [
+  [-1],
+  ["C", "Cis"],
+  ["D"],
+  ["E"],
+  ["Fis"],
+  ["G"],
+  ["A"],
+  ["H"],
+  ["c", "cis"],
+  ["d"],
+  ["e"],
+  ["fis"],
+  ["g"],
+  ["a"],
+  ["h"],
+  ["c'", "cis'"],
+  ["d'"],
+  ["e'"],
+  ["fis'"],
+  ["g'"],
+  ["a'"],
+  ["h'"],
+  ["c''", "cis''"],
+  ["d''"]
+];
+
+
+x = 0;
+ii=0;
+score = apply(melody, note,
+  ii=ii+1;
+  y = select(1..length(notes), i, contains(notes_i, note_1));
+  if (length(y) != 1, err(note));
+  res = [x, y_1, note_2,ii];
+  x = x + note_2;
+  res
+);
+
+xscale = 2;
+barlen = 0.5;
+played=true;
+mso=0;
+drawit() := (
+
+
+
+////////////////////////////////////
+//OK This is brute force. Improve if speed is a problem!!!
+ii=1;
+apply(all,
+if(#_2<=midiposition-24-2 & #_2>mso-24-2,playtone(#_1,channel->instr3);sizes_(ii)=1);
+if(#_2<=midiposition-16-2 & #_2>mso-16-2,playtone(#_1,channel->instr2);sizes_(ii)=1);
+if(#_2<=midiposition-8-2 & #_2>mso-8-2,playtone(#_1,channel->instr1,velocity->.7);sizes_(ii)=1);
+ii=ii+1;
+);
+sizes=sizes*.97;
+apply(allb,
+if(#_2<=midiposition-2 & #_2>mso-2,playtone(#_1,channel->0););
+
+);
+////////////////////////////////////
+
+mso=midiposition;
+gsave();
+  translate((0, -3));
+  forall(1..5, draw((-100, #), (150, #), color->[0,0,0]));
+  now = midiposition - 2;
+  translate((xscale*(16 - now), 0));
+  forall(score, note,
+    if (note_2 > 1,
+      x = xscale*note_1;
+      y = note_2/2 - 4.5;
+      if (y <= 0, forall(ceil(y)..0, draw((x - barlen, #), (x + barlen, #), color->[0,0,0])));
+      if (y >= 6, forall(6..floor(y), draw((x - barlen, #), (x + barlen, #), color->[0,0,0])));
+    );
+  );
+  damp=1;
+  ii=1;
+  forall(score, note,
+    if (note_2 > 1,
+      off = (now - note_1) / 8;
+      size=max(4,12*sizes_ii);
+      x = xscale*note_1;
+      y = note_2/2 - 4.5;
+      draw((x, y), size->size,color->(1,.8,0));
+    );
+      ii=ii+1;
+
+
+
+
+  );
+  translate((-xscale*(16 - now), 0));
+  forall(-1..1, draw((8*xscale*#, -2), (8*xscale*#, 8), color->[0,0,0],size->2));
+
+  grestore();
+);
+drawitX() := (
+);
+sandclock() := (
+  gsave();
+  translate((4*xscale, 0)); scale(1.25);
+  fillpoly([(1,1),(1,2),(-1,2),(-1,1),(1,-1),(1,-2),(-1,-2),(-1,-1)],color->[1,1,1]);
+  drawpoly([(1,1),(1,2),(-1,2),(-1,1),(1,-1),(1,-2),(-1,-2),(-1,-1)],size->20,color->[1,1,1]);
+  fillpoly([(1,1),(1,1.5),(0,1),(-1,1.5),(-1,1),(0,0)],color->[1,0.8,0]);
+  fillpoly([(1,-2),(1,-1.5),(0,-1),(-1,-1.5),(-1,-2)],color->[1,0.8,0]);
+  drawpoly([(1,1),(1,2),(-1,2),(-1,1),(1,-1),(1,-2),(-1,-2),(-1,-1)],color->[0.3,0.2,0]);
+  grestore();
+);
+
+playanimation();
+ot=seconds();
+t=seconds();
+midiposition=0;
+play():=(
+  play=true;
+  paused=false;
+
+  ot=seconds();
+  t=seconds();
+  if(midiposition>226.3,midiposition=0);
+);
+stop():=(
+  play=false;
+  paused=false;
+  midiposition=0;
+);
+pause():=(
+  paused=true;
+);
+
+f(p):=(
+
+  if(p<0,0,
+     if(p>2,1,
+      (-cos(p*pi/2)+1)/2;
+     )
+   )
+);
+
+bass(x,y,q):=(
+   al=fac*3;
+   pp=-(mid-q)/8+floor((mid-q)/8);
+   pp1=-(mid)/8+floor((mid)/8);
+   lo=((x+pp1*8)*r,y*.1-2);
+
+   siz=2+if(pp<0,exp(pp*20)*5,0);
+   if(mid<-12,siz=2);
+   forall(-2..3,
+    lo1=lo+(#*r*8,0);
+    al1=exp(-.01*(lo1_1+4)^2)*al;
+    fillcircle(lo1*2-(-8.5,7),siz*.1,alpha->al1,color->(.5,0,0));
+    drawcircle(lo1*2-(-8.5,7),siz*.1,alpha->al1,color->(0,0,0),size->siz/3);
+  )
+
+);
+
+
+</script>
+<script id="cstick" type="text/x-cindyscript">
+</script>
+<script id="csmousedown" type="text/x-cindyscript">
+if(|mouse().xy,posplay|<2,play());
+if(|mouse().xy,pospause|<2,pause());
+if(|mouse().xy,posstop|<2,stop());
+if(|mouse().xy,posinst11|<2,instr1=1);
+if(|mouse().xy,posinst12|<2,instr1=2);
+if(|mouse().xy,posinst13|<2,instr1=3);
+
+if(|mouse().xy,posinst21|<2,instr2=1);
+if(|mouse().xy,posinst22|<2,instr2=2);
+if(|mouse().xy,posinst23|<2,instr2=3);
+
+if(|mouse().xy,posinst31|<2,instr3=1);
+if(|mouse().xy,posinst32|<2,instr3=2);
+if(|mouse().xy,posinst33|<2,instr3=3);
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+speed=|G,K|/|G,H|+1;
+
+if(midiposition>219.4,speed=speed*(((226.4-midiposition)/7)^(1/2)*.8+.2));
+if(midiposition>226.4,speed=0);
+fillcircle((0,0),100,color->(0,0,0));
+r=1;
+t=seconds();
+if(play & !paused,
+  midiposition=midiposition+(t-ot)*speed;
+);
+
+
+ot=t;
+
+
+mid=midiposition-14;
+fac=(f(225-mid));
+translate((0,-7));
+forall(0..10,
+  drawimage(2*(5-mid*r+#*20,0),2*(5-mid*r+22+#*20,0),"strip");
+);
+drawimage(2*(2-mid*r,0),2*(6.5-mid*r,0),"beg");
+drawimage(2*(2-mid*r+221.3,0),2*(5.85-mid*r+221.3,0),"end");
+translate((0,7));
+
+
+
+
+drawit();
+bass(0,7,4);
+bass(1,4,5);
+bass(2,5,6);
+bass(3,2,7);
+bass(4,3,0);
+bass(5,0,1);
+bass(6,3,2);
+bass(7,4,3);
+
+//if (loadinstruments([33, 1, 25, 12]),
+//  ,
+ // sandclock();
+//)
+grestore();
+drawimage(posplay+(-2,-2),posplay+(2,-2),"play");
+drawimage(pospause+(-2,-2),pospause+(2,-2),"pause",scale->0.5);
+drawimage(posstop+(-2,-2),posstop+(2,-2),"stop",scale->0.5);
+al1=min(1,max(0,midiposition-8));
+al2=min(1,max(0,midiposition-16));
+al3=min(1,max(0,midiposition-24));
+
+drawimage(posinst11+(-2,-2),posinst11+(2,-2),"Inst1",scale->0.5,alpha->al1*if(instr1==1,1,0.3));
+drawimage(posinst12+(-2,-2),posinst12+(2,-2),"Inst2",scale->0.5,alpha->al1*if(instr1==2,1,0.3));
+drawimage(posinst13+(-2,-2),posinst13+(2,-2),"Inst3",scale->0.5,alpha->al1*if(instr1==3,1,0.3));
+
+drawimage(posinst21+(-2,-2),posinst21+(2,-2),"Inst1",scale->0.5,alpha->al2*if(instr2==1,1,0.3));
+drawimage(posinst22+(-2,-2),posinst22+(2,-2),"Inst2",scale->0.5,alpha->al2*if(instr2==2,1,0.3));
+drawimage(posinst23+(-2,-2),posinst23+(2,-2),"Inst3",scale->0.5,alpha->al2*if(instr2==3,1,0.3));
+
+drawimage(posinst31+(-2,-2),posinst31+(2,-2),"Inst1",scale->0.5,alpha->al3*if(instr3==1,1,0.3));
+drawimage(posinst32+(-2,-2),posinst32+(2,-2),"Inst2",scale->0.5,alpha->al3*if(instr3==2,1,0.3));
+drawimage(posinst33+(-2,-2),posinst33+(2,-2),"Inst3",scale->0.5,alpha->al3*if(instr3==3,1,0.3));
+
+// drawtext((-20,20),international("APP_TITLE"),family->"Zapfino",size->25,color->(1,1,1)*.7);
+drawtext((0,-20),international("HINT_REPETITION"),family->"Helvetica",size->22,color->(1,1,1)*.7);
+
+
+</script>
+<script type="text/javascript">
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  var cdy = CindyJS({
+    ports: [{
+      id: "CSCanvas", width: 1024, height: 768,
+      transform: [{visibleRect: [-20,5,45,-5]}]
+    }],
+    scripts: "cs*",
+    geometry: [
+      {name: "G", type: "Free", pos: [-16-2,-16], color: [0.0, 0.0, 0.0], size: 2.0,pinned:true},
+      {name: "H", type: "Free", pos: [-4-2,-16], color: [0.0, 0.0, 0.0], size: 2.0,pinned:true},
+      {name: "e", type: "Segment", color: [0.7, 0.7, 0.7], args: ["G", "H"], size: 2},
+      {name: "K", type: "PointOnSegment", pos: [-10-2,-16], color: [1.0, 1.0, 1.0], args: ["e"], text_fontfamily: "STSong", textsize: 18.0, textitalics: true,narrow:40}
+    ],
+    images:{
+      "beg":"img/beg.png",
+      "end":"img/end.png",
+      "strip":"img/strip.png",
+      "play":"../common-music/img/Play.png",
+      "stop":"../common-music/img/Stop.png",
+      "pause":"../common-music/img/Pause.png",
+      "Inst1":"img/Vibraphone.png",
+      "Inst3":"img/Guitar.png",
+      "Inst2":"img/Piano.png"
+    },
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations
+  });
+
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "id": "pachelbel-canon",
+  "version": "1.4.0",
+  "main": "app.html",
+  "width": 1024,
+  "height": 768,
+  "name": {
+    "en": "Pachelbel's Canon",
+    "de": "Kanon in D-Dur (Pachelbel)",
+    "es": "Canon de Pachelbel",
+    "ru": "Канон Пахельбеля",
+    "ro": "Canonul lui Pachelbel"
+  },
+  "description": {
+    "en": "",
+    "de": "",
+    "es": ""
+  }
+}
