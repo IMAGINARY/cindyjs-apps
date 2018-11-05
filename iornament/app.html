@@ -194,16 +194,13 @@ Zalpha.size=9;
 Zblur.size=9;
 D.xy=(0,0);
 
-X.x = 12.5+offset.x;
-Y.x = 17.5+offset.x;
-Xsat.x = 12.5+offset.x;
-Ysat.x = 17.5+offset.x;
-Xdark.x = 12.5+offset.x;
-Ydark.x = 17.5+offset.x;
-Xalpha.x = 12.5+offset.x;
-Yalpha.x = 17.5+offset.x;
-Xblur.x = 12.5+offset.x;
-Yblur.x = 17.5+offset.x;
+if(lastoffset!=offset,
+  forall([X,Y,Z,Xsat,Ysat,Zsat,Xdark,Ydark,Zdark,Xalpha,Yalpha,Zalpha,Xblur,Yblur,Zblur],el,
+    el.xy = el.xy + (offset-lastoffset);
+  );
+);
+lastoffset = offset;
+
 
 if(|D-F|>7.8,F.xy=D+(F-D)/|F-D|*7.8);
 if(|D-F|<2,F.xy=D+(F-D)/|F-D|*2);
@@ -396,6 +393,7 @@ st=en;
 </script>
   <script id="app_cinderella_07_csinit" type="text/x-cindyscript">
   offset = (0,0);
+  lastoffset = (0,0);
   shiftedmouse() := (
     mouse().xy-offset;
   );
@@ -1719,7 +1717,7 @@ var cdy;
       // Ugly ad-hoc reset to fix a visualization bug where the tiling is off
       // until the symmetry group is changed to something and then back
       setTimeout(function(){
-        cdy07.evokeCS('reset();strokelist=[];Z.x=14+offset.x;Zsat.x=17+offset.x;Zdark.x=17.5+offset.x;Zalpha.x=17.5+offset.x;Zblur.x=13+offset.x;pencolor=1;color=cols_1;setdot();group=17;setgr(groups_group);fundsel=false;symannot=false;glowing=false');
+        cdy07.evokeCS('reset();strokelist=[];lastoffset=(0,0);Z.x=14.x;Zsat.x=17.x;Zdark.x=17.5.x;Zalpha.x=17.5.x;Zblur.x=13.x;pencolor=1;color=cols_1;setdot();group=17;setgr(groups_group);fundsel=false;symannot=false;glowing=false');
         cdy07.evokeCS('reset();strokelist=[];');
       }, 0);
     })();
