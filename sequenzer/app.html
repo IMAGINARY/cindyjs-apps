@@ -6,9 +6,9 @@
   <title>Sequencer</title>
   <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
   <script type="text/javascript" src="../common/js/Cindy.js"></script>
-  <script type="text/javascript" src="../common/js/midi/MIDI.js"></script>
+  <!--<script type="text/javascript" src="../common/js/midi/MIDI.js"></script>
   <script type="text/javascript" src="../common/js/midi-plugin.js"></script>
-  <script type="text/javascript" src="../common/sf/MusyngKite/drumset-mp3.js"></script>
+  <script type="text/javascript" src="../common/sf/MusyngKite/drumset-mp3.js"></script>-->
   <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
 </head>
 <body>
@@ -165,12 +165,12 @@ if(|mouse().xy,(23,-10)|<2,
 ;
 </script>
 <script id="csinit" type="text/x-cindyscript">
-use("midi");
+//use("midi");
 //instrument(33, channel->0); // Acoustic Bass
 //instrument(1, channel->2); // Acoustic Grand Piano
 //instrument(25, channel->3); // Acoustic Guitar (nylon)
-instrument(128, channel->9); // Vibraphone
-loadinstruments([128]);
+//instrument(128, channel->9); // Vibraphone
+//loadinstruments([128]);
 t0=seconds();
 seco=seconds();
 t=0;
