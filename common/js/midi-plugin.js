@@ -2,7 +2,7 @@
 CindyJS.registerPlugin(1, "midi", function(api) {
     "use strict";
 
-    var soundfont = CindyJS.getBaseDir() + "../sf/MusyngKite";
+    var soundfont = CindyJS.getBaseDir() + "soundfonts/";
     //var soundfont = "http://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/";
     //var soundfont = "http://cindyjs.org/extras/midi-js-soundfonts/MusyngKite/";
     
