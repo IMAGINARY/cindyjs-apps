@@ -67,19 +67,19 @@ erg=reverse(erg);
 apply(erg,st,
 if(|st|*sc<10,
 
-drawimage(gauss(bb*st),images_sel_2,scale->|st|*sc/2.5,angle->arctan2(im(st*i),re(st*i))-w);
+drawimage(gauss(bb*st),images_sel_2,scale->1.938461*|st|*sc/2.5,angle->arctan2(im(st*i),re(st*i))-w);
 );
 );
 
 
 
-apply(1..6,ind=images_#;drawimage(ind_1,ind_2,scale->ind_3,alpha->if(sel==#,1,0.4)));
+apply(1..6,ind=images_#;drawimage(ind_1,ind_2,scale->1.938461*ind_3,alpha->if(sel==#,1,0.4)));
 
 
 
 drawimage(D.xy,
 images_sel_2,
-scale->images_sel_3*.7,
+scale->1.938461*images_sel_3*.7,
 angle->-w);
 
 

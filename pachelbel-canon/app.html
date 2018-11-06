@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Pachelbel's Canon</title>
   <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
-  <script type="text/javascript" src="../common-music/js/Cindy.js"></script>
-  <script type="text/javascript" src="../common-music/js/midi/MIDI.js"></script>
-  <script type="text/javascript" src="../common-music/js/midi-plugin.js"></script>
-  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_grand_piano-mp3.js"></script>
-  <script type="text/javascript" src="../common-music/sf/MusyngKite/vibraphone-mp3.js"></script>
-  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_bass-mp3.js"></script>
-  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_guitar_nylon-mp3.js"></script>
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/midi/MIDI.js"></script>
+  <script type="text/javascript" src="../common/js/midi-plugin.js"></script>
+  <script type="text/javascript" src="../common/sf/MusyngKite/acoustic_grand_piano-mp3.js"></script>
+  <script type="text/javascript" src="../common/sf/MusyngKite/vibraphone-mp3.js"></script>
+  <script type="text/javascript" src="../common/sf/MusyngKite/acoustic_bass-mp3.js"></script>
+  <script type="text/javascript" src="../common/sf/MusyngKite/acoustic_guitar_nylon-mp3.js"></script>
   <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
 </head>
 <body>
@@ -442,23 +442,23 @@ bass(7,4,3);
 //)
 grestore();
 drawimage(posplay+(-2,-2),posplay+(2,-2),"play");
-drawimage(pospause+(-2,-2),pospause+(2,-2),"pause",scale->0.5);
-drawimage(posstop+(-2,-2),posstop+(2,-2),"stop",scale->0.5);
+drawimage(pospause+(-2,-2),pospause+(2,-2),"pause",scale->3.3333*0.5);
+drawimage(posstop+(-2,-2),posstop+(2,-2),"stop",scale->3.3333*0.5);
 al1=min(1,max(0,midiposition-8));
 al2=min(1,max(0,midiposition-16));
 al3=min(1,max(0,midiposition-24));
 
-drawimage(posinst11+(-2,-2),posinst11+(2,-2),"Inst1",scale->0.5,alpha->al1*if(instr1==1,1,0.3));
-drawimage(posinst12+(-2,-2),posinst12+(2,-2),"Inst2",scale->0.5,alpha->al1*if(instr1==2,1,0.3));
-drawimage(posinst13+(-2,-2),posinst13+(2,-2),"Inst3",scale->0.5,alpha->al1*if(instr1==3,1,0.3));
+drawimage(posinst11+(-2,-2),posinst11+(2,-2),"Inst1",scale->3.3333*0.5,alpha->al1*if(instr1==1,1,0.3));
+drawimage(posinst12+(-2,-2),posinst12+(2,-2),"Inst2",scale->3.3333*0.5,alpha->al1*if(instr1==2,1,0.3));
+drawimage(posinst13+(-2,-2),posinst13+(2,-2),"Inst3",scale->3.3333*0.5,alpha->al1*if(instr1==3,1,0.3));
 
-drawimage(posinst21+(-2,-2),posinst21+(2,-2),"Inst1",scale->0.5,alpha->al2*if(instr2==1,1,0.3));
-drawimage(posinst22+(-2,-2),posinst22+(2,-2),"Inst2",scale->0.5,alpha->al2*if(instr2==2,1,0.3));
-drawimage(posinst23+(-2,-2),posinst23+(2,-2),"Inst3",scale->0.5,alpha->al2*if(instr2==3,1,0.3));
+drawimage(posinst21+(-2,-2),posinst21+(2,-2),"Inst1",scale->3.3333*0.5,alpha->al2*if(instr2==1,1,0.3));
+drawimage(posinst22+(-2,-2),posinst22+(2,-2),"Inst2",scale->3.3333*0.5,alpha->al2*if(instr2==2,1,0.3));
+drawimage(posinst23+(-2,-2),posinst23+(2,-2),"Inst3",scale->3.3333*0.5,alpha->al2*if(instr2==3,1,0.3));
 
-drawimage(posinst31+(-2,-2),posinst31+(2,-2),"Inst1",scale->0.5,alpha->al3*if(instr3==1,1,0.3));
-drawimage(posinst32+(-2,-2),posinst32+(2,-2),"Inst2",scale->0.5,alpha->al3*if(instr3==2,1,0.3));
-drawimage(posinst33+(-2,-2),posinst33+(2,-2),"Inst3",scale->0.5,alpha->al3*if(instr3==3,1,0.3));
+drawimage(posinst31+(-2,-2),posinst31+(2,-2),"Inst1",scale->3.3333*0.5,alpha->al3*if(instr3==1,1,0.3));
+drawimage(posinst32+(-2,-2),posinst32+(2,-2),"Inst2",scale->3.3333*0.5,alpha->al3*if(instr3==2,1,0.3));
+drawimage(posinst33+(-2,-2),posinst33+(2,-2),"Inst3",scale->3.3333*0.5,alpha->al3*if(instr3==3,1,0.3));
 
 // drawtext((-20,20),international("APP_TITLE"),family->"Zapfino",size->25,color->(1,1,1)*.7);
 drawtext((0,-20),international("HINT_REPETITION"),family->"Helvetica",size->22,color->(1,1,1)*.7);
@@ -493,9 +493,9 @@ drawtext((0,-20),international("HINT_REPETITION"),family->"Helvetica",size->22,c
       "beg":"img/beg.png",
       "end":"img/end.png",
       "strip":"img/strip.png",
-      "play":"../common-music/img/Play.png",
-      "stop":"../common-music/img/Stop.png",
-      "pause":"../common-music/img/Pause.png",
+      "play":"../common/img/Play.png",
+      "stop":"../common/img/Stop.png",
+      "pause":"../common/img/Pause.png",
       "Inst1":"img/Vibraphone.png",
       "Inst3":"img/Guitar.png",
       "Inst2":"img/Piano.png"
