@@ -11,6 +11,22 @@
 </head>
 <body>
 <div class="app-fixedsize">
+  <script id="app_cinderella_04_cssimulationstep" type="text/x-cindyscript">
+//errc("step");
+  if(pressed2,
+    if(simulationtime()>lastsimulationtime+.008,
+      lastsimulationtime = simulationtime();
+      if(l_1!=C.xy,
+        l=[C.xy]++l;
+      );
+
+      if(length(l)>n,
+      l=apply(1..(length(l)-1),l_#);
+      );
+    );
+);
+
+  </script>
   <script id="app_cinderella_04_csdraw" type="text/x-cindyscript">
  if(pressed1,
 B.pinned=true;
@@ -45,14 +61,6 @@ drawtext(button2_1+(3,.5),international("TRACE"),color->(1,1,1),size->34, align-
 draw(F,G, arrow->true,size->7,color->(1,1,1));
 
 if(pressed2,
-n=300;
-if(l_1!=C.xy,
-  l=[C.xy]++l;
-);
-
-if(length(l)>n,
-l=apply(1..(length(l)-1),l_#);
-);
 
 forall(reverse(1..length(l)),
 r=exp(-#*.01)*0.4;
@@ -87,11 +95,11 @@ oldb=B.xy;
 oldc=C.xy;
 
 
-
-
+n=300;
+lastsimulationtime = 0;
 
 reset():=(
-
+resetclock();
 stopanimation();
 A.homog=(4, -2.40740, 0.462962);
 B.homog=(8, 4, 1);
