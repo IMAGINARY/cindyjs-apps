@@ -1047,4 +1047,5 @@ l;h.behavior.fx+=k;h.behavior.fy+=l}}if(a.charges)for(b=0;b<ya.length-1;b++)for(
 ya[c],0!==h.behavior.radius){k=h.behavior.x;l=h.behavior.y;var n=d.behavior.radius+h.behavior.radius;m=Math.sqrt((f-k)*(f-k)+(g-l)*(g-l));0===a.ballInteractionBoosting?(k=(f-k)/(m*m*m)*(m>n?0:(m-n)*(m-n)),l=(g-l)/(m*m*m)*(m>n?0:(m-n)*(m-n))):1===a.ballInteractionBoosting?(k=(f-k)/(m*m*m*m)*(m>n?0:(m-n)*(m-n)),l=(g-l)/(m*m*m*m)*(m>n?0:(m-n)*(m-n))):(k=(f-k)/(m*m*m*m*m)*(m>n?0:(m-n)*(m-n)),l=(g-l)/(m*m*m*m*m)*(m>n?0:(m-n)*(m-n)));d.behavior.fx+=k;d.behavior.fy+=l;h.behavior.fx-=k;h.behavior.fy-=l}for(b=
 0;b<ya.length;b++)d=ya[b],d.behavior.fx+=0,d.behavior.fy+=-a.gravity*d.behavior.mass,d.behavior.fz+=0},calculateDelta:function(a,b){},savePos:function(a,b){},restorePos:function(a,b){},sqDist:function(a,b,c){return 0},kineticEnergy:function(a){},storePosition:function(a){},recallPosition:function(a){},doCollisions:function(a){}}};return Da};return l}(),createCindy=CindyJS;
 "undefined"!==typeof process&&"undefined"!==typeof module&&"undefined"!==typeof module.exports&&"undefined"===typeof window&&(module.exports=CindyJS);
-//# sourceMappingURL=Cindy.js.map
+//# sourceMappingURL=Cindy.closure.js.map
+

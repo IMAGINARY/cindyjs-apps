@@ -60,7 +60,6 @@ within its directory.
 
 To only install one or more apps (instead of the whole collection) copy the app directory and the **common** directory.
 
-The music apps require you also copy the **common-music** directory.
 
 ## Embedding
 

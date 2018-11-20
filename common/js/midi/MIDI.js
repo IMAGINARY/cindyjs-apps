@@ -140,8 +140,8 @@ if (typeof MIDI === 'undefined') MIDI = {};
 		'Synth Effects': ['97 FX 1 (rain)', '98 FX 2 (soundtrack)', '99 FX 3 (crystal)', '100 FX 4 (atmosphere)', '101 FX 5 (brightness)', '102 FX 6 (goblins)', '103 FX 7 (echoes)', '104 FX 8 (sci-fi)'],
 		'Ethnic': ['105 Sitar', '106 Banjo', '107 Shamisen', '108 Koto', '109 Kalimba', '110 Bagpipe', '111 Fiddle', '112 Shanai'],
 		'Percussive': ['113 Tinkle Bell', '114 Agogo', '115 Steel Drums', '116 Woodblock', '117 Taiko Drum', '118 Melodic Tom', '119 Synth Drum'],
-		'Sound effects': ['120 Reverse Cymbal', '121 Guitar Fret Noise', '122 Breath Noise', '123 Seashore', '124 Bird Tweet', '125 Telephone Ring', '126 Helicopter', '127 Applause', '128 Drumset'],
-		'DrumsetXX': ['0 DrumsetXXX'] // not really GM but convenient hack
+		'Sound effects': ['120 Reverse Cymbal', '121 Guitar Fret Noise', '122 Breath Noise', '123 Seashore', '124 Bird Tweet', '125 Telephone Ring', '126 Helicopter', '127 Applause', '128 Gunshot'],
+		'Percussion': ['0 Percussion'] // not really GM but convenient hack
 	});
 
 	/* get/setInstrument
@@ -294,6 +294,7 @@ MIDI.Player = MIDI.Player || {};
 		if (typeof opts === 'function') {
 			opts = {onsuccess: opts};
 		}
+
 		root.soundfontUrl = opts.soundfontUrl || root.soundfontUrl;
 
 		/// Detect the best type of audio to use
@@ -340,7 +341,6 @@ MIDI.Player = MIDI.Player || {};
 	*/
 
 	root.loadResource = function(opts) {
-
 		var instruments = opts.instruments || opts.instrument || 'acoustic_grand_piano';
 		///
 		if (typeof instruments !== 'object') {
@@ -384,8 +384,6 @@ MIDI.Player = MIDI.Player || {};
 	};
 
 	var requestQueue = function(opts, context) {
-
-
 		var audioFormat = opts.format;
 		var instruments = opts.instruments;
 		var onprogress = opts.onprogress;
@@ -402,7 +400,6 @@ MIDI.Player = MIDI.Player || {};
 		///
 		for (var i = 0; i < length; i ++) {
 			var instrumentId = instruments[i];
-
 			if (MIDI.Soundfont[instrumentId]) { // already loaded
 				waitForEnd();
 			} else { // needs to be requested
@@ -419,8 +416,6 @@ MIDI.Player = MIDI.Player || {};
 
 	var sendRequest = function(instrumentId, audioFormat, onprogress, onsuccess, onerror) {
 		var soundfontPath = root.soundfontUrl + instrumentId + '-' + audioFormat + '.js';
-		console.log("************");
-		console.log(soundfontPath);
 		if (root.USE_XHR) {
 			root.util.request({
 				url: soundfontPath,
@@ -432,7 +427,6 @@ MIDI.Player = MIDI.Player || {};
 					script.language = 'javascript';
 					script.type = 'text/javascript';
 					script.text = responseText;
-
 					document.body.appendChild(script);
 					///
 					onsuccess();

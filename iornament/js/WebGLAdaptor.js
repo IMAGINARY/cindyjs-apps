@@ -48,6 +48,7 @@ createCindy.registerPlugin(1,"WebGLExperiments",function(api){
 		//canvas = document.createElement( 'canvas' );
 		//canvaswebgl=document.getElementById('CSCanvasB');
 		canvaswebgl=document.getElementById('WEBGL');
+		canvaswebgl.style = "z-index: -1; position: absolute; top: 0px; left: 0px;"; //draw WEBGL canvas behind the CindyJS widget
 		//body.appendChild( canvas );
    
 		// Initialise WebGL
@@ -245,8 +246,8 @@ function onWindowResize( event ) {
     
 	canvaswebgl.width = window.innerWidth;
 	canvaswebgl.height = window.innerHeight;
-	canvaswebgl.width = 1170/2;
-	canvaswebgl.height = 1170/2;
+	//canvaswebgl.width = 1170/2;
+	//canvaswebgl.height = 1170/2;
                 
 	parameters.screenWidth = canvaswebgl.width;
 	parameters.screenHeight = canvaswebgl.height;
@@ -330,7 +331,7 @@ function renderwebgl() {
 
 	gl.uniform2f( gl.getUniformLocation( currentProgram, 'mouse' ), parameters.mouseX, parameters.mouseY);
 	gl.uniform2f( gl.getUniformLocation( currentProgram, 'translate' ),
-	initialmatrix.tx+3, 
+	initialmatrix.tx, 
 	initialmatrix.ty+canvaswebgl.height);
 	gl.uniform1f( gl.getUniformLocation( currentProgram, 'scale' ), initialmatrix.sdet/1);
 
@@ -359,4 +360,3 @@ function renderwebgl() {
                 
 }
 })
-

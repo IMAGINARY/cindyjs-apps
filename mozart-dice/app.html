@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Mozart's Dice</title>
   <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
-  <script type="text/javascript" src="../common-music/js/Cindy.js"></script>
-  <script type="text/javascript" src="../common-music/js/midi/MIDI.js"></script>
-  <script type="text/javascript" src="../common-music/js/midi-plugin.js"></script>
-  <script type="text/javascript" src="../common-music/sf/MusyngKite/acoustic_grand_piano-mp3.js"></script>
-  <script type="text/javascript" src="../common-music/sf/MusyngKite/glockenspiel-mp3.js"></script>
-  <script type="text/javascript" src="../common-music/sf/MusyngKite/pizzicato_strings-mp3.js"></script>
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <!--<script type="text/javascript" src="../common/js/midi/MIDI.js"></script>
+  <script type="text/javascript" src="../common/js/midi-plugin.js"></script>
+  <script type="text/javascript" src="../common/sf/MusyngKite/acoustic_grand_piano-mp3.js"></script>
+  <script type="text/javascript" src="../common/sf/MusyngKite/glockenspiel-mp3.js"></script>
+  <script type="text/javascript" src="../common/sf/MusyngKite/pizzicato_strings-mp3.js"></script>-->
   <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
 </head>
 <body>
@@ -196,13 +196,13 @@ drawtext((3,-15), international("HINT_2_7"),family->"Helvetica",size->17);
 
 
 greset();
-drawimage((-9,8),"inst1",scale->2.5/2.5,alpha->if(ins1==1,1,0.5));
-drawimage((-7,8),"inst2",scale->2.5/2.5,alpha->if(ins1==2,1,0.5));
-drawimage((-5,8),"inst3",scale->2.5/2.5,alpha->if(ins1==3,1,0.5));
+drawimage((-9,8),"inst1",scale->2.86875*2.5/2.5,alpha->if(ins1==1,1,0.5));
+drawimage((-7,8),"inst2",scale->2.86875*2.5/2.5,alpha->if(ins1==2,1,0.5));
+drawimage((-5,8),"inst3",scale->2.86875*2.5/2.5,alpha->if(ins1==3,1,0.5));
 
-drawimage((-9,-5),"inst1",scale->2.5/2.5,alpha->if(ins2==1,1,0.5));
-drawimage((-7,-5),"inst2",scale->2.5/2.5,alpha->if(ins2==2,1,0.5));
-drawimage((-5,-5),"inst3",scale->2.5/2.5,alpha->if(ins2==3,1,0.5));
+drawimage((-9,-5),"inst1",scale->2.86875*2.5/2.5,alpha->if(ins2==1,1,0.5));
+drawimage((-7,-5),"inst2",scale->2.86875*2.5/2.5,alpha->if(ins2==2,1,0.5));
+drawimage((-5,-5),"inst3",scale->2.86875*2.5/2.5,alpha->if(ins2==3,1,0.5));
 
 greset();
 
@@ -288,7 +288,7 @@ apply(note1,hit,
 taktpositiono=taktposition;
 //plot(start->10,((x-14.5)/1.5)*11.5+2.5,size->10,color->(.3,0.3,.7));
 //plot(start->10, -((x-14.5)/1.5)*11.5-.5,size->10,color->(0.3,0.3,0.6));
-drawimage((-2,-10),"play",scale->.5);
+drawimage((-2,-10),"play",scale->2.86875*.5);
 
 </script>
 <script id="cstick" type="text/x-cindyscript">
@@ -699,57 +699,57 @@ drawhead(pos,type,alt):=(
   sc=.8;
   if(pos.x<-2,sc=.8+.6*exp(.5*(pos.x+2)));
   if(type==4,
-    drawimage(pos,"head2",scale->1.08/2.5*sc)
+    drawimage(pos,"head2",scale->2.86875*1.08/2.5*sc)
   );
   if(type==2,
-    drawimage(pos,"head3",scale->1.08/2.5*sc)
+    drawimage(pos,"head3",scale->2.86875*1.08/2.5*sc)
   );
   if(type==1,
-    drawimage(pos,"head",scale->1.08/2.5*sc)
+    drawimage(pos,"head",scale->2.86875*1.08/2.5*sc)
   );
   if(type==.5,
-    drawimage(pos,"head",scale->1.08/2.5*sc)
+    drawimage(pos,"head",scale->2.86875*1.08/2.5*sc)
   );
   if(type==.25,
-    drawimage(pos,"head",scale->1.08/2.5*sc)
+    drawimage(pos,"head",scale->2.86875*1.08/2.5*sc)
   );
   if(type==3,
-    drawimage(pos,"head3",scale->1.08/2.5*sc);
+    drawimage(pos,"head3",scale->2.86875*1.08/2.5*sc);
     off=mod(alt,2)*.15;
     draw(pos+(.5,off),size->1.5,color->(0,0,0));
   );
   if(type==1.5,
-    drawimage(pos,"head",scale->1.08/2.5*sc);
+    drawimage(pos,"head",scale->2.86875*1.08/2.5*sc);
     off=mod(alt,2)*.15;
     draw(pos+(.5,off),size->1.5,color->(0,0,0));
   );
   if(type==.75,
-    drawimage(pos,"head",scale->1.08/2.5*sc);
+    drawimage(pos,"head",scale->2.86875*1.08/2.5*sc);
     off=mod(alt,2)*.15;
     draw(pos+(.5,off),size->1.5,color->(0,0,0));
   );
   if(type==.375,
-    drawimage(pos,"head",scale->1.08/2.5*sc);
+    drawimage(pos,"head",scale->2.86875*1.08/2.5*sc);
     off=mod(alt,2)*.15;
     draw(pos+(.5,off),size->1.5,color->(0,0,0));
   );
  ,
   if(type==1,
-    drawimage((pos_1,.8),"p4",scale->.35/2.5)
+    drawimage((pos_1,.8),"p4",scale->2.86875*.35/2.5)
   );
   if(type==1.5,
-    drawimage((pos_1,.8),"p4",scale->.35/2.5);
+    drawimage((pos_1,.8),"p4",scale->2.86875*.35/2.5);
     draw((pos_1,.9)+(.5,off),size->1.5,color->(0,0,0));
   );
   if(type==.5,
-    drawimage((pos_1,.9),"p8",scale->.4/2.5)
+    drawimage((pos_1,.9),"p8",scale->2.86875*.4/2.5)
   );
   if(type==0.75,
-    drawimage((pos_1,.9),"p8",scale->.4/2.5);
+    drawimage((pos_1,.9),"p8",scale->2.86875*.4/2.5);
     draw((pos_1,.9)+(.5,off),size->1.5,color->(0,0,0));
   );
   if(type==0.25,
-    drawimage((pos_1,.9),"p16",scale->.4/2.5)
+    drawimage((pos_1,.9),"p16",scale->2.86875*.4/2.5)
   );
  )
 );
@@ -764,19 +764,19 @@ drawstrich(pos,strich):=(
 
 drawflats(pos,type):=(
   if(type==1,
-  // drawimage(pos+(-.44,0),"is",scale->.24);
+  // drawimage(pos+(-.44,0),"is",scale->2.86875*.24);
    drawtext(pos+(-.8,-.29),
              unicode("266f"),size->16);
   );
   if(type==-1,
-//   drawimage(pos+(-.48,.1),"es",scale->.3);
+//   drawimage(pos+(-.48,.1),"es",scale->2.86875*.3);
     drawtext(pos+(-.9,-.2),
              unicode("266d"),size->16);
   )
 );
 
 drawcurl(pos):=(
-  drawimage(pos+(+1.78,-.3),"curl",scale->1.3/2.5);
+  drawimage(pos+(+1.78,-.3),"curl",scale->2.86875*1.3/2.5);
 );
 
 drawsenk(pos,mi,ma,beat,type):=(

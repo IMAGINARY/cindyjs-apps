@@ -1,251 +1,275 @@
-// rev 444
+/*! npm.im/iphone-inline-video 2.0.2 */
+var enableInlineVideo=function(){"use strict";/*! npm.im/intervalometer */
+function e(e,i,n,r){function t(n){d=i(t,r),e(n-(a||n)),a=n}var d,a;return{start:function(){d||t(0)},stop:function(){n(d),d=null,a=0}}}function i(i){return e(i,requestAnimationFrame,cancelAnimationFrame)}function n(e,i,n,r){function t(i){Boolean(e[n])===Boolean(r)&&i.stopImmediatePropagation(),delete e[n]}return e.addEventListener(i,t,!1),t}function r(e,i,n,r){function t(){return n[i]}function d(e){n[i]=e}r&&d(e[i]),Object.defineProperty(e,i,{get:t,set:d})}function t(e,i,n){n.addEventListener(i,function(){return e.dispatchEvent(new Event(i))})}function d(e,i){Promise.resolve().then(function(){e.dispatchEvent(new Event(i))})}function a(e){var i=new Audio;return t(e,"play",i),t(e,"playing",i),t(e,"pause",i),i.crossOrigin=e.crossOrigin,i.src=e.src||e.currentSrc||"data:",i}function o(e,i,n){(m||0)+200<Date.now()&&(e[b]=!0,m=Date.now()),n||(e.currentTime=i),w[++T%3]=100*i|0}function u(e){return e.driver.currentTime>=e.video.duration}function s(e){var i=this;i.video.readyState>=i.video.HAVE_FUTURE_DATA?(i.hasAudio||(i.driver.currentTime=i.video.currentTime+e*i.video.playbackRate/1e3,i.video.loop&&u(i)&&(i.driver.currentTime=0)),o(i.video,i.driver.currentTime)):i.video.networkState===i.video.NETWORK_IDLE&&0===i.video.buffered.length&&i.video.load(),i.video.ended&&(delete i.video[b],i.video.pause(!0))}function c(){var e=this,i=e[h];return e.webkitDisplayingFullscreen?void e[g]():("data:"!==i.driver.src&&i.driver.src!==e.src&&(o(e,0,!0),i.driver.src=e.src),void(e.paused&&(i.paused=!1,0===e.buffered.length&&e.load(),i.driver.play(),i.updater.start(),i.hasAudio||(d(e,"play"),i.video.readyState>=i.video.HAVE_ENOUGH_DATA&&d(e,"playing")))))}function v(e){var i=this,n=i[h];n.driver.pause(),n.updater.stop(),i.webkitDisplayingFullscreen&&i[E](),n.paused&&!e||(n.paused=!0,n.hasAudio||d(i,"pause"),i.ended&&(i[b]=!0,d(i,"ended")))}function p(e,n){var r=e[h]={};r.paused=!0,r.hasAudio=n,r.video=e,r.updater=i(s.bind(r)),n?r.driver=a(e):(e.addEventListener("canplay",function(){e.paused||d(e,"playing")}),r.driver={src:e.src||e.currentSrc||"data:",muted:!0,paused:!0,pause:function(){r.driver.paused=!0},play:function(){r.driver.paused=!1,u(r)&&o(e,0)},get ended(){return u(r)}}),e.addEventListener("emptied",function(){var i=!r.driver.src||"data:"===r.driver.src;r.driver.src&&r.driver.src!==e.src&&(o(e,0,!0),r.driver.src=e.src,i?r.driver.play():r.updater.stop())},!1),e.addEventListener("webkitbeginfullscreen",function(){e.paused?n&&0===r.driver.buffered.length&&r.driver.load():(e.pause(),e[g]())}),n&&(e.addEventListener("webkitendfullscreen",function(){r.driver.currentTime=e.currentTime}),e.addEventListener("seeking",function(){w.indexOf(100*e.currentTime|0)<0&&(r.driver.currentTime=e.currentTime)}))}function l(e){var i=e[h];e[g]=e.play,e[E]=e.pause,e.play=c,e.pause=v,r(e,"paused",i.driver),r(e,"muted",i.driver,!0),r(e,"playbackRate",i.driver,!0),r(e,"ended",i.driver),r(e,"loop",i.driver,!0),n(e,"seeking"),n(e,"seeked"),n(e,"timeupdate",b,!1),n(e,"ended",b,!1)}function f(e,i){if(void 0===i&&(i={}),!e[h]){if(!i.everywhere){if(!y)return;if(!(i.iPad||i.ipad?/iPhone|iPod|iPad/:/iPhone|iPod/).test(navigator.userAgent))return}!e.paused&&e.webkitDisplayingFullscreen&&e.pause(),p(e,!e.muted),l(e),e.classList.add("IIV"),e.muted&&e.autoplay&&e.play(),/iPhone|iPod|iPad/.test(navigator.platform)||console.warn("iphone-inline-video is not guaranteed to work in emulated environments")}}var m,y="object"==typeof document&&"object-fit"in document.head.style&&!matchMedia("(-webkit-video-playable-inline)").matches,h="bfred-it:iphone-inline-video",b="bfred-it:iphone-inline-video:event",g="bfred-it:iphone-inline-video:nativeplay",E="bfred-it:iphone-inline-video:nativepause",w=[],T=0;return f}();
+// rev 482
+/********************************************************************************
+ *                                                                              *
+ * Author    :  Angus Johnson                                                   *
+ * Version   :  6.2.1                                                          *
+ * Date      :  31 October 2014                                                 *
+ * Website   :  http://www.angusj.com                                           *
+ * Copyright :  Angus Johnson 2010-2014                                         *
+ *                                                                              *
+ * License:                                                                     *
+ * Use, modification & distribution is subject to Boost Software License Ver 1. *
+ * http://www.boost.org/LICENSE_1_0.txt                                         *
+ *                                                                              *
+ * Attributions:                                                                *
+ * The code in this library is an extension of Bala Vatti's clipping algorithm: *
+ * "A generic solution to polygon clipping"                                     *
+ * Communications of the ACM, Vol 35, Issue 7 (July 1992) pp 56-63.             *
+ * http://portal.acm.org/citation.cfm?id=129906                                 *
+ *                                                                              *
+ * Computer graphics and geometric modeling: implementation and algorithms      *
+ * By Max K. Agoston                                                            *
+ * Springer; 1 edition (January 4, 2005)                                        *
+ * http://books.google.com/books?q=vatti+clipping+agoston                       *
+ *                                                                              *
+ * See also:                                                                    *
+ * "Polygon Offsetting by Computing Winding Numbers"                            *
+ * Paper no. DETC2005-85513 pp. 565-575                                         *
+ * ASME 2005 International Design Engineering Technical Conferences             *
+ * and Computers and Information in Engineering Conference (IDETC/CIE2005)      *
+ * September 24-28, 2005 , Long Beach, California, USA                          *
+ * http://www.me.berkeley.edu/~mcmains/pubs/DAC05OffsetPolygon.pdf              *
+ *                                                                              *
+ *******************************************************************************/
 /*******************************************************************************
-*                                                                              *
-* Author    :  Angus Johnson                                                   *
-* Version   :  6.1.2                                                           *
-* Date      :  15 December 2013                                                *
-* Website   :  http://www.angusj.com                                           *
-* Copyright :  Angus Johnson 2010-2013                                         *
-*                                                                              *
-* License:                                                                     *
-* Use, modification & distribution is subject to Boost Software License Ver 1. *
-* http://www.boost.org/LICENSE_1_0.txt                                         *
-*                                                                              *
-* Attributions:                                                                *
-* The code in this library is an extension of Bala Vatti's clipping algorithm: *
-* "A generic solution to polygon clipping"                                     *
-* Communications of the ACM, Vol 35, Issue 7 (July 1992) pp 56-63.             *
-* http://portal.acm.org/citation.cfm?id=129906                                 *
-*                                                                              *
-* Computer graphics and geometric modeling: implementation and algorithms      *
-* By Max K. Agoston                                                            *
-* Springer; 1 edition (January 4, 2005)                                        *
-* http://books.google.com/books?q=vatti+clipping+agoston                       *
-*                                                                              *
-* See also:                                                                    *
-* "Polygon Offsetting by Computing Winding Numbers"                            *
-* Paper no. DETC2005-85513 pp. 565-575                                         *
-* ASME 2005 International Design Engineering Technical Conferences             *
-* and Computers and Information in Engineering Conference (IDETC/CIE2005)      *
-* September 24-28, 2005 , Long Beach, California, USA                          *
-* http://www.me.berkeley.edu/~mcmains/pubs/DAC05OffsetPolygon.pdf              *
-*                                                                              *
-*******************************************************************************/
+ *                                                                              *
+ * Author    :  Timo                                                            *
+ * Version   :  6.2.1.2                                                         *
+ * Date      :  27 November 2016                                                 *
+ *                                                                              *
+ * This is a translation of the C# Clipper library to Javascript.               *
+ * Int128 struct of C# is implemented using JSBN of Tom Wu.                     *
+ * Because Javascript lacks support for 64-bit integers, the space              *
+ * is a little more restricted than in C# version.                              *
+ *                                                                              *
+ * C# version has support for coordinate space:                                 *
+ * +-4611686018427387903 ( sqrt(2^127 -1)/2 )                                   *
+ * while Javascript version has support for space:                              *
+ * +-4503599627370495 ( sqrt(2^106 -1)/2 )                                      *
+ *                                                                              *
+ * Tom Wu's JSBN proved to be the fastest big integer library:                  *
+ * http://jsperf.com/big-integer-library-test                                   *
+ *                                                                              *
+ * This class can be made simpler when (if ever) 64-bit integer support comes.  *
+ *                                                                              *
+ *******************************************************************************/
+/*******************************************************************************
+ *                                                                              *
+ * Basic JavaScript BN library - subset useful for RSA encryption.              *
+ * http://www-cs-students.stanford.edu/~tjw/jsbn/                               *
+ * Copyright (c) 2005  Tom Wu                                                   *
+ * All Rights Reserved.                                                         *
+ * See "LICENSE" for details:                                                   *
+ * http://www-cs-students.stanford.edu/~tjw/jsbn/LICENSE                        *
+ *                                                                              *
+ *******************************************************************************/
 
-/*******************************************************************************
-*                                                                              *
-* Author    :  Timo                                                            *
-* Version   :  6.1.2.1                                                         *
-* Date      :  15 December 2013                                                *
-*                                                                              *
-* This is a translation of the C# Clipper library to Javascript.               *
-* Int128 struct of C# is implemented using JSBN of Tom Wu.                     *
-* Because Javascript lacks support for 64-bit integers, the space              *
-* is a little more restricted than in C# version.                              *
-*                                                                              *
-* C# version has support for coordinate space:                                 *
-* +-4611686018427387903 ( sqrt(2^127 -1)/2 )                                   *
-* while Javascript version has support for space:                              *
-* +-4503599627370495 ( sqrt(2^106 -1)/2 )                                      *
-*                                                                              *
-* Tom Wu's JSBN proved to be the fastest big integer library:                  *
-* http://jsperf.com/big-integer-library-test                                   *
-*                                                                              *
-* This class can be made simpler when (if ever) 64-bit integer support comes.  *
-*                                                                              *
-*******************************************************************************/
-
-/*******************************************************************************
-*                                                                              *
-* Basic JavaScript BN library - subset useful for RSA encryption.              *
-* http://www-cs-students.stanford.edu/~tjw/jsbn/                               *
-* Copyright (c) 2005  Tom Wu                                                   *
-* All Rights Reserved.                                                         *
-* See "LICENSE" for details:                                                   *
-* http://www-cs-students.stanford.edu/~tjw/jsbn/LICENSE                        *
-*                                                                              *
-*******************************************************************************/
-(function(){function l(a,b,c){d.biginteger_used=1;null!=a&&("number"==typeof a&&"undefined"==typeof b?this.fromInt(a):"number"==typeof a?this.fromNumber(a,b,c):null==b&&"string"!=typeof a?this.fromString(a,256):this.fromString(a,b))}function q(){return new l(null)}function R(a,b,c,e,d,g){for(;0<=--g;){var h=b*this[a++]+c[e]+d;d=Math.floor(h/67108864);c[e++]=h&67108863}return d}function S(a,b,c,e,d,g){var h=b&32767;for(b>>=15;0<=--g;){var k=this[a]&32767,n=this[a++]>>15,m=b*k+n*h,k=h*k+((m&32767)<<
-15)+c[e]+(d&1073741823);d=(k>>>30)+(m>>>15)+b*n+(d>>>30);c[e++]=k&1073741823}return d}function T(a,b,c,e,d,g){var h=b&16383;for(b>>=14;0<=--g;){var k=this[a]&16383,n=this[a++]>>14,m=b*k+n*h,k=h*k+((m&16383)<<14)+c[e]+d;d=(k>>28)+(m>>14)+b*n;c[e++]=k&268435455}return d}function M(a,b){var c=C[a.charCodeAt(b)];return null==c?-1:c}function y(a){var b=q();b.fromInt(a);return b}function D(a){var b=1,c;0!=(c=a>>>16)&&(a=c,b+=16);0!=(c=a>>8)&&(a=c,b+=8);0!=(c=a>>4)&&(a=c,b+=4);0!=(c=a>>2)&&(a=c,b+=2);0!=
-a>>1&&(b+=1);return b}function z(a){this.m=a}function x(a){this.m=a;this.mp=a.invDigit();this.mpl=this.mp&32767;this.mph=this.mp>>15;this.um=(1<<a.DB-15)-1;this.mt2=2*a.t}function U(a,b){return a&b}function J(a,b){return a|b}function N(a,b){return a^b}function O(a,b){return a&~b}function B(){}function P(a){return a}function A(a){this.r2=q();this.q3=q();l.ONE.dlShiftTo(2*a.t,this.r2);this.mu=this.r2.divide(a);this.m=a}var d={},E=!1;"undefined"!==typeof module&&module.exports?(module.exports=d,E=!0):
-"undefined"!==typeof document?window.ClipperLib=d:self.ClipperLib=d;var t;if(E)r="chrome",t="Netscape";else{var r=navigator.userAgent.toString().toLowerCase();t=navigator.appName}var F,K,G,H,I,Q;F=-1!=r.indexOf("chrome")&&-1==r.indexOf("chromium")?1:0;E=-1!=r.indexOf("chromium")?1:0;K=-1!=r.indexOf("safari")&&-1==r.indexOf("chrome")&&-1==r.indexOf("chromium")?1:0;G=-1!=r.indexOf("firefox")?1:0;r.indexOf("firefox/17");r.indexOf("firefox/15");r.indexOf("firefox/3");H=-1!=r.indexOf("opera")?1:0;r.indexOf("msie 10");
-r.indexOf("msie 9");I=-1!=r.indexOf("msie 8")?1:0;Q=-1!=r.indexOf("msie 7")?1:0;r=-1!=r.indexOf("msie ")?1:0;d.biginteger_used=null;"Microsoft Internet Explorer"==t?(l.prototype.am=S,t=30):"Netscape"!=t?(l.prototype.am=R,t=26):(l.prototype.am=T,t=28);l.prototype.DB=t;l.prototype.DM=(1<<t)-1;l.prototype.DV=1<<t;l.prototype.FV=Math.pow(2,52);l.prototype.F1=52-t;l.prototype.F2=2*t-52;var C=[],v;t=48;for(v=0;9>=v;++v)C[t++]=v;t=97;for(v=10;36>v;++v)C[t++]=v;t=65;for(v=10;36>v;++v)C[t++]=v;z.prototype.convert=
-function(a){return 0>a.s||0<=a.compareTo(this.m)?a.mod(this.m):a};z.prototype.revert=function(a){return a};z.prototype.reduce=function(a){a.divRemTo(this.m,null,a)};z.prototype.mulTo=function(a,b,c){a.multiplyTo(b,c);this.reduce(c)};z.prototype.sqrTo=function(a,b){a.squareTo(b);this.reduce(b)};x.prototype.convert=function(a){var b=q();a.abs().dlShiftTo(this.m.t,b);b.divRemTo(this.m,null,b);0>a.s&&0<b.compareTo(l.ZERO)&&this.m.subTo(b,b);return b};x.prototype.revert=function(a){var b=q();a.copyTo(b);
-this.reduce(b);return b};x.prototype.reduce=function(a){for(;a.t<=this.mt2;)a[a.t++]=0;for(var b=0;b<this.m.t;++b){var c=a[b]&32767,e=c*this.mpl+((c*this.mph+(a[b]>>15)*this.mpl&this.um)<<15)&a.DM,c=b+this.m.t;for(a[c]+=this.m.am(0,e,a,b,0,this.m.t);a[c]>=a.DV;)a[c]-=a.DV,a[++c]++}a.clamp();a.drShiftTo(this.m.t,a);0<=a.compareTo(this.m)&&a.subTo(this.m,a)};x.prototype.mulTo=function(a,b,c){a.multiplyTo(b,c);this.reduce(c)};x.prototype.sqrTo=function(a,b){a.squareTo(b);this.reduce(b)};l.prototype.copyTo=
-function(a){for(var b=this.t-1;0<=b;--b)a[b]=this[b];a.t=this.t;a.s=this.s};l.prototype.fromInt=function(a){this.t=1;this.s=0>a?-1:0;0<a?this[0]=a:-1>a?this[0]=a+this.DV:this.t=0};l.prototype.fromString=function(a,b){var c;if(16==b)c=4;else if(8==b)c=3;else if(256==b)c=8;else if(2==b)c=1;else if(32==b)c=5;else if(4==b)c=2;else{this.fromRadix(a,b);return}this.s=this.t=0;for(var e=a.length,d=!1,g=0;0<=--e;){var h=8==c?a[e]&255:M(a,e);0>h?"-"==a.charAt(e)&&(d=!0):(d=!1,0==g?this[this.t++]=h:g+c>this.DB?
-(this[this.t-1]|=(h&(1<<this.DB-g)-1)<<g,this[this.t++]=h>>this.DB-g):this[this.t-1]|=h<<g,g+=c,g>=this.DB&&(g-=this.DB))}8==c&&0!=(a[0]&128)&&(this.s=-1,0<g&&(this[this.t-1]|=(1<<this.DB-g)-1<<g));this.clamp();d&&l.ZERO.subTo(this,this)};l.prototype.clamp=function(){for(var a=this.s&this.DM;0<this.t&&this[this.t-1]==a;)--this.t};l.prototype.dlShiftTo=function(a,b){var c;for(c=this.t-1;0<=c;--c)b[c+a]=this[c];for(c=a-1;0<=c;--c)b[c]=0;b.t=this.t+a;b.s=this.s};l.prototype.drShiftTo=function(a,b){for(var c=
-a;c<this.t;++c)b[c-a]=this[c];b.t=Math.max(this.t-a,0);b.s=this.s};l.prototype.lShiftTo=function(a,b){var c=a%this.DB,e=this.DB-c,d=(1<<e)-1,g=Math.floor(a/this.DB),h=this.s<<c&this.DM,k;for(k=this.t-1;0<=k;--k)b[k+g+1]=this[k]>>e|h,h=(this[k]&d)<<c;for(k=g-1;0<=k;--k)b[k]=0;b[g]=h;b.t=this.t+g+1;b.s=this.s;b.clamp()};l.prototype.rShiftTo=function(a,b){b.s=this.s;var c=Math.floor(a/this.DB);if(c>=this.t)b.t=0;else{var e=a%this.DB,d=this.DB-e,g=(1<<e)-1;b[0]=this[c]>>e;for(var h=c+1;h<this.t;++h)b[h-
-c-1]|=(this[h]&g)<<d,b[h-c]=this[h]>>e;0<e&&(b[this.t-c-1]|=(this.s&g)<<d);b.t=this.t-c;b.clamp()}};l.prototype.subTo=function(a,b){for(var c=0,e=0,d=Math.min(a.t,this.t);c<d;)e+=this[c]-a[c],b[c++]=e&this.DM,e>>=this.DB;if(a.t<this.t){for(e-=a.s;c<this.t;)e+=this[c],b[c++]=e&this.DM,e>>=this.DB;e+=this.s}else{for(e+=this.s;c<a.t;)e-=a[c],b[c++]=e&this.DM,e>>=this.DB;e-=a.s}b.s=0>e?-1:0;-1>e?b[c++]=this.DV+e:0<e&&(b[c++]=e);b.t=c;b.clamp()};l.prototype.multiplyTo=function(a,b){var c=this.abs(),e=
-a.abs(),d=c.t;for(b.t=d+e.t;0<=--d;)b[d]=0;for(d=0;d<e.t;++d)b[d+c.t]=c.am(0,e[d],b,d,0,c.t);b.s=0;b.clamp();this.s!=a.s&&l.ZERO.subTo(b,b)};l.prototype.squareTo=function(a){for(var b=this.abs(),c=a.t=2*b.t;0<=--c;)a[c]=0;for(c=0;c<b.t-1;++c){var e=b.am(c,b[c],a,2*c,0,1);(a[c+b.t]+=b.am(c+1,2*b[c],a,2*c+1,e,b.t-c-1))>=b.DV&&(a[c+b.t]-=b.DV,a[c+b.t+1]=1)}0<a.t&&(a[a.t-1]+=b.am(c,b[c],a,2*c,0,1));a.s=0;a.clamp()};l.prototype.divRemTo=function(a,b,c){var e=a.abs();if(!(0>=e.t)){var d=this.abs();if(d.t<
-e.t)null!=b&&b.fromInt(0),null!=c&&this.copyTo(c);else{null==c&&(c=q());var g=q(),h=this.s;a=a.s;var k=this.DB-D(e[e.t-1]);0<k?(e.lShiftTo(k,g),d.lShiftTo(k,c)):(e.copyTo(g),d.copyTo(c));e=g.t;d=g[e-1];if(0!=d){var n=d*(1<<this.F1)+(1<e?g[e-2]>>this.F2:0),m=this.FV/n,n=(1<<this.F1)/n,V=1<<this.F2,w=c.t,p=w-e,s=null==b?q():b;g.dlShiftTo(p,s);0<=c.compareTo(s)&&(c[c.t++]=1,c.subTo(s,c));l.ONE.dlShiftTo(e,s);for(s.subTo(g,g);g.t<e;)g[g.t++]=0;for(;0<=--p;){var r=c[--w]==d?this.DM:Math.floor(c[w]*m+(c[w-
-1]+V)*n);if((c[w]+=g.am(0,r,c,p,0,e))<r)for(g.dlShiftTo(p,s),c.subTo(s,c);c[w]<--r;)c.subTo(s,c)}null!=b&&(c.drShiftTo(e,b),h!=a&&l.ZERO.subTo(b,b));c.t=e;c.clamp();0<k&&c.rShiftTo(k,c);0>h&&l.ZERO.subTo(c,c)}}}};l.prototype.invDigit=function(){if(1>this.t)return 0;var a=this[0];if(0==(a&1))return 0;var b=a&3,b=b*(2-(a&15)*b)&15,b=b*(2-(a&255)*b)&255,b=b*(2-((a&65535)*b&65535))&65535,b=b*(2-a*b%this.DV)%this.DV;return 0<b?this.DV-b:-b};l.prototype.isEven=function(){return 0==(0<this.t?this[0]&1:this.s)};
-l.prototype.exp=function(a,b){if(4294967295<a||1>a)return l.ONE;var c=q(),e=q(),d=b.convert(this),g=D(a)-1;for(d.copyTo(c);0<=--g;)if(b.sqrTo(c,e),0<(a&1<<g))b.mulTo(e,d,c);else var h=c,c=e,e=h;return b.revert(c)};l.prototype.toString=function(a){if(0>this.s)return"-"+this.negate().toString(a);if(16==a)a=4;else if(8==a)a=3;else if(2==a)a=1;else if(32==a)a=5;else if(4==a)a=2;else return this.toRadix(a);var b=(1<<a)-1,c,e=!1,d="",g=this.t,h=this.DB-g*this.DB%a;if(0<g--)for(h<this.DB&&0<(c=this[g]>>
-h)&&(e=!0,d="0123456789abcdefghijklmnopqrstuvwxyz".charAt(c));0<=g;)h<a?(c=(this[g]&(1<<h)-1)<<a-h,c|=this[--g]>>(h+=this.DB-a)):(c=this[g]>>(h-=a)&b,0>=h&&(h+=this.DB,--g)),0<c&&(e=!0),e&&(d+="0123456789abcdefghijklmnopqrstuvwxyz".charAt(c));return e?d:"0"};l.prototype.negate=function(){var a=q();l.ZERO.subTo(this,a);return a};l.prototype.abs=function(){return 0>this.s?this.negate():this};l.prototype.compareTo=function(a){var b=this.s-a.s;if(0!=b)return b;var c=this.t,b=c-a.t;if(0!=b)return 0>this.s?
--b:b;for(;0<=--c;)if(0!=(b=this[c]-a[c]))return b;return 0};l.prototype.bitLength=function(){return 0>=this.t?0:this.DB*(this.t-1)+D(this[this.t-1]^this.s&this.DM)};l.prototype.mod=function(a){var b=q();this.abs().divRemTo(a,null,b);0>this.s&&0<b.compareTo(l.ZERO)&&a.subTo(b,b);return b};l.prototype.modPowInt=function(a,b){var c;c=256>a||b.isEven()?new z(b):new x(b);return this.exp(a,c)};l.ZERO=y(0);l.ONE=y(1);B.prototype.convert=P;B.prototype.revert=P;B.prototype.mulTo=function(a,b,c){a.multiplyTo(b,
-c)};B.prototype.sqrTo=function(a,b){a.squareTo(b)};A.prototype.convert=function(a){if(0>a.s||a.t>2*this.m.t)return a.mod(this.m);if(0>a.compareTo(this.m))return a;var b=q();a.copyTo(b);this.reduce(b);return b};A.prototype.revert=function(a){return a};A.prototype.reduce=function(a){a.drShiftTo(this.m.t-1,this.r2);a.t>this.m.t+1&&(a.t=this.m.t+1,a.clamp());this.mu.multiplyUpperTo(this.r2,this.m.t+1,this.q3);for(this.m.multiplyLowerTo(this.q3,this.m.t+1,this.r2);0>a.compareTo(this.r2);)a.dAddOffset(1,
-this.m.t+1);for(a.subTo(this.r2,a);0<=a.compareTo(this.m);)a.subTo(this.m,a)};A.prototype.mulTo=function(a,b,c){a.multiplyTo(b,c);this.reduce(c)};A.prototype.sqrTo=function(a,b){a.squareTo(b);this.reduce(b)};var u=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,
-409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997],W=67108864/u[u.length-1];l.prototype.chunkSize=function(a){return Math.floor(Math.LN2*this.DB/Math.log(a))};l.prototype.toRadix=function(a){null==
-a&&(a=10);if(0==this.signum()||2>a||36<a)return"0";var b=this.chunkSize(a),b=Math.pow(a,b),c=y(b),e=q(),d=q(),g="";for(this.divRemTo(c,e,d);0<e.signum();)g=(b+d.intValue()).toString(a).substr(1)+g,e.divRemTo(c,e,d);return d.intValue().toString(a)+g};l.prototype.fromRadix=function(a,b){this.fromInt(0);null==b&&(b=10);for(var c=this.chunkSize(b),e=Math.pow(b,c),d=!1,g=0,h=0,k=0;k<a.length;++k){var n=M(a,k);0>n?"-"==a.charAt(k)&&0==this.signum()&&(d=!0):(h=b*h+n,++g>=c&&(this.dMultiply(e),this.dAddOffset(h,
-0),h=g=0))}0<g&&(this.dMultiply(Math.pow(b,g)),this.dAddOffset(h,0));d&&l.ZERO.subTo(this,this)};l.prototype.fromNumber=function(a,b,c){if("number"==typeof b)if(2>a)this.fromInt(1);else for(this.fromNumber(a,c),this.testBit(a-1)||this.bitwiseTo(l.ONE.shiftLeft(a-1),J,this),this.isEven()&&this.dAddOffset(1,0);!this.isProbablePrime(b);)this.dAddOffset(2,0),this.bitLength()>a&&this.subTo(l.ONE.shiftLeft(a-1),this);else{c=[];var e=a&7;c.length=(a>>3)+1;b.nextBytes(c);c[0]=0<e?c[0]&(1<<e)-1:0;this.fromString(c,
-256)}};l.prototype.bitwiseTo=function(a,b,c){var e,d,g=Math.min(a.t,this.t);for(e=0;e<g;++e)c[e]=b(this[e],a[e]);if(a.t<this.t){d=a.s&this.DM;for(e=g;e<this.t;++e)c[e]=b(this[e],d);c.t=this.t}else{d=this.s&this.DM;for(e=g;e<a.t;++e)c[e]=b(d,a[e]);c.t=a.t}c.s=b(this.s,a.s);c.clamp()};l.prototype.changeBit=function(a,b){var c=l.ONE.shiftLeft(a);this.bitwiseTo(c,b,c);return c};l.prototype.addTo=function(a,b){for(var c=0,e=0,d=Math.min(a.t,this.t);c<d;)e+=this[c]+a[c],b[c++]=e&this.DM,e>>=this.DB;if(a.t<
-this.t){for(e+=a.s;c<this.t;)e+=this[c],b[c++]=e&this.DM,e>>=this.DB;e+=this.s}else{for(e+=this.s;c<a.t;)e+=a[c],b[c++]=e&this.DM,e>>=this.DB;e+=a.s}b.s=0>e?-1:0;0<e?b[c++]=e:-1>e&&(b[c++]=this.DV+e);b.t=c;b.clamp()};l.prototype.dMultiply=function(a){this[this.t]=this.am(0,a-1,this,0,0,this.t);++this.t;this.clamp()};l.prototype.dAddOffset=function(a,b){if(0!=a){for(;this.t<=b;)this[this.t++]=0;for(this[b]+=a;this[b]>=this.DV;)this[b]-=this.DV,++b>=this.t&&(this[this.t++]=0),++this[b]}};l.prototype.multiplyLowerTo=
-function(a,b,c){var e=Math.min(this.t+a.t,b);c.s=0;for(c.t=e;0<e;)c[--e]=0;var d;for(d=c.t-this.t;e<d;++e)c[e+this.t]=this.am(0,a[e],c,e,0,this.t);for(d=Math.min(a.t,b);e<d;++e)this.am(0,a[e],c,e,0,b-e);c.clamp()};l.prototype.multiplyUpperTo=function(a,b,c){--b;var e=c.t=this.t+a.t-b;for(c.s=0;0<=--e;)c[e]=0;for(e=Math.max(b-this.t,0);e<a.t;++e)c[this.t+e-b]=this.am(b-e,a[e],c,0,0,this.t+e-b);c.clamp();c.drShiftTo(1,c)};l.prototype.modInt=function(a){if(0>=a)return 0;var b=this.DV%a,c=0>this.s?a-
-1:0;if(0<this.t)if(0==b)c=this[0]%a;else for(var e=this.t-1;0<=e;--e)c=(b*c+this[e])%a;return c};l.prototype.millerRabin=function(a){var b=this.subtract(l.ONE),c=b.getLowestSetBit();if(0>=c)return!1;var e=b.shiftRight(c);a=a+1>>1;a>u.length&&(a=u.length);for(var d=q(),g=0;g<a;++g){d.fromInt(u[Math.floor(Math.random()*u.length)]);var h=d.modPow(e,this);if(0!=h.compareTo(l.ONE)&&0!=h.compareTo(b)){for(var k=1;k++<c&&0!=h.compareTo(b);)if(h=h.modPowInt(2,this),0==h.compareTo(l.ONE))return!1;if(0!=h.compareTo(b))return!1}}return!0};
-l.prototype.clone=function(){var a=q();this.copyTo(a);return a};l.prototype.intValue=function(){if(0>this.s){if(1==this.t)return this[0]-this.DV;if(0==this.t)return-1}else{if(1==this.t)return this[0];if(0==this.t)return 0}return(this[1]&(1<<32-this.DB)-1)<<this.DB|this[0]};l.prototype.byteValue=function(){return 0==this.t?this.s:this[0]<<24>>24};l.prototype.shortValue=function(){return 0==this.t?this.s:this[0]<<16>>16};l.prototype.signum=function(){return 0>this.s?-1:0>=this.t||1==this.t&&0>=this[0]?
-0:1};l.prototype.toByteArray=function(){var a=this.t,b=[];b[0]=this.s;var c=this.DB-a*this.DB%8,e,d=0;if(0<a--)for(c<this.DB&&(e=this[a]>>c)!=(this.s&this.DM)>>c&&(b[d++]=e|this.s<<this.DB-c);0<=a;)if(8>c?(e=(this[a]&(1<<c)-1)<<8-c,e|=this[--a]>>(c+=this.DB-8)):(e=this[a]>>(c-=8)&255,0>=c&&(c+=this.DB,--a)),0!=(e&128)&&(e|=-256),0==d&&(this.s&128)!=(e&128)&&++d,0<d||e!=this.s)b[d++]=e;return b};l.prototype.equals=function(a){return 0==this.compareTo(a)};l.prototype.min=function(a){return 0>this.compareTo(a)?
-this:a};l.prototype.max=function(a){return 0<this.compareTo(a)?this:a};l.prototype.and=function(a){var b=q();this.bitwiseTo(a,U,b);return b};l.prototype.or=function(a){var b=q();this.bitwiseTo(a,J,b);return b};l.prototype.xor=function(a){var b=q();this.bitwiseTo(a,N,b);return b};l.prototype.andNot=function(a){var b=q();this.bitwiseTo(a,O,b);return b};l.prototype.not=function(){for(var a=q(),b=0;b<this.t;++b)a[b]=this.DM&~this[b];a.t=this.t;a.s=~this.s;return a};l.prototype.shiftLeft=function(a){var b=
-q();0>a?this.rShiftTo(-a,b):this.lShiftTo(a,b);return b};l.prototype.shiftRight=function(a){var b=q();0>a?this.lShiftTo(-a,b):this.rShiftTo(a,b);return b};l.prototype.getLowestSetBit=function(){for(var a=0;a<this.t;++a)if(0!=this[a]){var b=a*this.DB;a=this[a];if(0==a)a=-1;else{var c=0;0==(a&65535)&&(a>>=16,c+=16);0==(a&255)&&(a>>=8,c+=8);0==(a&15)&&(a>>=4,c+=4);0==(a&3)&&(a>>=2,c+=2);0==(a&1)&&++c;a=c}return b+a}return 0>this.s?this.t*this.DB:-1};l.prototype.bitCount=function(){for(var a=0,b=this.s&
-this.DM,c=0;c<this.t;++c){for(var e=this[c]^b,d=0;0!=e;)e&=e-1,++d;a+=d}return a};l.prototype.testBit=function(a){var b=Math.floor(a/this.DB);return b>=this.t?0!=this.s:0!=(this[b]&1<<a%this.DB)};l.prototype.setBit=function(a){return this.changeBit(a,J)};l.prototype.clearBit=function(a){return this.changeBit(a,O)};l.prototype.flipBit=function(a){return this.changeBit(a,N)};l.prototype.add=function(a){var b=q();this.addTo(a,b);return b};l.prototype.subtract=function(a){var b=q();this.subTo(a,b);return b};
-l.prototype.multiply=function(a){var b=q();this.multiplyTo(a,b);return b};l.prototype.divide=function(a){var b=q();this.divRemTo(a,b,null);return b};l.prototype.remainder=function(a){var b=q();this.divRemTo(a,null,b);return b};l.prototype.divideAndRemainder=function(a){var b=q(),c=q();this.divRemTo(a,b,c);return[b,c]};l.prototype.modPow=function(a,b){var c=a.bitLength(),e,d=y(1),g;if(0>=c)return d;e=18>c?1:48>c?3:144>c?4:768>c?5:6;g=8>c?new z(b):b.isEven()?new A(b):new x(b);var h=[],k=3,n=e-1,m=(1<<
-e)-1;h[1]=g.convert(this);if(1<e)for(c=q(),g.sqrTo(h[1],c);k<=m;)h[k]=q(),g.mulTo(c,h[k-2],h[k]),k+=2;for(var l=a.t-1,w,p=!0,s=q(),c=D(a[l])-1;0<=l;){c>=n?w=a[l]>>c-n&m:(w=(a[l]&(1<<c+1)-1)<<n-c,0<l&&(w|=a[l-1]>>this.DB+c-n));for(k=e;0==(w&1);)w>>=1,--k;0>(c-=k)&&(c+=this.DB,--l);if(p)h[w].copyTo(d),p=!1;else{for(;1<k;)g.sqrTo(d,s),g.sqrTo(s,d),k-=2;0<k?g.sqrTo(d,s):(k=d,d=s,s=k);g.mulTo(s,h[w],d)}for(;0<=l&&0==(a[l]&1<<c);)g.sqrTo(d,s),k=d,d=s,s=k,0>--c&&(c=this.DB-1,--l)}return g.revert(d)};l.prototype.modInverse=
-function(a){var b=a.isEven();if(this.isEven()&&b||0==a.signum())return l.ZERO;for(var c=a.clone(),e=this.clone(),d=y(1),g=y(0),h=y(0),k=y(1);0!=c.signum();){for(;c.isEven();)c.rShiftTo(1,c),b?(d.isEven()&&g.isEven()||(d.addTo(this,d),g.subTo(a,g)),d.rShiftTo(1,d)):g.isEven()||g.subTo(a,g),g.rShiftTo(1,g);for(;e.isEven();)e.rShiftTo(1,e),b?(h.isEven()&&k.isEven()||(h.addTo(this,h),k.subTo(a,k)),h.rShiftTo(1,h)):k.isEven()||k.subTo(a,k),k.rShiftTo(1,k);0<=c.compareTo(e)?(c.subTo(e,c),b&&d.subTo(h,d),
-g.subTo(k,g)):(e.subTo(c,e),b&&h.subTo(d,h),k.subTo(g,k))}if(0!=e.compareTo(l.ONE))return l.ZERO;if(0<=k.compareTo(a))return k.subtract(a);if(0>k.signum())k.addTo(a,k);else return k;return 0>k.signum()?k.add(a):k};l.prototype.pow=function(a){return this.exp(a,new B)};l.prototype.gcd=function(a){var b=0>this.s?this.negate():this.clone();a=0>a.s?a.negate():a.clone();if(0>b.compareTo(a)){var c=b,b=a;a=c}var c=b.getLowestSetBit(),e=a.getLowestSetBit();if(0>e)return b;c<e&&(e=c);0<e&&(b.rShiftTo(e,b),
-a.rShiftTo(e,a));for(;0<b.signum();)0<(c=b.getLowestSetBit())&&b.rShiftTo(c,b),0<(c=a.getLowestSetBit())&&a.rShiftTo(c,a),0<=b.compareTo(a)?(b.subTo(a,b),b.rShiftTo(1,b)):(a.subTo(b,a),a.rShiftTo(1,a));0<e&&a.lShiftTo(e,a);return a};l.prototype.isProbablePrime=function(a){var b,c=this.abs();if(1==c.t&&c[0]<=u[u.length-1]){for(b=0;b<u.length;++b)if(c[0]==u[b])return!0;return!1}if(c.isEven())return!1;for(b=1;b<u.length;){for(var e=u[b],d=b+1;d<u.length&&e<W;)e*=u[d++];for(e=c.modInt(e);b<d;)if(0==e%
-u[b++])return!1}return c.millerRabin(a)};l.prototype.square=function(){var a=q();this.squareTo(a);return a};var p=l;p.prototype.IsNegative=function(){return-1==this.compareTo(p.ZERO)?!0:!1};p.op_Equality=function(a,b){return 0==a.compareTo(b)?!0:!1};p.op_Inequality=function(a,b){return 0!=a.compareTo(b)?!0:!1};p.op_GreaterThan=function(a,b){return 0<a.compareTo(b)?!0:!1};p.op_LessThan=function(a,b){return 0>a.compareTo(b)?!0:!1};p.op_Addition=function(a,b){return(new p(a)).add(new p(b))};p.op_Subtraction=
-function(a,b){return(new p(a)).subtract(new p(b))};p.Int128Mul=function(a,b){return(new p(a)).multiply(new p(b))};p.op_Division=function(a,b){return a.divide(b)};p.prototype.ToDouble=function(){return parseFloat(this.toString())};if("undefined"==typeof L)var L=function(a,b){var c;if("undefined"==typeof Object.getOwnPropertyNames)for(c in b.prototype){if("undefined"==typeof a.prototype[c]||a.prototype[c]==Object.prototype[c])a.prototype[c]=b.prototype[c]}else for(var e=Object.getOwnPropertyNames(b.prototype),
-d=0;d<e.length;d++)"undefined"==typeof Object.getOwnPropertyDescriptor(a.prototype,e[d])&&Object.defineProperty(a.prototype,e[d],Object.getOwnPropertyDescriptor(b.prototype,e[d]));for(c in b)"undefined"==typeof a[c]&&(a[c]=b[c]);a.$baseCtor=b};d.Path=function(){return[]};d.Paths=function(){return[]};d.DoublePoint=function(){var a=arguments;this.Y=this.X=0;1==a.length?(this.X=a[0].X,this.Y=a[0].Y):2==a.length&&(this.X=a[0],this.Y=a[1])};d.DoublePoint0=function(){this.Y=this.X=0};d.DoublePoint1=function(a){this.X=
-a.X;this.Y=a.Y};d.DoublePoint2=function(a,b){this.X=a;this.Y=b};d.PolyNode=function(){this.m_Parent=null;this.m_polygon=new d.Path;this.m_endtype=this.m_jointype=this.m_Index=0;this.m_Childs=[];this.IsOpen=!1};d.PolyNode.prototype.IsHoleNode=function(){for(var a=!0,b=this.m_Parent;null!==b;)a=!a,b=b.m_Parent;return a};d.PolyNode.prototype.ChildCount=function(){return this.m_Childs.length};d.PolyNode.prototype.Contour=function(){return this.m_polygon};d.PolyNode.prototype.AddChild=function(a){var b=
-this.m_Childs.length;this.m_Childs.push(a);a.m_Parent=this;a.m_Index=b};d.PolyNode.prototype.GetNext=function(){return 0<this.m_Childs.length?this.m_Childs[0]:this.GetNextSiblingUp()};d.PolyNode.prototype.GetNextSiblingUp=function(){return null===this.m_Parent?null:this.m_Index==this.m_Parent.m_Childs.length-1?this.m_Parent.GetNextSiblingUp():this.m_Parent.m_Childs[this.m_Index+1]};d.PolyNode.prototype.Childs=function(){return this.m_Childs};d.PolyNode.prototype.Parent=function(){return this.m_Parent};
-d.PolyNode.prototype.IsHole=function(){return this.IsHoleNode()};d.PolyTree=function(){this.m_AllPolys=[];d.PolyNode.call(this)};d.PolyTree.prototype.Clear=function(){for(var a=0,b=this.m_AllPolys.length;a<b;a++)this.m_AllPolys[a]=null;this.m_AllPolys.length=0;this.m_Childs.length=0};d.PolyTree.prototype.GetFirst=function(){return 0<this.m_Childs.length?this.m_Childs[0]:null};d.PolyTree.prototype.Total=function(){return this.m_AllPolys.length};L(d.PolyTree,d.PolyNode);d.Math_Abs_Int64=d.Math_Abs_Int32=
-d.Math_Abs_Double=function(a){return Math.abs(a)};d.Math_Max_Int32_Int32=function(a,b){return Math.max(a,b)};d.Cast_Int32=r||H||K?function(a){return a|0}:function(a){return~~a};d.Cast_Int64=F?function(a){return-2147483648>a||2147483647<a?0>a?Math.ceil(a):Math.floor(a):~~a}:G&&"function"==typeof Number.toInteger?function(a){return Number.toInteger(a)}:Q||I?function(a){return parseInt(a,10)}:r?function(a){return-2147483648>a||2147483647<a?0>a?Math.ceil(a):Math.floor(a):a|0}:function(a){return 0>a?Math.ceil(a):
-Math.floor(a)};d.Clear=function(a){a.length=0};d.PI=3.141592653589793;d.PI2=6.283185307179586;d.IntPoint=function(){var a;a=arguments;var b=a.length;this.Y=this.X=0;2==b?(this.X=a[0],this.Y=a[1]):1==b?a[0]instanceof d.DoublePoint?(a=a[0],this.X=d.Clipper.Round(a.X),this.Y=d.Clipper.Round(a.Y)):(a=a[0],this.X=a.X,this.Y=a.Y):this.Y=this.X=0};d.IntPoint.op_Equality=function(a,b){return a.X==b.X&&a.Y==b.Y};d.IntPoint.op_Inequality=function(a,b){return a.X!=b.X||a.Y!=b.Y};d.IntPoint0=function(){this.Y=
-this.X=0};d.IntPoint1=function(a){this.X=a.X;this.Y=a.Y};d.IntPoint1dp=function(a){this.X=d.Clipper.Round(a.X);this.Y=d.Clipper.Round(a.Y)};d.IntPoint2=function(a,b){this.X=a;this.Y=b};d.IntRect=function(){var a=arguments,b=a.length;4==b?(this.left=a[0],this.top=a[1],this.right=a[2],this.bottom=a[3]):1==b?(this.left=a[0].left,this.top=a[0].top,this.right=a[0].right,this.bottom=a[0].bottom):this.bottom=this.right=this.top=this.left=0};d.IntRect0=function(){this.bottom=this.right=this.top=this.left=0};d.IntRect1=
-function(a){this.left=a.left;this.top=a.top;this.right=a.right;this.bottom=a.bottom};d.IntRect4=function(a,b,c,e){this.left=a;this.top=b;this.right=c;this.bottom=e};d.ClipType={ctIntersection:0,ctUnion:1,ctDifference:2,ctXor:3};d.PolyType={ptSubject:0,ptClip:1};d.PolyFillType={pftEvenOdd:0,pftNonZero:1,pftPositive:2,pftNegative:3};d.JoinType={jtSquare:0,jtRound:1,jtMiter:2};d.EndType={etOpenSquare:0,etOpenRound:1,etOpenButt:2,etClosedLine:3,etClosedPolygon:4};d.EdgeSide={esLeft:0,esRight:1};d.Direction=
-{dRightToLeft:0,dLeftToRight:1};d.TEdge=function(){this.Bot=new d.IntPoint;this.Curr=new d.IntPoint;this.Top=new d.IntPoint;this.Delta=new d.IntPoint;this.Dx=0;this.PolyTyp=d.PolyType.ptSubject;this.Side=d.EdgeSide.esLeft;this.OutIdx=this.WindCnt2=this.WindCnt=this.WindDelta=0;this.PrevInSEL=this.NextInSEL=this.PrevInAEL=this.NextInAEL=this.NextInLML=this.Prev=this.Next=null};d.IntersectNode=function(){this.Edge2=this.Edge1=null;this.Pt=new d.IntPoint};d.MyIntersectNodeSort=function(){};d.MyIntersectNodeSort.Compare=
-function(a,b){return b.Pt.Y-a.Pt.Y};d.LocalMinima=function(){this.Y=0;this.Next=this.RightBound=this.LeftBound=null};d.Scanbeam=function(){this.Y=0;this.Next=null};d.OutRec=function(){this.Idx=0;this.IsOpen=this.IsHole=!1;this.PolyNode=this.BottomPt=this.Pts=this.FirstLeft=null};d.OutPt=function(){this.Idx=0;this.Pt=new d.IntPoint;this.Prev=this.Next=null};d.Join=function(){this.OutPt2=this.OutPt1=null;this.OffPt=new d.IntPoint};d.ClipperBase=function(){this.m_CurrentLM=this.m_MinimaList=null;this.m_edges=
-[];this.PreserveCollinear=this.m_HasOpenPaths=this.m_UseFullRange=!1;this.m_CurrentLM=this.m_MinimaList=null;this.m_HasOpenPaths=this.m_UseFullRange=!1};d.ClipperBase.horizontal=-9007199254740992;d.ClipperBase.Skip=-2;d.ClipperBase.Unassigned=-1;d.ClipperBase.tolerance=1E-20;d.ClipperBase.loRange=47453132;d.ClipperBase.hiRange=0xfffffffffffff;d.ClipperBase.near_zero=function(a){return a>-d.ClipperBase.tolerance&&a<d.ClipperBase.tolerance};d.ClipperBase.IsHorizontal=function(a){return 0===a.Delta.Y};
-d.ClipperBase.prototype.PointIsVertex=function(a,b){var c=b;do{if(d.IntPoint.op_Equality(c.Pt,a))return!0;c=c.Next}while(c!=b);return!1};d.ClipperBase.prototype.PointOnLineSegment=function(a,b,c,e){return e?a.X==b.X&&a.Y==b.Y||a.X==c.X&&a.Y==c.Y||a.X>b.X==a.X<c.X&&a.Y>b.Y==a.Y<c.Y&&p.op_Equality(p.Int128Mul(a.X-b.X,c.Y-b.Y),p.Int128Mul(c.X-b.X,a.Y-b.Y)):a.X==b.X&&a.Y==b.Y||a.X==c.X&&a.Y==c.Y||a.X>b.X==a.X<c.X&&a.Y>b.Y==a.Y<c.Y&&(a.X-b.X)*(c.Y-b.Y)==(c.X-b.X)*(a.Y-b.Y)};d.ClipperBase.prototype.PointOnPolygon=
-function(a,b,c){for(var e=b;;){if(this.PointOnLineSegment(a,e.Pt,e.Next.Pt,c))return!0;e=e.Next;if(e==b)break}return!1};d.ClipperBase.prototype.SlopesEqual=d.ClipperBase.SlopesEqual=function(){var a=arguments,b=a.length,c,e,f;if(3==b)return b=a[0],c=a[1],(a=a[2])?p.op_Equality(p.Int128Mul(b.Delta.Y,c.Delta.X),p.Int128Mul(b.Delta.X,c.Delta.Y)):d.Cast_Int64(b.Delta.Y*c.Delta.X)==d.Cast_Int64(b.Delta.X*c.Delta.Y);if(4==b)return b=a[0],c=a[1],e=a[2],(a=a[3])?p.op_Equality(p.Int128Mul(b.Y-c.Y,c.X-e.X),
-p.Int128Mul(b.X-c.X,c.Y-e.Y)):0===d.Cast_Int64((b.Y-c.Y)*(c.X-e.X))-d.Cast_Int64((b.X-c.X)*(c.Y-e.Y));b=a[0];c=a[1];e=a[2];f=a[3];return(a=a[4])?p.op_Equality(p.Int128Mul(b.Y-c.Y,e.X-f.X),p.Int128Mul(b.X-c.X,e.Y-f.Y)):0===d.Cast_Int64((b.Y-c.Y)*(e.X-f.X))-d.Cast_Int64((b.X-c.X)*(e.Y-f.Y))};d.ClipperBase.SlopesEqual3=function(a,b,c){return c?p.op_Equality(p.Int128Mul(a.Delta.Y,b.Delta.X),p.Int128Mul(a.Delta.X,b.Delta.Y)):d.Cast_Int64(a.Delta.Y*b.Delta.X)==d.Cast_Int64(a.Delta.X*b.Delta.Y)};d.ClipperBase.SlopesEqual4=
-function(a,b,c,e){return e?p.op_Equality(p.Int128Mul(a.Y-b.Y,b.X-c.X),p.Int128Mul(a.X-b.X,b.Y-c.Y)):0===d.Cast_Int64((a.Y-b.Y)*(b.X-c.X))-d.Cast_Int64((a.X-b.X)*(b.Y-c.Y))};d.ClipperBase.SlopesEqual5=function(a,b,c,e,f){return f?p.op_Equality(p.Int128Mul(a.Y-b.Y,c.X-e.X),p.Int128Mul(a.X-b.X,c.Y-e.Y)):0===d.Cast_Int64((a.Y-b.Y)*(c.X-e.X))-d.Cast_Int64((a.X-b.X)*(c.Y-e.Y))};d.ClipperBase.prototype.Clear=function(){this.DisposeLocalMinimaList();for(var a=0,b=this.m_edges.length;a<b;++a){for(var c=0,
-e=this.m_edges[a].length;c<e;++c)this.m_edges[a][c]=null;d.Clear(this.m_edges[a])}d.Clear(this.m_edges);this.m_HasOpenPaths=this.m_UseFullRange=!1};d.ClipperBase.prototype.DisposeLocalMinimaList=function(){for(;null!==this.m_MinimaList;){var a=this.m_MinimaList.Next;this.m_MinimaList=null;this.m_MinimaList=a}this.m_CurrentLM=null};d.ClipperBase.prototype.RangeTest=function(a,b){if(b.Value)(a.X>d.ClipperBase.hiRange||a.Y>d.ClipperBase.hiRange||-a.X>d.ClipperBase.hiRange||-a.Y>d.ClipperBase.hiRange)&&
-d.Error("Coordinate outside allowed range in RangeTest().");else if(a.X>d.ClipperBase.loRange||a.Y>d.ClipperBase.loRange||-a.X>d.ClipperBase.loRange||-a.Y>d.ClipperBase.loRange)b.Value=!0,this.RangeTest(a,b)};d.ClipperBase.prototype.InitEdge=function(a,b,c,e){a.Next=b;a.Prev=c;a.Curr.X=e.X;a.Curr.Y=e.Y;a.OutIdx=-1};d.ClipperBase.prototype.InitEdge2=function(a,b){a.Curr.Y>=a.Next.Curr.Y?(a.Bot.X=a.Curr.X,a.Bot.Y=a.Curr.Y,a.Top.X=a.Next.Curr.X,a.Top.Y=a.Next.Curr.Y):(a.Top.X=a.Curr.X,a.Top.Y=a.Curr.Y,
-a.Bot.X=a.Next.Curr.X,a.Bot.Y=a.Next.Curr.Y);this.SetDx(a);a.PolyTyp=b};d.ClipperBase.prototype.FindNextLocMin=function(a){for(var b;;){for(;d.IntPoint.op_Inequality(a.Bot,a.Prev.Bot)||d.IntPoint.op_Equality(a.Curr,a.Top);)a=a.Next;if(a.Dx!=d.ClipperBase.horizontal&&a.Prev.Dx!=d.ClipperBase.horizontal)break;for(;a.Prev.Dx==d.ClipperBase.horizontal;)a=a.Prev;for(b=a;a.Dx==d.ClipperBase.horizontal;)a=a.Next;if(a.Top.Y!=a.Prev.Bot.Y){b.Prev.Bot.X<a.Bot.X&&(a=b);break}}return a};d.ClipperBase.prototype.ProcessBound=
-function(a,b){var c=a,e=a,f;a.Dx==d.ClipperBase.horizontal&&(f=b?a.Prev.Bot.X:a.Next.Bot.X,a.Bot.X!=f&&this.ReverseHorizontal(a));if(e.OutIdx!=d.ClipperBase.Skip)if(b){for(;e.Top.Y==e.Next.Bot.Y&&e.Next.OutIdx!=d.ClipperBase.Skip;)e=e.Next;if(e.Dx==d.ClipperBase.horizontal&&e.Next.OutIdx!=d.ClipperBase.Skip){for(f=e;f.Prev.Dx==d.ClipperBase.horizontal;)f=f.Prev;f.Prev.Top.X==e.Next.Top.X?b||(e=f.Prev):f.Prev.Top.X>e.Next.Top.X&&(e=f.Prev)}for(;a!=e;)a.NextInLML=a.Next,a.Dx==d.ClipperBase.horizontal&&
-a!=c&&a.Bot.X!=a.Prev.Top.X&&this.ReverseHorizontal(a),a=a.Next;a.Dx==d.ClipperBase.horizontal&&a!=c&&a.Bot.X!=a.Prev.Top.X&&this.ReverseHorizontal(a);e=e.Next}else{for(;e.Top.Y==e.Prev.Bot.Y&&e.Prev.OutIdx!=d.ClipperBase.Skip;)e=e.Prev;if(e.Dx==d.ClipperBase.horizontal&&e.Prev.OutIdx!=d.ClipperBase.Skip){for(f=e;f.Next.Dx==d.ClipperBase.horizontal;)f=f.Next;f.Next.Top.X==e.Prev.Top.X?b||(e=f.Next):f.Next.Top.X>e.Prev.Top.X&&(e=f.Next)}for(;a!=e;)a.NextInLML=a.Prev,a.Dx==d.ClipperBase.horizontal&&
-a!=c&&a.Bot.X!=a.Next.Top.X&&this.ReverseHorizontal(a),a=a.Prev;a.Dx==d.ClipperBase.horizontal&&a!=c&&a.Bot.X!=a.Next.Top.X&&this.ReverseHorizontal(a);e=e.Prev}if(e.OutIdx==d.ClipperBase.Skip){a=e;if(b){for(;a.Top.Y==a.Next.Bot.Y;)a=a.Next;for(;a!=e&&a.Dx==d.ClipperBase.horizontal;)a=a.Prev}else{for(;a.Top.Y==a.Prev.Bot.Y;)a=a.Prev;for(;a!=e&&a.Dx==d.ClipperBase.horizontal;)a=a.Next}a==e?e=b?a.Next:a.Prev:(a=b?e.Next:e.Prev,c=new d.LocalMinima,c.Next=null,c.Y=a.Bot.Y,c.LeftBound=null,c.RightBound=
-a,c.RightBound.WindDelta=0,e=this.ProcessBound(c.RightBound,b),this.InsertLocalMinima(c))}return e};d.ClipperBase.prototype.AddPath=function(a,b,c){c||b!=d.PolyType.ptClip||d.Error("AddPath: Open paths must be subject.");var e=a.length-1;if(c)for(;0<e&&d.IntPoint.op_Equality(a[e],a[0]);)--e;for(;0<e&&d.IntPoint.op_Equality(a[e],a[e-1]);)--e;if(c&&2>e||!c&&1>e)return!1;for(var f=[],g=0;g<=e;g++)f.push(new d.TEdge);var h=!0;try{for(f[1].Curr.X=a[1].X,f[1].Curr.Y=a[1].Y,function(){var b={Value:this.m_UseFullRange},
-c=this.RangeTest(a[0],b);this.m_UseFullRange=b.Value;return c}.call(this),function(){var b={Value:this.m_UseFullRange},c=this.RangeTest(a[e],b);this.m_UseFullRange=b.Value;return c}.call(this),this.InitEdge(f[0],f[1],f[e],a[0]),this.InitEdge(f[e],f[0],f[e-1],a[e]),g=e-1;1<=g;--g)(function(){var b={Value:this.m_UseFullRange},c=this.RangeTest(a[g],b);this.m_UseFullRange=b.Value;return c}).call(this),this.InitEdge(f[g],f[g+1],f[g-1],a[g])}catch(k){return!1}var n=f[0];c||(n.Prev.OutIdx=d.ClipperBase.Skip);
-for(var m=n,l=n;;)if(d.IntPoint.op_Equality(m.Curr,m.Next.Curr)){if(m==m.Next)break;m==n&&(n=m.Next);l=m=this.RemoveEdge(m)}else{if(m.Prev==m.Next)break;else if(c&&d.ClipperBase.SlopesEqual(m.Prev.Curr,m.Curr,m.Next.Curr,this.m_UseFullRange)&&(!this.PreserveCollinear||!this.Pt2IsBetweenPt1AndPt3(m.Prev.Curr,m.Curr,m.Next.Curr))){m==n&&(n=m.Next);m=this.RemoveEdge(m);l=m=m.Prev;continue}m=m.Next;if(m==l)break}if(!c&&m==m.Next||c&&m.Prev==m.Next)return!1;c||(this.m_HasOpenPaths=!0);m=n;do this.InitEdge2(m,
-b),m=m.Next,h&&m.Curr.Y!=n.Curr.Y&&(h=!1);while(m!=n);if(h){if(c)return!1;m.Prev.OutIdx=d.ClipperBase.Skip;m.Prev.Bot.X<m.Prev.Top.X&&this.ReverseHorizontal(m.Prev);b=new d.LocalMinima;b.Next=null;b.Y=m.Bot.Y;b.LeftBound=null;b.RightBound=m;b.RightBound.Side=d.EdgeSide.esRight;for(b.RightBound.WindDelta=0;m.Next.OutIdx!=d.ClipperBase.Skip;)m.NextInLML=m.Next,m.Bot.X!=m.Prev.Top.X&&this.ReverseHorizontal(m),m=m.Next;this.InsertLocalMinima(b);this.m_edges.push(f);return!0}this.m_edges.push(f);for(h=
-null;;){m=this.FindNextLocMin(m);if(m==h)break;else null==h&&(h=m);b=new d.LocalMinima;b.Next=null;b.Y=m.Bot.Y;m.Dx<m.Prev.Dx?(b.LeftBound=m.Prev,b.RightBound=m,f=!1):(b.LeftBound=m,b.RightBound=m.Prev,f=!0);b.LeftBound.Side=d.EdgeSide.esLeft;b.RightBound.Side=d.EdgeSide.esRight;b.LeftBound.WindDelta=c?b.LeftBound.Next==b.RightBound?-1:1:0;b.RightBound.WindDelta=-b.LeftBound.WindDelta;m=this.ProcessBound(b.LeftBound,f);n=this.ProcessBound(b.RightBound,!f);b.LeftBound.OutIdx==d.ClipperBase.Skip?b.LeftBound=
-null:b.RightBound.OutIdx==d.ClipperBase.Skip&&(b.RightBound=null);this.InsertLocalMinima(b);f||(m=n)}return!0};d.ClipperBase.prototype.AddPaths=function(a,b,c){for(var e=!1,d=0,g=a.length;d<g;++d)this.AddPath(a[d],b,c)&&(e=!0);return e};d.ClipperBase.prototype.Pt2IsBetweenPt1AndPt3=function(a,b,c){return d.IntPoint.op_Equality(a,c)||d.IntPoint.op_Equality(a,b)||d.IntPoint.op_Equality(c,b)?!1:a.X!=c.X?b.X>a.X==b.X<c.X:b.Y>a.Y==b.Y<c.Y};d.ClipperBase.prototype.RemoveEdge=function(a){a.Prev.Next=a.Next;
-a.Next.Prev=a.Prev;var b=a.Next;a.Prev=null;return b};d.ClipperBase.prototype.SetDx=function(a){a.Delta.X=a.Top.X-a.Bot.X;a.Delta.Y=a.Top.Y-a.Bot.Y;a.Dx=0===a.Delta.Y?d.ClipperBase.horizontal:a.Delta.X/a.Delta.Y};d.ClipperBase.prototype.InsertLocalMinima=function(a){if(null===this.m_MinimaList)this.m_MinimaList=a;else if(a.Y>=this.m_MinimaList.Y)a.Next=this.m_MinimaList,this.m_MinimaList=a;else{for(var b=this.m_MinimaList;null!==b.Next&&a.Y<b.Next.Y;)b=b.Next;a.Next=b.Next;b.Next=a}};d.ClipperBase.prototype.PopLocalMinima=
-function(){null!==this.m_CurrentLM&&(this.m_CurrentLM=this.m_CurrentLM.Next)};d.ClipperBase.prototype.ReverseHorizontal=function(a){var b=a.Top.X;a.Top.X=a.Bot.X;a.Bot.X=b};d.ClipperBase.prototype.Reset=function(){this.m_CurrentLM=this.m_MinimaList;if(null!=this.m_CurrentLM)for(var a=this.m_MinimaList;null!=a;){var b=a.LeftBound;null!=b&&(b.Curr.X=b.Bot.X,b.Curr.Y=b.Bot.Y,b.Side=d.EdgeSide.esLeft,b.OutIdx=d.ClipperBase.Unassigned);b=a.RightBound;null!=b&&(b.Curr.X=b.Bot.X,b.Curr.Y=b.Bot.Y,b.Side=
-d.EdgeSide.esRight,b.OutIdx=d.ClipperBase.Unassigned);a=a.Next}};d.Clipper=function(a){"undefined"==typeof a&&(a=0);this.m_PolyOuts=null;this.m_ClipType=d.ClipType.ctIntersection;this.m_IntersectNodeComparer=this.m_IntersectList=this.m_SortedEdges=this.m_ActiveEdges=this.m_Scanbeam=null;this.m_ExecuteLocked=!1;this.m_SubjFillType=this.m_ClipFillType=d.PolyFillType.pftEvenOdd;this.m_GhostJoins=this.m_Joins=null;this.StrictlySimple=this.ReverseSolution=this.m_UsingPolyTree=!1;d.ClipperBase.call(this);
-this.m_SortedEdges=this.m_ActiveEdges=this.m_Scanbeam=null;this.m_IntersectList=[];this.m_IntersectNodeComparer=d.MyIntersectNodeSort.Compare;this.m_UsingPolyTree=this.m_ExecuteLocked=!1;this.m_PolyOuts=[];this.m_Joins=[];this.m_GhostJoins=[];this.ReverseSolution=0!==(1&a);this.StrictlySimple=0!==(2&a);this.PreserveCollinear=0!==(4&a)};d.Clipper.ioReverseSolution=1;d.Clipper.ioStrictlySimple=2;d.Clipper.ioPreserveCollinear=4;d.Clipper.prototype.Clear=function(){0!==this.m_edges.length&&(this.DisposeAllPolyPts(),
-d.ClipperBase.prototype.Clear.call(this))};d.Clipper.prototype.DisposeScanbeamList=function(){for(;null!==this.m_Scanbeam;){var a=this.m_Scanbeam.Next;this.m_Scanbeam=null;this.m_Scanbeam=a}};d.Clipper.prototype.Reset=function(){d.ClipperBase.prototype.Reset.call(this);this.m_SortedEdges=this.m_ActiveEdges=this.m_Scanbeam=null;this.DisposeAllPolyPts();for(var a=this.m_MinimaList;null!==a;)this.InsertScanbeam(a.Y),a=a.Next};d.Clipper.prototype.InsertScanbeam=function(a){if(null===this.m_Scanbeam)this.m_Scanbeam=
-new d.Scanbeam,this.m_Scanbeam.Next=null,this.m_Scanbeam.Y=a;else if(a>this.m_Scanbeam.Y){var b=new d.Scanbeam;b.Y=a;b.Next=this.m_Scanbeam;this.m_Scanbeam=b}else{for(var c=this.m_Scanbeam;null!==c.Next&&a<=c.Next.Y;)c=c.Next;a!=c.Y&&(b=new d.Scanbeam,b.Y=a,b.Next=c.Next,c.Next=b)}};d.Clipper.prototype.Execute=function(){var a=arguments,b=a.length,c=a[1]instanceof d.PolyTree;if(4!=b||c){if(4==b&&c){c=a[0];b=a[1];e=a[2];a=a[3];if(this.m_ExecuteLocked)return!1;this.m_ExecuteLocked=!0;this.m_SubjFillType=
-e;this.m_ClipFillType=a;this.m_ClipType=c;this.m_UsingPolyTree=!0;(a=this.ExecuteInternal())&&this.BuildResult2(b);this.m_ExecuteLocked=!1;return a}if(2==b&&!c||2==b&&c)return c=a[0],b=a[1],this.Execute(c,b,d.PolyFillType.pftEvenOdd,d.PolyFillType.pftEvenOdd)}else{var c=a[0],b=a[1],e=a[2],a=a[3];if(this.m_ExecuteLocked)return!1;this.m_HasOpenPaths&&d.Error("Error: PolyTree struct is need for open path clipping.");this.m_ExecuteLocked=!0;d.Clear(b);this.m_SubjFillType=e;this.m_ClipFillType=a;this.m_ClipType=
-c;this.m_UsingPolyTree=!1;(a=this.ExecuteInternal())&&this.BuildResult(b);this.m_ExecuteLocked=!1;return a}};d.Clipper.prototype.FixHoleLinkage=function(a){if(null!==a.FirstLeft&&(a.IsHole==a.FirstLeft.IsHole||null===a.FirstLeft.Pts)){for(var b=a.FirstLeft;null!==b&&(b.IsHole==a.IsHole||null===b.Pts);)b=b.FirstLeft;a.FirstLeft=b}};d.Clipper.prototype.ExecuteInternal=function(){try{this.Reset();if(null===this.m_CurrentLM)return!1;var a=this.PopScanbeam();do{this.InsertLocalMinimaIntoAEL(a);d.Clear(this.m_GhostJoins);
-this.ProcessHorizontals(!1);if(null===this.m_Scanbeam)break;var b=this.PopScanbeam();if(!this.ProcessIntersections(a,b))return!1;this.ProcessEdgesAtTopOfScanbeam(b);a=b}while(null!==this.m_Scanbeam||null!==this.m_CurrentLM);for(var a=0,c=this.m_PolyOuts.length;a<c;a++){var e=this.m_PolyOuts[a];null===e.Pts||e.IsOpen||(e.IsHole^this.ReverseSolution)==0<this.Area(e)&&this.ReversePolyPtLinks(e.Pts)}this.JoinCommonEdges();a=0;for(c=this.m_PolyOuts.length;a<c;a++)e=this.m_PolyOuts[a],null===e.Pts||e.IsOpen||
-this.FixupOutPolygon(e);this.StrictlySimple&&this.DoSimplePolygons();return!0}finally{d.Clear(this.m_Joins),d.Clear(this.m_GhostJoins)}};d.Clipper.prototype.PopScanbeam=function(){var a=this.m_Scanbeam.Y;this.m_Scanbeam=this.m_Scanbeam.Next;return a};d.Clipper.prototype.DisposeAllPolyPts=function(){for(var a=0,b=this.m_PolyOuts.length;a<b;++a)this.DisposeOutRec(a);d.Clear(this.m_PolyOuts)};d.Clipper.prototype.DisposeOutRec=function(a){var b=this.m_PolyOuts[a];null!==b.Pts&&this.DisposeOutPts(b.Pts);
-this.m_PolyOuts[a]=null};d.Clipper.prototype.DisposeOutPts=function(a){if(null!==a)for(a.Prev.Next=null;null!==a;)a=a.Next};d.Clipper.prototype.AddJoin=function(a,b,c){var e=new d.Join;e.OutPt1=a;e.OutPt2=b;e.OffPt.X=c.X;e.OffPt.Y=c.Y;this.m_Joins.push(e)};d.Clipper.prototype.AddGhostJoin=function(a,b){var c=new d.Join;c.OutPt1=a;c.OffPt.X=b.X;c.OffPt.Y=b.Y;this.m_GhostJoins.push(c)};d.Clipper.prototype.InsertLocalMinimaIntoAEL=function(a){for(;null!==this.m_CurrentLM&&this.m_CurrentLM.Y==a;){var b=
+(function(){function k(a,b,c){d.biginteger_used=1;null!=a&&("number"==typeof a&&"undefined"==typeof b?this.fromInt(a):"number"==typeof a?this.fromNumber(a,b,c):null==b&&"string"!=typeof a?this.fromString(a,256):this.fromString(a,b))}function m(){return new k(null,void 0,void 0)}function R(a,b,c,e,d,g){for(;0<=--g;){var f=b*this[a++]+c[e]+d;d=Math.floor(f/67108864);c[e++]=f&67108863}return d}function S(a,b,c,e,d,g){var f=b&32767;for(b>>=15;0<=--g;){var l=this[a]&32767,k=this[a++]>>15,n=b*l+k*f,l=f*
+l+((n&32767)<<15)+c[e]+(d&1073741823);d=(l>>>30)+(n>>>15)+b*k+(d>>>30);c[e++]=l&1073741823}return d}function T(a,b,c,e,d,g){var f=b&16383;for(b>>=14;0<=--g;){var l=this[a]&16383,k=this[a++]>>14,n=b*l+k*f,l=f*l+((n&16383)<<14)+c[e]+d;d=(l>>28)+(n>>14)+b*k;c[e++]=l&268435455}return d}function M(a,b){var c=D[a.charCodeAt(b)];return null==c?-1:c}function x(a){var b=m();b.fromInt(a);return b}function E(a){var b=1,c;0!=(c=a>>>16)&&(a=c,b+=16);0!=(c=a>>8)&&(a=c,b+=8);0!=(c=a>>4)&&(a=c,b+=4);0!=(c=a>>2)&&
+(a=c,b+=2);0!=a>>1&&(b+=1);return b}function A(a){this.m=a}function B(a){this.m=a;this.mp=a.invDigit();this.mpl=this.mp&32767;this.mph=this.mp>>15;this.um=(1<<a.DB-15)-1;this.mt2=2*a.t}function U(a,b){return a&b}function K(a,b){return a|b}function N(a,b){return a^b}function O(a,b){return a&~b}function C(){}function P(a){return a}function z(a){this.r2=m();this.q3=m();k.ONE.dlShiftTo(2*a.t,this.r2);this.mu=this.r2.divide(a);this.m=a}var d={use_lines:!0,use_xyz:!1},F=!1;"undefined"!==typeof module&&
+module.exports?(module.exports=d,F=!0):"undefined"!==typeof document?window.ClipperLib=d:self.ClipperLib=d;var q;if(F)r="chrome",q="Netscape";else{var r=navigator.userAgent.toString().toLowerCase();q=navigator.appName}var G,L,H,I,J,Q;G=-1!=r.indexOf("chrome")&&-1==r.indexOf("chromium")?1:0;F=-1!=r.indexOf("chromium")?1:0;L=-1!=r.indexOf("safari")&&-1==r.indexOf("chrome")&&-1==r.indexOf("chromium")?1:0;H=-1!=r.indexOf("firefox")?1:0;r.indexOf("firefox/17");r.indexOf("firefox/15");r.indexOf("firefox/3");
+I=-1!=r.indexOf("opera")?1:0;r.indexOf("msie 10");r.indexOf("msie 9");J=-1!=r.indexOf("msie 8")?1:0;Q=-1!=r.indexOf("msie 7")?1:0;r=-1!=r.indexOf("msie ")?1:0;d.biginteger_used=null;"Microsoft Internet Explorer"==q?(k.prototype.am=S,q=30):"Netscape"!=q?(k.prototype.am=R,q=26):(k.prototype.am=T,q=28);k.prototype.DB=q;k.prototype.DM=(1<<q)-1;k.prototype.DV=1<<q;k.prototype.FV=Math.pow(2,52);k.prototype.F1=52-q;k.prototype.F2=2*q-52;var D=[],w;q=48;for(w=0;9>=w;++w)D[q++]=w;q=97;for(w=10;36>w;++w)D[q++]=
+w;q=65;for(w=10;36>w;++w)D[q++]=w;A.prototype.convert=function(a){return 0>a.s||0<=a.compareTo(this.m)?a.mod(this.m):a};A.prototype.revert=function(a){return a};A.prototype.reduce=function(a){a.divRemTo(this.m,null,a)};A.prototype.mulTo=function(a,b,c){a.multiplyTo(b,c);this.reduce(c)};A.prototype.sqrTo=function(a,b){a.squareTo(b);this.reduce(b)};B.prototype.convert=function(a){var b=m();a.abs().dlShiftTo(this.m.t,b);b.divRemTo(this.m,null,b);0>a.s&&0<b.compareTo(k.ZERO)&&this.m.subTo(b,b);return b};
+B.prototype.revert=function(a){var b=m();a.copyTo(b);this.reduce(b);return b};B.prototype.reduce=function(a){for(;a.t<=this.mt2;)a[a.t++]=0;for(var b=0;b<this.m.t;++b){var c=a[b]&32767,e=c*this.mpl+((c*this.mph+(a[b]>>15)*this.mpl&this.um)<<15)&a.DM,c=b+this.m.t;for(a[c]+=this.m.am(0,e,a,b,0,this.m.t);a[c]>=a.DV;)a[c]-=a.DV,a[++c]++}a.clamp();a.drShiftTo(this.m.t,a);0<=a.compareTo(this.m)&&a.subTo(this.m,a)};B.prototype.mulTo=function(a,b,c){a.multiplyTo(b,c);this.reduce(c)};B.prototype.sqrTo=function(a,
+b){a.squareTo(b);this.reduce(b)};k.prototype.copyTo=function(a){for(var b=this.t-1;0<=b;--b)a[b]=this[b];a.t=this.t;a.s=this.s};k.prototype.fromInt=function(a){this.t=1;this.s=0>a?-1:0;0<a?this[0]=a:-1>a?this[0]=a+this.DV:this.t=0};k.prototype.fromString=function(a,b){var c;if(16==b)c=4;else if(8==b)c=3;else if(256==b)c=8;else if(2==b)c=1;else if(32==b)c=5;else if(4==b)c=2;else{this.fromRadix(a,b);return}this.s=this.t=0;for(var e=a.length,d=!1,g=0;0<=--e;){var h=8==c?a[e]&255:M(a,e);0>h?"-"==a.charAt(e)&&
+(d=!0):(d=!1,0==g?this[this.t++]=h:g+c>this.DB?(this[this.t-1]|=(h&(1<<this.DB-g)-1)<<g,this[this.t++]=h>>this.DB-g):this[this.t-1]|=h<<g,g+=c,g>=this.DB&&(g-=this.DB))}8==c&&0!=(a[0]&128)&&(this.s=-1,0<g&&(this[this.t-1]|=(1<<this.DB-g)-1<<g));this.clamp();d&&k.ZERO.subTo(this,this)};k.prototype.clamp=function(){for(var a=this.s&this.DM;0<this.t&&this[this.t-1]==a;)--this.t};k.prototype.dlShiftTo=function(a,b){var c;for(c=this.t-1;0<=c;--c)b[c+a]=this[c];for(c=a-1;0<=c;--c)b[c]=0;b.t=this.t+a;b.s=
+this.s};k.prototype.drShiftTo=function(a,b){for(var c=a;c<this.t;++c)b[c-a]=this[c];b.t=Math.max(this.t-a,0);b.s=this.s};k.prototype.lShiftTo=function(a,b){var c=a%this.DB,e=this.DB-c,d=(1<<e)-1,g=Math.floor(a/this.DB),h=this.s<<c&this.DM,l;for(l=this.t-1;0<=l;--l)b[l+g+1]=this[l]>>e|h,h=(this[l]&d)<<c;for(l=g-1;0<=l;--l)b[l]=0;b[g]=h;b.t=this.t+g+1;b.s=this.s;b.clamp()};k.prototype.rShiftTo=function(a,b){b.s=this.s;var c=Math.floor(a/this.DB);if(c>=this.t)b.t=0;else{var e=a%this.DB,d=this.DB-e,g=
+(1<<e)-1;b[0]=this[c]>>e;for(var h=c+1;h<this.t;++h)b[h-c-1]|=(this[h]&g)<<d,b[h-c]=this[h]>>e;0<e&&(b[this.t-c-1]|=(this.s&g)<<d);b.t=this.t-c;b.clamp()}};k.prototype.subTo=function(a,b){for(var c=0,e=0,d=Math.min(a.t,this.t);c<d;)e+=this[c]-a[c],b[c++]=e&this.DM,e>>=this.DB;if(a.t<this.t){for(e-=a.s;c<this.t;)e+=this[c],b[c++]=e&this.DM,e>>=this.DB;e+=this.s}else{for(e+=this.s;c<a.t;)e-=a[c],b[c++]=e&this.DM,e>>=this.DB;e-=a.s}b.s=0>e?-1:0;-1>e?b[c++]=this.DV+e:0<e&&(b[c++]=e);b.t=c;b.clamp()};
+k.prototype.multiplyTo=function(a,b){var c=this.abs(),e=a.abs(),d=c.t;for(b.t=d+e.t;0<=--d;)b[d]=0;for(d=0;d<e.t;++d)b[d+c.t]=c.am(0,e[d],b,d,0,c.t);b.s=0;b.clamp();this.s!=a.s&&k.ZERO.subTo(b,b)};k.prototype.squareTo=function(a){for(var b=this.abs(),c=a.t=2*b.t;0<=--c;)a[c]=0;for(c=0;c<b.t-1;++c){var e=b.am(c,b[c],a,2*c,0,1);(a[c+b.t]+=b.am(c+1,2*b[c],a,2*c+1,e,b.t-c-1))>=b.DV&&(a[c+b.t]-=b.DV,a[c+b.t+1]=1)}0<a.t&&(a[a.t-1]+=b.am(c,b[c],a,2*c,0,1));a.s=0;a.clamp()};k.prototype.divRemTo=function(a,
+b,c){var e=a.abs();if(!(0>=e.t)){var d=this.abs();if(d.t<e.t)null!=b&&b.fromInt(0),null!=c&&this.copyTo(c);else{null==c&&(c=m());var g=m(),h=this.s;a=a.s;var l=this.DB-E(e[e.t-1]);0<l?(e.lShiftTo(l,g),d.lShiftTo(l,c)):(e.copyTo(g),d.copyTo(c));e=g.t;d=g[e-1];if(0!=d){var v=d*(1<<this.F1)+(1<e?g[e-2]>>this.F2:0),n=this.FV/v,v=(1<<this.F1)/v,p=1<<this.F2,y=c.t,q=y-e,t=null==b?m():b;g.dlShiftTo(q,t);0<=c.compareTo(t)&&(c[c.t++]=1,c.subTo(t,c));k.ONE.dlShiftTo(e,t);for(t.subTo(g,g);g.t<e;)g[g.t++]=0;
+for(;0<=--q;){var r=c[--y]==d?this.DM:Math.floor(c[y]*n+(c[y-1]+p)*v);if((c[y]+=g.am(0,r,c,q,0,e))<r)for(g.dlShiftTo(q,t),c.subTo(t,c);c[y]<--r;)c.subTo(t,c)}null!=b&&(c.drShiftTo(e,b),h!=a&&k.ZERO.subTo(b,b));c.t=e;c.clamp();0<l&&c.rShiftTo(l,c);0>h&&k.ZERO.subTo(c,c)}}}};k.prototype.invDigit=function(){if(1>this.t)return 0;var a=this[0];if(0==(a&1))return 0;var b=a&3,b=b*(2-(a&15)*b)&15,b=b*(2-(a&255)*b)&255,b=b*(2-((a&65535)*b&65535))&65535,b=b*(2-a*b%this.DV)%this.DV;return 0<b?this.DV-b:-b};
+k.prototype.isEven=function(){return 0==(0<this.t?this[0]&1:this.s)};k.prototype.exp=function(a,b){if(4294967295<a||1>a)return k.ONE;var c=m(),e=m(),d=b.convert(this),g=E(a)-1;for(d.copyTo(c);0<=--g;)if(b.sqrTo(c,e),0<(a&1<<g))b.mulTo(e,d,c);else var h=c,c=e,e=h;return b.revert(c)};k.prototype.toString=function(a){if(0>this.s)return"-"+this.negate().toString(a);if(16==a)a=4;else if(8==a)a=3;else if(2==a)a=1;else if(32==a)a=5;else if(4==a)a=2;else return this.toRadix(a);var b=(1<<a)-1,c,e=!1,d="",
+g=this.t,h=this.DB-g*this.DB%a;if(0<g--)for(h<this.DB&&0<(c=this[g]>>h)&&(e=!0,d="0123456789abcdefghijklmnopqrstuvwxyz".charAt(c));0<=g;)h<a?(c=(this[g]&(1<<h)-1)<<a-h,c|=this[--g]>>(h+=this.DB-a)):(c=this[g]>>(h-=a)&b,0>=h&&(h+=this.DB,--g)),0<c&&(e=!0),e&&(d+="0123456789abcdefghijklmnopqrstuvwxyz".charAt(c));return e?d:"0"};k.prototype.negate=function(){var a=m();k.ZERO.subTo(this,a);return a};k.prototype.abs=function(){return 0>this.s?this.negate():this};k.prototype.compareTo=function(a){var b=
+this.s-a.s;if(0!=b)return b;var c=this.t,b=c-a.t;if(0!=b)return 0>this.s?-b:b;for(;0<=--c;)if(0!=(b=this[c]-a[c]))return b;return 0};k.prototype.bitLength=function(){return 0>=this.t?0:this.DB*(this.t-1)+E(this[this.t-1]^this.s&this.DM)};k.prototype.mod=function(a){var b=m();this.abs().divRemTo(a,null,b);0>this.s&&0<b.compareTo(k.ZERO)&&a.subTo(b,b);return b};k.prototype.modPowInt=function(a,b){var c;c=256>a||b.isEven()?new A(b):new B(b);return this.exp(a,c)};k.ZERO=x(0);k.ONE=x(1);C.prototype.convert=
+P;C.prototype.revert=P;C.prototype.mulTo=function(a,b,c){a.multiplyTo(b,c)};C.prototype.sqrTo=function(a,b){a.squareTo(b)};z.prototype.convert=function(a){if(0>a.s||a.t>2*this.m.t)return a.mod(this.m);if(0>a.compareTo(this.m))return a;var b=m();a.copyTo(b);this.reduce(b);return b};z.prototype.revert=function(a){return a};z.prototype.reduce=function(a){a.drShiftTo(this.m.t-1,this.r2);a.t>this.m.t+1&&(a.t=this.m.t+1,a.clamp());this.mu.multiplyUpperTo(this.r2,this.m.t+1,this.q3);for(this.m.multiplyLowerTo(this.q3,
+this.m.t+1,this.r2);0>a.compareTo(this.r2);)a.dAddOffset(1,this.m.t+1);for(a.subTo(this.r2,a);0<=a.compareTo(this.m);)a.subTo(this.m,a)};z.prototype.mulTo=function(a,b,c){a.multiplyTo(b,c);this.reduce(c)};z.prototype.sqrTo=function(a,b){a.squareTo(b);this.reduce(b)};var u=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,
+313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997],V=67108864/u[u.length-1];k.prototype.chunkSize=function(a){return Math.floor(Math.LN2*
+this.DB/Math.log(a))};k.prototype.toRadix=function(a){null==a&&(a=10);if(0==this.signum()||2>a||36<a)return"0";var b=this.chunkSize(a),b=Math.pow(a,b),c=x(b),e=m(),d=m(),g="";for(this.divRemTo(c,e,d);0<e.signum();)g=(b+d.intValue()).toString(a).substr(1)+g,e.divRemTo(c,e,d);return d.intValue().toString(a)+g};k.prototype.fromRadix=function(a,b){this.fromInt(0);null==b&&(b=10);for(var c=this.chunkSize(b),e=Math.pow(b,c),d=!1,g=0,h=0,l=0;l<a.length;++l){var v=M(a,l);0>v?"-"==a.charAt(l)&&0==this.signum()&&
+(d=!0):(h=b*h+v,++g>=c&&(this.dMultiply(e),this.dAddOffset(h,0),h=g=0))}0<g&&(this.dMultiply(Math.pow(b,g)),this.dAddOffset(h,0));d&&k.ZERO.subTo(this,this)};k.prototype.fromNumber=function(a,b,c){if("number"==typeof b)if(2>a)this.fromInt(1);else for(this.fromNumber(a,c),this.testBit(a-1)||this.bitwiseTo(k.ONE.shiftLeft(a-1),K,this),this.isEven()&&this.dAddOffset(1,0);!this.isProbablePrime(b);)this.dAddOffset(2,0),this.bitLength()>a&&this.subTo(k.ONE.shiftLeft(a-1),this);else{c=[];var e=a&7;c.length=
+(a>>3)+1;b.nextBytes(c);c[0]=0<e?c[0]&(1<<e)-1:0;this.fromString(c,256)}};k.prototype.bitwiseTo=function(a,b,c){var e,d,g=Math.min(a.t,this.t);for(e=0;e<g;++e)c[e]=b(this[e],a[e]);if(a.t<this.t){d=a.s&this.DM;for(e=g;e<this.t;++e)c[e]=b(this[e],d);c.t=this.t}else{d=this.s&this.DM;for(e=g;e<a.t;++e)c[e]=b(d,a[e]);c.t=a.t}c.s=b(this.s,a.s);c.clamp()};k.prototype.changeBit=function(a,b){var c=k.ONE.shiftLeft(a);this.bitwiseTo(c,b,c);return c};k.prototype.addTo=function(a,b){for(var c=0,e=0,d=Math.min(a.t,
+this.t);c<d;)e+=this[c]+a[c],b[c++]=e&this.DM,e>>=this.DB;if(a.t<this.t){for(e+=a.s;c<this.t;)e+=this[c],b[c++]=e&this.DM,e>>=this.DB;e+=this.s}else{for(e+=this.s;c<a.t;)e+=a[c],b[c++]=e&this.DM,e>>=this.DB;e+=a.s}b.s=0>e?-1:0;0<e?b[c++]=e:-1>e&&(b[c++]=this.DV+e);b.t=c;b.clamp()};k.prototype.dMultiply=function(a){this[this.t]=this.am(0,a-1,this,0,0,this.t);++this.t;this.clamp()};k.prototype.dAddOffset=function(a,b){if(0!=a){for(;this.t<=b;)this[this.t++]=0;for(this[b]+=a;this[b]>=this.DV;)this[b]-=
+this.DV,++b>=this.t&&(this[this.t++]=0),++this[b]}};k.prototype.multiplyLowerTo=function(a,b,c){var e=Math.min(this.t+a.t,b);c.s=0;for(c.t=e;0<e;)c[--e]=0;var d;for(d=c.t-this.t;e<d;++e)c[e+this.t]=this.am(0,a[e],c,e,0,this.t);for(d=Math.min(a.t,b);e<d;++e)this.am(0,a[e],c,e,0,b-e);c.clamp()};k.prototype.multiplyUpperTo=function(a,b,c){--b;var e=c.t=this.t+a.t-b;for(c.s=0;0<=--e;)c[e]=0;for(e=Math.max(b-this.t,0);e<a.t;++e)c[this.t+e-b]=this.am(b-e,a[e],c,0,0,this.t+e-b);c.clamp();c.drShiftTo(1,c)};
+k.prototype.modInt=function(a){if(0>=a)return 0;var b=this.DV%a,c=0>this.s?a-1:0;if(0<this.t)if(0==b)c=this[0]%a;else for(var e=this.t-1;0<=e;--e)c=(b*c+this[e])%a;return c};k.prototype.millerRabin=function(a){var b=this.subtract(k.ONE),c=b.getLowestSetBit();if(0>=c)return!1;var e=b.shiftRight(c);a=a+1>>1;a>u.length&&(a=u.length);for(var d=m(),g=0;g<a;++g){d.fromInt(u[Math.floor(Math.random()*u.length)]);var h=d.modPow(e,this);if(0!=h.compareTo(k.ONE)&&0!=h.compareTo(b)){for(var l=1;l++<c&&0!=h.compareTo(b);)if(h=
+h.modPowInt(2,this),0==h.compareTo(k.ONE))return!1;if(0!=h.compareTo(b))return!1}}return!0};k.prototype.clone=function(){var a=m();this.copyTo(a);return a};k.prototype.intValue=function(){if(0>this.s){if(1==this.t)return this[0]-this.DV;if(0==this.t)return-1}else{if(1==this.t)return this[0];if(0==this.t)return 0}return(this[1]&(1<<32-this.DB)-1)<<this.DB|this[0]};k.prototype.byteValue=function(){return 0==this.t?this.s:this[0]<<24>>24};k.prototype.shortValue=function(){return 0==this.t?this.s:this[0]<<
+16>>16};k.prototype.signum=function(){return 0>this.s?-1:0>=this.t||1==this.t&&0>=this[0]?0:1};k.prototype.toByteArray=function(){var a=this.t,b=[];b[0]=this.s;var c=this.DB-a*this.DB%8,e,d=0;if(0<a--)for(c<this.DB&&(e=this[a]>>c)!=(this.s&this.DM)>>c&&(b[d++]=e|this.s<<this.DB-c);0<=a;)if(8>c?(e=(this[a]&(1<<c)-1)<<8-c,e|=this[--a]>>(c+=this.DB-8)):(e=this[a]>>(c-=8)&255,0>=c&&(c+=this.DB,--a)),0!=(e&128)&&(e|=-256),0==d&&(this.s&128)!=(e&128)&&++d,0<d||e!=this.s)b[d++]=e;return b};k.prototype.equals=
+function(a){return 0==this.compareTo(a)};k.prototype.min=function(a){return 0>this.compareTo(a)?this:a};k.prototype.max=function(a){return 0<this.compareTo(a)?this:a};k.prototype.and=function(a){var b=m();this.bitwiseTo(a,U,b);return b};k.prototype.or=function(a){var b=m();this.bitwiseTo(a,K,b);return b};k.prototype.xor=function(a){var b=m();this.bitwiseTo(a,N,b);return b};k.prototype.andNot=function(a){var b=m();this.bitwiseTo(a,O,b);return b};k.prototype.not=function(){for(var a=m(),b=0;b<this.t;++b)a[b]=
+this.DM&~this[b];a.t=this.t;a.s=~this.s;return a};k.prototype.shiftLeft=function(a){var b=m();0>a?this.rShiftTo(-a,b):this.lShiftTo(a,b);return b};k.prototype.shiftRight=function(a){var b=m();0>a?this.lShiftTo(-a,b):this.rShiftTo(a,b);return b};k.prototype.getLowestSetBit=function(){for(var a=0;a<this.t;++a)if(0!=this[a]){var b=a*this.DB;a=this[a];if(0==a)a=-1;else{var c=0;0==(a&65535)&&(a>>=16,c+=16);0==(a&255)&&(a>>=8,c+=8);0==(a&15)&&(a>>=4,c+=4);0==(a&3)&&(a>>=2,c+=2);0==(a&1)&&++c;a=c}return b+
+a}return 0>this.s?this.t*this.DB:-1};k.prototype.bitCount=function(){for(var a=0,b=this.s&this.DM,c=0;c<this.t;++c){for(var e=this[c]^b,d=0;0!=e;)e&=e-1,++d;a+=d}return a};k.prototype.testBit=function(a){var b=Math.floor(a/this.DB);return b>=this.t?0!=this.s:0!=(this[b]&1<<a%this.DB)};k.prototype.setBit=function(a){return this.changeBit(a,K)};k.prototype.clearBit=function(a){return this.changeBit(a,O)};k.prototype.flipBit=function(a){return this.changeBit(a,N)};k.prototype.add=function(a){var b=m();
+this.addTo(a,b);return b};k.prototype.subtract=function(a){var b=m();this.subTo(a,b);return b};k.prototype.multiply=function(a){var b=m();this.multiplyTo(a,b);return b};k.prototype.divide=function(a){var b=m();this.divRemTo(a,b,null);return b};k.prototype.remainder=function(a){var b=m();this.divRemTo(a,null,b);return b};k.prototype.divideAndRemainder=function(a){var b=m(),c=m();this.divRemTo(a,b,c);return[b,c]};k.prototype.modPow=function(a,b){var c=a.bitLength(),e,d=x(1),g;if(0>=c)return d;e=18>
+c?1:48>c?3:144>c?4:768>c?5:6;g=8>c?new A(b):b.isEven()?new z(b):new B(b);var h=[],l=3,k=e-1,n=(1<<e)-1;h[1]=g.convert(this);if(1<e)for(c=m(),g.sqrTo(h[1],c);l<=n;)h[l]=m(),g.mulTo(c,h[l-2],h[l]),l+=2;for(var p=a.t-1,y,q=!0,t=m(),c=E(a[p])-1;0<=p;){c>=k?y=a[p]>>c-k&n:(y=(a[p]&(1<<c+1)-1)<<k-c,0<p&&(y|=a[p-1]>>this.DB+c-k));for(l=e;0==(y&1);)y>>=1,--l;0>(c-=l)&&(c+=this.DB,--p);if(q)h[y].copyTo(d),q=!1;else{for(;1<l;)g.sqrTo(d,t),g.sqrTo(t,d),l-=2;0<l?g.sqrTo(d,t):(l=d,d=t,t=l);g.mulTo(t,h[y],d)}for(;0<=
+p&&0==(a[p]&1<<c);)g.sqrTo(d,t),l=d,d=t,t=l,0>--c&&(c=this.DB-1,--p)}return g.revert(d)};k.prototype.modInverse=function(a){var b=a.isEven();if(this.isEven()&&b||0==a.signum())return k.ZERO;for(var c=a.clone(),d=this.clone(),f=x(1),g=x(0),h=x(0),l=x(1);0!=c.signum();){for(;c.isEven();)c.rShiftTo(1,c),b?(f.isEven()&&g.isEven()||(f.addTo(this,f),g.subTo(a,g)),f.rShiftTo(1,f)):g.isEven()||g.subTo(a,g),g.rShiftTo(1,g);for(;d.isEven();)d.rShiftTo(1,d),b?(h.isEven()&&l.isEven()||(h.addTo(this,h),l.subTo(a,
+l)),h.rShiftTo(1,h)):l.isEven()||l.subTo(a,l),l.rShiftTo(1,l);0<=c.compareTo(d)?(c.subTo(d,c),b&&f.subTo(h,f),g.subTo(l,g)):(d.subTo(c,d),b&&h.subTo(f,h),l.subTo(g,l))}if(0!=d.compareTo(k.ONE))return k.ZERO;if(0<=l.compareTo(a))return l.subtract(a);if(0>l.signum())l.addTo(a,l);else return l;return 0>l.signum()?l.add(a):l};k.prototype.pow=function(a){return this.exp(a,new C)};k.prototype.gcd=function(a){var b=0>this.s?this.negate():this.clone();a=0>a.s?a.negate():a.clone();if(0>b.compareTo(a)){var c=
+b,b=a;a=c}var c=b.getLowestSetBit(),d=a.getLowestSetBit();if(0>d)return b;c<d&&(d=c);0<d&&(b.rShiftTo(d,b),a.rShiftTo(d,a));for(;0<b.signum();)0<(c=b.getLowestSetBit())&&b.rShiftTo(c,b),0<(c=a.getLowestSetBit())&&a.rShiftTo(c,a),0<=b.compareTo(a)?(b.subTo(a,b),b.rShiftTo(1,b)):(a.subTo(b,a),a.rShiftTo(1,a));0<d&&a.lShiftTo(d,a);return a};k.prototype.isProbablePrime=function(a){var b,c=this.abs();if(1==c.t&&c[0]<=u[u.length-1]){for(b=0;b<u.length;++b)if(c[0]==u[b])return!0;return!1}if(c.isEven())return!1;
+for(b=1;b<u.length;){for(var d=u[b],f=b+1;f<u.length&&d<V;)d*=u[f++];for(d=c.modInt(d);b<f;)if(0==d%u[b++])return!1}return c.millerRabin(a)};k.prototype.square=function(){var a=m();this.squareTo(a);return a};k.prototype.IsNegative=function(){return-1==this.compareTo(k.ZERO)?!0:!1};k.op_Equality=function(a,b){return 0==a.compareTo(b)?!0:!1};k.op_Inequality=function(a,b){return 0!=a.compareTo(b)?!0:!1};k.op_GreaterThan=function(a,b){return 0<a.compareTo(b)?!0:!1};k.op_LessThan=function(a,b){return 0>
+a.compareTo(b)?!0:!1};k.op_Addition=function(a,b){return(new k(a)).add(new k(b))};k.op_Subtraction=function(a,b){return(new k(a)).subtract(new k(b))};k.Int128Mul=function(a,b){return(new k(a)).multiply(new k(b))};k.op_Division=function(a,b){return a.divide(b)};k.prototype.ToDouble=function(){return parseFloat(this.toString())};q=function(a,b){var c;if("undefined"==typeof Object.getOwnPropertyNames)for(c in b.prototype){if("undefined"==typeof a.prototype[c]||a.prototype[c]==Object.prototype[c])a.prototype[c]=
+b.prototype[c]}else for(var d=Object.getOwnPropertyNames(b.prototype),f=0;f<d.length;f++)"undefined"==typeof Object.getOwnPropertyDescriptor(a.prototype,d[f])&&Object.defineProperty(a.prototype,d[f],Object.getOwnPropertyDescriptor(b.prototype,d[f]));for(c in b)"undefined"==typeof a[c]&&(a[c]=b[c]);a.$baseCtor=b};d.Path=function(){return[]};d.Paths=function(){return[]};d.DoublePoint=function(){var a=arguments;this.Y=this.X=0;1==a.length?(this.X=a[0].X,this.Y=a[0].Y):2==a.length&&(this.X=a[0],this.Y=
+a[1])};d.DoublePoint0=function(){this.Y=this.X=0};d.DoublePoint1=function(a){this.X=a.X;this.Y=a.Y};d.DoublePoint2=function(a,b){this.X=a;this.Y=b};d.PolyNode=function(){this.m_Parent=null;this.m_polygon=new d.Path;this.m_endtype=this.m_jointype=this.m_Index=0;this.m_Childs=[];this.IsOpen=!1};d.PolyNode.prototype.IsHoleNode=function(){for(var a=!0,b=this.m_Parent;null!==b;)a=!a,b=b.m_Parent;return a};d.PolyNode.prototype.ChildCount=function(){return this.m_Childs.length};d.PolyNode.prototype.Contour=
+function(){return this.m_polygon};d.PolyNode.prototype.AddChild=function(a){var b=this.m_Childs.length;this.m_Childs.push(a);a.m_Parent=this;a.m_Index=b};d.PolyNode.prototype.GetNext=function(){return 0<this.m_Childs.length?this.m_Childs[0]:this.GetNextSiblingUp()};d.PolyNode.prototype.GetNextSiblingUp=function(){return null===this.m_Parent?null:this.m_Index==this.m_Parent.m_Childs.length-1?this.m_Parent.GetNextSiblingUp():this.m_Parent.m_Childs[this.m_Index+1]};d.PolyNode.prototype.Childs=function(){return this.m_Childs};
+d.PolyNode.prototype.Parent=function(){return this.m_Parent};d.PolyNode.prototype.IsHole=function(){return this.IsHoleNode()};d.PolyTree=function(){this.m_AllPolys=[];d.PolyNode.call(this)};d.PolyTree.prototype.Clear=function(){for(var a=0,b=this.m_AllPolys.length;a<b;a++)this.m_AllPolys[a]=null;this.m_AllPolys.length=0;this.m_Childs.length=0};d.PolyTree.prototype.GetFirst=function(){return 0<this.m_Childs.length?this.m_Childs[0]:null};d.PolyTree.prototype.Total=function(){var a=this.m_AllPolys.length;
+0<a&&this.m_Childs[0]!=this.m_AllPolys[0]&&a--;return a};q(d.PolyTree,d.PolyNode);d.Math_Abs_Int64=d.Math_Abs_Int32=d.Math_Abs_Double=function(a){return Math.abs(a)};d.Math_Max_Int32_Int32=function(a,b){return Math.max(a,b)};d.Cast_Int32=r||I||L?function(a){return a|0}:function(a){return~~a};d.Cast_Int64=G?function(a){return-2147483648>a||2147483647<a?0>a?Math.ceil(a):Math.floor(a):~~a}:H&&"function"==typeof Number.toInteger?function(a){return Number.toInteger(a)}:Q||J?function(a){return parseInt(a,
+10)}:r?function(a){return-2147483648>a||2147483647<a?0>a?Math.ceil(a):Math.floor(a):a|0}:function(a){return 0>a?Math.ceil(a):Math.floor(a)};d.Clear=function(a){a.length=0};d.PI=3.141592653589793;d.PI2=6.283185307179586;d.IntPoint=function(){var a=arguments,b=a.length;this.Y=this.X=0;d.use_xyz?(this.Z=0,3==b?(this.X=a[0],this.Y=a[1],this.Z=a[2]):2==b?(this.X=a[0],this.Y=a[1],this.Z=0):1==b?a[0]instanceof d.DoublePoint?(a=a[0],this.X=d.Clipper.Round(a.X),this.Y=d.Clipper.Round(a.Y),this.Z=0):(a=a[0],
+"undefined"==typeof a.Z&&(a.Z=0),this.X=a.X,this.Y=a.Y,this.Z=a.Z):this.Z=this.Y=this.X=0):2==b?(this.X=a[0],this.Y=a[1]):1==b?a[0]instanceof d.DoublePoint?(a=a[0],this.X=d.Clipper.Round(a.X),this.Y=d.Clipper.Round(a.Y)):(a=a[0],this.X=a.X,this.Y=a.Y):this.Y=this.X=0};d.IntPoint.op_Equality=function(a,b){return a.X==b.X&&a.Y==b.Y};d.IntPoint.op_Inequality=function(a,b){return a.X!=b.X||a.Y!=b.Y};d.use_xyz?(d.IntPoint0=function(){this.Z=this.Y=this.X=0},d.IntPoint1=function(a){this.X=a.X;this.Y=a.Y;
+this.Z=a.Z},d.IntPoint1dp=function(a){this.X=d.Clipper.Round(a.X);this.Y=d.Clipper.Round(a.Y);this.Z=0},d.IntPoint2=function(a,b){this.X=a;this.Y=b;this.Z=0},d.IntPoint3=function(a,b,c){this.X=a;this.Y=b;this.Z=c}):(d.IntPoint0=function(){this.Y=this.X=0},d.IntPoint1=function(a){this.X=a.X;this.Y=a.Y},d.IntPoint1dp=function(a){this.X=d.Clipper.Round(a.X);this.Y=d.Clipper.Round(a.Y)},d.IntPoint2=function(a,b){this.X=a;this.Y=b});d.IntRect=function(){var a=arguments,b=a.length;4==b?(this.left=a[0],
+this.top=a[1],this.right=a[2],this.bottom=a[3]):1==b?(this.left=a[0].left,this.top=a[0].top,this.right=a[0].right,this.bottom=a[0].bottom):this.bottom=this.right=this.top=this.left=0};d.IntRect0=function(){this.bottom=this.right=this.top=this.left=0};d.IntRect1=function(a){this.left=a.left;this.top=a.top;this.right=a.right;this.bottom=a.bottom};d.IntRect4=function(a,b,c,d){this.left=a;this.top=b;this.right=c;this.bottom=d};d.ClipType={ctIntersection:0,ctUnion:1,ctDifference:2,ctXor:3};d.PolyType={ptSubject:0,
+ptClip:1};d.PolyFillType={pftEvenOdd:0,pftNonZero:1,pftPositive:2,pftNegative:3};d.JoinType={jtSquare:0,jtRound:1,jtMiter:2};d.EndType={etOpenSquare:0,etOpenRound:1,etOpenButt:2,etClosedLine:3,etClosedPolygon:4};d.EdgeSide={esLeft:0,esRight:1};d.Direction={dRightToLeft:0,dLeftToRight:1};d.TEdge=function(){this.Bot=new d.IntPoint;this.Curr=new d.IntPoint;this.Top=new d.IntPoint;this.Delta=new d.IntPoint;this.Dx=0;this.PolyTyp=d.PolyType.ptSubject;this.Side=d.EdgeSide.esLeft;this.OutIdx=this.WindCnt2=
+this.WindCnt=this.WindDelta=0;this.PrevInSEL=this.NextInSEL=this.PrevInAEL=this.NextInAEL=this.NextInLML=this.Prev=this.Next=null};d.IntersectNode=function(){this.Edge2=this.Edge1=null;this.Pt=new d.IntPoint};d.MyIntersectNodeSort=function(){};d.MyIntersectNodeSort.Compare=function(a,b){var c=b.Pt.Y-a.Pt.Y;return 0<c?1:0>c?-1:0};d.LocalMinima=function(){this.Y=0;this.Next=this.RightBound=this.LeftBound=null};d.Scanbeam=function(){this.Y=0;this.Next=null};d.OutRec=function(){this.Idx=0;this.IsOpen=
+this.IsHole=!1;this.PolyNode=this.BottomPt=this.Pts=this.FirstLeft=null};d.OutPt=function(){this.Idx=0;this.Pt=new d.IntPoint;this.Prev=this.Next=null};d.Join=function(){this.OutPt2=this.OutPt1=null;this.OffPt=new d.IntPoint};d.ClipperBase=function(){this.m_CurrentLM=this.m_MinimaList=null;this.m_edges=[];this.PreserveCollinear=this.m_HasOpenPaths=this.m_UseFullRange=!1;this.m_CurrentLM=this.m_MinimaList=null;this.m_HasOpenPaths=this.m_UseFullRange=!1};d.ClipperBase.horizontal=-9007199254740992;d.ClipperBase.Skip=
+-2;d.ClipperBase.Unassigned=-1;d.ClipperBase.tolerance=1E-20;d.ClipperBase.loRange=47453132;d.ClipperBase.hiRange=0xfffffffffffff;d.ClipperBase.near_zero=function(a){return a>-d.ClipperBase.tolerance&&a<d.ClipperBase.tolerance};d.ClipperBase.IsHorizontal=function(a){return 0===a.Delta.Y};d.ClipperBase.prototype.PointIsVertex=function(a,b){var c=b;do{if(d.IntPoint.op_Equality(c.Pt,a))return!0;c=c.Next}while(c!=b);return!1};d.ClipperBase.prototype.PointOnLineSegment=function(a,b,c,d){return d?a.X==
+b.X&&a.Y==b.Y||a.X==c.X&&a.Y==c.Y||a.X>b.X==a.X<c.X&&a.Y>b.Y==a.Y<c.Y&&k.op_Equality(k.Int128Mul(a.X-b.X,c.Y-b.Y),k.Int128Mul(c.X-b.X,a.Y-b.Y)):a.X==b.X&&a.Y==b.Y||a.X==c.X&&a.Y==c.Y||a.X>b.X==a.X<c.X&&a.Y>b.Y==a.Y<c.Y&&(a.X-b.X)*(c.Y-b.Y)==(c.X-b.X)*(a.Y-b.Y)};d.ClipperBase.prototype.PointOnPolygon=function(a,b,c){for(var d=b;;){if(this.PointOnLineSegment(a,d.Pt,d.Next.Pt,c))return!0;d=d.Next;if(d==b)break}return!1};d.ClipperBase.prototype.SlopesEqual=d.ClipperBase.SlopesEqual=function(){var a=arguments,
+b=a.length,c,e,f;if(3==b)return b=a[0],c=a[1],(a=a[2])?k.op_Equality(k.Int128Mul(b.Delta.Y,c.Delta.X),k.Int128Mul(b.Delta.X,c.Delta.Y)):d.Cast_Int64(b.Delta.Y*c.Delta.X)==d.Cast_Int64(b.Delta.X*c.Delta.Y);if(4==b)return b=a[0],c=a[1],e=a[2],(a=a[3])?k.op_Equality(k.Int128Mul(b.Y-c.Y,c.X-e.X),k.Int128Mul(b.X-c.X,c.Y-e.Y)):0===d.Cast_Int64((b.Y-c.Y)*(c.X-e.X))-d.Cast_Int64((b.X-c.X)*(c.Y-e.Y));b=a[0];c=a[1];e=a[2];f=a[3];return(a=a[4])?k.op_Equality(k.Int128Mul(b.Y-c.Y,e.X-f.X),k.Int128Mul(b.X-c.X,
+e.Y-f.Y)):0===d.Cast_Int64((b.Y-c.Y)*(e.X-f.X))-d.Cast_Int64((b.X-c.X)*(e.Y-f.Y))};d.ClipperBase.SlopesEqual3=function(a,b,c){return c?k.op_Equality(k.Int128Mul(a.Delta.Y,b.Delta.X),k.Int128Mul(a.Delta.X,b.Delta.Y)):d.Cast_Int64(a.Delta.Y*b.Delta.X)==d.Cast_Int64(a.Delta.X*b.Delta.Y)};d.ClipperBase.SlopesEqual4=function(a,b,c,e){return e?k.op_Equality(k.Int128Mul(a.Y-b.Y,b.X-c.X),k.Int128Mul(a.X-b.X,b.Y-c.Y)):0===d.Cast_Int64((a.Y-b.Y)*(b.X-c.X))-d.Cast_Int64((a.X-b.X)*(b.Y-c.Y))};d.ClipperBase.SlopesEqual5=
+function(a,b,c,e,f){return f?k.op_Equality(k.Int128Mul(a.Y-b.Y,c.X-e.X),k.Int128Mul(a.X-b.X,c.Y-e.Y)):0===d.Cast_Int64((a.Y-b.Y)*(c.X-e.X))-d.Cast_Int64((a.X-b.X)*(c.Y-e.Y))};d.ClipperBase.prototype.Clear=function(){this.DisposeLocalMinimaList();for(var a=0,b=this.m_edges.length;a<b;++a){for(var c=0,e=this.m_edges[a].length;c<e;++c)this.m_edges[a][c]=null;d.Clear(this.m_edges[a])}d.Clear(this.m_edges);this.m_HasOpenPaths=this.m_UseFullRange=!1};d.ClipperBase.prototype.DisposeLocalMinimaList=function(){for(;null!==
+this.m_MinimaList;){var a=this.m_MinimaList.Next;this.m_MinimaList=null;this.m_MinimaList=a}this.m_CurrentLM=null};d.ClipperBase.prototype.RangeTest=function(a,b){if(b.Value)(a.X>d.ClipperBase.hiRange||a.Y>d.ClipperBase.hiRange||-a.X>d.ClipperBase.hiRange||-a.Y>d.ClipperBase.hiRange)&&d.Error("Coordinate outside allowed range in RangeTest().");else if(a.X>d.ClipperBase.loRange||a.Y>d.ClipperBase.loRange||-a.X>d.ClipperBase.loRange||-a.Y>d.ClipperBase.loRange)b.Value=!0,this.RangeTest(a,b)};d.ClipperBase.prototype.InitEdge=
+function(a,b,c,e){a.Next=b;a.Prev=c;a.Curr.X=e.X;a.Curr.Y=e.Y;d.use_xyz&&(a.Curr.Z=e.Z);a.OutIdx=-1};d.ClipperBase.prototype.InitEdge2=function(a,b){a.Curr.Y>=a.Next.Curr.Y?(a.Bot.X=a.Curr.X,a.Bot.Y=a.Curr.Y,d.use_xyz&&(a.Bot.Z=a.Curr.Z),a.Top.X=a.Next.Curr.X,a.Top.Y=a.Next.Curr.Y,d.use_xyz&&(a.Top.Z=a.Next.Curr.Z)):(a.Top.X=a.Curr.X,a.Top.Y=a.Curr.Y,d.use_xyz&&(a.Top.Z=a.Curr.Z),a.Bot.X=a.Next.Curr.X,a.Bot.Y=a.Next.Curr.Y,d.use_xyz&&(a.Bot.Z=a.Next.Curr.Z));this.SetDx(a);a.PolyTyp=b};d.ClipperBase.prototype.FindNextLocMin=
+function(a){for(var b;;){for(;d.IntPoint.op_Inequality(a.Bot,a.Prev.Bot)||d.IntPoint.op_Equality(a.Curr,a.Top);)a=a.Next;if(a.Dx!=d.ClipperBase.horizontal&&a.Prev.Dx!=d.ClipperBase.horizontal)break;for(;a.Prev.Dx==d.ClipperBase.horizontal;)a=a.Prev;for(b=a;a.Dx==d.ClipperBase.horizontal;)a=a.Next;if(a.Top.Y!=a.Prev.Bot.Y){b.Prev.Bot.X<a.Bot.X&&(a=b);break}}return a};d.ClipperBase.prototype.ProcessBound=function(a,b){var c,e=a,f;if(e.OutIdx==d.ClipperBase.Skip){a=e;if(b){for(;a.Top.Y==a.Next.Bot.Y;)a=
+a.Next;for(;a!=e&&a.Dx==d.ClipperBase.horizontal;)a=a.Prev}else{for(;a.Top.Y==a.Prev.Bot.Y;)a=a.Prev;for(;a!=e&&a.Dx==d.ClipperBase.horizontal;)a=a.Next}a==e?e=b?a.Next:a.Prev:(a=b?e.Next:e.Prev,c=new d.LocalMinima,c.Next=null,c.Y=a.Bot.Y,c.LeftBound=null,c.RightBound=a,a.WindDelta=0,e=this.ProcessBound(a,b),this.InsertLocalMinima(c));return e}a.Dx==d.ClipperBase.horizontal&&(c=b?a.Prev:a.Next,c.OutIdx!=d.ClipperBase.Skip&&(c.Dx==d.ClipperBase.horizontal?c.Bot.X!=a.Bot.X&&c.Top.X!=a.Bot.X&&this.ReverseHorizontal(a):
+c.Bot.X!=a.Bot.X&&this.ReverseHorizontal(a)));c=a;if(b){for(;e.Top.Y==e.Next.Bot.Y&&e.Next.OutIdx!=d.ClipperBase.Skip;)e=e.Next;if(e.Dx==d.ClipperBase.horizontal&&e.Next.OutIdx!=d.ClipperBase.Skip){for(f=e;f.Prev.Dx==d.ClipperBase.horizontal;)f=f.Prev;f.Prev.Top.X==e.Next.Top.X?b||(e=f.Prev):f.Prev.Top.X>e.Next.Top.X&&(e=f.Prev)}for(;a!=e;)a.NextInLML=a.Next,a.Dx==d.ClipperBase.horizontal&&a!=c&&a.Bot.X!=a.Prev.Top.X&&this.ReverseHorizontal(a),a=a.Next;a.Dx==d.ClipperBase.horizontal&&a!=c&&a.Bot.X!=
+a.Prev.Top.X&&this.ReverseHorizontal(a);e=e.Next}else{for(;e.Top.Y==e.Prev.Bot.Y&&e.Prev.OutIdx!=d.ClipperBase.Skip;)e=e.Prev;if(e.Dx==d.ClipperBase.horizontal&&e.Prev.OutIdx!=d.ClipperBase.Skip){for(f=e;f.Next.Dx==d.ClipperBase.horizontal;)f=f.Next;f.Next.Top.X==e.Prev.Top.X?b||(e=f.Next):f.Next.Top.X>e.Prev.Top.X&&(e=f.Next)}for(;a!=e;)a.NextInLML=a.Prev,a.Dx==d.ClipperBase.horizontal&&a!=c&&a.Bot.X!=a.Next.Top.X&&this.ReverseHorizontal(a),a=a.Prev;a.Dx==d.ClipperBase.horizontal&&a!=c&&a.Bot.X!=
+a.Next.Top.X&&this.ReverseHorizontal(a);e=e.Prev}return e};d.ClipperBase.prototype.AddPath=function(a,b,c){d.use_lines?c||b!=d.PolyType.ptClip||d.Error("AddPath: Open paths must be subject."):c||d.Error("AddPath: Open paths have been disabled.");var e=a.length-1;if(c)for(;0<e&&d.IntPoint.op_Equality(a[e],a[0]);)--e;for(;0<e&&d.IntPoint.op_Equality(a[e],a[e-1]);)--e;if(c&&2>e||!c&&1>e)return!1;for(var f=[],g=0;g<=e;g++)f.push(new d.TEdge);var h=!0;f[1].Curr.X=a[1].X;f[1].Curr.Y=a[1].Y;d.use_xyz&&(f[1].Curr.Z=
+a[1].Z);var l={Value:this.m_UseFullRange};this.RangeTest(a[0],l);this.m_UseFullRange=l.Value;l.Value=this.m_UseFullRange;this.RangeTest(a[e],l);this.m_UseFullRange=l.Value;this.InitEdge(f[0],f[1],f[e],a[0]);this.InitEdge(f[e],f[0],f[e-1],a[e]);for(g=e-1;1<=g;--g)l.Value=this.m_UseFullRange,this.RangeTest(a[g],l),this.m_UseFullRange=l.Value,this.InitEdge(f[g],f[g+1],f[g-1],a[g]);for(g=a=e=f[0];;)if(a.Curr!=a.Next.Curr||!c&&a.Next==e){if(a.Prev==a.Next)break;else if(c&&d.ClipperBase.SlopesEqual(a.Prev.Curr,
+a.Curr,a.Next.Curr,this.m_UseFullRange)&&(!this.PreserveCollinear||!this.Pt2IsBetweenPt1AndPt3(a.Prev.Curr,a.Curr,a.Next.Curr))){a==e&&(e=a.Next);a=this.RemoveEdge(a);g=a=a.Prev;continue}a=a.Next;if(a==g||!c&&a.Next==e)break}else{if(a==a.Next)break;a==e&&(e=a.Next);g=a=this.RemoveEdge(a)}if(!c&&a==a.Next||c&&a.Prev==a.Next)return!1;c||(this.m_HasOpenPaths=!0,e.Prev.OutIdx=d.ClipperBase.Skip);a=e;do this.InitEdge2(a,b),a=a.Next,h&&a.Curr.Y!=e.Curr.Y&&(h=!1);while(a!=e);if(h){if(c)return!1;a.Prev.OutIdx=
+d.ClipperBase.Skip;a.Prev.Bot.X<a.Prev.Top.X&&this.ReverseHorizontal(a.Prev);b=new d.LocalMinima;b.Next=null;b.Y=a.Bot.Y;b.LeftBound=null;b.RightBound=a;b.RightBound.Side=d.EdgeSide.esRight;for(b.RightBound.WindDelta=0;a.Next.OutIdx!=d.ClipperBase.Skip;)a.NextInLML=a.Next,a.Bot.X!=a.Prev.Top.X&&this.ReverseHorizontal(a),a=a.Next;this.InsertLocalMinima(b);this.m_edges.push(f);return!0}this.m_edges.push(f);h=null;d.IntPoint.op_Equality(a.Prev.Bot,a.Prev.Top)&&(a=a.Next);for(;;){a=this.FindNextLocMin(a);
+if(a==h)break;else null==h&&(h=a);b=new d.LocalMinima;b.Next=null;b.Y=a.Bot.Y;a.Dx<a.Prev.Dx?(b.LeftBound=a.Prev,b.RightBound=a,f=!1):(b.LeftBound=a,b.RightBound=a.Prev,f=!0);b.LeftBound.Side=d.EdgeSide.esLeft;b.RightBound.Side=d.EdgeSide.esRight;b.LeftBound.WindDelta=c?b.LeftBound.Next==b.RightBound?-1:1:0;b.RightBound.WindDelta=-b.LeftBound.WindDelta;a=this.ProcessBound(b.LeftBound,f);a.OutIdx==d.ClipperBase.Skip&&(a=this.ProcessBound(a,f));e=this.ProcessBound(b.RightBound,!f);e.OutIdx==d.ClipperBase.Skip&&
+(e=this.ProcessBound(e,!f));b.LeftBound.OutIdx==d.ClipperBase.Skip?b.LeftBound=null:b.RightBound.OutIdx==d.ClipperBase.Skip&&(b.RightBound=null);this.InsertLocalMinima(b);f||(a=e)}return!0};d.ClipperBase.prototype.AddPaths=function(a,b,c){for(var d=!1,f=0,g=a.length;f<g;++f)this.AddPath(a[f],b,c)&&(d=!0);return d};d.ClipperBase.prototype.Pt2IsBetweenPt1AndPt3=function(a,b,c){return d.IntPoint.op_Equality(a,c)||d.IntPoint.op_Equality(a,b)||d.IntPoint.op_Equality(c,b)?!1:a.X!=c.X?b.X>a.X==b.X<c.X:b.Y>
+a.Y==b.Y<c.Y};d.ClipperBase.prototype.RemoveEdge=function(a){a.Prev.Next=a.Next;a.Next.Prev=a.Prev;var b=a.Next;a.Prev=null;return b};d.ClipperBase.prototype.SetDx=function(a){a.Delta.X=a.Top.X-a.Bot.X;a.Delta.Y=a.Top.Y-a.Bot.Y;a.Dx=0===a.Delta.Y?d.ClipperBase.horizontal:a.Delta.X/a.Delta.Y};d.ClipperBase.prototype.InsertLocalMinima=function(a){if(null===this.m_MinimaList)this.m_MinimaList=a;else if(a.Y>=this.m_MinimaList.Y)a.Next=this.m_MinimaList,this.m_MinimaList=a;else{for(var b=this.m_MinimaList;null!==
+b.Next&&a.Y<b.Next.Y;)b=b.Next;a.Next=b.Next;b.Next=a}};d.ClipperBase.prototype.PopLocalMinima=function(){null!==this.m_CurrentLM&&(this.m_CurrentLM=this.m_CurrentLM.Next)};d.ClipperBase.prototype.ReverseHorizontal=function(a){var b=a.Top.X;a.Top.X=a.Bot.X;a.Bot.X=b;d.use_xyz&&(b=a.Top.Z,a.Top.Z=a.Bot.Z,a.Bot.Z=b)};d.ClipperBase.prototype.Reset=function(){this.m_CurrentLM=this.m_MinimaList;if(null!=this.m_CurrentLM)for(var a=this.m_MinimaList;null!=a;){var b=a.LeftBound;null!=b&&(b.Curr.X=b.Bot.X,
+b.Curr.Y=b.Bot.Y,d.use_xyz&&(b.Curr.Z=b.Bot.Z),b.Side=d.EdgeSide.esLeft,b.OutIdx=d.ClipperBase.Unassigned);b=a.RightBound;null!=b&&(b.Curr.X=b.Bot.X,b.Curr.Y=b.Bot.Y,d.use_xyz&&(b.Curr.Z=b.Bot.Z),b.Side=d.EdgeSide.esRight,b.OutIdx=d.ClipperBase.Unassigned);a=a.Next}};d.Clipper=function(a){"undefined"==typeof a&&(a=0);this.m_PolyOuts=null;this.m_ClipType=d.ClipType.ctIntersection;this.m_IntersectNodeComparer=this.m_IntersectList=this.m_SortedEdges=this.m_ActiveEdges=this.m_Scanbeam=null;this.m_ExecuteLocked=
+!1;this.m_SubjFillType=this.m_ClipFillType=d.PolyFillType.pftEvenOdd;this.m_GhostJoins=this.m_Joins=null;this.StrictlySimple=this.ReverseSolution=this.m_UsingPolyTree=!1;d.ClipperBase.call(this);this.m_SortedEdges=this.m_ActiveEdges=this.m_Scanbeam=null;this.m_IntersectList=[];this.m_IntersectNodeComparer=d.MyIntersectNodeSort.Compare;this.m_UsingPolyTree=this.m_ExecuteLocked=!1;this.m_PolyOuts=[];this.m_Joins=[];this.m_GhostJoins=[];this.ReverseSolution=0!==(1&a);this.StrictlySimple=0!==(2&a);this.PreserveCollinear=
+0!==(4&a);d.use_xyz&&(this.ZFillFunction=null)};d.Clipper.ioReverseSolution=1;d.Clipper.ioStrictlySimple=2;d.Clipper.ioPreserveCollinear=4;d.Clipper.prototype.Clear=function(){0!==this.m_edges.length&&(this.DisposeAllPolyPts(),d.ClipperBase.prototype.Clear.call(this))};d.Clipper.prototype.DisposeScanbeamList=function(){for(;null!==this.m_Scanbeam;){var a=this.m_Scanbeam.Next;this.m_Scanbeam=null;this.m_Scanbeam=a}};d.Clipper.prototype.Reset=function(){d.ClipperBase.prototype.Reset.call(this);this.m_SortedEdges=
+this.m_ActiveEdges=this.m_Scanbeam=null;for(var a=this.m_MinimaList;null!==a;)this.InsertScanbeam(a.Y),a=a.Next};d.Clipper.prototype.InsertScanbeam=function(a){if(null===this.m_Scanbeam)this.m_Scanbeam=new d.Scanbeam,this.m_Scanbeam.Next=null,this.m_Scanbeam.Y=a;else if(a>this.m_Scanbeam.Y){var b=new d.Scanbeam;b.Y=a;b.Next=this.m_Scanbeam;this.m_Scanbeam=b}else{for(var c=this.m_Scanbeam;null!==c.Next&&a<=c.Next.Y;)c=c.Next;a!=c.Y&&(b=new d.Scanbeam,b.Y=a,b.Next=c.Next,c.Next=b)}};d.Clipper.prototype.Execute=
+function(){var a=arguments,b=a.length,c=a[1]instanceof d.PolyTree;if(4!=b||c){if(4==b&&c){var b=a[0],e=a[1],c=a[2],a=a[3];if(this.m_ExecuteLocked)return!1;this.m_ExecuteLocked=!0;this.m_SubjFillType=c;this.m_ClipFillType=a;this.m_ClipType=b;this.m_UsingPolyTree=!0;try{(f=this.ExecuteInternal())&&this.BuildResult2(e)}finally{this.DisposeAllPolyPts(),this.m_ExecuteLocked=!1}return f}if(2==b&&!c||2==b&&c)return b=a[0],e=a[1],this.Execute(b,e,d.PolyFillType.pftEvenOdd,d.PolyFillType.pftEvenOdd)}else{b=
+a[0];e=a[1];c=a[2];a=a[3];if(this.m_ExecuteLocked)return!1;this.m_HasOpenPaths&&d.Error("Error: PolyTree struct is need for open path clipping.");this.m_ExecuteLocked=!0;d.Clear(e);this.m_SubjFillType=c;this.m_ClipFillType=a;this.m_ClipType=b;this.m_UsingPolyTree=!1;try{var f=this.ExecuteInternal();f&&this.BuildResult(e)}finally{this.DisposeAllPolyPts(),this.m_ExecuteLocked=!1}return f}};d.Clipper.prototype.FixHoleLinkage=function(a){if(null!==a.FirstLeft&&(a.IsHole==a.FirstLeft.IsHole||null===a.FirstLeft.Pts)){for(var b=
+a.FirstLeft;null!==b&&(b.IsHole==a.IsHole||null===b.Pts);)b=b.FirstLeft;a.FirstLeft=b}};d.Clipper.prototype.ExecuteInternal=function(){try{this.Reset();if(null===this.m_CurrentLM)return!1;var a=this.PopScanbeam();do{this.InsertLocalMinimaIntoAEL(a);d.Clear(this.m_GhostJoins);this.ProcessHorizontals(!1);if(null===this.m_Scanbeam)break;var b=this.PopScanbeam();if(!this.ProcessIntersections(b))return!1;this.ProcessEdgesAtTopOfScanbeam(b);a=b}while(null!==this.m_Scanbeam||null!==this.m_CurrentLM);for(var a=
+0,c=this.m_PolyOuts.length;a<c;a++){var e=this.m_PolyOuts[a];null===e.Pts||e.IsOpen||(e.IsHole^this.ReverseSolution)==0<this.Area(e)&&this.ReversePolyPtLinks(e.Pts)}this.JoinCommonEdges();a=0;for(c=this.m_PolyOuts.length;a<c;a++)e=this.m_PolyOuts[a],null===e.Pts||e.IsOpen||this.FixupOutPolygon(e);this.StrictlySimple&&this.DoSimplePolygons();return!0}finally{d.Clear(this.m_Joins),d.Clear(this.m_GhostJoins)}};d.Clipper.prototype.PopScanbeam=function(){var a=this.m_Scanbeam.Y;this.m_Scanbeam=this.m_Scanbeam.Next;
+return a};d.Clipper.prototype.DisposeAllPolyPts=function(){for(var a=0,b=this.m_PolyOuts.length;a<b;++a)this.DisposeOutRec(a);d.Clear(this.m_PolyOuts)};d.Clipper.prototype.DisposeOutRec=function(a){this.m_PolyOuts[a].Pts=null;this.m_PolyOuts[a]=null};d.Clipper.prototype.AddJoin=function(a,b,c){var e=new d.Join;e.OutPt1=a;e.OutPt2=b;e.OffPt.X=c.X;e.OffPt.Y=c.Y;d.use_xyz&&(e.OffPt.Z=c.Z);this.m_Joins.push(e)};d.Clipper.prototype.AddGhostJoin=function(a,b){var c=new d.Join;c.OutPt1=a;c.OffPt.X=b.X;c.OffPt.Y=
+b.Y;d.use_xyz&&(c.OffPt.Z=b.Z);this.m_GhostJoins.push(c)};d.Clipper.prototype.SetZ=function(a,b,c){null!==this.ZFillFunction&&0==a.Z&&null!==this.ZFillFunction&&(d.IntPoint.op_Equality(a,b.Bot)?a.Z=b.Bot.Z:d.IntPoint.op_Equality(a,b.Top)?a.Z=b.Top.Z:d.IntPoint.op_Equality(a,c.Bot)?a.Z=c.Bot.Z:d.IntPoint.op_Equality(a,c.Top)?a.Z=c.Top.Z:this.ZFillFunction(b.Bot,b.Top,c.Bot,c.Top,a))};d.Clipper.prototype.InsertLocalMinimaIntoAEL=function(a){for(;null!==this.m_CurrentLM&&this.m_CurrentLM.Y==a;){var b=
 this.m_CurrentLM.LeftBound,c=this.m_CurrentLM.RightBound;this.PopLocalMinima();var e=null;null===b?(this.InsertEdgeIntoAEL(c,null),this.SetWindingCount(c),this.IsContributing(c)&&(e=this.AddOutPt(c,c.Bot))):(null==c?(this.InsertEdgeIntoAEL(b,null),this.SetWindingCount(b),this.IsContributing(b)&&(e=this.AddOutPt(b,b.Bot))):(this.InsertEdgeIntoAEL(b,null),this.InsertEdgeIntoAEL(c,b),this.SetWindingCount(b),c.WindCnt=b.WindCnt,c.WindCnt2=b.WindCnt2,this.IsContributing(b)&&(e=this.AddLocalMinPoly(b,c,
-b.Bot))),this.InsertScanbeam(b.Top.Y));null!=c&&(d.ClipperBase.IsHorizontal(c)?this.AddEdgeToSEL(c):this.InsertScanbeam(c.Top.Y));if(null!=b&&null!=c){if(null!==e&&d.ClipperBase.IsHorizontal(c)&&0<this.m_GhostJoins.length&&0!==c.WindDelta)for(var f=0,g=this.m_GhostJoins.length;f<g;f++){var h=this.m_GhostJoins[f];this.HorzSegmentsOverlap(h.OutPt1.Pt,h.OffPt,c.Bot,c.Top)&&this.AddJoin(h.OutPt1,e,h.OffPt)}0<=b.OutIdx&&null!==b.PrevInAEL&&b.PrevInAEL.Curr.X==b.Bot.X&&0<=b.PrevInAEL.OutIdx&&d.ClipperBase.SlopesEqual(b.PrevInAEL,
+b.Bot))),this.InsertScanbeam(b.Top.Y));null!=c&&(d.ClipperBase.IsHorizontal(c)?this.AddEdgeToSEL(c):this.InsertScanbeam(c.Top.Y));if(null!=b&&null!=c){if(null!==e&&d.ClipperBase.IsHorizontal(c)&&0<this.m_GhostJoins.length&&0!==c.WindDelta)for(var f=0,g=this.m_GhostJoins.length;f<g;f++){var h=this.m_GhostJoins[f];this.HorzSegmentsOverlap(h.OutPt1.Pt.X,h.OffPt.X,c.Bot.X,c.Top.X)&&this.AddJoin(h.OutPt1,e,h.OffPt)}0<=b.OutIdx&&null!==b.PrevInAEL&&b.PrevInAEL.Curr.X==b.Bot.X&&0<=b.PrevInAEL.OutIdx&&d.ClipperBase.SlopesEqual(b.PrevInAEL,
 b,this.m_UseFullRange)&&0!==b.WindDelta&&0!==b.PrevInAEL.WindDelta&&(f=this.AddOutPt(b.PrevInAEL,b.Bot),this.AddJoin(e,f,b.Top));if(b.NextInAEL!=c&&(0<=c.OutIdx&&0<=c.PrevInAEL.OutIdx&&d.ClipperBase.SlopesEqual(c.PrevInAEL,c,this.m_UseFullRange)&&0!==c.WindDelta&&0!==c.PrevInAEL.WindDelta&&(f=this.AddOutPt(c.PrevInAEL,c.Bot),this.AddJoin(e,f,c.Top)),e=b.NextInAEL,null!==e))for(;e!=c;)this.IntersectEdges(c,e,b.Curr,!1),e=e.NextInAEL}}};d.Clipper.prototype.InsertEdgeIntoAEL=function(a,b){if(null===
 this.m_ActiveEdges)a.PrevInAEL=null,a.NextInAEL=null,this.m_ActiveEdges=a;else if(null===b&&this.E2InsertsBeforeE1(this.m_ActiveEdges,a))a.PrevInAEL=null,a.NextInAEL=this.m_ActiveEdges,this.m_ActiveEdges=this.m_ActiveEdges.PrevInAEL=a;else{null===b&&(b=this.m_ActiveEdges);for(;null!==b.NextInAEL&&!this.E2InsertsBeforeE1(b.NextInAEL,a);)b=b.NextInAEL;a.NextInAEL=b.NextInAEL;null!==b.NextInAEL&&(b.NextInAEL.PrevInAEL=a);a.PrevInAEL=b;b.NextInAEL=a}};d.Clipper.prototype.E2InsertsBeforeE1=function(a,
 b){return b.Curr.X==a.Curr.X?b.Top.Y>a.Top.Y?b.Top.X<d.Clipper.TopX(a,b.Top.Y):a.Top.X>d.Clipper.TopX(b,a.Top.Y):b.Curr.X<a.Curr.X};d.Clipper.prototype.IsEvenOddFillType=function(a){return a.PolyTyp==d.PolyType.ptSubject?this.m_SubjFillType==d.PolyFillType.pftEvenOdd:this.m_ClipFillType==d.PolyFillType.pftEvenOdd};d.Clipper.prototype.IsEvenOddAltFillType=function(a){return a.PolyTyp==d.PolyType.ptSubject?this.m_ClipFillType==d.PolyFillType.pftEvenOdd:this.m_SubjFillType==d.PolyFillType.pftEvenOdd};
 d.Clipper.prototype.IsContributing=function(a){var b,c;a.PolyTyp==d.PolyType.ptSubject?(b=this.m_SubjFillType,c=this.m_ClipFillType):(b=this.m_ClipFillType,c=this.m_SubjFillType);switch(b){case d.PolyFillType.pftEvenOdd:if(0===a.WindDelta&&1!=a.WindCnt)return!1;break;case d.PolyFillType.pftNonZero:if(1!=Math.abs(a.WindCnt))return!1;break;case d.PolyFillType.pftPositive:if(1!=a.WindCnt)return!1;break;default:if(-1!=a.WindCnt)return!1}switch(this.m_ClipType){case d.ClipType.ctIntersection:switch(c){case d.PolyFillType.pftEvenOdd:case d.PolyFillType.pftNonZero:return 0!==
 a.WindCnt2;case d.PolyFillType.pftPositive:return 0<a.WindCnt2;default:return 0>a.WindCnt2}case d.ClipType.ctUnion:switch(c){case d.PolyFillType.pftEvenOdd:case d.PolyFillType.pftNonZero:return 0===a.WindCnt2;case d.PolyFillType.pftPositive:return 0>=a.WindCnt2;default:return 0<=a.WindCnt2}case d.ClipType.ctDifference:if(a.PolyTyp==d.PolyType.ptSubject)switch(c){case d.PolyFillType.pftEvenOdd:case d.PolyFillType.pftNonZero:return 0===a.WindCnt2;case d.PolyFillType.pftPositive:return 0>=a.WindCnt2;
 default:return 0<=a.WindCnt2}else switch(c){case d.PolyFillType.pftEvenOdd:case d.PolyFillType.pftNonZero:return 0!==a.WindCnt2;case d.PolyFillType.pftPositive:return 0<a.WindCnt2;default:return 0>a.WindCnt2}case d.ClipType.ctXor:if(0===a.WindDelta)switch(c){case d.PolyFillType.pftEvenOdd:case d.PolyFillType.pftNonZero:return 0===a.WindCnt2;case d.PolyFillType.pftPositive:return 0>=a.WindCnt2;default:return 0<=a.WindCnt2}}return!0};d.Clipper.prototype.SetWindingCount=function(a){for(var b=a.PrevInAEL;null!==
-b&&(b.PolyTyp!=a.PolyTyp||0===b.WindDelta);)b=b.PrevInAEL;if(null===b)a.WindCnt=0===a.WindDelta?1:a.WindDelta,a.WindCnt2=0,b=this.m_ActiveEdges;else{if(0===a.WindDelta&&this.m_ClipType!=d.ClipType.ctUnion)a.WindCnt=1;else if(this.IsEvenOddFillType(a))if(0===a.WindDelta){for(var c=!0,e=b.PrevInAEL;null!==e;)e.PolyTyp==b.PolyTyp&&0!==e.WindDelta&&(c=!c),e=e.PrevInAEL;a.WindCnt=c?0:1}else a.WindCnt=a.WindDelta;else 0>b.WindCnt*b.WindDelta?1<Math.abs(b.WindCnt)?a.WindCnt=0>b.WindDelta*a.WindDelta?b.WindCnt:
-b.WindCnt+a.WindDelta:a.WindCnt=0===a.WindDelta?1:a.WindDelta:a.WindCnt=0===a.WindDelta?0>b.WindCnt?b.WindCnt-1:b.WindCnt+1:0>b.WindDelta*a.WindDelta?b.WindCnt:b.WindCnt+a.WindDelta;a.WindCnt2=b.WindCnt2;b=b.NextInAEL}if(this.IsEvenOddAltFillType(a))for(;b!=a;)0!==b.WindDelta&&(a.WindCnt2=0===a.WindCnt2?1:0),b=b.NextInAEL;else for(;b!=a;)a.WindCnt2+=b.WindDelta,b=b.NextInAEL};d.Clipper.prototype.AddEdgeToSEL=function(a){null===this.m_SortedEdges?(this.m_SortedEdges=a,a.PrevInSEL=null,a.NextInSEL=
-null):(a.NextInSEL=this.m_SortedEdges,a.PrevInSEL=null,this.m_SortedEdges=this.m_SortedEdges.PrevInSEL=a)};d.Clipper.prototype.CopyAELToSEL=function(){var a=this.m_ActiveEdges;for(this.m_SortedEdges=a;null!==a;)a.PrevInSEL=a.PrevInAEL,a=a.NextInSEL=a.NextInAEL};d.Clipper.prototype.SwapPositionsInAEL=function(a,b){if(a.NextInAEL!=a.PrevInAEL&&b.NextInAEL!=b.PrevInAEL){if(a.NextInAEL==b){var c=b.NextInAEL;null!==c&&(c.PrevInAEL=a);var e=a.PrevInAEL;null!==e&&(e.NextInAEL=b);b.PrevInAEL=e;b.NextInAEL=
-a;a.PrevInAEL=b;a.NextInAEL=c}else b.NextInAEL==a?(c=a.NextInAEL,null!==c&&(c.PrevInAEL=b),e=b.PrevInAEL,null!==e&&(e.NextInAEL=a),a.PrevInAEL=e,a.NextInAEL=b,b.PrevInAEL=a,b.NextInAEL=c):(c=a.NextInAEL,e=a.PrevInAEL,a.NextInAEL=b.NextInAEL,null!==a.NextInAEL&&(a.NextInAEL.PrevInAEL=a),a.PrevInAEL=b.PrevInAEL,null!==a.PrevInAEL&&(a.PrevInAEL.NextInAEL=a),b.NextInAEL=c,null!==b.NextInAEL&&(b.NextInAEL.PrevInAEL=b),b.PrevInAEL=e,null!==b.PrevInAEL&&(b.PrevInAEL.NextInAEL=b));null===a.PrevInAEL?this.m_ActiveEdges=
-a:null===b.PrevInAEL&&(this.m_ActiveEdges=b)}};d.Clipper.prototype.SwapPositionsInSEL=function(a,b){if(null!==a.NextInSEL||null!==a.PrevInSEL)if(null!==b.NextInSEL||null!==b.PrevInSEL){if(a.NextInSEL==b){var c=b.NextInSEL;null!==c&&(c.PrevInSEL=a);var e=a.PrevInSEL;null!==e&&(e.NextInSEL=b);b.PrevInSEL=e;b.NextInSEL=a;a.PrevInSEL=b;a.NextInSEL=c}else b.NextInSEL==a?(c=a.NextInSEL,null!==c&&(c.PrevInSEL=b),e=b.PrevInSEL,null!==e&&(e.NextInSEL=a),a.PrevInSEL=e,a.NextInSEL=b,b.PrevInSEL=a,b.NextInSEL=
-c):(c=a.NextInSEL,e=a.PrevInSEL,a.NextInSEL=b.NextInSEL,null!==a.NextInSEL&&(a.NextInSEL.PrevInSEL=a),a.PrevInSEL=b.PrevInSEL,null!==a.PrevInSEL&&(a.PrevInSEL.NextInSEL=a),b.NextInSEL=c,null!==b.NextInSEL&&(b.NextInSEL.PrevInSEL=b),b.PrevInSEL=e,null!==b.PrevInSEL&&(b.PrevInSEL.NextInSEL=b));null===a.PrevInSEL?this.m_SortedEdges=a:null===b.PrevInSEL&&(this.m_SortedEdges=b)}};d.Clipper.prototype.AddLocalMaxPoly=function(a,b,c){this.AddOutPt(a,c);0==b.WindDelta&&this.AddOutPt(b,c);a.OutIdx==b.OutIdx?
-(a.OutIdx=-1,b.OutIdx=-1):a.OutIdx<b.OutIdx?this.AppendPolygon(a,b):this.AppendPolygon(b,a)};d.Clipper.prototype.AddLocalMinPoly=function(a,b,c){var e,f;d.ClipperBase.IsHorizontal(b)||a.Dx>b.Dx?(e=this.AddOutPt(a,c),b.OutIdx=a.OutIdx,a.Side=d.EdgeSide.esLeft,b.Side=d.EdgeSide.esRight,f=a,a=f.PrevInAEL==b?b.PrevInAEL:f.PrevInAEL):(e=this.AddOutPt(b,c),a.OutIdx=b.OutIdx,a.Side=d.EdgeSide.esRight,b.Side=d.EdgeSide.esLeft,f=b,a=f.PrevInAEL==a?a.PrevInAEL:f.PrevInAEL);null!==a&&0<=a.OutIdx&&d.Clipper.TopX(a,
-c.Y)==d.Clipper.TopX(f,c.Y)&&d.ClipperBase.SlopesEqual(f,a,this.m_UseFullRange)&&0!==f.WindDelta&&0!==a.WindDelta&&(c=this.AddOutPt(a,c),this.AddJoin(e,c,f.Top));return e};d.Clipper.prototype.CreateOutRec=function(){var a=new d.OutRec;a.Idx=-1;a.IsHole=!1;a.IsOpen=!1;a.FirstLeft=null;a.Pts=null;a.BottomPt=null;a.PolyNode=null;this.m_PolyOuts.push(a);a.Idx=this.m_PolyOuts.length-1;return a};d.Clipper.prototype.AddOutPt=function(a,b){var c=a.Side==d.EdgeSide.esLeft;if(0>a.OutIdx){var e=this.CreateOutRec();
-e.IsOpen=0===a.WindDelta;var f=new d.OutPt;e.Pts=f;f.Idx=e.Idx;f.Pt.X=b.X;f.Pt.Y=b.Y;f.Next=f;f.Prev=f;e.IsOpen||this.SetHoleState(a,e);a.OutIdx=e.Idx}else{var e=this.m_PolyOuts[a.OutIdx],g=e.Pts;if(c&&d.IntPoint.op_Equality(b,g.Pt))return g;if(!c&&d.IntPoint.op_Equality(b,g.Prev.Pt))return g.Prev;f=new d.OutPt;f.Idx=e.Idx;f.Pt.X=b.X;f.Pt.Y=b.Y;f.Next=g;f.Prev=g.Prev;f.Prev.Next=f;g.Prev=f;c&&(e.Pts=f)}return f};d.Clipper.prototype.SwapPoints=function(a,b){var c=new d.IntPoint(a.Value);a.Value.X=
-b.Value.X;a.Value.Y=b.Value.Y;b.Value.X=c.X;b.Value.Y=c.Y};d.Clipper.prototype.HorzSegmentsOverlap=function(a,b,c,e){return a.X>c.X==a.X<e.X?!0:b.X>c.X==b.X<e.X?!0:c.X>a.X==c.X<b.X?!0:e.X>a.X==e.X<b.X?!0:a.X==c.X&&b.X==e.X?!0:a.X==e.X&&b.X==c.X?!0:!1};d.Clipper.prototype.InsertPolyPtBetween=function(a,b,c){var e=new d.OutPt;e.Pt.X=c.X;e.Pt.Y=c.Y;b==a.Next?(a.Next=e,b.Prev=e,e.Next=b,e.Prev=a):(b.Next=e,a.Prev=e,e.Next=a,e.Prev=b);return e};d.Clipper.prototype.SetHoleState=function(a,b){for(var c=
-!1,e=a.PrevInAEL;null!==e;)0<=e.OutIdx&&0!=e.WindDelta&&(c=!c,null===b.FirstLeft&&(b.FirstLeft=this.m_PolyOuts[e.OutIdx])),e=e.PrevInAEL;c&&(b.IsHole=!0)};d.Clipper.prototype.GetDx=function(a,b){return a.Y==b.Y?d.ClipperBase.horizontal:(b.X-a.X)/(b.Y-a.Y)};d.Clipper.prototype.FirstIsBottomPt=function(a,b){for(var c=a.Prev;d.IntPoint.op_Equality(c.Pt,a.Pt)&&c!=a;)c=c.Prev;for(var e=Math.abs(this.GetDx(a.Pt,c.Pt)),c=a.Next;d.IntPoint.op_Equality(c.Pt,a.Pt)&&c!=a;)c=c.Next;for(var f=Math.abs(this.GetDx(a.Pt,
-c.Pt)),c=b.Prev;d.IntPoint.op_Equality(c.Pt,b.Pt)&&c!=b;)c=c.Prev;for(var g=Math.abs(this.GetDx(b.Pt,c.Pt)),c=b.Next;d.IntPoint.op_Equality(c.Pt,b.Pt)&&c!=b;)c=c.Next;c=Math.abs(this.GetDx(b.Pt,c.Pt));return e>=g&&e>=c||f>=g&&f>=c};d.Clipper.prototype.GetBottomPt=function(a){for(var b=null,c=a.Next;c!=a;)c.Pt.Y>a.Pt.Y?(a=c,b=null):c.Pt.Y==a.Pt.Y&&c.Pt.X<=a.Pt.X&&(c.Pt.X<a.Pt.X?(b=null,a=c):c.Next!=a&&c.Prev!=a&&(b=c)),c=c.Next;if(null!==b)for(;b!=c;)for(this.FirstIsBottomPt(c,b)||(a=b),b=b.Next;d.IntPoint.op_Inequality(b.Pt,
-a.Pt);)b=b.Next;return a};d.Clipper.prototype.GetLowermostRec=function(a,b){null===a.BottomPt&&(a.BottomPt=this.GetBottomPt(a.Pts));null===b.BottomPt&&(b.BottomPt=this.GetBottomPt(b.Pts));var c=a.BottomPt,e=b.BottomPt;return c.Pt.Y>e.Pt.Y?a:c.Pt.Y<e.Pt.Y?b:c.Pt.X<e.Pt.X?a:c.Pt.X>e.Pt.X?b:c.Next==c?b:e.Next==e?a:this.FirstIsBottomPt(c,e)?a:b};d.Clipper.prototype.Param1RightOfParam2=function(a,b){do if(a=a.FirstLeft,a==b)return!0;while(null!==a);return!1};d.Clipper.prototype.GetOutRec=function(a){for(a=
-this.m_PolyOuts[a];a!=this.m_PolyOuts[a.Idx];)a=this.m_PolyOuts[a.Idx];return a};d.Clipper.prototype.AppendPolygon=function(a,b){var c=this.m_PolyOuts[a.OutIdx],e=this.m_PolyOuts[b.OutIdx],f;f=this.Param1RightOfParam2(c,e)?e:this.Param1RightOfParam2(e,c)?c:this.GetLowermostRec(c,e);var g=c.Pts,h=g.Prev,k=e.Pts,n=k.Prev;a.Side==d.EdgeSide.esLeft?(b.Side==d.EdgeSide.esLeft?(this.ReversePolyPtLinks(k),k.Next=g,g.Prev=k,h.Next=n,n.Prev=h,c.Pts=n):(n.Next=g,g.Prev=n,k.Prev=h,h.Next=k,c.Pts=k),g=d.EdgeSide.esLeft):
-(b.Side==d.EdgeSide.esRight?(this.ReversePolyPtLinks(k),h.Next=n,n.Prev=h,k.Next=g,g.Prev=k):(h.Next=k,k.Prev=h,g.Prev=n,n.Next=g),g=d.EdgeSide.esRight);c.BottomPt=null;f==e&&(e.FirstLeft!=c&&(c.FirstLeft=e.FirstLeft),c.IsHole=e.IsHole);e.Pts=null;e.BottomPt=null;e.FirstLeft=c;f=a.OutIdx;h=b.OutIdx;a.OutIdx=-1;b.OutIdx=-1;for(k=this.m_ActiveEdges;null!==k;){if(k.OutIdx==h){k.OutIdx=f;k.Side=g;break}k=k.NextInAEL}e.Idx=c.Idx};d.Clipper.prototype.ReversePolyPtLinks=function(a){if(null!==a){var b,c;
-b=a;do c=b.Next,b.Next=b.Prev,b=b.Prev=c;while(b!=a)}};d.Clipper.SwapSides=function(a,b){var c=a.Side;a.Side=b.Side;b.Side=c};d.Clipper.SwapPolyIndexes=function(a,b){var c=a.OutIdx;a.OutIdx=b.OutIdx;b.OutIdx=c};d.Clipper.prototype.IntersectEdges=function(a,b,c,e){var f=!e&&null===a.NextInLML&&a.Top.X==c.X&&a.Top.Y==c.Y;e=!e&&null===b.NextInLML&&b.Top.X==c.X&&b.Top.Y==c.Y;var g=0<=a.OutIdx,h=0<=b.OutIdx;if(0===a.WindDelta||0===b.WindDelta)0===a.WindDelta&&0===b.WindDelta?(f||e)&&g&&h&&this.AddLocalMaxPoly(a,
-b,c):a.PolyTyp==b.PolyTyp&&a.WindDelta!=b.WindDelta&&this.m_ClipType==d.ClipType.ctUnion?0===a.WindDelta?h&&(this.AddOutPt(a,c),g&&(a.OutIdx=-1)):g&&(this.AddOutPt(b,c),h&&(b.OutIdx=-1)):a.PolyTyp!=b.PolyTyp&&(0!==a.WindDelta||1!=Math.abs(b.WindCnt)||this.m_ClipType==d.ClipType.ctUnion&&0!==b.WindCnt2?0!==b.WindDelta||1!=Math.abs(a.WindCnt)||this.m_ClipType==d.ClipType.ctUnion&&0!==a.WindCnt2||(this.AddOutPt(b,c),h&&(b.OutIdx=-1)):(this.AddOutPt(a,c),g&&(a.OutIdx=-1))),f&&(0>a.OutIdx?this.DeleteFromAEL(a):
-d.Error("Error intersecting polylines")),e&&(0>b.OutIdx?this.DeleteFromAEL(b):d.Error("Error intersecting polylines"));else{if(a.PolyTyp==b.PolyTyp)if(this.IsEvenOddFillType(a)){var k=a.WindCnt;a.WindCnt=b.WindCnt;b.WindCnt=k}else a.WindCnt=0===a.WindCnt+b.WindDelta?-a.WindCnt:a.WindCnt+b.WindDelta,b.WindCnt=0===b.WindCnt-a.WindDelta?-b.WindCnt:b.WindCnt-a.WindDelta;else this.IsEvenOddFillType(b)?a.WindCnt2=0===a.WindCnt2?1:0:a.WindCnt2+=b.WindDelta,this.IsEvenOddFillType(a)?b.WindCnt2=0===b.WindCnt2?
-1:0:b.WindCnt2-=a.WindDelta;var n,m,l;a.PolyTyp==d.PolyType.ptSubject?(n=this.m_SubjFillType,l=this.m_ClipFillType):(n=this.m_ClipFillType,l=this.m_SubjFillType);b.PolyTyp==d.PolyType.ptSubject?(m=this.m_SubjFillType,k=this.m_ClipFillType):(m=this.m_ClipFillType,k=this.m_SubjFillType);switch(n){case d.PolyFillType.pftPositive:n=a.WindCnt;break;case d.PolyFillType.pftNegative:n=-a.WindCnt;break;default:n=Math.abs(a.WindCnt)}switch(m){case d.PolyFillType.pftPositive:m=b.WindCnt;break;case d.PolyFillType.pftNegative:m=
--b.WindCnt;break;default:m=Math.abs(b.WindCnt)}if(g&&h)f||e||0!==n&&1!=n||0!==m&&1!=m||a.PolyTyp!=b.PolyTyp&&this.m_ClipType!=d.ClipType.ctXor?this.AddLocalMaxPoly(a,b,c):(this.AddOutPt(a,c),this.AddOutPt(b,c),d.Clipper.SwapSides(a,b),d.Clipper.SwapPolyIndexes(a,b));else if(g){if(0===m||1==m)this.AddOutPt(a,c),d.Clipper.SwapSides(a,b),d.Clipper.SwapPolyIndexes(a,b)}else if(h){if(0===n||1==n)this.AddOutPt(b,c),d.Clipper.SwapSides(a,b),d.Clipper.SwapPolyIndexes(a,b)}else if(!(0!==n&&1!=n||0!==m&&1!=
-m||f||e)){switch(l){case d.PolyFillType.pftPositive:g=a.WindCnt2;break;case d.PolyFillType.pftNegative:g=-a.WindCnt2;break;default:g=Math.abs(a.WindCnt2)}switch(k){case d.PolyFillType.pftPositive:h=b.WindCnt2;break;case d.PolyFillType.pftNegative:h=-b.WindCnt2;break;default:h=Math.abs(b.WindCnt2)}if(a.PolyTyp!=b.PolyTyp)this.AddLocalMinPoly(a,b,c);else if(1==n&&1==m)switch(this.m_ClipType){case d.ClipType.ctIntersection:0<g&&0<h&&this.AddLocalMinPoly(a,b,c);break;case d.ClipType.ctUnion:0>=g&&0>=
-h&&this.AddLocalMinPoly(a,b,c);break;case d.ClipType.ctDifference:(a.PolyTyp==d.PolyType.ptClip&&0<g&&0<h||a.PolyTyp==d.PolyType.ptSubject&&0>=g&&0>=h)&&this.AddLocalMinPoly(a,b,c);break;case d.ClipType.ctXor:this.AddLocalMinPoly(a,b,c)}else d.Clipper.SwapSides(a,b)}f!=e&&(f&&0<=a.OutIdx||e&&0<=b.OutIdx)&&(d.Clipper.SwapSides(a,b),d.Clipper.SwapPolyIndexes(a,b));f&&this.DeleteFromAEL(a);e&&this.DeleteFromAEL(b)}};d.Clipper.prototype.DeleteFromAEL=function(a){var b=a.PrevInAEL,c=a.NextInAEL;if(null!==
-b||null!==c||a==this.m_ActiveEdges)null!==b?b.NextInAEL=c:this.m_ActiveEdges=c,null!==c&&(c.PrevInAEL=b),a.NextInAEL=null,a.PrevInAEL=null};d.Clipper.prototype.DeleteFromSEL=function(a){var b=a.PrevInSEL,c=a.NextInSEL;if(null!==b||null!==c||a==this.m_SortedEdges)null!==b?b.NextInSEL=c:this.m_SortedEdges=c,null!==c&&(c.PrevInSEL=b),a.NextInSEL=null,a.PrevInSEL=null};d.Clipper.prototype.UpdateEdgeIntoAEL=function(a){null===a.Value.NextInLML&&d.Error("UpdateEdgeIntoAEL: invalid call");var b=a.Value.PrevInAEL,
-c=a.Value.NextInAEL;a.Value.NextInLML.OutIdx=a.Value.OutIdx;null!==b?b.NextInAEL=a.Value.NextInLML:this.m_ActiveEdges=a.Value.NextInLML;null!==c&&(c.PrevInAEL=a.Value.NextInLML);a.Value.NextInLML.Side=a.Value.Side;a.Value.NextInLML.WindDelta=a.Value.WindDelta;a.Value.NextInLML.WindCnt=a.Value.WindCnt;a.Value.NextInLML.WindCnt2=a.Value.WindCnt2;a.Value=a.Value.NextInLML;a.Value.Curr.X=a.Value.Bot.X;a.Value.Curr.Y=a.Value.Bot.Y;a.Value.PrevInAEL=b;a.Value.NextInAEL=c;d.ClipperBase.IsHorizontal(a.Value)||
-this.InsertScanbeam(a.Value.Top.Y)};d.Clipper.prototype.ProcessHorizontals=function(a){for(var b=this.m_SortedEdges;null!==b;)this.DeleteFromSEL(b),this.ProcessHorizontal(b,a),b=this.m_SortedEdges};d.Clipper.prototype.GetHorzDirection=function(a,b,c,e){a.Bot.X<a.Top.X?(c.Value=a.Bot.X,e.Value=a.Top.X,b.Value=d.Direction.dLeftToRight):(c.Value=a.Top.X,e.Value=a.Bot.X,b.Value=d.Direction.dRightToLeft)};d.Clipper.prototype.PrepareHorzJoins=function(a,b){var c=this.m_PolyOuts[a.OutIdx].Pts;a.Side!=d.EdgeSide.esLeft&&
-(c=c.Prev);for(var e=0,f=this.m_GhostJoins.length;e<f;++e){var g=this.m_GhostJoins[e];this.HorzSegmentsOverlap(g.OutPt1.Pt,g.OffPt,a.Bot,a.Top)&&this.AddJoin(g.OutPt1,c,g.OffPt)}b&&(d.IntPoint.op_Equality(c.Pt,a.Top)?this.AddGhostJoin(c,a.Bot):this.AddGhostJoin(c,a.Top))};d.Clipper.prototype.ProcessHorizontal=function(a,b){var c,e,f;(function(){c={Value:c};e={Value:e};f={Value:f};var b=this.GetHorzDirection(a,c,e,f);c=c.Value;e=e.Value;f=f.Value;return b}).call(this);for(var g=a,h=null;null!==g.NextInLML&&
-d.ClipperBase.IsHorizontal(g.NextInLML);)g=g.NextInLML;for(null===g.NextInLML&&(h=this.GetMaximaPair(g));;){for(var k=a==g,n=this.GetNextInAEL(a,c);null!==n&&!(n.Curr.X==a.Top.X&&null!==a.NextInLML&&n.Dx<a.NextInLML.Dx);){var m=this.GetNextInAEL(n,c);if(c==d.Direction.dLeftToRight&&n.Curr.X<=f||c==d.Direction.dRightToLeft&&n.Curr.X>=e){0<=a.OutIdx&&0!=a.WindDelta&&this.PrepareHorzJoins(a,b);if(n==h&&k){c==d.Direction.dLeftToRight?this.IntersectEdges(a,n,n.Top,!1):this.IntersectEdges(n,a,n.Top,!1);
-0<=h.OutIdx&&d.Error("ProcessHorizontal error");return}if(c==d.Direction.dLeftToRight){var l=new d.IntPoint(n.Curr.X,a.Curr.Y);this.IntersectEdges(a,n,l,!0)}else l=new d.IntPoint(n.Curr.X,a.Curr.Y),this.IntersectEdges(n,a,l,!0);this.SwapPositionsInAEL(a,n)}else if(c==d.Direction.dLeftToRight&&n.Curr.X>=f||c==d.Direction.dRightToLeft&&n.Curr.X<=e)break;n=m}0<=a.OutIdx&&0!==a.WindDelta&&this.PrepareHorzJoins(a,b);if(null!==a.NextInLML&&d.ClipperBase.IsHorizontal(a.NextInLML))(function(){a={Value:a};
-var b=this.UpdateEdgeIntoAEL(a);a=a.Value;return b}).call(this),0<=a.OutIdx&&this.AddOutPt(a,a.Bot),function(){c={Value:c};e={Value:e};f={Value:f};var b=this.GetHorzDirection(a,c,e,f);c=c.Value;e=e.Value;f=f.Value;return b}.call(this);else break}null!==a.NextInLML?0<=a.OutIdx?(g=this.AddOutPt(a,a.Top),function(){a={Value:a};var b=this.UpdateEdgeIntoAEL(a);a=a.Value;return b}.call(this),0!==a.WindDelta&&(h=a.PrevInAEL,m=a.NextInAEL,null!==h&&h.Curr.X==a.Bot.X&&h.Curr.Y==a.Bot.Y&&0!==h.WindDelta&&0<=
-h.OutIdx&&h.Curr.Y>h.Top.Y&&d.ClipperBase.SlopesEqual(a,h,this.m_UseFullRange)?(m=this.AddOutPt(h,a.Bot),this.AddJoin(g,m,a.Top)):null!==m&&m.Curr.X==a.Bot.X&&m.Curr.Y==a.Bot.Y&&0!==m.WindDelta&&0<=m.OutIdx&&m.Curr.Y>m.Top.Y&&d.ClipperBase.SlopesEqual(a,m,this.m_UseFullRange)&&(m=this.AddOutPt(m,a.Bot),this.AddJoin(g,m,a.Top)))):function(){a={Value:a};var b=this.UpdateEdgeIntoAEL(a);a=a.Value;return b}.call(this):null!==h?0<=h.OutIdx?(c==d.Direction.dLeftToRight?this.IntersectEdges(a,h,a.Top,!1):
-this.IntersectEdges(h,a,a.Top,!1),0<=h.OutIdx&&d.Error("ProcessHorizontal error")):(this.DeleteFromAEL(a),this.DeleteFromAEL(h)):(0<=a.OutIdx&&this.AddOutPt(a,a.Top),this.DeleteFromAEL(a))};d.Clipper.prototype.GetNextInAEL=function(a,b){return b==d.Direction.dLeftToRight?a.NextInAEL:a.PrevInAEL};d.Clipper.prototype.IsMinima=function(a){return null!==a&&a.Prev.NextInLML!=a&&a.Next.NextInLML!=a};d.Clipper.prototype.IsMaxima=function(a,b){return null!==a&&a.Top.Y==b&&null===a.NextInLML};d.Clipper.prototype.IsIntermediate=
-function(a,b){return a.Top.Y==b&&null!==a.NextInLML};d.Clipper.prototype.GetMaximaPair=function(a){var b=null;d.IntPoint.op_Equality(a.Next.Top,a.Top)&&null===a.Next.NextInLML?b=a.Next:d.IntPoint.op_Equality(a.Prev.Top,a.Top)&&null===a.Prev.NextInLML&&(b=a.Prev);return null===b||-2!=b.OutIdx&&(b.NextInAEL!=b.PrevInAEL||d.ClipperBase.IsHorizontal(b))?b:null};d.Clipper.prototype.ProcessIntersections=function(a,b){if(null==this.m_ActiveEdges)return!0;try{this.BuildIntersectList(a,b);if(0==this.m_IntersectList.length)return!0;
-if(1==this.m_IntersectList.length||this.FixupIntersectionOrder())this.ProcessIntersectList();else return!1}catch(c){this.m_SortedEdges=null,this.m_IntersectList.length=0,d.Error("ProcessIntersections error")}this.m_SortedEdges=null;return!0};d.Clipper.prototype.BuildIntersectList=function(a,b){if(null!==this.m_ActiveEdges){var c=this.m_ActiveEdges;for(this.m_SortedEdges=c;null!==c;)c.PrevInSEL=c.PrevInAEL,c.NextInSEL=c.NextInAEL,c.Curr.X=d.Clipper.TopX(c,b),c=c.NextInAEL;for(var e=!0;e&&null!==this.m_SortedEdges;){e=
-!1;for(c=this.m_SortedEdges;null!==c.NextInSEL;){var f=c.NextInSEL,g=new d.IntPoint;c.Curr.X>f.Curr.X?(g={Value:g},e=this.IntersectPoint(c,f,g),g=g.Value,!e&&c.Curr.X>f.Curr.X+1&&d.Error("Intersection error"),g.Y>a&&(g.Y=a,Math.abs(c.Dx)>Math.abs(f.Dx)?g.X=d.Clipper.TopX(f,a):g.X=d.Clipper.TopX(c,a)),e=new d.IntersectNode,e.Edge1=c,e.Edge2=f,e.Pt.X=g.X,e.Pt.Y=g.Y,this.m_IntersectList.push(e),this.SwapPositionsInSEL(c,f),e=!0):c=f}if(null!==c.PrevInSEL)c.PrevInSEL.NextInSEL=null;else break}this.m_SortedEdges=
-null}};d.Clipper.prototype.EdgesAdjacent=function(a){return a.Edge1.NextInSEL==a.Edge2||a.Edge1.PrevInSEL==a.Edge2};d.Clipper.IntersectNodeSort=function(a,b){return b.Pt.Y-a.Pt.Y};d.Clipper.prototype.FixupIntersectionOrder=function(){this.m_IntersectList.sort(this.m_IntersectNodeComparer);this.CopyAELToSEL();for(var a=this.m_IntersectList.length,b=0;b<a;b++){if(!this.EdgesAdjacent(this.m_IntersectList[b])){for(var c=b+1;c<a&&!this.EdgesAdjacent(this.m_IntersectList[c]);)c++;if(c==a)return!1;var e=
-this.m_IntersectList[b];this.m_IntersectList[b]=this.m_IntersectList[c];this.m_IntersectList[c]=e}this.SwapPositionsInSEL(this.m_IntersectList[b].Edge1,this.m_IntersectList[b].Edge2)}return!0};d.Clipper.prototype.ProcessIntersectList=function(){for(var a=0,b=this.m_IntersectList.length;a<b;a++){var c=this.m_IntersectList[a];this.IntersectEdges(c.Edge1,c.Edge2,c.Pt,!0);this.SwapPositionsInAEL(c.Edge1,c.Edge2)}this.m_IntersectList.length=0};F=function(a){return 0>a?Math.ceil(a-0.5):Math.round(a)};G=
-function(a){return 0>a?Math.ceil(a-0.5):Math.floor(a+0.5)};H=function(a){return 0>a?-Math.round(Math.abs(a)):Math.round(a)};I=function(a){if(0>a)return a-=0.5,-2147483648>a?Math.ceil(a):a|0;a+=0.5;return 2147483647<a?Math.floor(a):a|0};d.Clipper.Round=r?F:E?H:K?I:G;d.Clipper.TopX=function(a,b){return b==a.Top.Y?a.Top.X:a.Bot.X+d.Clipper.Round(a.Dx*(b-a.Bot.Y))};d.Clipper.prototype.IntersectPoint=function(a,b,c){c.Value=new d.IntPoint;var e,f;if(d.ClipperBase.SlopesEqual(a,b,this.m_UseFullRange)||
-a.Dx==b.Dx)return b.Bot.Y>a.Bot.Y?(c.Value.X=b.Bot.X,c.Value.Y=b.Bot.Y):(c.Value.X=a.Bot.X,c.Value.Y=a.Bot.Y),!1;if(0===a.Delta.X)c.Value.X=a.Bot.X,d.ClipperBase.IsHorizontal(b)?c.Value.Y=b.Bot.Y:(f=b.Bot.Y-b.Bot.X/b.Dx,c.Value.Y=d.Clipper.Round(c.Value.X/b.Dx+f));else if(0===b.Delta.X)c.Value.X=b.Bot.X,d.ClipperBase.IsHorizontal(a)?c.Value.Y=a.Bot.Y:(e=a.Bot.Y-a.Bot.X/a.Dx,c.Value.Y=d.Clipper.Round(c.Value.X/a.Dx+e));else{e=a.Bot.X-a.Bot.Y*a.Dx;f=b.Bot.X-b.Bot.Y*b.Dx;var g=(f-e)/(a.Dx-b.Dx);c.Value.Y=
-d.Clipper.Round(g);Math.abs(a.Dx)<Math.abs(b.Dx)?c.Value.X=d.Clipper.Round(a.Dx*g+e):c.Value.X=d.Clipper.Round(b.Dx*g+f)}if(c.Value.Y<a.Top.Y||c.Value.Y<b.Top.Y){if(a.Top.Y>b.Top.Y)return c.Value.Y=a.Top.Y,c.Value.X=d.Clipper.TopX(b,a.Top.Y),c.Value.X<a.Top.X;c.Value.Y=b.Top.Y;Math.abs(a.Dx)<Math.abs(b.Dx)?c.Value.X=d.Clipper.TopX(a,c.Value.Y):c.Value.X=d.Clipper.TopX(b,c.Value.Y)}return!0};d.Clipper.prototype.ProcessEdgesAtTopOfScanbeam=function(a){for(var b=this.m_ActiveEdges;null!==b;){var c=this.IsMaxima(b,
-a);c&&(c=this.GetMaximaPair(b),c=null===c||!d.ClipperBase.IsHorizontal(c));if(c){var e=b.PrevInAEL;this.DoMaxima(b);b=null===e?this.m_ActiveEdges:e.NextInAEL}else this.IsIntermediate(b,a)&&d.ClipperBase.IsHorizontal(b.NextInLML)?(function(){b={Value:b};var a=this.UpdateEdgeIntoAEL(b);b=b.Value;return a}.call(this),0<=b.OutIdx&&this.AddOutPt(b,b.Bot),this.AddEdgeToSEL(b)):(b.Curr.X=d.Clipper.TopX(b,a),b.Curr.Y=a),this.StrictlySimple&&(e=b.PrevInAEL,0<=b.OutIdx&&0!==b.WindDelta&&null!==e&&0<=e.OutIdx&&
-e.Curr.X==b.Curr.X&&0!==e.WindDelta&&(c=this.AddOutPt(e,b.Curr),e=this.AddOutPt(b,b.Curr),this.AddJoin(c,e,b.Curr))),b=b.NextInAEL}this.ProcessHorizontals(!0);for(b=this.m_ActiveEdges;null!==b;){if(this.IsIntermediate(b,a)){c=null;0<=b.OutIdx&&(c=this.AddOutPt(b,b.Top));(function(){b={Value:b};var a=this.UpdateEdgeIntoAEL(b);b=b.Value;return a}).call(this);var e=b.PrevInAEL,f=b.NextInAEL;null!==e&&e.Curr.X==b.Bot.X&&e.Curr.Y==b.Bot.Y&&null!==c&&0<=e.OutIdx&&e.Curr.Y>e.Top.Y&&d.ClipperBase.SlopesEqual(b,
-e,this.m_UseFullRange)&&0!==b.WindDelta&&0!==e.WindDelta?(e=this.AddOutPt(e,b.Bot),this.AddJoin(c,e,b.Top)):null!==f&&f.Curr.X==b.Bot.X&&f.Curr.Y==b.Bot.Y&&null!==c&&0<=f.OutIdx&&f.Curr.Y>f.Top.Y&&d.ClipperBase.SlopesEqual(b,f,this.m_UseFullRange)&&0!==b.WindDelta&&0!==f.WindDelta&&(e=this.AddOutPt(f,b.Bot),this.AddJoin(c,e,b.Top))}b=b.NextInAEL}};d.Clipper.prototype.DoMaxima=function(a){var b=this.GetMaximaPair(a);if(null===b)0<=a.OutIdx&&this.AddOutPt(a,a.Top),this.DeleteFromAEL(a);else{for(var c=
-a.NextInAEL;null!==c&&c!=b;)this.IntersectEdges(a,c,a.Top,!0),this.SwapPositionsInAEL(a,c),c=a.NextInAEL;-1==a.OutIdx&&-1==b.OutIdx?(this.DeleteFromAEL(a),this.DeleteFromAEL(b)):0<=a.OutIdx&&0<=b.OutIdx?this.IntersectEdges(a,b,a.Top,!1):0===a.WindDelta?(0<=a.OutIdx&&(this.AddOutPt(a,a.Top),a.OutIdx=-1),this.DeleteFromAEL(a),0<=b.OutIdx&&(this.AddOutPt(b,a.Top),b.OutIdx=-1),this.DeleteFromAEL(b)):d.Error("DoMaxima error")}};d.Clipper.ReversePaths=function(a){for(var b=0,c=a.length;b<c;b++)a[b].reverse()};
-d.Clipper.Orientation=function(a){return 0<=d.Clipper.Area(a)};d.Clipper.prototype.PointCount=function(a){if(null===a)return 0;var b=0,c=a;do b++,c=c.Next;while(c!=a);return b};d.Clipper.prototype.BuildResult=function(a){d.Clear(a);for(var b=0,c=this.m_PolyOuts.length;b<c;b++){var e=this.m_PolyOuts[b];if(null!==e.Pts){var e=e.Pts.Prev,f=this.PointCount(e);if(!(2>f)){for(var g=Array(f),h=0;h<f;h++)g[h]=e.Pt,e=e.Prev;a.push(g)}}}};d.Clipper.prototype.BuildResult2=function(a){a.Clear();for(var b=0,c=
-this.m_PolyOuts.length;b<c;b++){var e=this.m_PolyOuts[b],f=this.PointCount(e.Pts);if(!(e.IsOpen&&2>f||!e.IsOpen&&3>f)){this.FixHoleLinkage(e);var g=new d.PolyNode;a.m_AllPolys.push(g);e.PolyNode=g;g.m_polygon.length=f;for(var e=e.Pts.Prev,h=0;h<f;h++)g.m_polygon[h]=e.Pt,e=e.Prev}}b=0;for(c=this.m_PolyOuts.length;b<c;b++)e=this.m_PolyOuts[b],null!==e.PolyNode&&(e.IsOpen?(e.PolyNode.IsOpen=!0,a.AddChild(e.PolyNode)):null!==e.FirstLeft&&null!=e.FirstLeft.PolyNode?e.FirstLeft.PolyNode.AddChild(e.PolyNode):
-a.AddChild(e.PolyNode))};d.Clipper.prototype.FixupOutPolygon=function(a){var b=null;a.BottomPt=null;for(var c=a.Pts;;){if(c.Prev==c||c.Prev==c.Next){this.DisposeOutPts(c);a.Pts=null;return}if(d.IntPoint.op_Equality(c.Pt,c.Next.Pt)||d.IntPoint.op_Equality(c.Pt,c.Prev.Pt)||d.ClipperBase.SlopesEqual(c.Prev.Pt,c.Pt,c.Next.Pt,this.m_UseFullRange)&&(!this.PreserveCollinear||!this.Pt2IsBetweenPt1AndPt3(c.Prev.Pt,c.Pt,c.Next.Pt)))b=null,c.Prev.Next=c.Next,c=c.Next.Prev=c.Prev;else if(c==b)break;else null===
-b&&(b=c),c=c.Next}a.Pts=c};d.Clipper.prototype.DupOutPt=function(a,b){var c=new d.OutPt;c.Pt.X=a.Pt.X;c.Pt.Y=a.Pt.Y;c.Idx=a.Idx;b?(c.Next=a.Next,c.Prev=a,a.Next.Prev=c,a.Next=c):(c.Prev=a.Prev,c.Next=a,a.Prev.Next=c,a.Prev=c);return c};d.Clipper.prototype.GetOverlap=function(a,b,c,e,d,g){a<b?c<e?(d.Value=Math.max(a,c),g.Value=Math.min(b,e)):(d.Value=Math.max(a,e),g.Value=Math.min(b,c)):c<e?(d.Value=Math.max(b,c),g.Value=Math.min(a,e)):(d.Value=Math.max(b,e),g.Value=Math.min(a,c));return d.Value<g.Value};
-d.Clipper.prototype.JoinHorz=function(a,b,c,e,f,g){var h=a.Pt.X>b.Pt.X?d.Direction.dRightToLeft:d.Direction.dLeftToRight;e=c.Pt.X>e.Pt.X?d.Direction.dRightToLeft:d.Direction.dLeftToRight;if(h==e)return!1;if(h==d.Direction.dLeftToRight){for(;a.Next.Pt.X<=f.X&&a.Next.Pt.X>=a.Pt.X&&a.Next.Pt.Y==f.Y;)a=a.Next;g&&a.Pt.X!=f.X&&(a=a.Next);b=this.DupOutPt(a,!g);d.IntPoint.op_Inequality(b.Pt,f)&&(a=b,a.Pt.X=f.X,a.Pt.Y=f.Y,b=this.DupOutPt(a,!g))}else{for(;a.Next.Pt.X>=f.X&&a.Next.Pt.X<=a.Pt.X&&a.Next.Pt.Y==
-f.Y;)a=a.Next;g||a.Pt.X==f.X||(a=a.Next);b=this.DupOutPt(a,g);d.IntPoint.op_Inequality(b.Pt,f)&&(a=b,a.Pt.X=f.X,a.Pt.Y=f.Y,b=this.DupOutPt(a,g))}if(e==d.Direction.dLeftToRight){for(;c.Next.Pt.X<=f.X&&c.Next.Pt.X>=c.Pt.X&&c.Next.Pt.Y==f.Y;)c=c.Next;g&&c.Pt.X!=f.X&&(c=c.Next);e=this.DupOutPt(c,!g);d.IntPoint.op_Inequality(e.Pt,f)&&(c=e,c.Pt.X=f.X,c.Pt.Y=f.Y,e=this.DupOutPt(c,!g))}else{for(;c.Next.Pt.X>=f.X&&c.Next.Pt.X<=c.Pt.X&&c.Next.Pt.Y==f.Y;)c=c.Next;g||c.Pt.X==f.X||(c=c.Next);e=this.DupOutPt(c,
-g);d.IntPoint.op_Inequality(e.Pt,f)&&(c=e,c.Pt.X=f.X,c.Pt.Y=f.Y,e=this.DupOutPt(c,g))}h==d.Direction.dLeftToRight==g?(a.Prev=c,c.Next=a,b.Next=e,e.Prev=b):(a.Next=c,c.Prev=a,b.Prev=e,e.Next=b);return!0};d.Clipper.prototype.JoinPoints=function(a,b,c){var e=a.OutPt1,f=new d.OutPt,g=a.OutPt2,h=new d.OutPt;if((h=a.OutPt1.Pt.Y==a.OffPt.Y)&&d.IntPoint.op_Equality(a.OffPt,a.OutPt1.Pt)&&d.IntPoint.op_Equality(a.OffPt,a.OutPt2.Pt)){for(f=a.OutPt1.Next;f!=e&&d.IntPoint.op_Equality(f.Pt,a.OffPt);)f=f.Next;f=
-f.Pt.Y>a.OffPt.Y;for(h=a.OutPt2.Next;h!=g&&d.IntPoint.op_Equality(h.Pt,a.OffPt);)h=h.Next;if(f==h.Pt.Y>a.OffPt.Y)return!1;f?(f=this.DupOutPt(e,!1),h=this.DupOutPt(g,!0),e.Prev=g,g.Next=e,f.Next=h,h.Prev=f):(f=this.DupOutPt(e,!0),h=this.DupOutPt(g,!1),e.Next=g,g.Prev=e,f.Prev=h,h.Next=f);a.OutPt1=e;a.OutPt2=f;return!0}if(h){for(f=e;e.Prev.Pt.Y==e.Pt.Y&&e.Prev!=f&&e.Prev!=g;)e=e.Prev;for(;f.Next.Pt.Y==f.Pt.Y&&f.Next!=e&&f.Next!=g;)f=f.Next;if(f.Next==e||f.Next==g)return!1;for(h=g;g.Prev.Pt.Y==g.Pt.Y&&
-g.Prev!=h&&g.Prev!=f;)g=g.Prev;for(;h.Next.Pt.Y==h.Pt.Y&&h.Next!=g&&h.Next!=e;)h=h.Next;if(h.Next==g||h.Next==e)return!1;var k,n;k={Value:k};n={Value:n};b=this.GetOverlap(e.Pt.X,f.Pt.X,g.Pt.X,h.Pt.X,k,n);k=k.Value;n=n.Value;if(!b)return!1;b=new d.IntPoint;e.Pt.X>=k&&e.Pt.X<=n?(b.X=e.Pt.X,b.Y=e.Pt.Y,c=e.Pt.X>f.Pt.X):g.Pt.X>=k&&g.Pt.X<=n?(b.X=g.Pt.X,b.Y=g.Pt.Y,c=g.Pt.X>h.Pt.X):f.Pt.X>=k&&f.Pt.X<=n?(b.X=f.Pt.X,b.Y=f.Pt.Y,c=f.Pt.X>e.Pt.X):(b.X=h.Pt.X,b.Y=h.Pt.Y,c=h.Pt.X>g.Pt.X);a.OutPt1=e;a.OutPt2=g;
-return this.JoinHorz(e,f,g,h,b,c)}for(f=e.Next;d.IntPoint.op_Equality(f.Pt,e.Pt)&&f!=e;)f=f.Next;if(k=f.Pt.Y>e.Pt.Y||!d.ClipperBase.SlopesEqual(e.Pt,f.Pt,a.OffPt,this.m_UseFullRange)){for(f=e.Prev;d.IntPoint.op_Equality(f.Pt,e.Pt)&&f!=e;)f=f.Prev;if(f.Pt.Y>e.Pt.Y||!d.ClipperBase.SlopesEqual(e.Pt,f.Pt,a.OffPt,this.m_UseFullRange))return!1}for(h=g.Next;d.IntPoint.op_Equality(h.Pt,g.Pt)&&h!=g;)h=h.Next;if(n=h.Pt.Y>g.Pt.Y||!d.ClipperBase.SlopesEqual(g.Pt,h.Pt,a.OffPt,this.m_UseFullRange)){for(h=g.Prev;d.IntPoint.op_Equality(h.Pt,
-g.Pt)&&h!=g;)h=h.Prev;if(h.Pt.Y>g.Pt.Y||!d.ClipperBase.SlopesEqual(g.Pt,h.Pt,a.OffPt,this.m_UseFullRange))return!1}if(f==e||h==g||f==h||b==c&&k==n)return!1;k?(f=this.DupOutPt(e,!1),h=this.DupOutPt(g,!0),e.Prev=g,g.Next=e,f.Next=h,h.Prev=f):(f=this.DupOutPt(e,!0),h=this.DupOutPt(g,!1),e.Next=g,g.Prev=e,f.Prev=h,h.Next=f);a.OutPt1=e;a.OutPt2=f;return!0};d.Clipper.GetBounds=function(a){for(var b=0,c=a.length;b<c&&0==a[b].length;)b++;if(b==c)return new d.IntRect(0,0,0,0);var e=new d.IntRect;e.left=a[b][0].X;
-e.right=e.left;e.top=a[b][0].Y;for(e.bottom=e.top;b<c;b++)for(var f=0,g=a[b].length;f<g;f++)a[b][f].X<e.left?e.left=a[b][f].X:a[b][f].X>e.right&&(e.right=a[b][f].X),a[b][f].Y<e.top?e.top=a[b][f].Y:a[b][f].Y>e.bottom&&(e.bottom=a[b][f].Y);return e};d.Clipper.prototype.GetBounds2=function(a){var b=a,c=new d.IntRect;c.left=a.Pt.X;c.right=a.Pt.X;c.top=a.Pt.Y;c.bottom=a.Pt.Y;for(a=a.Next;a!=b;)a.Pt.X<c.left&&(c.left=a.Pt.X),a.Pt.X>c.right&&(c.right=a.Pt.X),a.Pt.Y<c.top&&(c.top=a.Pt.Y),a.Pt.Y>c.bottom&&
-(c.bottom=a.Pt.Y),a=a.Next;return c};d.ClipperBase.prototype.PointInPolygon=d.Clipper.prototype.PointInPolygon=function(){var a=arguments,b=a.length;if(2==b){for(var b=a[0],c=a[1],a=0,e=c;;){var d=c.Pt.X,g=c.Pt.Y,h=c.Next.Pt.X,k=c.Next.Pt.Y;if(k==b.Y&&(h==b.X||g==b.Y&&h>b.X==d<b.X))return-1;if(g<b.Y!=k<b.Y)if(d>=b.X)if(h>b.X)a=1-a;else{d=(d-b.X)*(k-b.Y)-(h-b.X)*(g-b.Y);if(0==d)return-1;0<d==k>g&&(a=1-a)}else if(h>b.X){d=(d-b.X)*(k-b.Y)-(h-b.X)*(g-b.Y);if(0==d)return-1;0<d==k>g&&(a=1-a)}c=c.Next;if(e==
-c)break}return a}if(3==b){b=a[0];c=a[1];e=a[2];g=c;a=!1;if(e){do g.Pt.Y>b.Y!=g.Prev.Pt.Y>b.Y&&p.op_LessThan(new p(b.X-g.Pt.X),p.op_Division(p.Int128Mul(g.Prev.Pt.X-g.Pt.X,b.Y-g.Pt.Y),new p(g.Prev.Pt.Y-g.Pt.Y)))&&(a=!a),g=g.Next;while(g!=c)}else{do g.Pt.Y>b.Y!=g.Prev.Pt.Y>b.Y&&b.X-g.Pt.X<(g.Prev.Pt.X-g.Pt.X)*(b.Y-g.Pt.Y)/(g.Prev.Pt.Y-g.Pt.Y)&&(a=!a),g=g.Next;while(g!=c)}return a}};d.Clipper.prototype.Poly2ContainsPoly1=function(a,b){var c=a;do{var e=this.PointInPolygon(c.Pt,b);if(0<=e)return 0!=e;
-c=c.Next}while(c!=a);return!0};d.Clipper.prototype.FixupFirstLefts1=function(a,b){for(var c=0,e=this.m_PolyOuts.length;c<e;c++){var d=this.m_PolyOuts[c];null!==d.Pts&&d.FirstLeft==a&&this.Poly2ContainsPoly1(d.Pts,b.Pts)&&(d.FirstLeft=b)}};d.Clipper.prototype.FixupFirstLefts2=function(a,b){for(var c=0,e=this.m_PolyOuts,d=e.length,g=e[c];c<d;c++,g=e[c])g.FirstLeft==a&&(g.FirstLeft=b)};d.Clipper.ParseFirstLeft=function(a){for(;null!=a&&null==a.Pts;)a=a.FirstLeft;return a};d.Clipper.prototype.JoinCommonEdges=
-function(){for(var a=0,b=this.m_Joins.length;a<b;a++){var c=this.m_Joins[a],e=this.GetOutRec(c.OutPt1.Idx),f=this.GetOutRec(c.OutPt2.Idx);if(null!=e.Pts&&null!=f.Pts){var g;g=e==f?e:this.Param1RightOfParam2(e,f)?f:this.Param1RightOfParam2(f,e)?e:this.GetLowermostRec(e,f);if(this.JoinPoints(c,e,f))if(e==f){e.Pts=c.OutPt1;e.BottomPt=null;f=this.CreateOutRec();f.Pts=c.OutPt2;this.UpdateOutPtIdxs(f);if(this.m_UsingPolyTree){g=0;for(var h=this.m_PolyOuts.length;g<h-1;g++){var k=this.m_PolyOuts[g];null!=
-k.Pts&&d.Clipper.ParseFirstLeft(k.FirstLeft)==e&&k.IsHole!=e.IsHole&&this.Poly2ContainsPoly1(k.Pts,c.OutPt2)&&(k.FirstLeft=f)}}this.Poly2ContainsPoly1(f.Pts,e.Pts)?(f.IsHole=!e.IsHole,f.FirstLeft=e,this.m_UsingPolyTree&&this.FixupFirstLefts2(f,e),(f.IsHole^this.ReverseSolution)==0<this.Area(f)&&this.ReversePolyPtLinks(f.Pts)):this.Poly2ContainsPoly1(e.Pts,f.Pts)?(f.IsHole=e.IsHole,e.IsHole=!f.IsHole,f.FirstLeft=e.FirstLeft,e.FirstLeft=f,this.m_UsingPolyTree&&this.FixupFirstLefts2(e,f),(e.IsHole^this.ReverseSolution)==
-0<this.Area(e)&&this.ReversePolyPtLinks(e.Pts)):(f.IsHole=e.IsHole,f.FirstLeft=e.FirstLeft,this.m_UsingPolyTree&&this.FixupFirstLefts1(e,f))}else f.Pts=null,f.BottomPt=null,f.Idx=e.Idx,e.IsHole=g.IsHole,g==f&&(e.FirstLeft=f.FirstLeft),f.FirstLeft=e,this.m_UsingPolyTree&&this.FixupFirstLefts2(f,e)}}};d.Clipper.prototype.UpdateOutPtIdxs=function(a){var b=a.Pts;do b.Idx=a.Idx,b=b.Prev;while(b!=a.Pts)};d.Clipper.prototype.DoSimplePolygons=function(){for(var a=0;a<this.m_PolyOuts.length;){var b=this.m_PolyOuts[a++],
-c=b.Pts;if(null!==c){do{for(var e=c.Next;e!=b.Pts;){if(d.IntPoint.op_Equality(c.Pt,e.Pt)&&e.Next!=c&&e.Prev!=c){var f=c.Prev,g=e.Prev;c.Prev=g;g.Next=c;e.Prev=f;f.Next=e;b.Pts=c;f=this.CreateOutRec();f.Pts=e;this.UpdateOutPtIdxs(f);this.Poly2ContainsPoly1(f.Pts,b.Pts)?(f.IsHole=!b.IsHole,f.FirstLeft=b):this.Poly2ContainsPoly1(b.Pts,f.Pts)?(f.IsHole=b.IsHole,b.IsHole=!f.IsHole,f.FirstLeft=b.FirstLeft,b.FirstLeft=f):(f.IsHole=b.IsHole,f.FirstLeft=b.FirstLeft);e=c}e=e.Next}c=c.Next}while(c!=b.Pts)}}};
-d.Clipper.Area=function(a){var b=a.length;if(3>b)return 0;for(var c=0,e=0,d=b-1;e<b;++e)c+=(a[d].X+a[e].X)*(a[d].Y-a[e].Y),d=e;return 0.5*-c};d.Clipper.prototype.Area=function(a){var b=a.Pts;if(null==b)return 0;var c=0;do c+=(b.Prev.Pt.X+b.Pt.X)*(b.Prev.Pt.Y-b.Pt.Y),b=b.Next;while(b!=a.Pts);return 0.5*c};d.Clipper.SimplifyPolygon=function(a,b){var c=[],e=new d.Clipper(0);e.StrictlySimple=!0;e.AddPath(a,d.PolyType.ptSubject,!0);e.Execute(d.ClipType.ctUnion,c,b,b);return c};d.Clipper.SimplifyPolygons=
-function(a,b){"undefined"==typeof b&&(b=d.PolyFillType.pftEvenOdd);var c=[],e=new d.Clipper(0);e.StrictlySimple=!0;e.AddPaths(a,d.PolyType.ptSubject,!0);e.Execute(d.ClipType.ctUnion,c,b,b);return c};d.Clipper.DistanceSqrd=function(a,b){var c=a.X-b.X,e=a.Y-b.Y;return c*c+e*e};d.Clipper.DistanceFromLineSqrd=function(a,b,c){var e=b.Y-c.Y;c=c.X-b.X;b=e*b.X+c*b.Y;b=e*a.X+c*a.Y-b;return b*b/(e*e+c*c)};d.Clipper.SlopesNearCollinear=function(a,b,c,e){return d.Clipper.DistanceFromLineSqrd(b,a,c)<e};d.Clipper.PointsAreClose=
-function(a,b,c){var e=a.X-b.X;a=a.Y-b.Y;return e*e+a*a<=c};d.Clipper.ExcludeOp=function(a){var b=a.Prev;b.Next=a.Next;a.Next.Prev=b;b.Idx=0;return b};d.Clipper.CleanPolygon=function(a,b){"undefined"==typeof b&&(b=1.415);var c=a.length;if(0==c)return[];for(var e=Array(c),f=0;f<c;++f)e[f]=new d.OutPt;for(f=0;f<c;++f)e[f].Pt=a[f],e[f].Next=e[(f+1)%c],e[f].Next.Prev=e[f],e[f].Idx=0;f=b*b;for(e=e[0];0==e.Idx&&e.Next!=e.Prev;)d.Clipper.PointsAreClose(e.Pt,e.Prev.Pt,f)?(e=d.Clipper.ExcludeOp(e),c--):d.Clipper.PointsAreClose(e.Prev.Pt,
-e.Next.Pt,f)?(d.Clipper.ExcludeOp(e.Next),e=d.Clipper.ExcludeOp(e),c-=2):d.Clipper.SlopesNearCollinear(e.Prev.Pt,e.Pt,e.Next.Pt,f)?(e=d.Clipper.ExcludeOp(e),c--):(e.Idx=1,e=e.Next);3>c&&(c=0);for(var g=Array(c),f=0;f<c;++f)g[f]=new d.IntPoint(e.Pt),e=e.Next;return g};d.Clipper.CleanPolygons=function(a,b){for(var c=Array(a.length),e=0,f=a.length;e<f;e++)c[e]=d.Clipper.CleanPolygon(a[e],b);return c};d.Clipper.Minkowski=function(a,b,c,e){var f=e?1:0,g=a.length,h=b.length;e=[];if(c)for(c=0;c<h;c++){for(var k=
-Array(g),n=0,m=a.length,l=a[n];n<m;n++,l=a[n])k[n]=new d.IntPoint(b[c].X+l.X,b[c].Y+l.Y);e.push(k)}else for(c=0;c<h;c++){k=Array(g);n=0;m=a.length;for(l=a[n];n<m;n++,l=a[n])k[n]=new d.IntPoint(b[c].X-l.X,b[c].Y-l.Y);e.push(k)}a=[];for(c=0;c<=h-2+f;c++)for(n=0;n<=g-1;n++)b=[],b.push(e[c%h][n%g]),b.push(e[(c+1)%h][n%g]),b.push(e[(c+1)%h][(n+1)%g]),b.push(e[c%h][(n+1)%g]),d.Clipper.Orientation(b)||b.reverse(),a.push(b);f=new d.Clipper(0);f.AddPaths(a,d.PolyType.ptSubject,!0);f.Execute(d.ClipType.ctUnion,
-e,d.PolyFillType.pftNonZero,d.PolyFillType.pftNonZero);return e};d.Clipper.MinkowskiSum=function(a,b,c){return d.Clipper.Minkowski(a,b,!0,c)};d.Clipper.MinkowskiDiff=function(a,b,c){return d.Clipper.Minkowski(a,b,!1,c)};d.Clipper.PolyTreeToPaths=function(a){var b=[];d.Clipper.AddPolyNodeToPaths(a,d.Clipper.NodeType.ntAny,b);return b};d.Clipper.AddPolyNodeToPaths=function(a,b,c){var e=!0;switch(b){case d.Clipper.NodeType.ntOpen:return;case d.Clipper.NodeType.ntClosed:e=!a.IsOpen}0<a.m_polygon.length&&
-e&&c.push(a.m_polygon);e=0;a=a.Childs();for(var f=a.length,g=a[e];e<f;e++,g=a[e])d.Clipper.AddPolyNodeToPaths(g,b,c)};d.Clipper.OpenPathsFromPolyTree=function(a){for(var b=new d.Paths,c=0,e=a.ChildCount();c<e;c++)a.Childs()[c].IsOpen&&b.push(a.Childs()[c].m_polygon);return b};d.Clipper.ClosedPathsFromPolyTree=function(a){var b=new d.Paths;d.Clipper.AddPolyNodeToPaths(a,d.Clipper.NodeType.ntClosed,b);return b};L(d.Clipper,d.ClipperBase);d.Clipper.NodeType={ntAny:0,ntOpen:1,ntClosed:2};d.ClipperOffset=
-function(a,b){"undefined"==typeof a&&(a=2);"undefined"==typeof b&&(b=d.ClipperOffset.def_arc_tolerance);this.m_destPolys=new d.Paths;this.m_srcPoly=new d.Path;this.m_destPoly=new d.Path;this.m_normals=[];this.m_StepsPerRad=this.m_miterLim=this.m_cos=this.m_sin=this.m_sinA=this.m_delta=0;this.m_lowest=new d.IntPoint;this.m_polyNodes=new d.PolyNode;this.MiterLimit=a;this.ArcTolerance=b;this.m_lowest.X=-1};d.ClipperOffset.two_pi=6.28318530717959;d.ClipperOffset.def_arc_tolerance=0.25;d.ClipperOffset.prototype.Clear=
-function(){d.Clear(this.m_polyNodes.Childs());this.m_lowest.X=-1};d.ClipperOffset.Round=d.Clipper.Round;d.ClipperOffset.prototype.AddPath=function(a,b,c){var e=a.length-1;if(!(0>e)){var f=new d.PolyNode;f.m_jointype=b;f.m_endtype=c;if(c==d.EndType.etClosedLine||c==d.EndType.etClosedPolygon)for(;0<e&&d.IntPoint.op_Equality(a[0],a[e]);)e--;f.m_polygon.push(a[0]);var g=0;b=0;for(var h=1;h<=e;h++)d.IntPoint.op_Inequality(f.m_polygon[g],a[h])&&(g++,f.m_polygon.push(a[h]),a[h].Y>f.m_polygon[b].Y||a[h].Y==
-f.m_polygon[b].Y&&a[h].X<f.m_polygon[b].X)&&(b=g);if(!(c==d.EndType.etClosedPolygon&&2>g||c!=d.EndType.etClosedPolygon&&0>g)&&(this.m_polyNodes.AddChild(f),c==d.EndType.etClosedPolygon))if(0>this.m_lowest.X)this.m_lowest=new d.IntPoint(0,b);else if(a=this.m_polyNodes.Childs()[this.m_lowest.X].m_polygon[this.m_lowest.Y],f.m_polygon[b].Y>a.Y||f.m_polygon[b].Y==a.Y&&f.m_polygon[b].X<a.X)this.m_lowest=new d.IntPoint(this.m_polyNodes.ChildCount()-1,b)}};d.ClipperOffset.prototype.AddPaths=function(a,b,
-c){for(var e=0,d=a.length;e<d;e++)this.AddPath(a[e],b,c)};d.ClipperOffset.prototype.FixOrientations=function(){if(0<=this.m_lowest.X&&!d.Clipper.Orientation(this.m_polyNodes.Childs()[this.m_lowest.X].m_polygon))for(var a=0;a<this.m_polyNodes.ChildCount();a++){var b=this.m_polyNodes.Childs()[a];(b.m_endtype==d.EndType.etClosedPolygon||b.m_endtype==d.EndType.etClosedLine&&d.Clipper.Orientation(b.m_polygon))&&b.m_polygon.reverse()}else for(a=0;a<this.m_polyNodes.ChildCount();a++)b=this.m_polyNodes.Childs()[a],
-b.m_endtype!=d.EndType.etClosedLine||d.Clipper.Orientation(b.m_polygon)||b.m_polygon.reverse()};d.ClipperOffset.GetUnitNormal=function(a,b){var c=b.X-a.X,e=b.Y-a.Y;if(0==c&&0==e)return new d.DoublePoint(0,0);var f=1/Math.sqrt(c*c+e*e);return new d.DoublePoint(e*f,-(c*f))};d.ClipperOffset.prototype.DoOffset=function(a){this.m_destPolys=[];this.m_delta=a;if(d.ClipperBase.near_zero(a))for(var b=0;b<this.m_polyNodes.ChildCount();b++){var c=this.m_polyNodes.Childs()[b];c.m_endtype==d.EndType.etClosedPolygon&&
-this.m_destPolys.push(c.m_polygon)}else{this.m_miterLim=2<this.MiterLimit?2/(this.MiterLimit*this.MiterLimit):0.5;var b=0>=this.ArcTolerance?d.ClipperOffset.def_arc_tolerance:this.ArcTolerance>Math.abs(a)*d.ClipperOffset.def_arc_tolerance?Math.abs(a)*d.ClipperOffset.def_arc_tolerance:this.ArcTolerance,e=3.14159265358979/Math.acos(1-b/Math.abs(a));this.m_sin=Math.sin(d.ClipperOffset.two_pi/e);this.m_cos=Math.cos(d.ClipperOffset.two_pi/e);this.m_StepsPerRad=e/d.ClipperOffset.two_pi;0>a&&(this.m_sin=
--this.m_sin);for(b=0;b<this.m_polyNodes.ChildCount();b++){c=this.m_polyNodes.Childs()[b];this.m_srcPoly=c.m_polygon;var f=this.m_srcPoly.length;if(!(0==f||0>=a&&(3>f||c.m_endtype!=d.EndType.etClosedPolygon))){this.m_destPoly=[];if(1==f)if(c.m_jointype==d.JoinType.jtRound)for(var c=1,f=0,g=1;g<=e;g++){this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[0].X+c*a),d.ClipperOffset.Round(this.m_srcPoly[0].Y+f*a)));var h=c,c=c*this.m_cos-this.m_sin*f,f=h*this.m_sin+f*this.m_cos}else for(f=
-c=-1,g=0;4>g;++g)this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[0].X+c*a),d.ClipperOffset.Round(this.m_srcPoly[0].Y+f*a))),0>c?c=1:0>f?f=1:c=-1;else{for(g=this.m_normals.length=0;g<f-1;g++)this.m_normals.push(d.ClipperOffset.GetUnitNormal(this.m_srcPoly[g],this.m_srcPoly[g+1]));c.m_endtype==d.EndType.etClosedLine||c.m_endtype==d.EndType.etClosedPolygon?this.m_normals.push(d.ClipperOffset.GetUnitNormal(this.m_srcPoly[f-1],this.m_srcPoly[0])):this.m_normals.push(new d.DoublePoint(this.m_normals[f-
-2]));if(c.m_endtype==d.EndType.etClosedPolygon)for(h=f-1,g=0;g<f;g++)h=this.OffsetPoint(g,h,c.m_jointype);else if(c.m_endtype==d.EndType.etClosedLine){h=f-1;for(g=0;g<f;g++)h=this.OffsetPoint(g,h,c.m_jointype);this.m_destPolys.push(this.m_destPoly);this.m_destPoly=[];h=this.m_normals[f-1];for(g=f-1;0<g;g--)this.m_normals[g]=new d.DoublePoint(-this.m_normals[g-1].X,-this.m_normals[g-1].Y);this.m_normals[0]=new d.DoublePoint(-h.X,-h.Y);h=0;for(g=f-1;0<=g;g--)h=this.OffsetPoint(g,h,c.m_jointype)}else{h=
-0;for(g=1;g<f-1;++g)h=this.OffsetPoint(g,h,c.m_jointype);c.m_endtype==d.EndType.etOpenButt?(g=f-1,h=new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[g].X+this.m_normals[g].X*a),d.ClipperOffset.Round(this.m_srcPoly[g].Y+this.m_normals[g].Y*a)),this.m_destPoly.push(h),h=new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[g].X-this.m_normals[g].X*a),d.ClipperOffset.Round(this.m_srcPoly[g].Y-this.m_normals[g].Y*a)),this.m_destPoly.push(h)):(g=f-1,h=f-2,this.m_sinA=0,this.m_normals[g]=new d.DoublePoint(-this.m_normals[g].X,
--this.m_normals[g].Y),c.m_endtype==d.EndType.etOpenSquare?this.DoSquare(g,h):this.DoRound(g,h));for(g=f-1;0<g;g--)this.m_normals[g]=new d.DoublePoint(-this.m_normals[g-1].X,-this.m_normals[g-1].Y);this.m_normals[0]=new d.DoublePoint(-this.m_normals[1].X,-this.m_normals[1].Y);h=f-1;for(g=h-1;0<g;--g)h=this.OffsetPoint(g,h,c.m_jointype);c.m_endtype==d.EndType.etOpenButt?(h=new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[0].X-this.m_normals[0].X*a),d.ClipperOffset.Round(this.m_srcPoly[0].Y-this.m_normals[0].Y*
-a)),this.m_destPoly.push(h),h=new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[0].X+this.m_normals[0].X*a),d.ClipperOffset.Round(this.m_srcPoly[0].Y+this.m_normals[0].Y*a)),this.m_destPoly.push(h)):(this.m_sinA=0,c.m_endtype==d.EndType.etOpenSquare?this.DoSquare(0,1):this.DoRound(0,1))}}this.m_destPolys.push(this.m_destPoly)}}}};d.ClipperOffset.prototype.Execute=function(){var a=arguments;if(a[0]instanceof d.PolyTree)if(b=a[0],c=a[1],b.Clear(),this.FixOrientations(),this.DoOffset(c),a=new d.Clipper(0),
-a.AddPaths(this.m_destPolys,d.PolyType.ptSubject,!0),0<c)a.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftPositive,d.PolyFillType.pftPositive);else if(c=d.Clipper.GetBounds(this.m_destPolys),e=new d.Path,e.push(new d.IntPoint(c.left-10,c.bottom+10)),e.push(new d.IntPoint(c.right+10,c.bottom+10)),e.push(new d.IntPoint(c.right+10,c.top-10)),e.push(new d.IntPoint(c.left-10,c.top-10)),a.AddPath(e,d.PolyType.ptSubject,!0),a.ReverseSolution=!0,a.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftNegative,d.PolyFillType.pftNegative),
-1==b.ChildCount()&&0<b.Childs()[0].ChildCount())for(a=b.Childs()[0],b.Childs()[0]=a.Childs()[0],c=1;c<a.ChildCount();c++)b.AddChild(a.Childs()[c]);else b.Clear();else{var b=a[0],c=a[1];d.Clear(b);this.FixOrientations();this.DoOffset(c);a=new d.Clipper(0);a.AddPaths(this.m_destPolys,d.PolyType.ptSubject,!0);if(0<c)a.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftPositive,d.PolyFillType.pftPositive);else{var c=d.Clipper.GetBounds(this.m_destPolys),e=new d.Path;e.push(new d.IntPoint(c.left-10,c.bottom+
-10));e.push(new d.IntPoint(c.right+10,c.bottom+10));e.push(new d.IntPoint(c.right+10,c.top-10));e.push(new d.IntPoint(c.left-10,c.top-10));a.AddPath(e,d.PolyType.ptSubject,!0);a.ReverseSolution=!0;a.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftNegative,d.PolyFillType.pftNegative);0<b.length&&b.splice(0,1)}}};d.ClipperOffset.prototype.OffsetPoint=function(a,b,c){this.m_sinA=this.m_normals[b].X*this.m_normals[a].Y-this.m_normals[a].X*this.m_normals[b].Y;if(5E-5>this.m_sinA&&-5E-5<this.m_sinA)return b;
-1<this.m_sinA?this.m_sinA=1:-1>this.m_sinA&&(this.m_sinA=-1);if(0>this.m_sinA*this.m_delta)this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_normals[b].X*this.m_delta),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_normals[b].Y*this.m_delta))),this.m_destPoly.push(new d.IntPoint(this.m_srcPoly[a])),this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_normals[a].X*this.m_delta),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_normals[a].Y*
-this.m_delta)));else switch(c){case d.JoinType.jtMiter:c=1+(this.m_normals[a].X*this.m_normals[b].X+this.m_normals[a].Y*this.m_normals[b].Y);c>=this.m_miterLim?this.DoMiter(a,b,c):this.DoSquare(a,b);break;case d.JoinType.jtSquare:this.DoSquare(a,b);break;case d.JoinType.jtRound:this.DoRound(a,b)}return a};d.ClipperOffset.prototype.DoSquare=function(a,b){var c=Math.tan(Math.atan2(this.m_sinA,this.m_normals[b].X*this.m_normals[a].X+this.m_normals[b].Y*this.m_normals[a].Y)/4);this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+
-this.m_delta*(this.m_normals[b].X-this.m_normals[b].Y*c)),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_delta*(this.m_normals[b].Y+this.m_normals[b].X*c))));this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_delta*(this.m_normals[a].X+this.m_normals[a].Y*c)),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_delta*(this.m_normals[a].Y-this.m_normals[a].X*c))))};d.ClipperOffset.prototype.DoMiter=function(a,b,c){c=this.m_delta/c;this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+
-(this.m_normals[b].X+this.m_normals[a].X)*c),d.ClipperOffset.Round(this.m_srcPoly[a].Y+(this.m_normals[b].Y+this.m_normals[a].Y)*c)))};d.ClipperOffset.prototype.DoRound=function(a,b){for(var c=Math.atan2(this.m_sinA,this.m_normals[b].X*this.m_normals[a].X+this.m_normals[b].Y*this.m_normals[a].Y),c=d.Cast_Int32(d.ClipperOffset.Round(this.m_StepsPerRad*Math.abs(c))),e=this.m_normals[b].X,f=this.m_normals[b].Y,g,h=0;h<c;++h)this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+
-e*this.m_delta),d.ClipperOffset.Round(this.m_srcPoly[a].Y+f*this.m_delta))),g=e,e=e*this.m_cos-this.m_sin*f,f=g*this.m_sin+f*this.m_cos;this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_normals[a].X*this.m_delta),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_normals[a].Y*this.m_delta)))};d.Error=function(a){try{throw Error(a);}catch(b){alert(b.message)}};d.JS={};d.JS.AreaOfPolygon=function(a,b){b||(b=1);return d.Clipper.Area(a)/(b*b)};d.JS.AreaOfPolygons=function(a,
-b){b||(b=1);for(var c=0,e=0;e<a.length;e++)c+=d.Clipper.Area(a[e]);return c/(b*b)};d.JS.BoundsOfPath=function(a,b){return d.JS.BoundsOfPaths([a],b)};d.JS.BoundsOfPaths=function(a,b){b||(b=1);var c=d.Clipper.GetBounds(a);c.left/=b;c.bottom/=b;c.right/=b;c.top/=b;return c};d.JS.Clean=function(a,b){if(!(a instanceof Array))return[];var c=a[0]instanceof Array;a=d.JS.Clone(a);if("number"!=typeof b||null===b)return d.Error("Delta is not a number in Clean()."),a;if(0===a.length||1==a.length&&0===a[0].length||
-0>b)return a;c||(a=[a]);for(var e=a.length,f,g,h,k,n,m,l,p=[],q=0;q<e;q++)if(g=a[q],f=g.length,0!==f)if(3>f)h=g,p.push(h);else{h=g;k=b*b;n=g[0];for(l=m=1;l<f;l++)(g[l].X-n.X)*(g[l].X-n.X)+(g[l].Y-n.Y)*(g[l].Y-n.Y)<=k||(h[m]=g[l],n=g[l],m++);n=g[m-1];(g[0].X-n.X)*(g[0].X-n.X)+(g[0].Y-n.Y)*(g[0].Y-n.Y)<=k&&m--;m<f&&h.splice(m,f-m);h.length&&p.push(h)}!c&&p.length?p=p[0]:c||0!==p.length?c&&0===p.length&&(p=[[]]):p=[];return p};d.JS.Clone=function(a){if(!(a instanceof Array)||0===a.length)return[];if(1==
-a.length&&0===a[0].length)return[[]];var b=a[0]instanceof Array;b||(a=[a]);var c=a.length,e,d,g,h,k=Array(c);for(d=0;d<c;d++){e=a[d].length;h=Array(e);for(g=0;g<e;g++)h[g]={X:a[d][g].X,Y:a[d][g].Y};k[d]=h}b||(k=k[0]);return k};d.JS.Lighten=function(a,b){if(!(a instanceof Array))return[];if("number"!=typeof b||null===b)return d.Error("Tolerance is not a number in Lighten()."),d.JS.Clone(a);if(0===a.length||1==a.length&&0===a[0].length||0>b)return d.JS.Clone(a);a[0]instanceof Array||(a=[a]);var c,e,
-f,g,h,k,l,m,p,q,r,s,t,u,v,y=a.length,z=b*b,x=[];for(c=0;c<y;c++)if(f=a[c],k=f.length,0!=k){for(g=0;1E6>g;g++){h=[];k=f.length;f[k-1].X!=f[0].X||f[k-1].Y!=f[0].Y?(r=1,f.push({X:f[0].X,Y:f[0].Y}),k=f.length):r=0;q=[];for(e=0;e<k-2;e++){l=f[e];p=f[e+1];m=f[e+2];u=l.X;v=l.Y;l=m.X-u;s=m.Y-v;if(0!==l||0!==s)t=((p.X-u)*l+(p.Y-v)*s)/(l*l+s*s),1<t?(u=m.X,v=m.Y):0<t&&(u+=l*t,v+=s*t);l=p.X-u;s=p.Y-v;m=l*l+s*s;m<=z&&(q[e+1]=1,e++)}h.push({X:f[0].X,Y:f[0].Y});for(e=1;e<k-1;e++)q[e]||h.push({X:f[e].X,Y:f[e].Y});
-h.push({X:f[k-1].X,Y:f[k-1].Y});r&&f.pop();if(q.length)f=h;else break}k=h.length;h[k-1].X==h[0].X&&h[k-1].Y==h[0].Y&&h.pop();2<h.length&&x.push(h)}!(a[0]instanceof Array)&&(x=x[0]);"undefined"==typeof x&&(x=[[]]);return x};d.JS.PerimeterOfPath=function(a,b,c){if("undefined"==typeof a)return 0;var e=Math.sqrt,d=0,g,h,k=0,l=g=0;h=0;var m=a.length;if(2>m)return 0;b&&(a[m]=a[0],m++);for(;--m;)g=a[m],k=g.X,g=g.Y,h=a[m-1],l=h.X,h=h.Y,d+=e((k-l)*(k-l)+(g-h)*(g-h));b&&a.pop();return d/c};d.JS.PerimeterOfPaths=
-function(a,b,c){c||(c=1);for(var e=0,f=0;f<a.length;f++)e+=d.JS.PerimeterOfPath(a[f],b,c);return e};d.JS.ScaleDownPath=function(a,b){var c,e;b||(b=1);for(c=a.length;c--;)e=a[c],e.X/=b,e.Y/=b};d.JS.ScaleDownPaths=function(a,b){var c,e,d;b||(b=1);for(c=a.length;c--;)for(e=a[c].length;e--;)d=a[c][e],d.X/=b,d.Y/=b};d.JS.ScaleUpPath=function(a,b){var c,d,f=Math.round;b||(b=1);for(c=a.length;c--;)d=a[c],d.X=f(d.X*b),d.Y=f(d.Y*b)};d.JS.ScaleUpPaths=function(a,b){var c,d,f,g=Math.round;b||(b=1);for(c=a.length;c--;)for(d=
-a[c].length;d--;)f=a[c][d],f.X=g(f.X*b),f.Y=g(f.Y*b)};d.ExPolygons=function(){return[]};d.ExPolygon=function(){this.holes=this.outer=null};d.JS.AddOuterPolyNodeToExPolygons=function(a,b){var c=new d.ExPolygon;c.outer=a.Contour();var e=a.Childs(),f=e.length;c.holes=Array(f);var g,h,k,l,m;for(h=0;h<f;h++)for(g=e[h],c.holes[h]=g.Contour(),k=0,l=g.Childs(),m=l.length;k<m;k++)g=l[k],d.JS.AddOuterPolyNodeToExPolygons(g,b);b.push(c)};d.JS.ExPolygonsToPaths=function(a){var b,c,e,f,g=new d.Paths;b=0;for(e=
-a.length;b<e;b++)for(g.push(a[b].outer),c=0,f=a[b].holes.length;c<f;c++)g.push(a[b].holes[c]);return g};d.JS.PolyTreeToExPolygons=function(a){var b=new d.ExPolygons,c,e,f;c=0;e=a.Childs();for(f=e.length;c<f;c++)a=e[c],d.JS.AddOuterPolyNodeToExPolygons(a,b);return b}})();
+b&&(b.PolyTyp!=a.PolyTyp||0===b.WindDelta);)b=b.PrevInAEL;if(null===b)a.WindCnt=0===a.WindDelta?1:a.WindDelta,a.WindCnt2=0,b=this.m_ActiveEdges;else{if(0===a.WindDelta&&this.m_ClipType!=d.ClipType.ctUnion)a.WindCnt=1;else if(this.IsEvenOddFillType(a))if(0===a.WindDelta){for(var c=!0,e=b.PrevInAEL;null!==e;)e.PolyTyp==b.PolyTyp&&0!==e.WindDelta&&(c=!c),e=e.PrevInAEL;a.WindCnt=c?0:1}else a.WindCnt=a.WindDelta;else a.WindCnt=0>b.WindCnt*b.WindDelta?1<Math.abs(b.WindCnt)?0>b.WindDelta*a.WindDelta?b.WindCnt:
+b.WindCnt+a.WindDelta:0===a.WindDelta?1:a.WindDelta:0===a.WindDelta?0>b.WindCnt?b.WindCnt-1:b.WindCnt+1:0>b.WindDelta*a.WindDelta?b.WindCnt:b.WindCnt+a.WindDelta;a.WindCnt2=b.WindCnt2;b=b.NextInAEL}if(this.IsEvenOddAltFillType(a))for(;b!=a;)0!==b.WindDelta&&(a.WindCnt2=0===a.WindCnt2?1:0),b=b.NextInAEL;else for(;b!=a;)a.WindCnt2+=b.WindDelta,b=b.NextInAEL};d.Clipper.prototype.AddEdgeToSEL=function(a){null===this.m_SortedEdges?(this.m_SortedEdges=a,a.PrevInSEL=null,a.NextInSEL=null):(a.NextInSEL=this.m_SortedEdges,
+a.PrevInSEL=null,this.m_SortedEdges=this.m_SortedEdges.PrevInSEL=a)};d.Clipper.prototype.CopyAELToSEL=function(){var a=this.m_ActiveEdges;for(this.m_SortedEdges=a;null!==a;)a.PrevInSEL=a.PrevInAEL,a=a.NextInSEL=a.NextInAEL};d.Clipper.prototype.SwapPositionsInAEL=function(a,b){if(a.NextInAEL!=a.PrevInAEL&&b.NextInAEL!=b.PrevInAEL){if(a.NextInAEL==b){var c=b.NextInAEL;null!==c&&(c.PrevInAEL=a);var d=a.PrevInAEL;null!==d&&(d.NextInAEL=b);b.PrevInAEL=d;b.NextInAEL=a;a.PrevInAEL=b;a.NextInAEL=c}else b.NextInAEL==
+a?(c=a.NextInAEL,null!==c&&(c.PrevInAEL=b),d=b.PrevInAEL,null!==d&&(d.NextInAEL=a),a.PrevInAEL=d,a.NextInAEL=b,b.PrevInAEL=a,b.NextInAEL=c):(c=a.NextInAEL,d=a.PrevInAEL,a.NextInAEL=b.NextInAEL,null!==a.NextInAEL&&(a.NextInAEL.PrevInAEL=a),a.PrevInAEL=b.PrevInAEL,null!==a.PrevInAEL&&(a.PrevInAEL.NextInAEL=a),b.NextInAEL=c,null!==b.NextInAEL&&(b.NextInAEL.PrevInAEL=b),b.PrevInAEL=d,null!==b.PrevInAEL&&(b.PrevInAEL.NextInAEL=b));null===a.PrevInAEL?this.m_ActiveEdges=a:null===b.PrevInAEL&&(this.m_ActiveEdges=
+b)}};d.Clipper.prototype.SwapPositionsInSEL=function(a,b){if(null!==a.NextInSEL||null!==a.PrevInSEL)if(null!==b.NextInSEL||null!==b.PrevInSEL){if(a.NextInSEL==b){var c=b.NextInSEL;null!==c&&(c.PrevInSEL=a);var d=a.PrevInSEL;null!==d&&(d.NextInSEL=b);b.PrevInSEL=d;b.NextInSEL=a;a.PrevInSEL=b;a.NextInSEL=c}else b.NextInSEL==a?(c=a.NextInSEL,null!==c&&(c.PrevInSEL=b),d=b.PrevInSEL,null!==d&&(d.NextInSEL=a),a.PrevInSEL=d,a.NextInSEL=b,b.PrevInSEL=a,b.NextInSEL=c):(c=a.NextInSEL,d=a.PrevInSEL,a.NextInSEL=
+b.NextInSEL,null!==a.NextInSEL&&(a.NextInSEL.PrevInSEL=a),a.PrevInSEL=b.PrevInSEL,null!==a.PrevInSEL&&(a.PrevInSEL.NextInSEL=a),b.NextInSEL=c,null!==b.NextInSEL&&(b.NextInSEL.PrevInSEL=b),b.PrevInSEL=d,null!==b.PrevInSEL&&(b.PrevInSEL.NextInSEL=b));null===a.PrevInSEL?this.m_SortedEdges=a:null===b.PrevInSEL&&(this.m_SortedEdges=b)}};d.Clipper.prototype.AddLocalMaxPoly=function(a,b,c){this.AddOutPt(a,c);0==b.WindDelta&&this.AddOutPt(b,c);a.OutIdx==b.OutIdx?(a.OutIdx=-1,b.OutIdx=-1):a.OutIdx<b.OutIdx?
+this.AppendPolygon(a,b):this.AppendPolygon(b,a)};d.Clipper.prototype.AddLocalMinPoly=function(a,b,c){var e,f;d.ClipperBase.IsHorizontal(b)||a.Dx>b.Dx?(e=this.AddOutPt(a,c),b.OutIdx=a.OutIdx,a.Side=d.EdgeSide.esLeft,b.Side=d.EdgeSide.esRight,f=a,a=f.PrevInAEL==b?b.PrevInAEL:f.PrevInAEL):(e=this.AddOutPt(b,c),a.OutIdx=b.OutIdx,a.Side=d.EdgeSide.esRight,b.Side=d.EdgeSide.esLeft,f=b,a=f.PrevInAEL==a?a.PrevInAEL:f.PrevInAEL);null!==a&&0<=a.OutIdx&&d.Clipper.TopX(a,c.Y)==d.Clipper.TopX(f,c.Y)&&d.ClipperBase.SlopesEqual(f,
+a,this.m_UseFullRange)&&0!==f.WindDelta&&0!==a.WindDelta&&(c=this.AddOutPt(a,c),this.AddJoin(e,c,f.Top));return e};d.Clipper.prototype.CreateOutRec=function(){var a=new d.OutRec;a.Idx=-1;a.IsHole=!1;a.IsOpen=!1;a.FirstLeft=null;a.Pts=null;a.BottomPt=null;a.PolyNode=null;this.m_PolyOuts.push(a);a.Idx=this.m_PolyOuts.length-1;return a};d.Clipper.prototype.AddOutPt=function(a,b){var c=a.Side==d.EdgeSide.esLeft;if(0>a.OutIdx){var e=this.CreateOutRec();e.IsOpen=0===a.WindDelta;var f=new d.OutPt;e.Pts=
+f;f.Idx=e.Idx;f.Pt.X=b.X;f.Pt.Y=b.Y;d.use_xyz&&(f.Pt.Z=b.Z);f.Next=f;f.Prev=f;e.IsOpen||this.SetHoleState(a,e);a.OutIdx=e.Idx}else{var e=this.m_PolyOuts[a.OutIdx],g=e.Pts;if(c&&d.IntPoint.op_Equality(b,g.Pt))return g;if(!c&&d.IntPoint.op_Equality(b,g.Prev.Pt))return g.Prev;f=new d.OutPt;f.Idx=e.Idx;f.Pt.X=b.X;f.Pt.Y=b.Y;d.use_xyz&&(f.Pt.Z=b.Z);f.Next=g;f.Prev=g.Prev;f.Prev.Next=f;g.Prev=f;c&&(e.Pts=f)}return f};d.Clipper.prototype.SwapPoints=function(a,b){var c=new d.IntPoint(a.Value);a.Value.X=b.Value.X;
+a.Value.Y=b.Value.Y;d.use_xyz&&(a.Value.Z=b.Value.Z);b.Value.X=c.X;b.Value.Y=c.Y;d.use_xyz&&(b.Value.Z=c.Z)};d.Clipper.prototype.HorzSegmentsOverlap=function(a,b,c,d){var e;a>b&&(e=a,a=b,b=e);c>d&&(e=c,c=d,d=e);return a<d&&c<b};d.Clipper.prototype.SetHoleState=function(a,b){for(var c=!1,d=a.PrevInAEL;null!==d;)0<=d.OutIdx&&0!=d.WindDelta&&(c=!c,null===b.FirstLeft&&(b.FirstLeft=this.m_PolyOuts[d.OutIdx])),d=d.PrevInAEL;c&&(b.IsHole=!0)};d.Clipper.prototype.GetDx=function(a,b){return a.Y==b.Y?d.ClipperBase.horizontal:
+(b.X-a.X)/(b.Y-a.Y)};d.Clipper.prototype.FirstIsBottomPt=function(a,b){for(var c=a.Prev;d.IntPoint.op_Equality(c.Pt,a.Pt)&&c!=a;)c=c.Prev;for(var e=Math.abs(this.GetDx(a.Pt,c.Pt)),c=a.Next;d.IntPoint.op_Equality(c.Pt,a.Pt)&&c!=a;)c=c.Next;for(var f=Math.abs(this.GetDx(a.Pt,c.Pt)),c=b.Prev;d.IntPoint.op_Equality(c.Pt,b.Pt)&&c!=b;)c=c.Prev;for(var g=Math.abs(this.GetDx(b.Pt,c.Pt)),c=b.Next;d.IntPoint.op_Equality(c.Pt,b.Pt)&&c!=b;)c=c.Next;c=Math.abs(this.GetDx(b.Pt,c.Pt));return e>=g&&e>=c||f>=g&&f>=
+c};d.Clipper.prototype.GetBottomPt=function(a){for(var b=null,c=a.Next;c!=a;)c.Pt.Y>a.Pt.Y?(a=c,b=null):c.Pt.Y==a.Pt.Y&&c.Pt.X<=a.Pt.X&&(c.Pt.X<a.Pt.X?(b=null,a=c):c.Next!=a&&c.Prev!=a&&(b=c)),c=c.Next;if(null!==b)for(;b!=c;)for(this.FirstIsBottomPt(c,b)||(a=b),b=b.Next;d.IntPoint.op_Inequality(b.Pt,a.Pt);)b=b.Next;return a};d.Clipper.prototype.GetLowermostRec=function(a,b){null===a.BottomPt&&(a.BottomPt=this.GetBottomPt(a.Pts));null===b.BottomPt&&(b.BottomPt=this.GetBottomPt(b.Pts));var c=a.BottomPt,
+d=b.BottomPt;return c.Pt.Y>d.Pt.Y?a:c.Pt.Y<d.Pt.Y?b:c.Pt.X<d.Pt.X?a:c.Pt.X>d.Pt.X?b:c.Next==c?b:d.Next==d?a:this.FirstIsBottomPt(c,d)?a:b};d.Clipper.prototype.Param1RightOfParam2=function(a,b){do if(a=a.FirstLeft,a==b)return!0;while(null!==a);return!1};d.Clipper.prototype.GetOutRec=function(a){for(a=this.m_PolyOuts[a];a!=this.m_PolyOuts[a.Idx];)a=this.m_PolyOuts[a.Idx];return a};d.Clipper.prototype.AppendPolygon=function(a,b){var c=this.m_PolyOuts[a.OutIdx],e=this.m_PolyOuts[b.OutIdx],f;f=this.Param1RightOfParam2(c,
+e)?e:this.Param1RightOfParam2(e,c)?c:this.GetLowermostRec(c,e);var g=c.Pts,h=g.Prev,l=e.Pts,k=l.Prev;a.Side==d.EdgeSide.esLeft?(b.Side==d.EdgeSide.esLeft?(this.ReversePolyPtLinks(l),l.Next=g,g.Prev=l,h.Next=k,k.Prev=h,c.Pts=k):(k.Next=g,g.Prev=k,l.Prev=h,h.Next=l,c.Pts=l),g=d.EdgeSide.esLeft):(b.Side==d.EdgeSide.esRight?(this.ReversePolyPtLinks(l),h.Next=k,k.Prev=h,l.Next=g,g.Prev=l):(h.Next=l,l.Prev=h,g.Prev=k,k.Next=g),g=d.EdgeSide.esRight);c.BottomPt=null;f==e&&(e.FirstLeft!=c&&(c.FirstLeft=e.FirstLeft),
+c.IsHole=e.IsHole);e.Pts=null;e.BottomPt=null;e.FirstLeft=c;f=a.OutIdx;h=b.OutIdx;a.OutIdx=-1;b.OutIdx=-1;for(l=this.m_ActiveEdges;null!==l;){if(l.OutIdx==h){l.OutIdx=f;l.Side=g;break}l=l.NextInAEL}e.Idx=c.Idx};d.Clipper.prototype.ReversePolyPtLinks=function(a){if(null!==a){var b,c;b=a;do c=b.Next,b.Next=b.Prev,b=b.Prev=c;while(b!=a)}};d.Clipper.SwapSides=function(a,b){var c=a.Side;a.Side=b.Side;b.Side=c};d.Clipper.SwapPolyIndexes=function(a,b){var c=a.OutIdx;a.OutIdx=b.OutIdx;b.OutIdx=c};d.Clipper.prototype.IntersectEdges=
+function(a,b,c){var e=0<=a.OutIdx,f=0<=b.OutIdx;d.use_xyz&&this.SetZ(c,a,b);if(!d.use_lines||0!==a.WindDelta&&0!==b.WindDelta){if(a.PolyTyp==b.PolyTyp)if(this.IsEvenOddFillType(a)){var g=a.WindCnt;a.WindCnt=b.WindCnt;b.WindCnt=g}else a.WindCnt=0===a.WindCnt+b.WindDelta?-a.WindCnt:a.WindCnt+b.WindDelta,b.WindCnt=0===b.WindCnt-a.WindDelta?-b.WindCnt:b.WindCnt-a.WindDelta;else this.IsEvenOddFillType(b)?a.WindCnt2=0===a.WindCnt2?1:0:a.WindCnt2+=b.WindDelta,this.IsEvenOddFillType(a)?b.WindCnt2=0===b.WindCnt2?
+1:0:b.WindCnt2-=a.WindDelta;var h,l,k;a.PolyTyp==d.PolyType.ptSubject?(h=this.m_SubjFillType,k=this.m_ClipFillType):(h=this.m_ClipFillType,k=this.m_SubjFillType);b.PolyTyp==d.PolyType.ptSubject?(l=this.m_SubjFillType,g=this.m_ClipFillType):(l=this.m_ClipFillType,g=this.m_SubjFillType);switch(h){case d.PolyFillType.pftPositive:h=a.WindCnt;break;case d.PolyFillType.pftNegative:h=-a.WindCnt;break;default:h=Math.abs(a.WindCnt)}switch(l){case d.PolyFillType.pftPositive:l=b.WindCnt;break;case d.PolyFillType.pftNegative:l=
+-b.WindCnt;break;default:l=Math.abs(b.WindCnt)}if(e&&f)0!=h&&1!=h||0!=l&&1!=l||a.PolyTyp!=b.PolyTyp&&this.m_ClipType!=d.ClipType.ctXor?this.AddLocalMaxPoly(a,b,c):(this.AddOutPt(a,c),this.AddOutPt(b,c),d.Clipper.SwapSides(a,b),d.Clipper.SwapPolyIndexes(a,b));else if(e){if(0===l||1==l)this.AddOutPt(a,c),d.Clipper.SwapSides(a,b),d.Clipper.SwapPolyIndexes(a,b)}else if(f){if(0===h||1==h)this.AddOutPt(b,c),d.Clipper.SwapSides(a,b),d.Clipper.SwapPolyIndexes(a,b)}else if(!(0!=h&&1!=h||0!=l&&1!=l)){switch(k){case d.PolyFillType.pftPositive:e=
+a.WindCnt2;break;case d.PolyFillType.pftNegative:e=-a.WindCnt2;break;default:e=Math.abs(a.WindCnt2)}switch(g){case d.PolyFillType.pftPositive:f=b.WindCnt2;break;case d.PolyFillType.pftNegative:f=-b.WindCnt2;break;default:f=Math.abs(b.WindCnt2)}if(a.PolyTyp!=b.PolyTyp)this.AddLocalMinPoly(a,b,c);else if(1==h&&1==l)switch(this.m_ClipType){case d.ClipType.ctIntersection:0<e&&0<f&&this.AddLocalMinPoly(a,b,c);break;case d.ClipType.ctUnion:0>=e&&0>=f&&this.AddLocalMinPoly(a,b,c);break;case d.ClipType.ctDifference:(a.PolyTyp==
+d.PolyType.ptClip&&0<e&&0<f||a.PolyTyp==d.PolyType.ptSubject&&0>=e&&0>=f)&&this.AddLocalMinPoly(a,b,c);break;case d.ClipType.ctXor:this.AddLocalMinPoly(a,b,c)}else d.Clipper.SwapSides(a,b)}}else if(0!=a.WindDelta||0!=b.WindDelta)a.PolyTyp==b.PolyTyp&&a.WindDelta!=b.WindDelta&&this.m_ClipType==d.ClipType.ctUnion?0===a.WindDelta?f&&(this.AddOutPt(a,c),e&&(a.OutIdx=-1)):e&&(this.AddOutPt(b,c),f&&(b.OutIdx=-1)):a.PolyTyp!=b.PolyTyp&&(0!==a.WindDelta||1!=Math.abs(b.WindCnt)||this.m_ClipType==d.ClipType.ctUnion&&
+0!==b.WindCnt2?0!==b.WindDelta||1!=Math.abs(a.WindCnt)||this.m_ClipType==d.ClipType.ctUnion&&0!==a.WindCnt2||(this.AddOutPt(b,c),f&&(b.OutIdx=-1)):(this.AddOutPt(a,c),e&&(a.OutIdx=-1)))};d.Clipper.prototype.DeleteFromAEL=function(a){var b=a.PrevInAEL,c=a.NextInAEL;if(null!==b||null!==c||a==this.m_ActiveEdges)null!==b?b.NextInAEL=c:this.m_ActiveEdges=c,null!==c&&(c.PrevInAEL=b),a.NextInAEL=null,a.PrevInAEL=null};d.Clipper.prototype.DeleteFromSEL=function(a){var b=a.PrevInSEL,c=a.NextInSEL;if(null!==
+b||null!==c||a==this.m_SortedEdges)null!==b?b.NextInSEL=c:this.m_SortedEdges=c,null!==c&&(c.PrevInSEL=b),a.NextInSEL=null,a.PrevInSEL=null};d.Clipper.prototype.UpdateEdgeIntoAEL=function(a){null===a.NextInLML&&d.Error("UpdateEdgeIntoAEL: invalid call");var b=a.PrevInAEL,c=a.NextInAEL;a.NextInLML.OutIdx=a.OutIdx;null!==b?b.NextInAEL=a.NextInLML:this.m_ActiveEdges=a.NextInLML;null!==c&&(c.PrevInAEL=a.NextInLML);a.NextInLML.Side=a.Side;a.NextInLML.WindDelta=a.WindDelta;a.NextInLML.WindCnt=a.WindCnt;
+a.NextInLML.WindCnt2=a.WindCnt2;a=a.NextInLML;a.Curr.X=a.Bot.X;a.Curr.Y=a.Bot.Y;d.use_xyz&&(a.Curr.Z=a.Bot.Z);a.PrevInAEL=b;a.NextInAEL=c;d.ClipperBase.IsHorizontal(a)||this.InsertScanbeam(a.Top.Y);return a};d.Clipper.prototype.ProcessHorizontals=function(a){for(var b=this.m_SortedEdges;null!==b;)this.DeleteFromSEL(b),this.ProcessHorizontal(b,a),b=this.m_SortedEdges};d.Clipper.prototype.GetHorzDirection=function(a,b){a.Bot.X<a.Top.X?(b.Left=a.Bot.X,b.Right=a.Top.X,b.Dir=d.Direction.dLeftToRight):
+(b.Left=a.Top.X,b.Right=a.Bot.X,b.Dir=d.Direction.dRightToLeft)};d.Clipper.prototype.ProcessHorizontal=function(a,b){var c={Dir:null,Left:null,Right:null};this.GetHorzDirection(a,c);for(var e=c.Dir,f=c.Left,g=c.Right,h=a,l=null;null!==h.NextInLML&&d.ClipperBase.IsHorizontal(h.NextInLML);)h=h.NextInLML;for(null===h.NextInLML&&(l=this.GetMaximaPair(h));;){for(var k=a==h,n=this.GetNextInAEL(a,e);null!==n&&!(n.Curr.X==a.Top.X&&null!==a.NextInLML&&n.Dx<a.NextInLML.Dx);){c=this.GetNextInAEL(n,e);if(e==
+d.Direction.dLeftToRight&&n.Curr.X<=g||e==d.Direction.dRightToLeft&&n.Curr.X>=f){if(n==l&&k){if(0<=a.OutIdx){e=this.AddOutPt(a,a.Top);for(c=this.m_SortedEdges;null!==c;)0<=c.OutIdx&&this.HorzSegmentsOverlap(a.Bot.X,a.Top.X,c.Bot.X,c.Top.X)&&(f=this.AddOutPt(c,c.Bot),this.AddJoin(f,e,c.Top)),c=c.NextInSEL;this.AddGhostJoin(e,a.Bot);this.AddLocalMaxPoly(a,l,a.Top)}this.DeleteFromAEL(a);this.DeleteFromAEL(l);return}if(e==d.Direction.dLeftToRight){var p=new d.IntPoint(n.Curr.X,a.Curr.Y);this.IntersectEdges(a,
+n,p)}else p=new d.IntPoint(n.Curr.X,a.Curr.Y),this.IntersectEdges(n,a,p);this.SwapPositionsInAEL(a,n)}else if(e==d.Direction.dLeftToRight&&n.Curr.X>=g||e==d.Direction.dRightToLeft&&n.Curr.X<=f)break;n=c}if(null!==a.NextInLML&&d.ClipperBase.IsHorizontal(a.NextInLML))a=this.UpdateEdgeIntoAEL(a),0<=a.OutIdx&&this.AddOutPt(a,a.Bot),c={Dir:e,Left:f,Right:g},this.GetHorzDirection(a,c),e=c.Dir,f=c.Left,g=c.Right;else break}null!==a.NextInLML?0<=a.OutIdx?(e=this.AddOutPt(a,a.Top),b&&this.AddGhostJoin(e,a.Bot),
+a=this.UpdateEdgeIntoAEL(a),0!==a.WindDelta&&(l=a.PrevInAEL,c=a.NextInAEL,null!==l&&l.Curr.X==a.Bot.X&&l.Curr.Y==a.Bot.Y&&0!==l.WindDelta&&0<=l.OutIdx&&l.Curr.Y>l.Top.Y&&d.ClipperBase.SlopesEqual(a,l,this.m_UseFullRange)?(f=this.AddOutPt(l,a.Bot),this.AddJoin(e,f,a.Top)):null!==c&&c.Curr.X==a.Bot.X&&c.Curr.Y==a.Bot.Y&&0!==c.WindDelta&&0<=c.OutIdx&&c.Curr.Y>c.Top.Y&&d.ClipperBase.SlopesEqual(a,c,this.m_UseFullRange)&&(f=this.AddOutPt(c,a.Bot),this.AddJoin(e,f,a.Top)))):this.UpdateEdgeIntoAEL(a):(0<=
+a.OutIdx&&this.AddOutPt(a,a.Top),this.DeleteFromAEL(a))};d.Clipper.prototype.GetNextInAEL=function(a,b){return b==d.Direction.dLeftToRight?a.NextInAEL:a.PrevInAEL};d.Clipper.prototype.IsMinima=function(a){return null!==a&&a.Prev.NextInLML!=a&&a.Next.NextInLML!=a};d.Clipper.prototype.IsMaxima=function(a,b){return null!==a&&a.Top.Y==b&&null===a.NextInLML};d.Clipper.prototype.IsIntermediate=function(a,b){return a.Top.Y==b&&null!==a.NextInLML};d.Clipper.prototype.GetMaximaPair=function(a){var b=null;
+d.IntPoint.op_Equality(a.Next.Top,a.Top)&&null===a.Next.NextInLML?b=a.Next:d.IntPoint.op_Equality(a.Prev.Top,a.Top)&&null===a.Prev.NextInLML&&(b=a.Prev);return null===b||-2!=b.OutIdx&&(b.NextInAEL!=b.PrevInAEL||d.ClipperBase.IsHorizontal(b))?b:null};d.Clipper.prototype.ProcessIntersections=function(a){if(null==this.m_ActiveEdges)return!0;try{this.BuildIntersectList(a);if(0==this.m_IntersectList.length)return!0;if(1==this.m_IntersectList.length||this.FixupIntersectionOrder())this.ProcessIntersectList();
+else return!1}catch(b){this.m_SortedEdges=null,this.m_IntersectList.length=0,d.Error("ProcessIntersections error")}this.m_SortedEdges=null;return!0};d.Clipper.prototype.BuildIntersectList=function(a){if(null!==this.m_ActiveEdges){var b=this.m_ActiveEdges;for(this.m_SortedEdges=b;null!==b;)b.PrevInSEL=b.PrevInAEL,b.NextInSEL=b.NextInAEL,b.Curr.X=d.Clipper.TopX(b,a),b=b.NextInAEL;for(var c=!0;c&&null!==this.m_SortedEdges;){c=!1;for(b=this.m_SortedEdges;null!==b.NextInSEL;){a=b.NextInSEL;var e=new d.IntPoint;
+b.Curr.X>a.Curr.X?(this.IntersectPoint(b,a,e),c=new d.IntersectNode,c.Edge1=b,c.Edge2=a,c.Pt.X=e.X,c.Pt.Y=e.Y,d.use_xyz&&(c.Pt.Z=e.Z),this.m_IntersectList.push(c),this.SwapPositionsInSEL(b,a),c=!0):b=a}if(null!==b.PrevInSEL)b.PrevInSEL.NextInSEL=null;else break}this.m_SortedEdges=null}};d.Clipper.prototype.EdgesAdjacent=function(a){return a.Edge1.NextInSEL==a.Edge2||a.Edge1.PrevInSEL==a.Edge2};d.Clipper.IntersectNodeSort=function(a,b){return b.Pt.Y-a.Pt.Y};d.Clipper.prototype.FixupIntersectionOrder=
+function(){this.m_IntersectList.sort(this.m_IntersectNodeComparer);this.CopyAELToSEL();for(var a=this.m_IntersectList.length,b=0;b<a;b++){if(!this.EdgesAdjacent(this.m_IntersectList[b])){for(var c=b+1;c<a&&!this.EdgesAdjacent(this.m_IntersectList[c]);)c++;if(c==a)return!1;var d=this.m_IntersectList[b];this.m_IntersectList[b]=this.m_IntersectList[c];this.m_IntersectList[c]=d}this.SwapPositionsInSEL(this.m_IntersectList[b].Edge1,this.m_IntersectList[b].Edge2)}return!0};d.Clipper.prototype.ProcessIntersectList=
+function(){for(var a=0,b=this.m_IntersectList.length;a<b;a++){var c=this.m_IntersectList[a];this.IntersectEdges(c.Edge1,c.Edge2,c.Pt);this.SwapPositionsInAEL(c.Edge1,c.Edge2)}this.m_IntersectList.length=0};G=function(a){return 0>a?Math.ceil(a-.5):Math.round(a)};H=function(a){return 0>a?Math.ceil(a-.5):Math.floor(a+.5)};I=function(a){return 0>a?-Math.round(Math.abs(a)):Math.round(a)};J=function(a){if(0>a)return a-=.5,-2147483648>a?Math.ceil(a):a|0;a+=.5;return 2147483647<a?Math.floor(a):a|0};d.Clipper.Round=
+r?G:F?I:L?J:H;d.Clipper.TopX=function(a,b){return b==a.Top.Y?a.Top.X:a.Bot.X+d.Clipper.Round(a.Dx*(b-a.Bot.Y))};d.Clipper.prototype.IntersectPoint=function(a,b,c){c.X=0;c.Y=0;var e,f;if(a.Dx==b.Dx)c.Y=a.Curr.Y,c.X=d.Clipper.TopX(a,c.Y);else{if(0===a.Delta.X)c.X=a.Bot.X,d.ClipperBase.IsHorizontal(b)?c.Y=b.Bot.Y:(f=b.Bot.Y-b.Bot.X/b.Dx,c.Y=d.Clipper.Round(c.X/b.Dx+f));else if(0===b.Delta.X)c.X=b.Bot.X,d.ClipperBase.IsHorizontal(a)?c.Y=a.Bot.Y:(e=a.Bot.Y-a.Bot.X/a.Dx,c.Y=d.Clipper.Round(c.X/a.Dx+e));
+else{e=a.Bot.X-a.Bot.Y*a.Dx;f=b.Bot.X-b.Bot.Y*b.Dx;var g=(f-e)/(a.Dx-b.Dx);c.Y=d.Clipper.Round(g);c.X=Math.abs(a.Dx)<Math.abs(b.Dx)?d.Clipper.Round(a.Dx*g+e):d.Clipper.Round(b.Dx*g+f)}if(c.Y<a.Top.Y||c.Y<b.Top.Y){if(a.Top.Y>b.Top.Y)return c.Y=a.Top.Y,c.X=d.Clipper.TopX(b,a.Top.Y),c.X<a.Top.X;c.Y=b.Top.Y;c.X=Math.abs(a.Dx)<Math.abs(b.Dx)?d.Clipper.TopX(a,c.Y):d.Clipper.TopX(b,c.Y)}c.Y>a.Curr.Y&&(c.Y=a.Curr.Y,c.X=Math.abs(a.Dx)>Math.abs(b.Dx)?d.Clipper.TopX(b,c.Y):d.Clipper.TopX(a,c.Y))}};d.Clipper.prototype.ProcessEdgesAtTopOfScanbeam=
+function(a){for(var b=this.m_ActiveEdges;null!==b;){var c=this.IsMaxima(b,a);c&&(c=this.GetMaximaPair(b),c=null===c||!d.ClipperBase.IsHorizontal(c));if(c){var e=b.PrevInAEL;this.DoMaxima(b);b=null===e?this.m_ActiveEdges:e.NextInAEL}else{this.IsIntermediate(b,a)&&d.ClipperBase.IsHorizontal(b.NextInLML)?(b=this.UpdateEdgeIntoAEL(b),0<=b.OutIdx&&this.AddOutPt(b,b.Bot),this.AddEdgeToSEL(b)):(b.Curr.X=d.Clipper.TopX(b,a),b.Curr.Y=a);if(this.StrictlySimple&&(e=b.PrevInAEL,0<=b.OutIdx&&0!==b.WindDelta&&
+null!==e&&0<=e.OutIdx&&e.Curr.X==b.Curr.X&&0!==e.WindDelta)){var f=new d.IntPoint(b.Curr);d.use_xyz&&this.SetZ(f,e,b);c=this.AddOutPt(e,f);e=this.AddOutPt(b,f);this.AddJoin(c,e,f)}b=b.NextInAEL}}this.ProcessHorizontals(!0);for(b=this.m_ActiveEdges;null!==b;)this.IsIntermediate(b,a)&&(c=null,0<=b.OutIdx&&(c=this.AddOutPt(b,b.Top)),b=this.UpdateEdgeIntoAEL(b),e=b.PrevInAEL,f=b.NextInAEL,null!==e&&e.Curr.X==b.Bot.X&&e.Curr.Y==b.Bot.Y&&null!==c&&0<=e.OutIdx&&e.Curr.Y>e.Top.Y&&d.ClipperBase.SlopesEqual(b,
+e,this.m_UseFullRange)&&0!==b.WindDelta&&0!==e.WindDelta?(e=this.AddOutPt(e,b.Bot),this.AddJoin(c,e,b.Top)):null!==f&&f.Curr.X==b.Bot.X&&f.Curr.Y==b.Bot.Y&&null!==c&&0<=f.OutIdx&&f.Curr.Y>f.Top.Y&&d.ClipperBase.SlopesEqual(b,f,this.m_UseFullRange)&&0!==b.WindDelta&&0!==f.WindDelta&&(e=this.AddOutPt(f,b.Bot),this.AddJoin(c,e,b.Top))),b=b.NextInAEL};d.Clipper.prototype.DoMaxima=function(a){var b=this.GetMaximaPair(a);if(null===b)0<=a.OutIdx&&this.AddOutPt(a,a.Top),this.DeleteFromAEL(a);else{for(var c=
+a.NextInAEL;null!==c&&c!=b;)this.IntersectEdges(a,c,a.Top),this.SwapPositionsInAEL(a,c),c=a.NextInAEL;-1==a.OutIdx&&-1==b.OutIdx?(this.DeleteFromAEL(a),this.DeleteFromAEL(b)):0<=a.OutIdx&&0<=b.OutIdx?(0<=a.OutIdx&&this.AddLocalMaxPoly(a,b,a.Top),this.DeleteFromAEL(a),this.DeleteFromAEL(b)):d.use_lines&&0===a.WindDelta?(0<=a.OutIdx&&(this.AddOutPt(a,a.Top),a.OutIdx=-1),this.DeleteFromAEL(a),0<=b.OutIdx&&(this.AddOutPt(b,a.Top),b.OutIdx=-1),this.DeleteFromAEL(b)):d.Error("DoMaxima error")}};d.Clipper.ReversePaths=
+function(a){for(var b=0,c=a.length;b<c;b++)a[b].reverse()};d.Clipper.Orientation=function(a){return 0<=d.Clipper.Area(a)};d.Clipper.prototype.PointCount=function(a){if(null===a)return 0;var b=0,c=a;do b++,c=c.Next;while(c!=a);return b};d.Clipper.prototype.BuildResult=function(a){d.Clear(a);for(var b=0,c=this.m_PolyOuts.length;b<c;b++){var e=this.m_PolyOuts[b];if(null!==e.Pts){var e=e.Pts.Prev,f=this.PointCount(e);if(!(2>f)){for(var g=Array(f),h=0;h<f;h++)g[h]=e.Pt,e=e.Prev;a.push(g)}}}};d.Clipper.prototype.BuildResult2=
+function(a){a.Clear();for(var b=0,c=this.m_PolyOuts.length;b<c;b++){var e=this.m_PolyOuts[b],f=this.PointCount(e.Pts);if(!(e.IsOpen&&2>f||!e.IsOpen&&3>f)){this.FixHoleLinkage(e);var g=new d.PolyNode;a.m_AllPolys.push(g);e.PolyNode=g;g.m_polygon.length=f;for(var e=e.Pts.Prev,h=0;h<f;h++)g.m_polygon[h]=e.Pt,e=e.Prev}}b=0;for(c=this.m_PolyOuts.length;b<c;b++)e=this.m_PolyOuts[b],null!==e.PolyNode&&(e.IsOpen?(e.PolyNode.IsOpen=!0,a.AddChild(e.PolyNode)):null!==e.FirstLeft&&null!=e.FirstLeft.PolyNode?
+e.FirstLeft.PolyNode.AddChild(e.PolyNode):a.AddChild(e.PolyNode))};d.Clipper.prototype.FixupOutPolygon=function(a){var b=null;a.BottomPt=null;for(var c=a.Pts;;){if(c.Prev==c||c.Prev==c.Next){a.Pts=null;return}if(d.IntPoint.op_Equality(c.Pt,c.Next.Pt)||d.IntPoint.op_Equality(c.Pt,c.Prev.Pt)||d.ClipperBase.SlopesEqual(c.Prev.Pt,c.Pt,c.Next.Pt,this.m_UseFullRange)&&(!this.PreserveCollinear||!this.Pt2IsBetweenPt1AndPt3(c.Prev.Pt,c.Pt,c.Next.Pt)))b=null,c.Prev.Next=c.Next,c=c.Next.Prev=c.Prev;else if(c==
+b)break;else null===b&&(b=c),c=c.Next}a.Pts=c};d.Clipper.prototype.DupOutPt=function(a,b){var c=new d.OutPt;c.Pt.X=a.Pt.X;c.Pt.Y=a.Pt.Y;d.use_xyz&&(c.Pt.Z=a.Pt.Z);c.Idx=a.Idx;b?(c.Next=a.Next,c.Prev=a,a.Next.Prev=c,a.Next=c):(c.Prev=a.Prev,c.Next=a,a.Prev.Next=c,a.Prev=c);return c};d.Clipper.prototype.GetOverlap=function(a,b,c,d,f){a<b?c<d?(f.Left=Math.max(a,c),f.Right=Math.min(b,d)):(f.Left=Math.max(a,d),f.Right=Math.min(b,c)):c<d?(f.Left=Math.max(b,c),f.Right=Math.min(a,d)):(f.Left=Math.max(b,d),
+f.Right=Math.min(a,c));return f.Left<f.Right};d.Clipper.prototype.JoinHorz=function(a,b,c,e,f,g){var h=a.Pt.X>b.Pt.X?d.Direction.dRightToLeft:d.Direction.dLeftToRight;e=c.Pt.X>e.Pt.X?d.Direction.dRightToLeft:d.Direction.dLeftToRight;if(h==e)return!1;if(h==d.Direction.dLeftToRight){for(;a.Next.Pt.X<=f.X&&a.Next.Pt.X>=a.Pt.X&&a.Next.Pt.Y==f.Y;)a=a.Next;g&&a.Pt.X!=f.X&&(a=a.Next);b=this.DupOutPt(a,!g);d.IntPoint.op_Inequality(b.Pt,f)&&(a=b,a.Pt.X=f.X,a.Pt.Y=f.Y,d.use_xyz&&(a.Pt.Z=f.Z),b=this.DupOutPt(a,
+!g))}else{for(;a.Next.Pt.X>=f.X&&a.Next.Pt.X<=a.Pt.X&&a.Next.Pt.Y==f.Y;)a=a.Next;g||a.Pt.X==f.X||(a=a.Next);b=this.DupOutPt(a,g);d.IntPoint.op_Inequality(b.Pt,f)&&(a=b,a.Pt.X=f.X,a.Pt.Y=f.Y,d.use_xyz&&(a.Pt.Z=f.Z),b=this.DupOutPt(a,g))}if(e==d.Direction.dLeftToRight){for(;c.Next.Pt.X<=f.X&&c.Next.Pt.X>=c.Pt.X&&c.Next.Pt.Y==f.Y;)c=c.Next;g&&c.Pt.X!=f.X&&(c=c.Next);e=this.DupOutPt(c,!g);d.IntPoint.op_Inequality(e.Pt,f)&&(c=e,c.Pt.X=f.X,c.Pt.Y=f.Y,d.use_xyz&&(c.Pt.Z=f.Z),e=this.DupOutPt(c,!g))}else{for(;c.Next.Pt.X>=
+f.X&&c.Next.Pt.X<=c.Pt.X&&c.Next.Pt.Y==f.Y;)c=c.Next;g||c.Pt.X==f.X||(c=c.Next);e=this.DupOutPt(c,g);d.IntPoint.op_Inequality(e.Pt,f)&&(c=e,c.Pt.X=f.X,c.Pt.Y=f.Y,d.use_xyz&&(c.Pt.Z=f.Z),e=this.DupOutPt(c,g))}h==d.Direction.dLeftToRight==g?(a.Prev=c,c.Next=a,b.Next=e,e.Prev=b):(a.Next=c,c.Prev=a,b.Prev=e,e.Next=b);return!0};d.Clipper.prototype.JoinPoints=function(a,b,c){var e=a.OutPt1,f;new d.OutPt;var g=a.OutPt2,h;new d.OutPt;if((h=a.OutPt1.Pt.Y==a.OffPt.Y)&&d.IntPoint.op_Equality(a.OffPt,a.OutPt1.Pt)&&
+d.IntPoint.op_Equality(a.OffPt,a.OutPt2.Pt)){if(b!=c)return!1;for(f=a.OutPt1.Next;f!=e&&d.IntPoint.op_Equality(f.Pt,a.OffPt);)f=f.Next;f=f.Pt.Y>a.OffPt.Y;for(h=a.OutPt2.Next;h!=g&&d.IntPoint.op_Equality(h.Pt,a.OffPt);)h=h.Next;if(f==h.Pt.Y>a.OffPt.Y)return!1;f?(f=this.DupOutPt(e,!1),h=this.DupOutPt(g,!0),e.Prev=g,g.Next=e,f.Next=h,h.Prev=f):(f=this.DupOutPt(e,!0),h=this.DupOutPt(g,!1),e.Next=g,g.Prev=e,f.Prev=h,h.Next=f);a.OutPt1=e;a.OutPt2=f;return!0}if(h){for(f=e;e.Prev.Pt.Y==e.Pt.Y&&e.Prev!=f&&
+e.Prev!=g;)e=e.Prev;for(;f.Next.Pt.Y==f.Pt.Y&&f.Next!=e&&f.Next!=g;)f=f.Next;if(f.Next==e||f.Next==g)return!1;for(h=g;g.Prev.Pt.Y==g.Pt.Y&&g.Prev!=h&&g.Prev!=f;)g=g.Prev;for(;h.Next.Pt.Y==h.Pt.Y&&h.Next!=g&&h.Next!=e;)h=h.Next;if(h.Next==g||h.Next==e)return!1;c={Left:null,Right:null};if(!this.GetOverlap(e.Pt.X,f.Pt.X,g.Pt.X,h.Pt.X,c))return!1;b=c.Left;var l=c.Right;c=new d.IntPoint;e.Pt.X>=b&&e.Pt.X<=l?(c.X=e.Pt.X,c.Y=e.Pt.Y,d.use_xyz&&(c.Z=e.Pt.Z),b=e.Pt.X>f.Pt.X):g.Pt.X>=b&&g.Pt.X<=l?(c.X=g.Pt.X,
+c.Y=g.Pt.Y,d.use_xyz&&(c.Z=g.Pt.Z),b=g.Pt.X>h.Pt.X):f.Pt.X>=b&&f.Pt.X<=l?(c.X=f.Pt.X,c.Y=f.Pt.Y,d.use_xyz&&(c.Z=f.Pt.Z),b=f.Pt.X>e.Pt.X):(c.X=h.Pt.X,c.Y=h.Pt.Y,d.use_xyz&&(c.Z=h.Pt.Z),b=h.Pt.X>g.Pt.X);a.OutPt1=e;a.OutPt2=g;return this.JoinHorz(e,f,g,h,c,b)}for(f=e.Next;d.IntPoint.op_Equality(f.Pt,e.Pt)&&f!=e;)f=f.Next;if(l=f.Pt.Y>e.Pt.Y||!d.ClipperBase.SlopesEqual(e.Pt,f.Pt,a.OffPt,this.m_UseFullRange)){for(f=e.Prev;d.IntPoint.op_Equality(f.Pt,e.Pt)&&f!=e;)f=f.Prev;if(f.Pt.Y>e.Pt.Y||!d.ClipperBase.SlopesEqual(e.Pt,
+f.Pt,a.OffPt,this.m_UseFullRange))return!1}for(h=g.Next;d.IntPoint.op_Equality(h.Pt,g.Pt)&&h!=g;)h=h.Next;var k=h.Pt.Y>g.Pt.Y||!d.ClipperBase.SlopesEqual(g.Pt,h.Pt,a.OffPt,this.m_UseFullRange);if(k){for(h=g.Prev;d.IntPoint.op_Equality(h.Pt,g.Pt)&&h!=g;)h=h.Prev;if(h.Pt.Y>g.Pt.Y||!d.ClipperBase.SlopesEqual(g.Pt,h.Pt,a.OffPt,this.m_UseFullRange))return!1}if(f==e||h==g||f==h||b==c&&l==k)return!1;l?(f=this.DupOutPt(e,!1),h=this.DupOutPt(g,!0),e.Prev=g,g.Next=e,f.Next=h,h.Prev=f):(f=this.DupOutPt(e,!0),
+h=this.DupOutPt(g,!1),e.Next=g,g.Prev=e,f.Prev=h,h.Next=f);a.OutPt1=e;a.OutPt2=f;return!0};d.Clipper.GetBounds=function(a){for(var b=0,c=a.length;b<c&&0==a[b].length;)b++;if(b==c)return new d.IntRect(0,0,0,0);var e=new d.IntRect;e.left=a[b][0].X;e.right=e.left;e.top=a[b][0].Y;for(e.bottom=e.top;b<c;b++)for(var f=0,g=a[b].length;f<g;f++)a[b][f].X<e.left?e.left=a[b][f].X:a[b][f].X>e.right&&(e.right=a[b][f].X),a[b][f].Y<e.top?e.top=a[b][f].Y:a[b][f].Y>e.bottom&&(e.bottom=a[b][f].Y);return e};d.Clipper.prototype.GetBounds2=
+function(a){var b=a,c=new d.IntRect;c.left=a.Pt.X;c.right=a.Pt.X;c.top=a.Pt.Y;c.bottom=a.Pt.Y;for(a=a.Next;a!=b;)a.Pt.X<c.left&&(c.left=a.Pt.X),a.Pt.X>c.right&&(c.right=a.Pt.X),a.Pt.Y<c.top&&(c.top=a.Pt.Y),a.Pt.Y>c.bottom&&(c.bottom=a.Pt.Y),a=a.Next;return c};d.Clipper.PointInPolygon=function(a,b){var c=0,d=b.length;if(3>d)return 0;for(var f=b[0],g=1;g<=d;++g){var h=g==d?b[0]:b[g];if(h.Y==a.Y&&(h.X==a.X||f.Y==a.Y&&h.X>a.X==f.X<a.X))return-1;if(f.Y<a.Y!=h.Y<a.Y)if(f.X>=a.X)if(h.X>a.X)c=1-c;else{var l=
+(f.X-a.X)*(h.Y-a.Y)-(h.X-a.X)*(f.Y-a.Y);if(0==l)return-1;0<l==h.Y>f.Y&&(c=1-c)}else if(h.X>a.X){l=(f.X-a.X)*(h.Y-a.Y)-(h.X-a.X)*(f.Y-a.Y);if(0==l)return-1;0<l==h.Y>f.Y&&(c=1-c)}f=h}return c};d.Clipper.prototype.PointInPolygon=function(a,b){var c=0,d=b,f=a.X,g=a.Y,h=b.Pt.X,l=b.Pt.Y;do{b=b.Next;var k=b.Pt.X,n=b.Pt.Y;if(n==g&&(k==f||l==g&&k>f==h<f))return-1;if(l<g!=n<g)if(h>=f)if(k>f)c=1-c;else{h=(h-f)*(n-g)-(k-f)*(l-g);if(0==h)return-1;0<h==n>l&&(c=1-c)}else if(k>f){h=(h-f)*(n-g)-(k-f)*(l-g);if(0==
+h)return-1;0<h==n>l&&(c=1-c)}h=k;l=n}while(d!=b);return c};d.Clipper.prototype.Poly2ContainsPoly1=function(a,b){var c=a;do{var d=this.PointInPolygon(c.Pt,b);if(0<=d)return 0<d;c=c.Next}while(c!=a);return!0};d.Clipper.prototype.FixupFirstLefts1=function(a,b){for(var c=0,d=this.m_PolyOuts.length;c<d;c++){var f=this.m_PolyOuts[c];null!=f.Pts&&null!=f.FirstLeft&&this.ParseFirstLeft(f.FirstLeft)==a&&this.Poly2ContainsPoly1(f.Pts,b.Pts)&&(f.FirstLeft=b)}};d.Clipper.prototype.FixupFirstLefts2=function(a,
+b){for(var c=0,d=this.m_PolyOuts,f=d.length,g=d[c];c<f;c++,g=d[c])g.FirstLeft==a&&(g.FirstLeft=b)};d.Clipper.ParseFirstLeft=function(a){for(;null!=a&&null==a.Pts;)a=a.FirstLeft;return a};d.Clipper.prototype.JoinCommonEdges=function(){for(var a=0,b=this.m_Joins.length;a<b;a++){var c=this.m_Joins[a],e=this.GetOutRec(c.OutPt1.Idx),f=this.GetOutRec(c.OutPt2.Idx);if(null!=e.Pts&&null!=f.Pts){var g;g=e==f?e:this.Param1RightOfParam2(e,f)?f:this.Param1RightOfParam2(f,e)?e:this.GetLowermostRec(e,f);if(this.JoinPoints(c,
+e,f))if(e==f){e.Pts=c.OutPt1;e.BottomPt=null;f=this.CreateOutRec();f.Pts=c.OutPt2;this.UpdateOutPtIdxs(f);if(this.m_UsingPolyTree){g=0;for(var h=this.m_PolyOuts.length;g<h-1;g++){var l=this.m_PolyOuts[g];null!=l.Pts&&d.Clipper.ParseFirstLeft(l.FirstLeft)==e&&l.IsHole!=e.IsHole&&this.Poly2ContainsPoly1(l.Pts,c.OutPt2)&&(l.FirstLeft=f)}}this.Poly2ContainsPoly1(f.Pts,e.Pts)?(f.IsHole=!e.IsHole,f.FirstLeft=e,this.m_UsingPolyTree&&this.FixupFirstLefts2(f,e),(f.IsHole^this.ReverseSolution)==0<this.Area(f)&&
+this.ReversePolyPtLinks(f.Pts)):this.Poly2ContainsPoly1(e.Pts,f.Pts)?(f.IsHole=e.IsHole,e.IsHole=!f.IsHole,f.FirstLeft=e.FirstLeft,e.FirstLeft=f,this.m_UsingPolyTree&&this.FixupFirstLefts2(e,f),(e.IsHole^this.ReverseSolution)==0<this.Area(e)&&this.ReversePolyPtLinks(e.Pts)):(f.IsHole=e.IsHole,f.FirstLeft=e.FirstLeft,this.m_UsingPolyTree&&this.FixupFirstLefts1(e,f))}else f.Pts=null,f.BottomPt=null,f.Idx=e.Idx,e.IsHole=g.IsHole,g==f&&(e.FirstLeft=f.FirstLeft),f.FirstLeft=e,this.m_UsingPolyTree&&this.FixupFirstLefts2(f,
+e)}}};d.Clipper.prototype.UpdateOutPtIdxs=function(a){var b=a.Pts;do b.Idx=a.Idx,b=b.Prev;while(b!=a.Pts)};d.Clipper.prototype.DoSimplePolygons=function(){for(var a=0;a<this.m_PolyOuts.length;){var b=this.m_PolyOuts[a++],c=b.Pts;if(null!=c&&!b.IsOpen){do{for(var e=c.Next;e!=b.Pts;){if(d.IntPoint.op_Equality(c.Pt,e.Pt)&&e.Next!=c&&e.Prev!=c){var f=c.Prev,g=e.Prev;c.Prev=g;g.Next=c;e.Prev=f;f.Next=e;b.Pts=c;f=this.CreateOutRec();f.Pts=e;this.UpdateOutPtIdxs(f);this.Poly2ContainsPoly1(f.Pts,b.Pts)?(f.IsHole=
+!b.IsHole,f.FirstLeft=b,this.m_UsingPolyTree&&this.FixupFirstLefts2(f,b)):this.Poly2ContainsPoly1(b.Pts,f.Pts)?(f.IsHole=b.IsHole,b.IsHole=!f.IsHole,f.FirstLeft=b.FirstLeft,b.FirstLeft=f,this.m_UsingPolyTree&&this.FixupFirstLefts2(b,f)):(f.IsHole=b.IsHole,f.FirstLeft=b.FirstLeft,this.m_UsingPolyTree&&this.FixupFirstLefts1(b,f));e=c}e=e.Next}c=c.Next}while(c!=b.Pts)}}};d.Clipper.Area=function(a){var b=a.length;if(3>b)return 0;for(var c=0,d=0,f=b-1;d<b;++d)c+=(a[f].X+a[d].X)*(a[f].Y-a[d].Y),f=d;return.5*
+-c};d.Clipper.prototype.Area=function(a){var b=a.Pts;if(null==b)return 0;var c=0;do c+=(b.Prev.Pt.X+b.Pt.X)*(b.Prev.Pt.Y-b.Pt.Y),b=b.Next;while(b!=a.Pts);return.5*c};d.Clipper.SimplifyPolygon=function(a,b){var c=[],e=new d.Clipper(0);e.StrictlySimple=!0;e.AddPath(a,d.PolyType.ptSubject,!0);e.Execute(d.ClipType.ctUnion,c,b,b);return c};d.Clipper.SimplifyPolygons=function(a,b){"undefined"==typeof b&&(b=d.PolyFillType.pftEvenOdd);var c=[],e=new d.Clipper(0);e.StrictlySimple=!0;e.AddPaths(a,d.PolyType.ptSubject,
+!0);e.Execute(d.ClipType.ctUnion,c,b,b);return c};d.Clipper.DistanceSqrd=function(a,b){var c=a.X-b.X,d=a.Y-b.Y;return c*c+d*d};d.Clipper.DistanceFromLineSqrd=function(a,b,c){var d=b.Y-c.Y;c=c.X-b.X;b=d*b.X+c*b.Y;b=d*a.X+c*a.Y-b;return b*b/(d*d+c*c)};d.Clipper.SlopesNearCollinear=function(a,b,c,e){return Math.abs(a.X-b.X)>Math.abs(a.Y-b.Y)?a.X>b.X==a.X<c.X?d.Clipper.DistanceFromLineSqrd(a,b,c)<e:b.X>a.X==b.X<c.X?d.Clipper.DistanceFromLineSqrd(b,a,c)<e:d.Clipper.DistanceFromLineSqrd(c,a,b)<e:a.Y>b.Y==
+a.Y<c.Y?d.Clipper.DistanceFromLineSqrd(a,b,c)<e:b.Y>a.Y==b.Y<c.Y?d.Clipper.DistanceFromLineSqrd(b,a,c)<e:d.Clipper.DistanceFromLineSqrd(c,a,b)<e};d.Clipper.PointsAreClose=function(a,b,c){var d=a.X-b.X;a=a.Y-b.Y;return d*d+a*a<=c};d.Clipper.ExcludeOp=function(a){var b=a.Prev;b.Next=a.Next;a.Next.Prev=b;b.Idx=0;return b};d.Clipper.CleanPolygon=function(a,b){"undefined"==typeof b&&(b=1.415);var c=a.length;if(0==c)return[];for(var e=Array(c),f=0;f<c;++f)e[f]=new d.OutPt;for(f=0;f<c;++f)e[f].Pt=a[f],e[f].Next=
+e[(f+1)%c],e[f].Next.Prev=e[f],e[f].Idx=0;f=b*b;for(e=e[0];0==e.Idx&&e.Next!=e.Prev;)d.Clipper.PointsAreClose(e.Pt,e.Prev.Pt,f)?(e=d.Clipper.ExcludeOp(e),c--):d.Clipper.PointsAreClose(e.Prev.Pt,e.Next.Pt,f)?(d.Clipper.ExcludeOp(e.Next),e=d.Clipper.ExcludeOp(e),c-=2):d.Clipper.SlopesNearCollinear(e.Prev.Pt,e.Pt,e.Next.Pt,f)?(e=d.Clipper.ExcludeOp(e),c--):(e.Idx=1,e=e.Next);3>c&&(c=0);for(var g=Array(c),f=0;f<c;++f)g[f]=new d.IntPoint(e.Pt),e=e.Next;return g};d.Clipper.CleanPolygons=function(a,b){for(var c=
+Array(a.length),e=0,f=a.length;e<f;e++)c[e]=d.Clipper.CleanPolygon(a[e],b);return c};d.Clipper.Minkowski=function(a,b,c,e){e=e?1:0;var f=a.length,g=b.length,h=[];if(c)for(c=0;c<g;c++){for(var l=Array(f),k=0,n=a.length,p=a[k];k<n;k++,p=a[k])l[k]=new d.IntPoint(b[c].X+p.X,b[c].Y+p.Y);h.push(l)}else for(c=0;c<g;c++){l=Array(f);k=0;n=a.length;for(p=a[k];k<n;k++,p=a[k])l[k]=new d.IntPoint(b[c].X-p.X,b[c].Y-p.Y);h.push(l)}a=[];for(c=0;c<g-1+e;c++)for(k=0;k<f;k++)b=[],b.push(h[c%g][k%f]),b.push(h[(c+1)%
+g][k%f]),b.push(h[(c+1)%g][(k+1)%f]),b.push(h[c%g][(k+1)%f]),d.Clipper.Orientation(b)||b.reverse(),a.push(b);return a};d.Clipper.MinkowskiSum=function(a,b,c){if(b[0]instanceof Array){h=b;b=new d.Paths;for(var e=new d.Clipper,f=0;f<h.length;++f){var g=d.Clipper.Minkowski(a,h[f],!0,c);e.AddPaths(g,d.PolyType.ptSubject,!0);c&&(g=d.Clipper.TranslatePath(h[f],a[0]),e.AddPath(g,d.PolyType.ptClip,!0))}e.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftNonZero,d.PolyFillType.pftNonZero);return b}var h=d.Clipper.Minkowski(a,
+b,!0,c),e=new d.Clipper;e.AddPaths(h,d.PolyType.ptSubject,!0);e.Execute(d.ClipType.ctUnion,h,d.PolyFillType.pftNonZero,d.PolyFillType.pftNonZero);return h};d.Clipper.TranslatePath=function(a,b){for(var c=new d.Path,e=0;e<a.length;e++)c.push(new d.IntPoint(a[e].X+b.X,a[e].Y+b.Y));return c};d.Clipper.MinkowskiDiff=function(a,b){var c=d.Clipper.Minkowski(a,b,!1,!0),e=new d.Clipper;e.AddPaths(c,d.PolyType.ptSubject,!0);e.Execute(d.ClipType.ctUnion,c,d.PolyFillType.pftNonZero,d.PolyFillType.pftNonZero);
+return c};d.Clipper.PolyTreeToPaths=function(a){var b=[];d.Clipper.AddPolyNodeToPaths(a,d.Clipper.NodeType.ntAny,b);return b};d.Clipper.AddPolyNodeToPaths=function(a,b,c){var e=!0;switch(b){case d.Clipper.NodeType.ntOpen:return;case d.Clipper.NodeType.ntClosed:e=!a.IsOpen}0<a.m_polygon.length&&e&&c.push(a.m_polygon);e=0;a=a.Childs();for(var f=a.length,g=a[e];e<f;e++,g=a[e])d.Clipper.AddPolyNodeToPaths(g,b,c)};d.Clipper.OpenPathsFromPolyTree=function(a){for(var b=new d.Paths,c=0,e=a.ChildCount();c<
+e;c++)a.Childs()[c].IsOpen&&b.push(a.Childs()[c].m_polygon);return b};d.Clipper.ClosedPathsFromPolyTree=function(a){var b=new d.Paths;d.Clipper.AddPolyNodeToPaths(a,d.Clipper.NodeType.ntClosed,b);return b};q(d.Clipper,d.ClipperBase);d.Clipper.NodeType={ntAny:0,ntOpen:1,ntClosed:2};d.ClipperOffset=function(a,b){"undefined"==typeof a&&(a=2);"undefined"==typeof b&&(b=d.ClipperOffset.def_arc_tolerance);this.m_destPolys=new d.Paths;this.m_srcPoly=new d.Path;this.m_destPoly=new d.Path;this.m_normals=[];
+this.m_StepsPerRad=this.m_miterLim=this.m_cos=this.m_sin=this.m_sinA=this.m_delta=0;this.m_lowest=new d.IntPoint;this.m_polyNodes=new d.PolyNode;this.MiterLimit=a;this.ArcTolerance=b;this.m_lowest.X=-1};d.ClipperOffset.two_pi=6.28318530717959;d.ClipperOffset.def_arc_tolerance=.25;d.ClipperOffset.prototype.Clear=function(){d.Clear(this.m_polyNodes.Childs());this.m_lowest.X=-1};d.ClipperOffset.Round=d.Clipper.Round;d.ClipperOffset.prototype.AddPath=function(a,b,c){var e=a.length-1;if(!(0>e)){var f=
+new d.PolyNode;f.m_jointype=b;f.m_endtype=c;if(c==d.EndType.etClosedLine||c==d.EndType.etClosedPolygon)for(;0<e&&d.IntPoint.op_Equality(a[0],a[e]);)e--;f.m_polygon.push(a[0]);var g=0;b=0;for(var h=1;h<=e;h++)d.IntPoint.op_Inequality(f.m_polygon[g],a[h])&&(g++,f.m_polygon.push(a[h]),a[h].Y>f.m_polygon[b].Y||a[h].Y==f.m_polygon[b].Y&&a[h].X<f.m_polygon[b].X)&&(b=g);if(!(c==d.EndType.etClosedPolygon&&2>g)&&(this.m_polyNodes.AddChild(f),c==d.EndType.etClosedPolygon))if(0>this.m_lowest.X)this.m_lowest=
+new d.IntPoint(this.m_polyNodes.ChildCount()-1,b);else if(a=this.m_polyNodes.Childs()[this.m_lowest.X].m_polygon[this.m_lowest.Y],f.m_polygon[b].Y>a.Y||f.m_polygon[b].Y==a.Y&&f.m_polygon[b].X<a.X)this.m_lowest=new d.IntPoint(this.m_polyNodes.ChildCount()-1,b)}};d.ClipperOffset.prototype.AddPaths=function(a,b,c){for(var d=0,f=a.length;d<f;d++)this.AddPath(a[d],b,c)};d.ClipperOffset.prototype.FixOrientations=function(){if(0<=this.m_lowest.X&&!d.Clipper.Orientation(this.m_polyNodes.Childs()[this.m_lowest.X].m_polygon))for(var a=
+0;a<this.m_polyNodes.ChildCount();a++){var b=this.m_polyNodes.Childs()[a];(b.m_endtype==d.EndType.etClosedPolygon||b.m_endtype==d.EndType.etClosedLine&&d.Clipper.Orientation(b.m_polygon))&&b.m_polygon.reverse()}else for(a=0;a<this.m_polyNodes.ChildCount();a++)b=this.m_polyNodes.Childs()[a],b.m_endtype!=d.EndType.etClosedLine||d.Clipper.Orientation(b.m_polygon)||b.m_polygon.reverse()};d.ClipperOffset.GetUnitNormal=function(a,b){var c=b.X-a.X,e=b.Y-a.Y;if(0==c&&0==e)return new d.DoublePoint(0,0);var f=
+1/Math.sqrt(c*c+e*e);return new d.DoublePoint(e*f,-(c*f))};d.ClipperOffset.prototype.DoOffset=function(a){this.m_destPolys=[];this.m_delta=a;if(d.ClipperBase.near_zero(a))for(var b=0;b<this.m_polyNodes.ChildCount();b++){var c=this.m_polyNodes.Childs()[b];c.m_endtype==d.EndType.etClosedPolygon&&this.m_destPolys.push(c.m_polygon)}else{this.m_miterLim=2<this.MiterLimit?2/(this.MiterLimit*this.MiterLimit):.5;var e=3.14159265358979/Math.acos(1-(0>=this.ArcTolerance?d.ClipperOffset.def_arc_tolerance:this.ArcTolerance>
+Math.abs(a)*d.ClipperOffset.def_arc_tolerance?Math.abs(a)*d.ClipperOffset.def_arc_tolerance:this.ArcTolerance)/Math.abs(a));this.m_sin=Math.sin(d.ClipperOffset.two_pi/e);this.m_cos=Math.cos(d.ClipperOffset.two_pi/e);this.m_StepsPerRad=e/d.ClipperOffset.two_pi;0>a&&(this.m_sin=-this.m_sin);for(b=0;b<this.m_polyNodes.ChildCount();b++){c=this.m_polyNodes.Childs()[b];this.m_srcPoly=c.m_polygon;var f=this.m_srcPoly.length;if(!(0==f||0>=a&&(3>f||c.m_endtype!=d.EndType.etClosedPolygon))){this.m_destPoly=
+[];if(1==f)if(c.m_jointype==d.JoinType.jtRound)for(var c=1,f=0,g=1;g<=e;g++){this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[0].X+c*a),d.ClipperOffset.Round(this.m_srcPoly[0].Y+f*a)));var h=c,c=c*this.m_cos-this.m_sin*f,f=h*this.m_sin+f*this.m_cos}else for(f=c=-1,g=0;4>g;++g)this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[0].X+c*a),d.ClipperOffset.Round(this.m_srcPoly[0].Y+f*a))),0>c?c=1:0>f?f=1:c=-1;else{for(g=this.m_normals.length=0;g<f-1;g++)this.m_normals.push(d.ClipperOffset.GetUnitNormal(this.m_srcPoly[g],
+this.m_srcPoly[g+1]));c.m_endtype==d.EndType.etClosedLine||c.m_endtype==d.EndType.etClosedPolygon?this.m_normals.push(d.ClipperOffset.GetUnitNormal(this.m_srcPoly[f-1],this.m_srcPoly[0])):this.m_normals.push(new d.DoublePoint(this.m_normals[f-2]));if(c.m_endtype==d.EndType.etClosedPolygon)for(h=f-1,g=0;g<f;g++)h=this.OffsetPoint(g,h,c.m_jointype);else if(c.m_endtype==d.EndType.etClosedLine){h=f-1;for(g=0;g<f;g++)h=this.OffsetPoint(g,h,c.m_jointype);this.m_destPolys.push(this.m_destPoly);this.m_destPoly=
+[];h=this.m_normals[f-1];for(g=f-1;0<g;g--)this.m_normals[g]=new d.DoublePoint(-this.m_normals[g-1].X,-this.m_normals[g-1].Y);this.m_normals[0]=new d.DoublePoint(-h.X,-h.Y);h=0;for(g=f-1;0<=g;g--)h=this.OffsetPoint(g,h,c.m_jointype)}else{h=0;for(g=1;g<f-1;++g)h=this.OffsetPoint(g,h,c.m_jointype);c.m_endtype==d.EndType.etOpenButt?(g=f-1,h=new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[g].X+this.m_normals[g].X*a),d.ClipperOffset.Round(this.m_srcPoly[g].Y+this.m_normals[g].Y*a)),this.m_destPoly.push(h),
+h=new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[g].X-this.m_normals[g].X*a),d.ClipperOffset.Round(this.m_srcPoly[g].Y-this.m_normals[g].Y*a)),this.m_destPoly.push(h)):(g=f-1,h=f-2,this.m_sinA=0,this.m_normals[g]=new d.DoublePoint(-this.m_normals[g].X,-this.m_normals[g].Y),c.m_endtype==d.EndType.etOpenSquare?this.DoSquare(g,h):this.DoRound(g,h));for(g=f-1;0<g;g--)this.m_normals[g]=new d.DoublePoint(-this.m_normals[g-1].X,-this.m_normals[g-1].Y);this.m_normals[0]=new d.DoublePoint(-this.m_normals[1].X,
+-this.m_normals[1].Y);h=f-1;for(g=h-1;0<g;--g)h=this.OffsetPoint(g,h,c.m_jointype);c.m_endtype==d.EndType.etOpenButt?(h=new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[0].X-this.m_normals[0].X*a),d.ClipperOffset.Round(this.m_srcPoly[0].Y-this.m_normals[0].Y*a)),this.m_destPoly.push(h),h=new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[0].X+this.m_normals[0].X*a),d.ClipperOffset.Round(this.m_srcPoly[0].Y+this.m_normals[0].Y*a)),this.m_destPoly.push(h)):(this.m_sinA=0,c.m_endtype==d.EndType.etOpenSquare?
+this.DoSquare(0,1):this.DoRound(0,1))}}this.m_destPolys.push(this.m_destPoly)}}}};d.ClipperOffset.prototype.Execute=function(){var a=arguments;if(a[0]instanceof d.PolyTree)if(b=a[0],c=a[1],b.Clear(),this.FixOrientations(),this.DoOffset(c),a=new d.Clipper(0),a.AddPaths(this.m_destPolys,d.PolyType.ptSubject,!0),0<c)a.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftPositive,d.PolyFillType.pftPositive);else if(c=d.Clipper.GetBounds(this.m_destPolys),e=new d.Path,e.push(new d.IntPoint(c.left-10,c.bottom+
+10)),e.push(new d.IntPoint(c.right+10,c.bottom+10)),e.push(new d.IntPoint(c.right+10,c.top-10)),e.push(new d.IntPoint(c.left-10,c.top-10)),a.AddPath(e,d.PolyType.ptSubject,!0),a.ReverseSolution=!0,a.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftNegative,d.PolyFillType.pftNegative),1==b.ChildCount()&&0<b.Childs()[0].ChildCount())for(a=b.Childs()[0],b.Childs()[0]=a.Childs()[0],b.Childs()[0].m_Parent=b,c=1;c<a.ChildCount();c++)b.AddChild(a.Childs()[c]);else b.Clear();else{var b=a[0],c=a[1];d.Clear(b);
+this.FixOrientations();this.DoOffset(c);a=new d.Clipper(0);a.AddPaths(this.m_destPolys,d.PolyType.ptSubject,!0);if(0<c)a.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftPositive,d.PolyFillType.pftPositive);else{var c=d.Clipper.GetBounds(this.m_destPolys),e=new d.Path;e.push(new d.IntPoint(c.left-10,c.bottom+10));e.push(new d.IntPoint(c.right+10,c.bottom+10));e.push(new d.IntPoint(c.right+10,c.top-10));e.push(new d.IntPoint(c.left-10,c.top-10));a.AddPath(e,d.PolyType.ptSubject,!0);a.ReverseSolution=
+!0;a.Execute(d.ClipType.ctUnion,b,d.PolyFillType.pftNegative,d.PolyFillType.pftNegative);0<b.length&&b.splice(0,1)}}};d.ClipperOffset.prototype.OffsetPoint=function(a,b,c){this.m_sinA=this.m_normals[b].X*this.m_normals[a].Y-this.m_normals[a].X*this.m_normals[b].Y;if(1>Math.abs(this.m_sinA*this.m_delta)){if(0<this.m_normals[b].X*this.m_normals[a].X+this.m_normals[a].Y*this.m_normals[b].Y)return this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_normals[b].X*this.m_delta),
+d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_normals[b].Y*this.m_delta))),b}else 1<this.m_sinA?this.m_sinA=1:-1>this.m_sinA&&(this.m_sinA=-1);if(0>this.m_sinA*this.m_delta)this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_normals[b].X*this.m_delta),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_normals[b].Y*this.m_delta))),this.m_destPoly.push(new d.IntPoint(this.m_srcPoly[a])),this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_normals[a].X*
+this.m_delta),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_normals[a].Y*this.m_delta)));else switch(c){case d.JoinType.jtMiter:c=1+(this.m_normals[a].X*this.m_normals[b].X+this.m_normals[a].Y*this.m_normals[b].Y);c>=this.m_miterLim?this.DoMiter(a,b,c):this.DoSquare(a,b);break;case d.JoinType.jtSquare:this.DoSquare(a,b);break;case d.JoinType.jtRound:this.DoRound(a,b)}return a};d.ClipperOffset.prototype.DoSquare=function(a,b){var c=Math.tan(Math.atan2(this.m_sinA,this.m_normals[b].X*this.m_normals[a].X+
+this.m_normals[b].Y*this.m_normals[a].Y)/4);this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_delta*(this.m_normals[b].X-this.m_normals[b].Y*c)),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_delta*(this.m_normals[b].Y+this.m_normals[b].X*c))));this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_delta*(this.m_normals[a].X+this.m_normals[a].Y*c)),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_delta*(this.m_normals[a].Y-this.m_normals[a].X*
+c))))};d.ClipperOffset.prototype.DoMiter=function(a,b,c){c=this.m_delta/c;this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+(this.m_normals[b].X+this.m_normals[a].X)*c),d.ClipperOffset.Round(this.m_srcPoly[a].Y+(this.m_normals[b].Y+this.m_normals[a].Y)*c)))};d.ClipperOffset.prototype.DoRound=function(a,b){for(var c=Math.max(d.Cast_Int32(d.ClipperOffset.Round(this.m_StepsPerRad*Math.abs(Math.atan2(this.m_sinA,this.m_normals[b].X*this.m_normals[a].X+this.m_normals[b].Y*this.m_normals[a].Y)))),
+1),e=this.m_normals[b].X,f=this.m_normals[b].Y,g,h=0;h<c;++h)this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+e*this.m_delta),d.ClipperOffset.Round(this.m_srcPoly[a].Y+f*this.m_delta))),g=e,e=e*this.m_cos-this.m_sin*f,f=g*this.m_sin+f*this.m_cos;this.m_destPoly.push(new d.IntPoint(d.ClipperOffset.Round(this.m_srcPoly[a].X+this.m_normals[a].X*this.m_delta),d.ClipperOffset.Round(this.m_srcPoly[a].Y+this.m_normals[a].Y*this.m_delta)))};d.Error=function(a){try{throw Error(a);
+}catch(b){alert(b.message)}};d.JS={};d.JS.AreaOfPolygon=function(a,b){b||(b=1);return d.Clipper.Area(a)/(b*b)};d.JS.AreaOfPolygons=function(a,b){b||(b=1);for(var c=0,e=0;e<a.length;e++)c+=d.Clipper.Area(a[e]);return c/(b*b)};d.JS.BoundsOfPath=function(a,b){return d.JS.BoundsOfPaths([a],b)};d.JS.BoundsOfPaths=function(a,b){b||(b=1);var c=d.Clipper.GetBounds(a);c.left/=b;c.bottom/=b;c.right/=b;c.top/=b;return c};d.JS.Clean=function(a,b){if(!(a instanceof Array))return[];var c=a[0]instanceof Array;a=
+d.JS.Clone(a);if("number"!=typeof b||null===b)return d.Error("Delta is not a number in Clean()."),a;if(0===a.length||1==a.length&&0===a[0].length||0>b)return a;c||(a=[a]);for(var e=a.length,f,g,h,k,v,n,p,m=[],q=0;q<e;q++)if(g=a[q],f=g.length,0!==f)if(3>f)h=g,m.push(h);else{h=g;k=b*b;v=g[0];for(p=n=1;p<f;p++)(g[p].X-v.X)*(g[p].X-v.X)+(g[p].Y-v.Y)*(g[p].Y-v.Y)<=k||(h[n]=g[p],v=g[p],n++);v=g[n-1];(g[0].X-v.X)*(g[0].X-v.X)+(g[0].Y-v.Y)*(g[0].Y-v.Y)<=k&&n--;n<f&&h.splice(n,f-n);h.length&&m.push(h)}!c&&
+m.length?m=m[0]:c||0!==m.length?c&&0===m.length&&(m=[[]]):m=[];return m};d.JS.Clone=function(a){if(!(a instanceof Array)||0===a.length)return[];if(1==a.length&&0===a[0].length)return[[]];var b=a[0]instanceof Array;b||(a=[a]);var c=a.length,d,f,g,h,k=Array(c);for(f=0;f<c;f++){d=a[f].length;h=Array(d);for(g=0;g<d;g++)h[g]={X:a[f][g].X,Y:a[f][g].Y};k[f]=h}b||(k=k[0]);return k};d.JS.Lighten=function(a,b){if(!(a instanceof Array))return[];if("number"!=typeof b||null===b)return d.Error("Tolerance is not a number in Lighten()."),
+d.JS.Clone(a);if(0===a.length||1==a.length&&0===a[0].length||0>b)return d.JS.Clone(a);a[0]instanceof Array||(a=[a]);var c,e,f,g,h,k,m,n,p,q,r,t,u,w,x,A=a.length,B=b*b,z=[];for(c=0;c<A;c++)if(f=a[c],k=f.length,0!=k){for(g=0;1E6>g;g++){h=[];k=f.length;f[k-1].X!=f[0].X||f[k-1].Y!=f[0].Y?(r=1,f.push({X:f[0].X,Y:f[0].Y}),k=f.length):r=0;q=[];for(e=0;e<k-2;e++){m=f[e];p=f[e+1];n=f[e+2];w=m.X;x=m.Y;m=n.X-w;t=n.Y-x;if(0!==m||0!==t)u=((p.X-w)*m+(p.Y-x)*t)/(m*m+t*t),1<u?(w=n.X,x=n.Y):0<u&&(w+=m*u,x+=t*u);m=
+p.X-w;t=p.Y-x;n=m*m+t*t;n<=B&&(q[e+1]=1,e++)}h.push({X:f[0].X,Y:f[0].Y});for(e=1;e<k-1;e++)q[e]||h.push({X:f[e].X,Y:f[e].Y});h.push({X:f[k-1].X,Y:f[k-1].Y});r&&f.pop();if(q.length)f=h;else break}k=h.length;h[k-1].X==h[0].X&&h[k-1].Y==h[0].Y&&h.pop();2<h.length&&z.push(h)}a[0]instanceof Array||(z=z[0]);"undefined"==typeof z&&(z=[[]]);return z};d.JS.PerimeterOfPath=function(a,b,c){if("undefined"==typeof a)return 0;var d=Math.sqrt,f=0,g,h,k,m,n=a.length;if(2>n)return 0;b&&(a[n]=a[0],n++);for(;--n;)g=
+a[n],k=g.X,g=g.Y,h=a[n-1],m=h.X,h=h.Y,f+=d((k-m)*(k-m)+(g-h)*(g-h));b&&a.pop();return f/c};d.JS.PerimeterOfPaths=function(a,b,c){c||(c=1);for(var e=0,f=0;f<a.length;f++)e+=d.JS.PerimeterOfPath(a[f],b,c);return e};d.JS.ScaleDownPath=function(a,b){var c,d;b||(b=1);for(c=a.length;c--;)d=a[c],d.X/=b,d.Y/=b};d.JS.ScaleDownPaths=function(a,b){var c,d,f;b||(b=1);for(c=a.length;c--;)for(d=a[c].length;d--;)f=a[c][d],f.X/=b,f.Y/=b};d.JS.ScaleUpPath=function(a,b){var c,d,f=Math.round;b||(b=1);for(c=a.length;c--;)d=
+a[c],d.X=f(d.X*b),d.Y=f(d.Y*b)};d.JS.ScaleUpPaths=function(a,b){var c,d,f,g=Math.round;b||(b=1);for(c=a.length;c--;)for(d=a[c].length;d--;)f=a[c][d],f.X=g(f.X*b),f.Y=g(f.Y*b)};d.ExPolygons=function(){return[]};d.ExPolygon=function(){this.holes=this.outer=null};d.JS.AddOuterPolyNodeToExPolygons=function(a,b){var c=new d.ExPolygon;c.outer=a.Contour();var e=a.Childs(),f=e.length;c.holes=Array(f);var g,h,k,m,n;for(h=0;h<f;h++)for(g=e[h],c.holes[h]=g.Contour(),k=0,m=g.Childs(),n=m.length;k<n;k++)g=m[k],
+d.JS.AddOuterPolyNodeToExPolygons(g,b);b.push(c)};d.JS.ExPolygonsToPaths=function(a){var b,c,e,f,g=new d.Paths;b=0;for(e=a.length;b<e;b++)for(g.push(a[b].outer),c=0,f=a[b].holes.length;c<f;c++)g.push(a[b].holes[c]);return g};d.JS.PolyTreeToExPolygons=function(a){var b=new d.ExPolygons,c,e,f;c=0;e=a.Childs();for(f=e.length;c<f;c++)a=e[c],d.JS.AddOuterPolyNodeToExPolygons(a,b);return b}})();
+/*!
+  * https://github.com/paulmillr/es6-shim
+  * @license es6-shim Copyright 2013-2016 by Paul Miller (http://paulmillr.com)
+  *   and contributors,  MIT License
+  * es6-shim: v0.35.1
+  * see https://github.com/paulmillr/es6-shim/blob/0.35.1/LICENSE
+  * Details and documentation:
+  * https://github.com/paulmillr/es6-shim/
+  */
+(function(e,t){if(typeof define==="function"&&define.amd){define(t)}else if(typeof exports==="object"){module.exports=t()}else{e.returnExports=t()}})(this,function(){"use strict";var e=Function.call.bind(Function.apply);var t=Function.call.bind(Function.call);var r=Array.isArray;var n=Object.keys;var o=function notThunker(t){return function notThunk(){return!e(t,this,arguments)}};var i=function(e){try{e();return false}catch(e){return true}};var a=function valueOrFalseIfThrows(e){try{return e()}catch(e){return false}};var u=o(i);var f=function(){return!i(function(){Object.defineProperty({},"x",{get:function(){}})})};var s=!!Object.defineProperty&&f();var c=function foo(){}.name==="foo";var l=Function.call.bind(Array.prototype.forEach);var p=Function.call.bind(Array.prototype.reduce);var v=Function.call.bind(Array.prototype.filter);var y=Function.call.bind(Array.prototype.some);var h=function(e,t,r,n){if(!n&&t in e){return}if(s){Object.defineProperty(e,t,{configurable:true,enumerable:false,writable:true,value:r})}else{e[t]=r}};var b=function(e,t,r){l(n(t),function(n){var o=t[n];h(e,n,o,!!r)})};var g=Function.call.bind(Object.prototype.toString);var d=typeof/abc/==="function"?function IsCallableSlow(e){return typeof e==="function"&&g(e)==="[object Function]"}:function IsCallableFast(e){return typeof e==="function"};var m={getter:function(e,t,r){if(!s){throw new TypeError("getters require true ES5 support")}Object.defineProperty(e,t,{configurable:true,enumerable:false,get:r})},proxy:function(e,t,r){if(!s){throw new TypeError("getters require true ES5 support")}var n=Object.getOwnPropertyDescriptor(e,t);Object.defineProperty(r,t,{configurable:n.configurable,enumerable:n.enumerable,get:function getKey(){return e[t]},set:function setKey(r){e[t]=r}})},redefine:function(e,t,r){if(s){var n=Object.getOwnPropertyDescriptor(e,t);n.value=r;Object.defineProperty(e,t,n)}else{e[t]=r}},defineByDescriptor:function(e,t,r){if(s){Object.defineProperty(e,t,r)}else if("value"in r){e[t]=r.value}},preserveToString:function(e,t){if(t&&d(t.toString)){h(e,"toString",t.toString.bind(t),true)}}};var O=Object.create||function(e,t){var r=function Prototype(){};r.prototype=e;var o=new r;if(typeof t!=="undefined"){n(t).forEach(function(e){m.defineByDescriptor(o,e,t[e])})}return o};var w=function(e,t){if(!Object.setPrototypeOf){return false}return a(function(){var r=function Subclass(t){var r=new e(t);Object.setPrototypeOf(r,Subclass.prototype);return r};Object.setPrototypeOf(r,e);r.prototype=O(e.prototype,{constructor:{value:r}});return t(r)})};var j=function(){if(typeof self!=="undefined"){return self}if(typeof window!=="undefined"){return window}if(typeof global!=="undefined"){return global}throw new Error("unable to locate global object")};var S=j();var T=S.isFinite;var I=Function.call.bind(String.prototype.indexOf);var E=Function.apply.bind(Array.prototype.indexOf);var P=Function.call.bind(Array.prototype.concat);var C=Function.call.bind(String.prototype.slice);var M=Function.call.bind(Array.prototype.push);var x=Function.apply.bind(Array.prototype.push);var N=Function.call.bind(Array.prototype.shift);var A=Math.max;var R=Math.min;var _=Math.floor;var k=Math.abs;var F=Math.exp;var L=Math.log;var D=Math.sqrt;var z=Function.call.bind(Object.prototype.hasOwnProperty);var q;var W=function(){};var G=S.Map;var H=G&&G.prototype["delete"];var V=G&&G.prototype.get;var B=G&&G.prototype.has;var U=G&&G.prototype.set;var $=S.Symbol||{};var J=$.species||"@@species";var X=Number.isNaN||function isNaN(e){return e!==e};var K=Number.isFinite||function isFinite(e){return typeof e==="number"&&T(e)};var Z=d(Math.sign)?Math.sign:function sign(e){var t=Number(e);if(t===0){return t}if(X(t)){return t}return t<0?-1:1};var Y=function isArguments(e){return g(e)==="[object Arguments]"};var Q=function isArguments(e){return e!==null&&typeof e==="object"&&typeof e.length==="number"&&e.length>=0&&g(e)!=="[object Array]"&&g(e.callee)==="[object Function]"};var ee=Y(arguments)?Y:Q;var te={primitive:function(e){return e===null||typeof e!=="function"&&typeof e!=="object"},string:function(e){return g(e)==="[object String]"},regex:function(e){return g(e)==="[object RegExp]"},symbol:function(e){return typeof S.Symbol==="function"&&typeof e==="symbol"}};var re=function overrideNative(e,t,r){var n=e[t];h(e,t,r,true);m.preserveToString(e[t],n)};var ne=typeof $==="function"&&typeof $["for"]==="function"&&te.symbol($());var oe=te.symbol($.iterator)?$.iterator:"_es6-shim iterator_";if(S.Set&&typeof(new S.Set)["@@iterator"]==="function"){oe="@@iterator"}if(!S.Reflect){h(S,"Reflect",{},true)}var ie=S.Reflect;var ae=String;var ue=typeof document==="undefined"||!document?null:document.all;var fe=ue==null?function isNullOrUndefined(e){return e==null}:function isNullOrUndefinedAndNotDocumentAll(e){return e==null&&e!==ue};var se={Call:function Call(t,r){var n=arguments.length>2?arguments[2]:[];if(!se.IsCallable(t)){throw new TypeError(t+" is not a function")}return e(t,r,n)},RequireObjectCoercible:function(e,t){if(fe(e)){throw new TypeError(t||"Cannot call method on "+e)}return e},TypeIsObject:function(e){if(e===void 0||e===null||e===true||e===false){return false}return typeof e==="function"||typeof e==="object"||e===ue},ToObject:function(e,t){return Object(se.RequireObjectCoercible(e,t))},IsCallable:d,IsConstructor:function(e){return se.IsCallable(e)},ToInt32:function(e){return se.ToNumber(e)>>0},ToUint32:function(e){return se.ToNumber(e)>>>0},ToNumber:function(e){if(g(e)==="[object Symbol]"){throw new TypeError("Cannot convert a Symbol value to a number")}return+e},ToInteger:function(e){var t=se.ToNumber(e);if(X(t)){return 0}if(t===0||!K(t)){return t}return(t>0?1:-1)*_(k(t))},ToLength:function(e){var t=se.ToInteger(e);if(t<=0){return 0}if(t>Number.MAX_SAFE_INTEGER){return Number.MAX_SAFE_INTEGER}return t},SameValue:function(e,t){if(e===t){if(e===0){return 1/e===1/t}return true}return X(e)&&X(t)},SameValueZero:function(e,t){return e===t||X(e)&&X(t)},IsIterable:function(e){return se.TypeIsObject(e)&&(typeof e[oe]!=="undefined"||ee(e))},GetIterator:function(e){if(ee(e)){return new q(e,"value")}var t=se.GetMethod(e,oe);if(!se.IsCallable(t)){throw new TypeError("value is not an iterable")}var r=se.Call(t,e);if(!se.TypeIsObject(r)){throw new TypeError("bad iterator")}return r},GetMethod:function(e,t){var r=se.ToObject(e)[t];if(fe(r)){return void 0}if(!se.IsCallable(r)){throw new TypeError("Method not callable: "+t)}return r},IteratorComplete:function(e){return!!e.done},IteratorClose:function(e,t){var r=se.GetMethod(e,"return");if(r===void 0){return}var n,o;try{n=se.Call(r,e)}catch(e){o=e}if(t){return}if(o){throw o}if(!se.TypeIsObject(n)){throw new TypeError("Iterator's return method returned a non-object.")}},IteratorNext:function(e){var t=arguments.length>1?e.next(arguments[1]):e.next();if(!se.TypeIsObject(t)){throw new TypeError("bad iterator")}return t},IteratorStep:function(e){var t=se.IteratorNext(e);var r=se.IteratorComplete(t);return r?false:t},Construct:function(e,t,r,n){var o=typeof r==="undefined"?e:r;if(!n&&ie.construct){return ie.construct(e,t,o)}var i=o.prototype;if(!se.TypeIsObject(i)){i=Object.prototype}var a=O(i);var u=se.Call(e,a,t);return se.TypeIsObject(u)?u:a},SpeciesConstructor:function(e,t){var r=e.constructor;if(r===void 0){return t}if(!se.TypeIsObject(r)){throw new TypeError("Bad constructor")}var n=r[J];if(fe(n)){return t}if(!se.IsConstructor(n)){throw new TypeError("Bad @@species")}return n},CreateHTML:function(e,t,r,n){var o=se.ToString(e);var i="<"+t;if(r!==""){var a=se.ToString(n);var u=a.replace(/"/g,"&quot;");i+=" "+r+'="'+u+'"'}var f=i+">";var s=f+o;return s+"</"+t+">"},IsRegExp:function IsRegExp(e){if(!se.TypeIsObject(e)){return false}var t=e[$.match];if(typeof t!=="undefined"){return!!t}return te.regex(e)},ToString:function ToString(e){return ae(e)}};if(s&&ne){var ce=function defineWellKnownSymbol(e){if(te.symbol($[e])){return $[e]}var t=$["for"]("Symbol."+e);Object.defineProperty($,e,{configurable:false,enumerable:false,writable:false,value:t});return t};if(!te.symbol($.search)){var le=ce("search");var pe=String.prototype.search;h(RegExp.prototype,le,function search(e){return se.Call(pe,e,[this])});var ve=function search(e){var t=se.RequireObjectCoercible(this);if(!fe(e)){var r=se.GetMethod(e,le);if(typeof r!=="undefined"){return se.Call(r,e,[t])}}return se.Call(pe,t,[se.ToString(e)])};re(String.prototype,"search",ve)}if(!te.symbol($.replace)){var ye=ce("replace");var he=String.prototype.replace;h(RegExp.prototype,ye,function replace(e,t){return se.Call(he,e,[this,t])});var be=function replace(e,t){var r=se.RequireObjectCoercible(this);if(!fe(e)){var n=se.GetMethod(e,ye);if(typeof n!=="undefined"){return se.Call(n,e,[r,t])}}return se.Call(he,r,[se.ToString(e),t])};re(String.prototype,"replace",be)}if(!te.symbol($.split)){var ge=ce("split");var de=String.prototype.split;h(RegExp.prototype,ge,function split(e,t){return se.Call(de,e,[this,t])});var me=function split(e,t){var r=se.RequireObjectCoercible(this);if(!fe(e)){var n=se.GetMethod(e,ge);if(typeof n!=="undefined"){return se.Call(n,e,[r,t])}}return se.Call(de,r,[se.ToString(e),t])};re(String.prototype,"split",me)}var Oe=te.symbol($.match);var we=Oe&&function(){var e={};e[$.match]=function(){return 42};return"a".match(e)!==42}();if(!Oe||we){var je=ce("match");var Se=String.prototype.match;h(RegExp.prototype,je,function match(e){return se.Call(Se,e,[this])});var Te=function match(e){var t=se.RequireObjectCoercible(this);if(!fe(e)){var r=se.GetMethod(e,je);if(typeof r!=="undefined"){return se.Call(r,e,[t])}}return se.Call(Se,t,[se.ToString(e)])};re(String.prototype,"match",Te)}}var Ie=function wrapConstructor(e,t,r){m.preserveToString(t,e);if(Object.setPrototypeOf){Object.setPrototypeOf(e,t)}if(s){l(Object.getOwnPropertyNames(e),function(n){if(n in W||r[n]){return}m.proxy(e,n,t)})}else{l(Object.keys(e),function(n){if(n in W||r[n]){return}t[n]=e[n]})}t.prototype=e.prototype;m.redefine(e.prototype,"constructor",t)};var Ee=function(){return this};var Pe=function(e){if(s&&!z(e,J)){m.getter(e,J,Ee)}};var Ce=function(e,t){var r=t||function iterator(){return this};h(e,oe,r);if(!e[oe]&&te.symbol(oe)){e[oe]=r}};var Me=function createDataProperty(e,t,r){if(s){Object.defineProperty(e,t,{configurable:true,enumerable:true,writable:true,value:r})}else{e[t]=r}};var xe=function createDataPropertyOrThrow(e,t,r){Me(e,t,r);if(!se.SameValue(e[t],r)){throw new TypeError("property is nonconfigurable")}};var Ne=function(e,t,r,n){if(!se.TypeIsObject(e)){throw new TypeError("Constructor requires `new`: "+t.name)}var o=t.prototype;if(!se.TypeIsObject(o)){o=r}var i=O(o);for(var a in n){if(z(n,a)){var u=n[a];h(i,a,u,true)}}return i};if(String.fromCodePoint&&String.fromCodePoint.length!==1){var Ae=String.fromCodePoint;re(String,"fromCodePoint",function fromCodePoint(e){return se.Call(Ae,this,arguments)})}var Re={fromCodePoint:function fromCodePoint(e){var t=[];var r;for(var n=0,o=arguments.length;n<o;n++){r=Number(arguments[n]);if(!se.SameValue(r,se.ToInteger(r))||r<0||r>1114111){throw new RangeError("Invalid code point "+r)}if(r<65536){M(t,String.fromCharCode(r))}else{r-=65536;M(t,String.fromCharCode((r>>10)+55296));M(t,String.fromCharCode(r%1024+56320))}}return t.join("")},raw:function raw(e){var t=se.ToObject(e,"bad callSite");var r=se.ToObject(t.raw,"bad raw value");var n=r.length;var o=se.ToLength(n);if(o<=0){return""}var i=[];var a=0;var u,f,s,c;while(a<o){u=se.ToString(a);s=se.ToString(r[u]);M(i,s);if(a+1>=o){break}f=a+1<arguments.length?arguments[a+1]:"";c=se.ToString(f);M(i,c);a+=1}return i.join("")}};if(String.raw&&String.raw({raw:{0:"x",1:"y",length:2}})!=="xy"){re(String,"raw",Re.raw)}b(String,Re);var _e=function repeat(e,t){if(t<1){return""}if(t%2){return repeat(e,t-1)+e}var r=repeat(e,t/2);return r+r};var ke=Infinity;var Fe={repeat:function repeat(e){var t=se.ToString(se.RequireObjectCoercible(this));var r=se.ToInteger(e);if(r<0||r>=ke){throw new RangeError("repeat count must be less than infinity and not overflow maximum string size")}return _e(t,r)},startsWith:function startsWith(e){var t=se.ToString(se.RequireObjectCoercible(this));if(se.IsRegExp(e)){throw new TypeError('Cannot call method "startsWith" with a regex')}var r=se.ToString(e);var n;if(arguments.length>1){n=arguments[1]}var o=A(se.ToInteger(n),0);return C(t,o,o+r.length)===r},endsWith:function endsWith(e){var t=se.ToString(se.RequireObjectCoercible(this));if(se.IsRegExp(e)){throw new TypeError('Cannot call method "endsWith" with a regex')}var r=se.ToString(e);var n=t.length;var o;if(arguments.length>1){o=arguments[1]}var i=typeof o==="undefined"?n:se.ToInteger(o);var a=R(A(i,0),n);return C(t,a-r.length,a)===r},includes:function includes(e){if(se.IsRegExp(e)){throw new TypeError('"includes" does not accept a RegExp')}var t=se.ToString(e);var r;if(arguments.length>1){r=arguments[1]}return I(this,t,r)!==-1},codePointAt:function codePointAt(e){var t=se.ToString(se.RequireObjectCoercible(this));var r=se.ToInteger(e);var n=t.length;if(r>=0&&r<n){var o=t.charCodeAt(r);var i=r+1===n;if(o<55296||o>56319||i){return o}var a=t.charCodeAt(r+1);if(a<56320||a>57343){return o}return(o-55296)*1024+(a-56320)+65536}}};if(String.prototype.includes&&"a".includes("a",Infinity)!==false){re(String.prototype,"includes",Fe.includes)}if(String.prototype.startsWith&&String.prototype.endsWith){var Le=i(function(){"/a/".startsWith(/a/)});var De=a(function(){return"abc".startsWith("a",Infinity)===false});if(!Le||!De){re(String.prototype,"startsWith",Fe.startsWith);re(String.prototype,"endsWith",Fe.endsWith)}}if(ne){var ze=a(function(){var e=/a/;e[$.match]=false;return"/a/".startsWith(e)});if(!ze){re(String.prototype,"startsWith",Fe.startsWith)}var qe=a(function(){var e=/a/;e[$.match]=false;return"/a/".endsWith(e)});if(!qe){re(String.prototype,"endsWith",Fe.endsWith)}var We=a(function(){var e=/a/;e[$.match]=false;return"/a/".includes(e)});if(!We){re(String.prototype,"includes",Fe.includes)}}b(String.prototype,Fe);var Ge=["\t\n\v\f\r \xa0\u1680\u180e\u2000\u2001\u2002\u2003","\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028","\u2029\ufeff"].join("");var He=new RegExp("(^["+Ge+"]+)|(["+Ge+"]+$)","g");var Ve=function trim(){return se.ToString(se.RequireObjectCoercible(this)).replace(He,"")};var Be=["\x85","\u200b","\ufffe"].join("");var Ue=new RegExp("["+Be+"]","g");var $e=/^[-+]0x[0-9a-f]+$/i;var Je=Be.trim().length!==Be.length;h(String.prototype,"trim",Ve,Je);var Xe=function(e){return{value:e,done:arguments.length===0}};var Ke=function(e){se.RequireObjectCoercible(e);this._s=se.ToString(e);this._i=0};Ke.prototype.next=function(){var e=this._s;var t=this._i;if(typeof e==="undefined"||t>=e.length){this._s=void 0;return Xe()}var r=e.charCodeAt(t);var n,o;if(r<55296||r>56319||t+1===e.length){o=1}else{n=e.charCodeAt(t+1);o=n<56320||n>57343?1:2}this._i=t+o;return Xe(e.substr(t,o))};Ce(Ke.prototype);Ce(String.prototype,function(){return new Ke(this)});var Ze={from:function from(e){var r=this;var n;if(arguments.length>1){n=arguments[1]}var o,i;if(typeof n==="undefined"){o=false}else{if(!se.IsCallable(n)){throw new TypeError("Array.from: when provided, the second argument must be a function")}if(arguments.length>2){i=arguments[2]}o=true}var a=typeof(ee(e)||se.GetMethod(e,oe))!=="undefined";var u,f,s;if(a){f=se.IsConstructor(r)?Object(new r):[];var c=se.GetIterator(e);var l,p;s=0;while(true){l=se.IteratorStep(c);if(l===false){break}p=l.value;try{if(o){p=typeof i==="undefined"?n(p,s):t(n,i,p,s)}f[s]=p}catch(e){se.IteratorClose(c,true);throw e}s+=1}u=s}else{var v=se.ToObject(e);u=se.ToLength(v.length);f=se.IsConstructor(r)?Object(new r(u)):new Array(u);var y;for(s=0;s<u;++s){y=v[s];if(o){y=typeof i==="undefined"?n(y,s):t(n,i,y,s)}xe(f,s,y)}}f.length=u;return f},of:function of(){var e=arguments.length;var t=this;var n=r(t)||!se.IsCallable(t)?new Array(e):se.Construct(t,[e]);for(var o=0;o<e;++o){xe(n,o,arguments[o])}n.length=e;return n}};b(Array,Ze);Pe(Array);q=function(e,t){this.i=0;this.array=e;this.kind=t};b(q.prototype,{next:function(){var e=this.i;var t=this.array;if(!(this instanceof q)){throw new TypeError("Not an ArrayIterator")}if(typeof t!=="undefined"){var r=se.ToLength(t.length);for(;e<r;e++){var n=this.kind;var o;if(n==="key"){o=e}else if(n==="value"){o=t[e]}else if(n==="entry"){o=[e,t[e]]}this.i=e+1;return Xe(o)}}this.array=void 0;return Xe()}});Ce(q.prototype);var Ye=Array.of===Ze.of||function(){var e=function Foo(e){this.length=e};e.prototype=[];var t=Array.of.apply(e,[1,2]);return t instanceof e&&t.length===2}();if(!Ye){re(Array,"of",Ze.of)}var Qe={copyWithin:function copyWithin(e,t){var r=se.ToObject(this);var n=se.ToLength(r.length);var o=se.ToInteger(e);var i=se.ToInteger(t);var a=o<0?A(n+o,0):R(o,n);var u=i<0?A(n+i,0):R(i,n);var f;if(arguments.length>2){f=arguments[2]}var s=typeof f==="undefined"?n:se.ToInteger(f);var c=s<0?A(n+s,0):R(s,n);var l=R(c-u,n-a);var p=1;if(u<a&&a<u+l){p=-1;u+=l-1;a+=l-1}while(l>0){if(u in r){r[a]=r[u]}else{delete r[a]}u+=p;a+=p;l-=1}return r},fill:function fill(e){var t;if(arguments.length>1){t=arguments[1]}var r;if(arguments.length>2){r=arguments[2]}var n=se.ToObject(this);var o=se.ToLength(n.length);t=se.ToInteger(typeof t==="undefined"?0:t);r=se.ToInteger(typeof r==="undefined"?o:r);var i=t<0?A(o+t,0):R(t,o);var a=r<0?o+r:r;for(var u=i;u<o&&u<a;++u){n[u]=e}return n},find:function find(e){var r=se.ToObject(this);var n=se.ToLength(r.length);if(!se.IsCallable(e)){throw new TypeError("Array#find: predicate must be a function")}var o=arguments.length>1?arguments[1]:null;for(var i=0,a;i<n;i++){a=r[i];if(o){if(t(e,o,a,i,r)){return a}}else if(e(a,i,r)){return a}}},findIndex:function findIndex(e){var r=se.ToObject(this);var n=se.ToLength(r.length);if(!se.IsCallable(e)){throw new TypeError("Array#findIndex: predicate must be a function")}var o=arguments.length>1?arguments[1]:null;for(var i=0;i<n;i++){if(o){if(t(e,o,r[i],i,r)){return i}}else if(e(r[i],i,r)){return i}}return-1},keys:function keys(){return new q(this,"key")},values:function values(){return new q(this,"value")},entries:function entries(){return new q(this,"entry")}};if(Array.prototype.keys&&!se.IsCallable([1].keys().next)){delete Array.prototype.keys}if(Array.prototype.entries&&!se.IsCallable([1].entries().next)){delete Array.prototype.entries}if(Array.prototype.keys&&Array.prototype.entries&&!Array.prototype.values&&Array.prototype[oe]){b(Array.prototype,{values:Array.prototype[oe]});if(te.symbol($.unscopables)){Array.prototype[$.unscopables].values=true}}if(c&&Array.prototype.values&&Array.prototype.values.name!=="values"){var et=Array.prototype.values;re(Array.prototype,"values",function values(){return se.Call(et,this,arguments)});h(Array.prototype,oe,Array.prototype.values,true)}b(Array.prototype,Qe);if(1/[true].indexOf(true,-0)<0){h(Array.prototype,"indexOf",function indexOf(e){var t=E(this,arguments);if(t===0&&1/t<0){return 0}return t},true)}Ce(Array.prototype,function(){return this.values()});if(Object.getPrototypeOf){Ce(Object.getPrototypeOf([].values()))}var tt=function(){return a(function(){return Array.from({length:-1}).length===0})}();var rt=function(){var e=Array.from([0].entries());return e.length===1&&r(e[0])&&e[0][0]===0&&e[0][1]===0}();if(!tt||!rt){re(Array,"from",Ze.from)}var nt=function(){return a(function(){return Array.from([0],void 0)})}();if(!nt){var ot=Array.from;re(Array,"from",function from(e){if(arguments.length>1&&typeof arguments[1]!=="undefined"){return se.Call(ot,this,arguments)}else{return t(ot,this,e)}})}var it=-(Math.pow(2,32)-1);var at=function(e,r){var n={length:it};n[r?(n.length>>>0)-1:0]=true;return a(function(){t(e,n,function(){throw new RangeError("should not reach here")},[]);return true})};if(!at(Array.prototype.forEach)){var ut=Array.prototype.forEach;re(Array.prototype,"forEach",function forEach(e){return se.Call(ut,this.length>=0?this:[],arguments)},true)}if(!at(Array.prototype.map)){var ft=Array.prototype.map;re(Array.prototype,"map",function map(e){return se.Call(ft,this.length>=0?this:[],arguments)},true)}if(!at(Array.prototype.filter)){var st=Array.prototype.filter;re(Array.prototype,"filter",function filter(e){return se.Call(st,this.length>=0?this:[],arguments)},true)}if(!at(Array.prototype.some)){var ct=Array.prototype.some;re(Array.prototype,"some",function some(e){return se.Call(ct,this.length>=0?this:[],arguments)},true)}if(!at(Array.prototype.every)){var lt=Array.prototype.every;re(Array.prototype,"every",function every(e){return se.Call(lt,this.length>=0?this:[],arguments)},true)}if(!at(Array.prototype.reduce)){var pt=Array.prototype.reduce;re(Array.prototype,"reduce",function reduce(e){return se.Call(pt,this.length>=0?this:[],arguments)},true)}if(!at(Array.prototype.reduceRight,true)){var vt=Array.prototype.reduceRight;re(Array.prototype,"reduceRight",function reduceRight(e){return se.Call(vt,this.length>=0?this:[],arguments)},true)}var yt=Number("0o10")!==8;var ht=Number("0b10")!==2;var bt=y(Be,function(e){return Number(e+0+e)===0});if(yt||ht||bt){var gt=Number;var dt=/^0b[01]+$/i;var mt=/^0o[0-7]+$/i;var Ot=dt.test.bind(dt);var wt=mt.test.bind(mt);var jt=function(e){var t;if(typeof e.valueOf==="function"){t=e.valueOf();if(te.primitive(t)){return t}}if(typeof e.toString==="function"){t=e.toString();if(te.primitive(t)){return t}}throw new TypeError("No default value")};var St=Ue.test.bind(Ue);var Tt=$e.test.bind($e);var It=function(){var e=function Number(t){var r;if(arguments.length>0){r=te.primitive(t)?t:jt(t,"number")}else{r=0}if(typeof r==="string"){r=se.Call(Ve,r);if(Ot(r)){r=parseInt(C(r,2),2)}else if(wt(r)){r=parseInt(C(r,2),8)}else if(St(r)||Tt(r)){r=NaN}}var n=this;var o=a(function(){gt.prototype.valueOf.call(n);return true});if(n instanceof e&&!o){return new gt(r)}return gt(r)};return e}();Ie(gt,It,{});b(It,{NaN:gt.NaN,MAX_VALUE:gt.MAX_VALUE,MIN_VALUE:gt.MIN_VALUE,NEGATIVE_INFINITY:gt.NEGATIVE_INFINITY,POSITIVE_INFINITY:gt.POSITIVE_INFINITY});Number=It;m.redefine(S,"Number",It)}var Et=Math.pow(2,53)-1;b(Number,{MAX_SAFE_INTEGER:Et,MIN_SAFE_INTEGER:-Et,EPSILON:2.220446049250313e-16,parseInt:S.parseInt,parseFloat:S.parseFloat,isFinite:K,isInteger:function isInteger(e){return K(e)&&se.ToInteger(e)===e},isSafeInteger:function isSafeInteger(e){return Number.isInteger(e)&&k(e)<=Number.MAX_SAFE_INTEGER},isNaN:X});h(Number,"parseInt",S.parseInt,Number.parseInt!==S.parseInt);if([,1].find(function(){return true})===1){re(Array.prototype,"find",Qe.find)}if([,1].findIndex(function(){return true})!==0){re(Array.prototype,"findIndex",Qe.findIndex)}var Pt=Function.bind.call(Function.bind,Object.prototype.propertyIsEnumerable);var Ct=function ensureEnumerable(e,t){if(s&&Pt(e,t)){Object.defineProperty(e,t,{enumerable:false})}};var Mt=function sliceArgs(){var e=Number(this);var t=arguments.length;var r=t-e;var n=new Array(r<0?0:r);for(var o=e;o<t;++o){n[o-e]=arguments[o]}return n};var xt=function assignTo(e){return function assignToSource(t,r){t[r]=e[r];return t}};var Nt=function(e,t){var r=n(Object(t));var o;if(se.IsCallable(Object.getOwnPropertySymbols)){o=v(Object.getOwnPropertySymbols(Object(t)),Pt(t))}return p(P(r,o||[]),xt(t),e)};var At={assign:function(e,t){var r=se.ToObject(e,"Cannot convert undefined or null to object");return p(se.Call(Mt,1,arguments),Nt,r)},is:function is(e,t){return se.SameValue(e,t)}};var Rt=Object.assign&&Object.preventExtensions&&function(){var e=Object.preventExtensions({1:2});try{Object.assign(e,"xy")}catch(t){return e[1]==="y"}}();if(Rt){re(Object,"assign",At.assign)}b(Object,At);if(s){var _t={setPrototypeOf:function(e,r){var n;var o=function(e,t){if(!se.TypeIsObject(e)){throw new TypeError("cannot set prototype on a non-object")}if(!(t===null||se.TypeIsObject(t))){throw new TypeError("can only set prototype to an object or null"+t)}};var i=function(e,r){o(e,r);t(n,e,r);return e};try{n=e.getOwnPropertyDescriptor(e.prototype,r).set;t(n,{},null)}catch(t){if(e.prototype!=={}[r]){return}n=function(e){this[r]=e};i.polyfill=i(i({},null),e.prototype)instanceof e}return i}(Object,"__proto__")};b(Object,_t)}if(Object.setPrototypeOf&&Object.getPrototypeOf&&Object.getPrototypeOf(Object.setPrototypeOf({},null))!==null&&Object.getPrototypeOf(Object.create(null))===null){(function(){var e=Object.create(null);var t=Object.getPrototypeOf;var r=Object.setPrototypeOf;Object.getPrototypeOf=function(r){var n=t(r);return n===e?null:n};Object.setPrototypeOf=function(t,n){var o=n===null?e:n;return r(t,o)};Object.setPrototypeOf.polyfill=false})()}var kt=!i(function(){Object.keys("foo")});if(!kt){var Ft=Object.keys;re(Object,"keys",function keys(e){return Ft(se.ToObject(e))});n=Object.keys}var Lt=i(function(){Object.keys(/a/g)});if(Lt){var Dt=Object.keys;re(Object,"keys",function keys(e){if(te.regex(e)){var t=[];for(var r in e){if(z(e,r)){M(t,r)}}return t}return Dt(e)});n=Object.keys}if(Object.getOwnPropertyNames){var zt=!i(function(){Object.getOwnPropertyNames("foo")});if(!zt){var qt=typeof window==="object"?Object.getOwnPropertyNames(window):[];var Wt=Object.getOwnPropertyNames;re(Object,"getOwnPropertyNames",function getOwnPropertyNames(e){var t=se.ToObject(e);if(g(t)==="[object Window]"){try{return Wt(t)}catch(e){return P([],qt)}}return Wt(t)})}}if(Object.getOwnPropertyDescriptor){var Gt=!i(function(){Object.getOwnPropertyDescriptor("foo","bar")});if(!Gt){var Ht=Object.getOwnPropertyDescriptor;re(Object,"getOwnPropertyDescriptor",function getOwnPropertyDescriptor(e,t){return Ht(se.ToObject(e),t)})}}if(Object.seal){var Vt=!i(function(){Object.seal("foo")});if(!Vt){var Bt=Object.seal;re(Object,"seal",function seal(e){if(!se.TypeIsObject(e)){return e}return Bt(e)})}}if(Object.isSealed){var Ut=!i(function(){Object.isSealed("foo")});if(!Ut){var $t=Object.isSealed;re(Object,"isSealed",function isSealed(e){if(!se.TypeIsObject(e)){return true}return $t(e)})}}if(Object.freeze){var Jt=!i(function(){Object.freeze("foo")});if(!Jt){var Xt=Object.freeze;re(Object,"freeze",function freeze(e){if(!se.TypeIsObject(e)){return e}return Xt(e)})}}if(Object.isFrozen){var Kt=!i(function(){Object.isFrozen("foo")});if(!Kt){var Zt=Object.isFrozen;re(Object,"isFrozen",function isFrozen(e){if(!se.TypeIsObject(e)){return true}return Zt(e)})}}if(Object.preventExtensions){var Yt=!i(function(){Object.preventExtensions("foo")});if(!Yt){var Qt=Object.preventExtensions;re(Object,"preventExtensions",function preventExtensions(e){if(!se.TypeIsObject(e)){return e}return Qt(e)})}}if(Object.isExtensible){var er=!i(function(){Object.isExtensible("foo")});if(!er){var tr=Object.isExtensible;re(Object,"isExtensible",function isExtensible(e){if(!se.TypeIsObject(e)){return false}return tr(e)})}}if(Object.getPrototypeOf){var rr=!i(function(){Object.getPrototypeOf("foo")});if(!rr){var nr=Object.getPrototypeOf;re(Object,"getPrototypeOf",function getPrototypeOf(e){return nr(se.ToObject(e))})}}var or=s&&function(){var e=Object.getOwnPropertyDescriptor(RegExp.prototype,"flags");return e&&se.IsCallable(e.get)}();if(s&&!or){var ir=function flags(){if(!se.TypeIsObject(this)){throw new TypeError("Method called on incompatible type: must be an object.")}var e="";if(this.global){e+="g"}if(this.ignoreCase){e+="i"}if(this.multiline){e+="m"}if(this.unicode){e+="u"}if(this.sticky){e+="y"}return e};m.getter(RegExp.prototype,"flags",ir)}var ar=s&&a(function(){return String(new RegExp(/a/g,"i"))==="/a/i"});var ur=ne&&s&&function(){var e=/./;e[$.match]=false;return RegExp(e)===e}();var fr=a(function(){return RegExp.prototype.toString.call({source:"abc"})==="/abc/"});var sr=fr&&a(function(){return RegExp.prototype.toString.call({source:"a",flags:"b"})==="/a/b"});if(!fr||!sr){var cr=RegExp.prototype.toString;h(RegExp.prototype,"toString",function toString(){var e=se.RequireObjectCoercible(this);if(te.regex(e)){return t(cr,e)}var r=ae(e.source);var n=ae(e.flags);return"/"+r+"/"+n},true);m.preserveToString(RegExp.prototype.toString,cr)}if(s&&(!ar||ur)){var lr=Object.getOwnPropertyDescriptor(RegExp.prototype,"flags").get;var pr=Object.getOwnPropertyDescriptor(RegExp.prototype,"source")||{};var vr=function(){return this.source};var yr=se.IsCallable(pr.get)?pr.get:vr;var hr=RegExp;var br=function(){return function RegExp(e,t){var r=se.IsRegExp(e);var n=this instanceof RegExp;if(!n&&r&&typeof t==="undefined"&&e.constructor===RegExp){return e}var o=e;var i=t;if(te.regex(e)){o=se.Call(yr,e);i=typeof t==="undefined"?se.Call(lr,e):t;return new RegExp(o,i)}else if(r){o=e.source;i=typeof t==="undefined"?e.flags:t}return new hr(e,t)}}();Ie(hr,br,{$input:true});RegExp=br;m.redefine(S,"RegExp",br)}if(s){var gr={input:"$_",lastMatch:"$&",lastParen:"$+",leftContext:"$`",rightContext:"$'"};l(n(gr),function(e){if(e in RegExp&&!(gr[e]in RegExp)){m.getter(RegExp,gr[e],function get(){return RegExp[e]})}})}Pe(RegExp);var dr=1/Number.EPSILON;var mr=function roundTiesToEven(e){return e+dr-dr};var Or=Math.pow(2,-23);var wr=Math.pow(2,127)*(2-Or);var jr=Math.pow(2,-126);var Sr=Math.E;var Tr=Math.LOG2E;var Ir=Math.LOG10E;var Er=Number.prototype.clz;delete Number.prototype.clz;var Pr={acosh:function acosh(e){var t=Number(e);if(X(t)||e<1){return NaN}if(t===1){return 0}if(t===Infinity){return t}return L(t/Sr+D(t+1)*D(t-1)/Sr)+1},asinh:function asinh(e){var t=Number(e);if(t===0||!T(t)){return t}return t<0?-asinh(-t):L(t+D(t*t+1))},atanh:function atanh(e){var t=Number(e);if(X(t)||t<-1||t>1){return NaN}if(t===-1){return-Infinity}if(t===1){return Infinity}if(t===0){return t}return.5*L((1+t)/(1-t))},cbrt:function cbrt(e){var t=Number(e);if(t===0){return t}var r=t<0;var n;if(r){t=-t}if(t===Infinity){n=Infinity}else{n=F(L(t)/3);n=(t/(n*n)+2*n)/3}return r?-n:n},clz32:function clz32(e){var t=Number(e);var r=se.ToUint32(t);if(r===0){return 32}return Er?se.Call(Er,r):31-_(L(r+.5)*Tr)},cosh:function cosh(e){var t=Number(e);if(t===0){return 1}if(X(t)){return NaN}if(!T(t)){return Infinity}if(t<0){t=-t}if(t>21){return F(t)/2}return(F(t)+F(-t))/2},expm1:function expm1(e){var t=Number(e);if(t===-Infinity){return-1}if(!T(t)||t===0){return t}if(k(t)>.5){return F(t)-1}var r=t;var n=0;var o=1;while(n+r!==n){n+=r;o+=1;r*=t/o}return n},hypot:function hypot(e,t){var r=0;var n=0;for(var o=0;o<arguments.length;++o){var i=k(Number(arguments[o]));if(n<i){r*=n/i*(n/i);r+=1;n=i}else{r+=i>0?i/n*(i/n):i}}return n===Infinity?Infinity:n*D(r)},log2:function log2(e){return L(e)*Tr},log10:function log10(e){return L(e)*Ir},log1p:function log1p(e){var t=Number(e);if(t<-1||X(t)){return NaN}if(t===0||t===Infinity){return t}if(t===-1){return-Infinity}return 1+t-1===0?t:t*(L(1+t)/(1+t-1))},sign:Z,sinh:function sinh(e){var t=Number(e);if(!T(t)||t===0){return t}if(k(t)<1){return(Math.expm1(t)-Math.expm1(-t))/2}return(F(t-1)-F(-t-1))*Sr/2},tanh:function tanh(e){var t=Number(e);if(X(t)||t===0){return t}if(t>=20){return 1}if(t<=-20){return-1}return(Math.expm1(t)-Math.expm1(-t))/(F(t)+F(-t))},trunc:function trunc(e){var t=Number(e);return t<0?-_(-t):_(t)},imul:function imul(e,t){var r=se.ToUint32(e);var n=se.ToUint32(t);var o=r>>>16&65535;var i=r&65535;var a=n>>>16&65535;var u=n&65535;return i*u+(o*u+i*a<<16>>>0)|0},fround:function fround(e){var t=Number(e);if(t===0||t===Infinity||t===-Infinity||X(t)){return t}var r=Z(t);var n=k(t);if(n<jr){return r*mr(n/jr/Or)*jr*Or}var o=(1+Or/Number.EPSILON)*n;var i=o-(o-n);if(i>wr||X(i)){return r*Infinity}return r*i}};b(Math,Pr);h(Math,"log1p",Pr.log1p,Math.log1p(-1e-17)!==-1e-17);h(Math,"asinh",Pr.asinh,Math.asinh(-1e7)!==-Math.asinh(1e7));h(Math,"tanh",Pr.tanh,Math.tanh(-2e-17)!==-2e-17);h(Math,"acosh",Pr.acosh,Math.acosh(Number.MAX_VALUE)===Infinity);h(Math,"cbrt",Pr.cbrt,Math.abs(1-Math.cbrt(1e-300)/1e-100)/Number.EPSILON>8);h(Math,"sinh",Pr.sinh,Math.sinh(-2e-17)!==-2e-17);var Cr=Math.expm1(10);h(Math,"expm1",Pr.expm1,Cr>22025.465794806718||Cr<22025.465794806718);var Mr=Math.round;var xr=Math.round(.5-Number.EPSILON/4)===0&&Math.round(-.5+Number.EPSILON/3.99)===1;var Nr=dr+1;var Ar=2*dr-1;var Rr=[Nr,Ar].every(function(e){return Math.round(e)===e});h(Math,"round",function round(e){var t=_(e);var r=t===-1?-0:t+1;
+return e-t<.5?t:r},!xr||!Rr);m.preserveToString(Math.round,Mr);var _r=Math.imul;if(Math.imul(4294967295,5)!==-5){Math.imul=Pr.imul;m.preserveToString(Math.imul,_r)}if(Math.imul.length!==2){re(Math,"imul",function imul(e,t){return se.Call(_r,Math,arguments)})}var kr=function(){var e=S.setTimeout;if(typeof e!=="function"&&typeof e!=="object"){return}se.IsPromise=function(e){if(!se.TypeIsObject(e)){return false}if(typeof e._promise==="undefined"){return false}return true};var r=function(e){if(!se.IsConstructor(e)){throw new TypeError("Bad promise constructor")}var t=this;var r=function(e,r){if(t.resolve!==void 0||t.reject!==void 0){throw new TypeError("Bad Promise implementation!")}t.resolve=e;t.reject=r};t.resolve=void 0;t.reject=void 0;t.promise=new e(r);if(!(se.IsCallable(t.resolve)&&se.IsCallable(t.reject))){throw new TypeError("Bad promise constructor")}};var n;if(typeof window!=="undefined"&&se.IsCallable(window.postMessage)){n=function(){var e=[];var t="zero-timeout-message";var r=function(r){M(e,r);window.postMessage(t,"*")};var n=function(r){if(r.source===window&&r.data===t){r.stopPropagation();if(e.length===0){return}var n=N(e);n()}};window.addEventListener("message",n,true);return r}}var o=function(){var e=S.Promise;var t=e&&e.resolve&&e.resolve();return t&&function(e){return t.then(e)}};var i=se.IsCallable(S.setImmediate)?S.setImmediate:typeof process==="object"&&process.nextTick?process.nextTick:o()||(se.IsCallable(n)?n():function(t){e(t,0)});var a=function(e){return e};var u=function(e){throw e};var f=0;var s=1;var c=2;var l=0;var p=1;var v=2;var y={};var h=function(e,t,r){i(function(){g(e,t,r)})};var g=function(e,t,r){var n,o;if(t===y){return e(r)}try{n=e(r);o=t.resolve}catch(e){n=e;o=t.reject}o(n)};var d=function(e,t){var r=e._promise;var n=r.reactionLength;if(n>0){h(r.fulfillReactionHandler0,r.reactionCapability0,t);r.fulfillReactionHandler0=void 0;r.rejectReactions0=void 0;r.reactionCapability0=void 0;if(n>1){for(var o=1,i=0;o<n;o++,i+=3){h(r[i+l],r[i+v],t);e[i+l]=void 0;e[i+p]=void 0;e[i+v]=void 0}}}r.result=t;r.state=s;r.reactionLength=0};var m=function(e,t){var r=e._promise;var n=r.reactionLength;if(n>0){h(r.rejectReactionHandler0,r.reactionCapability0,t);r.fulfillReactionHandler0=void 0;r.rejectReactions0=void 0;r.reactionCapability0=void 0;if(n>1){for(var o=1,i=0;o<n;o++,i+=3){h(r[i+p],r[i+v],t);e[i+l]=void 0;e[i+p]=void 0;e[i+v]=void 0}}}r.result=t;r.state=c;r.reactionLength=0};var O=function(e){var t=false;var r=function(r){var n;if(t){return}t=true;if(r===e){return m(e,new TypeError("Self resolution"))}if(!se.TypeIsObject(r)){return d(e,r)}try{n=r.then}catch(t){return m(e,t)}if(!se.IsCallable(n)){return d(e,r)}i(function(){j(e,r,n)})};var n=function(r){if(t){return}t=true;return m(e,r)};return{resolve:r,reject:n}};var w=function(e,r,n,o){if(e===I){t(e,r,n,o,y)}else{t(e,r,n,o)}};var j=function(e,t,r){var n=O(e);var o=n.resolve;var i=n.reject;try{w(r,t,o,i)}catch(e){i(e)}};var T,I;var E=function(){var e=function Promise(t){if(!(this instanceof e)){throw new TypeError('Constructor Promise requires "new"')}if(this&&this._promise){throw new TypeError("Bad construction")}if(!se.IsCallable(t)){throw new TypeError("not a valid resolver")}var r=Ne(this,e,T,{_promise:{result:void 0,state:f,reactionLength:0,fulfillReactionHandler0:void 0,rejectReactionHandler0:void 0,reactionCapability0:void 0}});var n=O(r);var o=n.reject;try{t(n.resolve,o)}catch(e){o(e)}return r};return e}();T=E.prototype;var P=function(e,t,r,n){var o=false;return function(i){if(o){return}o=true;t[e]=i;if(--n.count===0){var a=r.resolve;a(t)}}};var C=function(e,t,r){var n=e.iterator;var o=[];var i={count:1};var a,u;var f=0;while(true){try{a=se.IteratorStep(n);if(a===false){e.done=true;break}u=a.value}catch(t){e.done=true;throw t}o[f]=void 0;var s=t.resolve(u);var c=P(f,o,r,i);i.count+=1;w(s.then,s,c,r.reject);f+=1}if(--i.count===0){var l=r.resolve;l(o)}return r.promise};var x=function(e,t,r){var n=e.iterator;var o,i,a;while(true){try{o=se.IteratorStep(n);if(o===false){e.done=true;break}i=o.value}catch(t){e.done=true;throw t}a=t.resolve(i);w(a.then,a,r.resolve,r.reject)}return r.promise};b(E,{all:function all(e){var t=this;if(!se.TypeIsObject(t)){throw new TypeError("Promise is not object")}var n=new r(t);var o,i;try{o=se.GetIterator(e);i={iterator:o,done:false};return C(i,t,n)}catch(e){var a=e;if(i&&!i.done){try{se.IteratorClose(o,true)}catch(e){a=e}}var u=n.reject;u(a);return n.promise}},race:function race(e){var t=this;if(!se.TypeIsObject(t)){throw new TypeError("Promise is not object")}var n=new r(t);var o,i;try{o=se.GetIterator(e);i={iterator:o,done:false};return x(i,t,n)}catch(e){var a=e;if(i&&!i.done){try{se.IteratorClose(o,true)}catch(e){a=e}}var u=n.reject;u(a);return n.promise}},reject:function reject(e){var t=this;if(!se.TypeIsObject(t)){throw new TypeError("Bad promise constructor")}var n=new r(t);var o=n.reject;o(e);return n.promise},resolve:function resolve(e){var t=this;if(!se.TypeIsObject(t)){throw new TypeError("Bad promise constructor")}if(se.IsPromise(e)){var n=e.constructor;if(n===t){return e}}var o=new r(t);var i=o.resolve;i(e);return o.promise}});b(T,{catch:function(e){return this.then(null,e)},then:function then(e,t){var n=this;if(!se.IsPromise(n)){throw new TypeError("not a promise")}var o=se.SpeciesConstructor(n,E);var i;var b=arguments.length>2&&arguments[2]===y;if(b&&o===E){i=y}else{i=new r(o)}var g=se.IsCallable(e)?e:a;var d=se.IsCallable(t)?t:u;var m=n._promise;var O;if(m.state===f){if(m.reactionLength===0){m.fulfillReactionHandler0=g;m.rejectReactionHandler0=d;m.reactionCapability0=i}else{var w=3*(m.reactionLength-1);m[w+l]=g;m[w+p]=d;m[w+v]=i}m.reactionLength+=1}else if(m.state===s){O=m.result;h(g,i,O)}else if(m.state===c){O=m.result;h(d,i,O)}else{throw new TypeError("unexpected Promise state")}return i.promise}});y=new r(E);I=T.then;return E}();if(S.Promise){delete S.Promise.accept;delete S.Promise.defer;delete S.Promise.prototype.chain}if(typeof kr==="function"){b(S,{Promise:kr});var Fr=w(S.Promise,function(e){return e.resolve(42).then(function(){})instanceof e});var Lr=!i(function(){S.Promise.reject(42).then(null,5).then(null,W)});var Dr=i(function(){S.Promise.call(3,W)});var zr=function(e){var t=e.resolve(5);t.constructor={};var r=e.resolve(t);try{r.then(null,W).then(null,W)}catch(e){return true}return t===r}(S.Promise);var qr=s&&function(){var e=0;var t=Object.defineProperty({},"then",{get:function(){e+=1}});Promise.resolve(t);return e===1}();var Wr=function BadResolverPromise(e){var t=new Promise(e);e(3,function(){});this.then=t.then;this.constructor=BadResolverPromise};Wr.prototype=Promise.prototype;Wr.all=Promise.all;var Gr=a(function(){return!!Wr.all([1,2])});if(!Fr||!Lr||!Dr||zr||!qr||Gr){Promise=kr;re(S,"Promise",kr)}if(Promise.all.length!==1){var Hr=Promise.all;re(Promise,"all",function all(e){return se.Call(Hr,this,arguments)})}if(Promise.race.length!==1){var Vr=Promise.race;re(Promise,"race",function race(e){return se.Call(Vr,this,arguments)})}if(Promise.resolve.length!==1){var Br=Promise.resolve;re(Promise,"resolve",function resolve(e){return se.Call(Br,this,arguments)})}if(Promise.reject.length!==1){var Ur=Promise.reject;re(Promise,"reject",function reject(e){return se.Call(Ur,this,arguments)})}Ct(Promise,"all");Ct(Promise,"race");Ct(Promise,"resolve");Ct(Promise,"reject");Pe(Promise)}var $r=function(e){var t=n(p(e,function(e,t){e[t]=true;return e},{}));return e.join(":")===t.join(":")};var Jr=$r(["z","a","bb"]);var Xr=$r(["z",1,"a","3",2]);if(s){var Kr=function fastkey(e,t){if(!t&&!Jr){return null}if(fe(e)){return"^"+se.ToString(e)}else if(typeof e==="string"){return"$"+e}else if(typeof e==="number"){if(!Xr){return"n"+e}return e}else if(typeof e==="boolean"){return"b"+e}return null};var Zr=function emptyObject(){return Object.create?Object.create(null):{}};var Yr=function addIterableToMap(e,n,o){if(r(o)||te.string(o)){l(o,function(e){if(!se.TypeIsObject(e)){throw new TypeError("Iterator value "+e+" is not an entry object")}n.set(e[0],e[1])})}else if(o instanceof e){t(e.prototype.forEach,o,function(e,t){n.set(t,e)})}else{var i,a;if(!fe(o)){a=n.set;if(!se.IsCallable(a)){throw new TypeError("bad map")}i=se.GetIterator(o)}if(typeof i!=="undefined"){while(true){var u=se.IteratorStep(i);if(u===false){break}var f=u.value;try{if(!se.TypeIsObject(f)){throw new TypeError("Iterator value "+f+" is not an entry object")}t(a,n,f[0],f[1])}catch(e){se.IteratorClose(i,true);throw e}}}}};var Qr=function addIterableToSet(e,n,o){if(r(o)||te.string(o)){l(o,function(e){n.add(e)})}else if(o instanceof e){t(e.prototype.forEach,o,function(e){n.add(e)})}else{var i,a;if(!fe(o)){a=n.add;if(!se.IsCallable(a)){throw new TypeError("bad set")}i=se.GetIterator(o)}if(typeof i!=="undefined"){while(true){var u=se.IteratorStep(i);if(u===false){break}var f=u.value;try{t(a,n,f)}catch(e){se.IteratorClose(i,true);throw e}}}}};var en={Map:function(){var e={};var r=function MapEntry(e,t){this.key=e;this.value=t;this.next=null;this.prev=null};r.prototype.isRemoved=function isRemoved(){return this.key===e};var n=function isMap(e){return!!e._es6map};var o=function requireMapSlot(e,t){if(!se.TypeIsObject(e)||!n(e)){throw new TypeError("Method Map.prototype."+t+" called on incompatible receiver "+se.ToString(e))}};var i=function MapIterator(e,t){o(e,"[[MapIterator]]");this.head=e._head;this.i=this.head;this.kind=t};i.prototype={next:function next(){var e=this.i;var t=this.kind;var r=this.head;if(typeof this.i==="undefined"){return Xe()}while(e.isRemoved()&&e!==r){e=e.prev}var n;while(e.next!==r){e=e.next;if(!e.isRemoved()){if(t==="key"){n=e.key}else if(t==="value"){n=e.value}else{n=[e.key,e.value]}this.i=e;return Xe(n)}}this.i=void 0;return Xe()}};Ce(i.prototype);var a;var u=function Map(){if(!(this instanceof Map)){throw new TypeError('Constructor Map requires "new"')}if(this&&this._es6map){throw new TypeError("Bad construction")}var e=Ne(this,Map,a,{_es6map:true,_head:null,_map:G?new G:null,_size:0,_storage:Zr()});var t=new r(null,null);t.next=t.prev=t;e._head=t;if(arguments.length>0){Yr(Map,e,arguments[0])}return e};a=u.prototype;m.getter(a,"size",function(){if(typeof this._size==="undefined"){throw new TypeError("size method called on incompatible Map")}return this._size});b(a,{get:function get(e){o(this,"get");var t;var r=Kr(e,true);if(r!==null){t=this._storage[r];if(t){return t.value}else{return}}if(this._map){t=V.call(this._map,e);if(t){return t.value}else{return}}var n=this._head;var i=n;while((i=i.next)!==n){if(se.SameValueZero(i.key,e)){return i.value}}},has:function has(e){o(this,"has");var t=Kr(e,true);if(t!==null){return typeof this._storage[t]!=="undefined"}if(this._map){return B.call(this._map,e)}var r=this._head;var n=r;while((n=n.next)!==r){if(se.SameValueZero(n.key,e)){return true}}return false},set:function set(e,t){o(this,"set");var n=this._head;var i=n;var a;var u=Kr(e,true);if(u!==null){if(typeof this._storage[u]!=="undefined"){this._storage[u].value=t;return this}else{a=this._storage[u]=new r(e,t);i=n.prev}}else if(this._map){if(B.call(this._map,e)){V.call(this._map,e).value=t}else{a=new r(e,t);U.call(this._map,e,a);i=n.prev}}while((i=i.next)!==n){if(se.SameValueZero(i.key,e)){i.value=t;return this}}a=a||new r(e,t);if(se.SameValue(-0,e)){a.key=+0}a.next=this._head;a.prev=this._head.prev;a.prev.next=a;a.next.prev=a;this._size+=1;return this},delete:function(t){o(this,"delete");var r=this._head;var n=r;var i=Kr(t,true);if(i!==null){if(typeof this._storage[i]==="undefined"){return false}n=this._storage[i].prev;delete this._storage[i]}else if(this._map){if(!B.call(this._map,t)){return false}n=V.call(this._map,t).prev;H.call(this._map,t)}while((n=n.next)!==r){if(se.SameValueZero(n.key,t)){n.key=e;n.value=e;n.prev.next=n.next;n.next.prev=n.prev;this._size-=1;return true}}return false},clear:function clear(){o(this,"clear");this._map=G?new G:null;this._size=0;this._storage=Zr();var t=this._head;var r=t;var n=r.next;while((r=n)!==t){r.key=e;r.value=e;n=r.next;r.next=r.prev=t}t.next=t.prev=t},keys:function keys(){o(this,"keys");return new i(this,"key")},values:function values(){o(this,"values");return new i(this,"value")},entries:function entries(){o(this,"entries");return new i(this,"key+value")},forEach:function forEach(e){o(this,"forEach");var r=arguments.length>1?arguments[1]:null;var n=this.entries();for(var i=n.next();!i.done;i=n.next()){if(r){t(e,r,i.value[1],i.value[0],this)}else{e(i.value[1],i.value[0],this)}}}});Ce(a,a.entries);return u}(),Set:function(){var e=function isSet(e){return e._es6set&&typeof e._storage!=="undefined"};var r=function requireSetSlot(t,r){if(!se.TypeIsObject(t)||!e(t)){throw new TypeError("Set.prototype."+r+" called on incompatible receiver "+se.ToString(t))}};var o;var i=function Set(){if(!(this instanceof Set)){throw new TypeError('Constructor Set requires "new"')}if(this&&this._es6set){throw new TypeError("Bad construction")}var e=Ne(this,Set,o,{_es6set:true,"[[SetData]]":null,_storage:Zr()});if(!e._es6set){throw new TypeError("bad set")}if(arguments.length>0){Qr(Set,e,arguments[0])}return e};o=i.prototype;var a=function(e){var t=e;if(t==="^null"){return null}else if(t==="^undefined"){return void 0}else{var r=t.charAt(0);if(r==="$"){return C(t,1)}else if(r==="n"){return+C(t,1)}else if(r==="b"){return t==="btrue"}}return+t};var u=function ensureMap(e){if(!e["[[SetData]]"]){var t=new en.Map;e["[[SetData]]"]=t;l(n(e._storage),function(e){var r=a(e);t.set(r,r)});e["[[SetData]]"]=t}e._storage=null};m.getter(i.prototype,"size",function(){r(this,"size");if(this._storage){return n(this._storage).length}u(this);return this["[[SetData]]"].size});b(i.prototype,{has:function has(e){r(this,"has");var t;if(this._storage&&(t=Kr(e))!==null){return!!this._storage[t]}u(this);return this["[[SetData]]"].has(e)},add:function add(e){r(this,"add");var t;if(this._storage&&(t=Kr(e))!==null){this._storage[t]=true;return this}u(this);this["[[SetData]]"].set(e,e);return this},delete:function(e){r(this,"delete");var t;if(this._storage&&(t=Kr(e))!==null){var n=z(this._storage,t);return delete this._storage[t]&&n}u(this);return this["[[SetData]]"]["delete"](e)},clear:function clear(){r(this,"clear");if(this._storage){this._storage=Zr()}if(this["[[SetData]]"]){this["[[SetData]]"].clear()}},values:function values(){r(this,"values");u(this);return this["[[SetData]]"].values()},entries:function entries(){r(this,"entries");u(this);return this["[[SetData]]"].entries()},forEach:function forEach(e){r(this,"forEach");var n=arguments.length>1?arguments[1]:null;var o=this;u(o);this["[[SetData]]"].forEach(function(r,i){if(n){t(e,n,i,i,o)}else{e(i,i,o)}})}});h(i.prototype,"keys",i.prototype.values,true);Ce(i.prototype,i.prototype.values);return i}()};if(S.Map||S.Set){var tn=a(function(){return new Map([[1,2]]).get(1)===2});if(!tn){S.Map=function Map(){if(!(this instanceof Map)){throw new TypeError('Constructor Map requires "new"')}var e=new G;if(arguments.length>0){Yr(Map,e,arguments[0])}delete e.constructor;Object.setPrototypeOf(e,S.Map.prototype);return e};S.Map.prototype=O(G.prototype);h(S.Map.prototype,"constructor",S.Map,true);m.preserveToString(S.Map,G)}var rn=new Map;var nn=function(){var e=new Map([[1,0],[2,0],[3,0],[4,0]]);e.set(-0,e);return e.get(0)===e&&e.get(-0)===e&&e.has(0)&&e.has(-0)}();var on=rn.set(1,2)===rn;if(!nn||!on){re(Map.prototype,"set",function set(e,r){t(U,this,e===0?0:e,r);return this})}if(!nn){b(Map.prototype,{get:function get(e){return t(V,this,e===0?0:e)},has:function has(e){return t(B,this,e===0?0:e)}},true);m.preserveToString(Map.prototype.get,V);m.preserveToString(Map.prototype.has,B)}var an=new Set;var un=function(e){e["delete"](0);e.add(-0);return!e.has(0)}(an);var fn=an.add(1)===an;if(!un||!fn){var sn=Set.prototype.add;Set.prototype.add=function add(e){t(sn,this,e===0?0:e);return this};m.preserveToString(Set.prototype.add,sn)}if(!un){var cn=Set.prototype.has;Set.prototype.has=function has(e){return t(cn,this,e===0?0:e)};m.preserveToString(Set.prototype.has,cn);var ln=Set.prototype["delete"];Set.prototype["delete"]=function SetDelete(e){return t(ln,this,e===0?0:e)};m.preserveToString(Set.prototype["delete"],ln)}var pn=w(S.Map,function(e){var t=new e([]);t.set(42,42);return t instanceof e});var vn=Object.setPrototypeOf&&!pn;var yn=function(){try{return!(S.Map()instanceof S.Map)}catch(e){return e instanceof TypeError}}();if(S.Map.length!==0||vn||!yn){S.Map=function Map(){if(!(this instanceof Map)){throw new TypeError('Constructor Map requires "new"')}var e=new G;if(arguments.length>0){Yr(Map,e,arguments[0])}delete e.constructor;Object.setPrototypeOf(e,Map.prototype);return e};S.Map.prototype=G.prototype;h(S.Map.prototype,"constructor",S.Map,true);m.preserveToString(S.Map,G)}var hn=w(S.Set,function(e){var t=new e([]);t.add(42,42);return t instanceof e});var bn=Object.setPrototypeOf&&!hn;var gn=function(){try{return!(S.Set()instanceof S.Set)}catch(e){return e instanceof TypeError}}();if(S.Set.length!==0||bn||!gn){var dn=S.Set;S.Set=function Set(){if(!(this instanceof Set)){throw new TypeError('Constructor Set requires "new"')}var e=new dn;if(arguments.length>0){Qr(Set,e,arguments[0])}delete e.constructor;Object.setPrototypeOf(e,Set.prototype);return e};S.Set.prototype=dn.prototype;h(S.Set.prototype,"constructor",S.Set,true);m.preserveToString(S.Set,dn)}var mn=new S.Map;var On=!a(function(){return mn.keys().next().done});if(typeof S.Map.prototype.clear!=="function"||(new S.Set).size!==0||mn.size!==0||typeof S.Map.prototype.keys!=="function"||typeof S.Set.prototype.keys!=="function"||typeof S.Map.prototype.forEach!=="function"||typeof S.Set.prototype.forEach!=="function"||u(S.Map)||u(S.Set)||typeof mn.keys().next!=="function"||On||!pn){b(S,{Map:en.Map,Set:en.Set},true)}if(S.Set.prototype.keys!==S.Set.prototype.values){h(S.Set.prototype,"keys",S.Set.prototype.values,true)}Ce(Object.getPrototypeOf((new S.Map).keys()));Ce(Object.getPrototypeOf((new S.Set).keys()));if(c&&S.Set.prototype.has.name!=="has"){var wn=S.Set.prototype.has;re(S.Set.prototype,"has",function has(e){return t(wn,this,e)})}}b(S,en);Pe(S.Map);Pe(S.Set)}var jn=function throwUnlessTargetIsObject(e){if(!se.TypeIsObject(e)){throw new TypeError("target must be an object")}};var Sn={apply:function apply(){return se.Call(se.Call,null,arguments)},construct:function construct(e,t){if(!se.IsConstructor(e)){throw new TypeError("First argument must be a constructor.")}var r=arguments.length>2?arguments[2]:e;if(!se.IsConstructor(r)){throw new TypeError("new.target must be a constructor.")}return se.Construct(e,t,r,"internal")},deleteProperty:function deleteProperty(e,t){jn(e);if(s){var r=Object.getOwnPropertyDescriptor(e,t);if(r&&!r.configurable){return false}}return delete e[t]},has:function has(e,t){jn(e);return t in e}};if(Object.getOwnPropertyNames){Object.assign(Sn,{ownKeys:function ownKeys(e){jn(e);var t=Object.getOwnPropertyNames(e);if(se.IsCallable(Object.getOwnPropertySymbols)){x(t,Object.getOwnPropertySymbols(e))}return t}})}var Tn=function ConvertExceptionToBoolean(e){return!i(e)};if(Object.preventExtensions){Object.assign(Sn,{isExtensible:function isExtensible(e){jn(e);return Object.isExtensible(e)},preventExtensions:function preventExtensions(e){jn(e);return Tn(function(){Object.preventExtensions(e)})}})}if(s){var In=function get(e,t,r){var n=Object.getOwnPropertyDescriptor(e,t);if(!n){var o=Object.getPrototypeOf(e);if(o===null){return void 0}return In(o,t,r)}if("value"in n){return n.value}if(n.get){return se.Call(n.get,r)}return void 0};var En=function set(e,r,n,o){var i=Object.getOwnPropertyDescriptor(e,r);if(!i){var a=Object.getPrototypeOf(e);if(a!==null){return En(a,r,n,o)}i={value:void 0,writable:true,enumerable:true,configurable:true}}if("value"in i){if(!i.writable){return false}if(!se.TypeIsObject(o)){return false}var u=Object.getOwnPropertyDescriptor(o,r);if(u){return ie.defineProperty(o,r,{value:n})}else{return ie.defineProperty(o,r,{value:n,writable:true,enumerable:true,configurable:true})}}if(i.set){t(i.set,o,n);return true}return false};Object.assign(Sn,{defineProperty:function defineProperty(e,t,r){jn(e);return Tn(function(){Object.defineProperty(e,t,r)})},getOwnPropertyDescriptor:function getOwnPropertyDescriptor(e,t){jn(e);return Object.getOwnPropertyDescriptor(e,t)},get:function get(e,t){jn(e);var r=arguments.length>2?arguments[2]:e;return In(e,t,r)},set:function set(e,t,r){jn(e);var n=arguments.length>3?arguments[3]:e;return En(e,t,r,n)}})}if(Object.getPrototypeOf){var Pn=Object.getPrototypeOf;Sn.getPrototypeOf=function getPrototypeOf(e){jn(e);return Pn(e)}}if(Object.setPrototypeOf&&Sn.getPrototypeOf){var Cn=function(e,t){var r=t;while(r){if(e===r){return true}r=Sn.getPrototypeOf(r)}return false};Object.assign(Sn,{setPrototypeOf:function setPrototypeOf(e,t){jn(e);if(t!==null&&!se.TypeIsObject(t)){throw new TypeError("proto must be an object or null")}if(t===ie.getPrototypeOf(e)){return true}if(ie.isExtensible&&!ie.isExtensible(e)){return false}if(Cn(e,t)){return false}Object.setPrototypeOf(e,t);return true}})}var Mn=function(e,t){if(!se.IsCallable(S.Reflect[e])){h(S.Reflect,e,t)}else{var r=a(function(){S.Reflect[e](1);S.Reflect[e](NaN);S.Reflect[e](true);return true});if(r){re(S.Reflect,e,t)}}};Object.keys(Sn).forEach(function(e){Mn(e,Sn[e])});var xn=S.Reflect.getPrototypeOf;if(c&&xn&&xn.name!=="getPrototypeOf"){re(S.Reflect,"getPrototypeOf",function getPrototypeOf(e){return t(xn,S.Reflect,e)})}if(S.Reflect.setPrototypeOf){if(a(function(){S.Reflect.setPrototypeOf(1,{});return true})){re(S.Reflect,"setPrototypeOf",Sn.setPrototypeOf)}}if(S.Reflect.defineProperty){if(!a(function(){var e=!S.Reflect.defineProperty(1,"test",{value:1});var t=typeof Object.preventExtensions!=="function"||!S.Reflect.defineProperty(Object.preventExtensions({}),"test",{});return e&&t})){re(S.Reflect,"defineProperty",Sn.defineProperty)}}if(S.Reflect.construct){if(!a(function(){var e=function F(){};return S.Reflect.construct(function(){},[],e)instanceof e})){re(S.Reflect,"construct",Sn.construct)}}if(String(new Date(NaN))!=="Invalid Date"){var Nn=Date.prototype.toString;var An=function toString(){var e=+this;if(e!==e){return"Invalid Date"}return se.Call(Nn,this)};re(Date.prototype,"toString",An)}var Rn={anchor:function anchor(e){return se.CreateHTML(this,"a","name",e)},big:function big(){return se.CreateHTML(this,"big","","")},blink:function blink(){return se.CreateHTML(this,"blink","","")},bold:function bold(){return se.CreateHTML(this,"b","","")},fixed:function fixed(){return se.CreateHTML(this,"tt","","")},fontcolor:function fontcolor(e){return se.CreateHTML(this,"font","color",e)},fontsize:function fontsize(e){return se.CreateHTML(this,"font","size",e)},italics:function italics(){return se.CreateHTML(this,"i","","")},link:function link(e){return se.CreateHTML(this,"a","href",e)},small:function small(){return se.CreateHTML(this,"small","","")},strike:function strike(){return se.CreateHTML(this,"strike","","")},sub:function sub(){return se.CreateHTML(this,"sub","","")},sup:function sub(){return se.CreateHTML(this,"sup","","")}};l(Object.keys(Rn),function(e){var r=String.prototype[e];var n=false;if(se.IsCallable(r)){var o=t(r,"",' " ');var i=P([],o.match(/"/g)).length;n=o!==o.toLowerCase()||i>2}else{n=true}if(n){re(String.prototype,e,Rn[e])}});var _n=function(){if(!ne){return false}var e=typeof JSON==="object"&&typeof JSON.stringify==="function"?JSON.stringify:null;if(!e){return false}if(typeof e($())!=="undefined"){return true}if(e([$()])!=="[null]"){return true}var t={a:$()};t[$()]=true;if(e(t)!=="{}"){return true}return false}();var kn=a(function(){if(!ne){return true}return JSON.stringify(Object($()))==="{}"&&JSON.stringify([Object($())])==="[{}]"});if(_n||!kn){var Fn=JSON.stringify;re(JSON,"stringify",function stringify(e){if(typeof e==="symbol"){return}var n;if(arguments.length>1){n=arguments[1]}var o=[e];if(!r(n)){var i=se.IsCallable(n)?n:null;var a=function(e,r){var n=i?t(i,this,e,r):r;if(typeof n!=="symbol"){if(te.symbol(n)){return xt({})(n)}else{return n}}};o.push(a)}else{o.push(n)}if(arguments.length>2){o.push(arguments[2])}return Fn.apply(this,o)})}return S});
+//# sourceMappingURL=es6-shim.map
+(function t(e,r,n){function i(p,u){if(!r[p]){if(!e[p]){var a=typeof require=="function"&&require;if(!u&&a)return a(p,!0);if(o)return o(p,!0);var l=new Error("Cannot find module '"+p+"'");throw l.code="MODULE_NOT_FOUND",l}var s=r[p]={exports:{}};e[p][0].call(s.exports,function(t){var r=e[p][1][t];return i(r?r:t)},s,s.exports,t,e,r,n)}return r[p].exports}var o=typeof require=="function"&&require;for(var p=0;p<n.length;p++)i(n[p]);return i})({1:[function(t,e,r){"use strict";var n=t("./Array.prototype");e.exports={prototype:n,shim:function t(){n.shim()}}},{"./Array.prototype":3}],2:[function(t,e,r){"use strict";e.exports=t("array-includes")},{"array-includes":14}],3:[function(t,e,r){"use strict";var n=t("./Array.prototype.includes");e.exports={includes:n,shim:function t(){n.shim()}}},{"./Array.prototype.includes":2}],4:[function(t,e,r){"use strict";var n=t("object.getownpropertydescriptors");var i=t("object.entries");var o=t("object.values");e.exports={entries:i,getOwnPropertyDescriptors:n,shim:function t(){n.shim();i.shim();o.shim()},values:o}},{"object.entries":38,"object.getownpropertydescriptors":64,"object.values":89}],5:[function(t,e,r){"use strict";var n=t("./String.prototype");e.exports={prototype:n,shim:function t(){n.shim()}}},{"./String.prototype":7}],6:[function(t,e,r){"use strict";e.exports=t("string-at")},{"string-at":114}],7:[function(t,e,r){"use strict";var n=t("./String.prototype.at");var i=t("./String.prototype.padStart");var o=t("./String.prototype.padEnd");var p=t("./String.prototype.trimLeft");var u=t("./String.prototype.trimRight");e.exports={at:n,padStart:i,padEnd:o,trimLeft:p,trimRight:u,shim:function t(){n.shim();i.shim();o.shim();p.shim();u.shim()}}},{"./String.prototype.at":6,"./String.prototype.padEnd":8,"./String.prototype.padStart":9,"./String.prototype.trimLeft":10,"./String.prototype.trimRight":11}],8:[function(t,e,r){"use strict";e.exports=t("string.prototype.padend")},{"string.prototype.padend":137}],9:[function(t,e,r){"use strict";e.exports=t("string.prototype.padstart")},{"string.prototype.padstart":162}],10:[function(t,e,r){"use strict";e.exports=t("string.prototype.trimleft")},{"string.prototype.trimleft":187}],11:[function(t,e,r){"use strict";e.exports=t("string.prototype.trimright")},{"string.prototype.trimright":197}],12:[function(t,e,r){/*!
+ * https://github.com/es-shims/es7-shim
+ * @license es7-shim Copyright 2014 by contributors, MIT License
+ * see https://github.com/es-shims/es7-shim/blob/master/LICENSE
+ */
+"use strict";var n=t("./Array");var i=t("./Object");var o=t("./String");e.exports={Array:n,Object:i,String:o,shim:function t(){n.shim();i.shim();o.shim()}}},{"./Array":1,"./Object":4,"./String":5}],13:[function(t,e,r){(function(r){"use strict";var n=t("es-abstract/es6");var i=Number.isNaN||function(t){return t!==t};var o=Number.isFinite||function(t){return typeof t==="number"&&r.isFinite(t)};var p=Array.prototype.indexOf;e.exports=function t(e){var r=arguments.length>1?n.ToInteger(arguments[1]):0;if(p&&!i(e)&&o(r)&&typeof e!=="undefined"){return p.apply(this,arguments)>-1}var u=n.ToObject(this);var a=n.ToLength(u.length);if(a===0){return false}var l=r>=0?r:Math.max(0,a+r);while(l<a){if(n.SameValueZero(e,u[l])){return true}l+=1}return false}}).call(this,typeof global!=="undefined"?global:typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{"es-abstract/es6":17}],14:[function(t,e,r){"use strict";var n=t("define-properties");var i=t("es-abstract/es6");var o=t("./implementation");var p=t("./polyfill");var u=p();var a=t("./shim");var l=Array.prototype.slice;var s=function t(e,r){i.RequireObjectCoercible(e);return u.apply(e,l.call(arguments,1))};n(s,{implementation:o,getPolyfill:p,shim:a});e.exports=s},{"./implementation":13,"./polyfill":35,"./shim":36,"define-properties":15,"es-abstract/es6":17}],15:[function(t,e,r){"use strict";var n=t("object-keys");var i=t("foreach");var o=typeof Symbol==="function"&&typeof Symbol()==="symbol";var p=Object.prototype.toString;var u=function(t){return typeof t==="function"&&p.call(t)==="[object Function]"};var a=function(){var t={};try{Object.defineProperty(t,"x",{enumerable:false,value:t});for(var e in t){return false}return t.x===t}catch(t){return false}};var l=Object.defineProperty&&a();var s=function(t,e,r,n){if(e in t&&(!u(n)||!n())){return}if(l){Object.defineProperty(t,e,{configurable:true,enumerable:false,value:r,writable:true})}else{t[e]=r}};var c=function(t,e){var r=arguments.length>2?arguments[2]:{};var p=n(e);if(o){p=p.concat(Object.getOwnPropertySymbols(e))}i(p,function(n){s(t,n,e[n],r[n])})};c.supportsDescriptors=!!l;e.exports=c},{foreach:26,"object-keys":33}],16:[function(t,e,r){"use strict";var n=Number.isNaN||function(t){return t!==t};var i=t("./helpers/isFinite");var o=t("./helpers/sign");var p=t("./helpers/mod");var u=t("is-callable");var a=t("es-to-primitive/es5");var l={ToPrimitive:a,ToBoolean:function t(e){return Boolean(e)},ToNumber:function t(e){return Number(e)},ToInteger:function t(e){var r=this.ToNumber(e);if(n(r)){return 0}if(r===0||!i(r)){return r}return o(r)*Math.floor(Math.abs(r))},ToInt32:function t(e){return this.ToNumber(e)>>0},ToUint32:function t(e){return this.ToNumber(e)>>>0},ToUint16:function t(e){var r=this.ToNumber(e);if(n(r)||r===0||!i(r)){return 0}var u=o(r)*Math.floor(Math.abs(r));return p(u,65536)},ToString:function t(e){return String(e)},ToObject:function t(e){this.CheckObjectCoercible(e);return Object(e)},CheckObjectCoercible:function t(e,r){if(e==null){throw new TypeError(r||"Cannot call method on "+e)}return e},IsCallable:u,SameValue:function t(e,r){if(e===r){if(e===0){return 1/e===1/r}return true}return n(e)&&n(r)}};e.exports=l},{"./helpers/isFinite":19,"./helpers/mod":21,"./helpers/sign":22,"es-to-primitive/es5":23,"is-callable":29}],17:[function(t,e,r){"use strict";var n=Object.prototype.toString;var i=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol";var o=i?Symbol.prototype.toString:n;var p=Number.isNaN||function(t){return t!==t};var u=t("./helpers/isFinite");var a=Number.MAX_SAFE_INTEGER||Math.pow(2,53)-1;var l=t("./helpers/assign");var s=t("./helpers/sign");var c=t("./helpers/mod");var f=t("./helpers/isPrimitive");var y=t("es-to-primitive/es6");var v=parseInt;var m=t("function-bind");var b=m.call(Function.call,String.prototype.slice);var d=m.call(Function.call,RegExp.prototype.test,/^0b[01]+$/i);var h=m.call(Function.call,RegExp.prototype.test,/^0o[0-7]+$/i);var g=["\x85","\u200b","\ufffe"].join("");var S=new RegExp("["+g+"]","g");var j=m.call(Function.call,RegExp.prototype.test,S);var x=/^[\-\+]0x[0-9a-f]+$/i;var O=m.call(Function.call,RegExp.prototype.test,x);var w=["\t\n\v\f\r \xa0\u1680\u180e\u2000\u2001\u2002\u2003","\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028","\u2029\ufeff"].join("");var T=new RegExp("(^["+w+"]+)|(["+w+"]+$)","g");var F=m.call(Function.call,String.prototype.replace);var P=function(t){return F(t,T,"")};var E=t("./es5");var N=t("is-regex");var A=l(l({},E),{Call:function t(e,r){var n=arguments.length>2?arguments[2]:[];if(!this.IsCallable(e)){throw new TypeError(e+" is not a function")}return e.apply(r,n)},ToPrimitive:y,ToNumber:function t(e){var r=f(e)?e:y(e,"number");if(typeof r==="symbol"){throw new TypeError("Cannot convert a Symbol value to a number")}if(typeof r==="string"){if(d(r)){return this.ToNumber(v(b(r,2),2))}else if(h(r)){return this.ToNumber(v(b(r,2),8))}else if(j(r)||O(r)){return NaN}else{var n=P(r);if(n!==r){return this.ToNumber(n)}}}return Number(r)},ToInt16:function t(e){var r=this.ToUint16(e);return r>=32768?r-65536:r},ToInt8:function t(e){var r=this.ToUint8(e);return r>=128?r-256:r},ToUint8:function t(e){var r=this.ToNumber(e);if(p(r)||r===0||!u(r)){return 0}var n=s(r)*Math.floor(Math.abs(r));return c(n,256)},ToUint8Clamp:function t(e){var r=this.ToNumber(e);if(p(r)||r<=0){return 0}if(r>=255){return 255}var n=Math.floor(e);if(n+.5<r){return n+1}if(r<n+.5){return n}if(n%2!==0){return n+1}return n},ToString:function t(e){if(typeof e==="symbol"){throw new TypeError("Cannot convert a Symbol value to a string")}return String(e)},ToObject:function t(e){this.RequireObjectCoercible(e);return Object(e)},ToPropertyKey:function t(e){var r=this.ToPrimitive(e,String);return typeof r==="symbol"?o.call(r):this.ToString(r)},ToLength:function t(e){var r=this.ToInteger(e);if(r<=0){return 0}if(r>a){return a}return r},CanonicalNumericIndexString:function t(e){if(n.call(e)!=="[object String]"){throw new TypeError("must be a string")}if(e==="-0"){return-0}var r=this.ToNumber(e);if(this.SameValue(this.ToString(r),e)){return r}},RequireObjectCoercible:E.CheckObjectCoercible,IsArray:Array.isArray||function t(e){return n.call(e)==="[object Array]"},IsConstructor:function t(e){return this.IsCallable(e)},IsExtensible:function t(e){if(!Object.preventExtensions){return true}if(f(e)){return false}return Object.isExtensible(e)},IsInteger:function t(e){if(typeof e!=="number"||p(e)||!u(e)){return false}var r=Math.abs(e);return Math.floor(r)===r},IsPropertyKey:function t(e){return typeof e==="string"||typeof e==="symbol"},IsRegExp:function t(e){if(!e||typeof e!=="object"){return false}if(i){var r=RegExp[Symbol.match];if(typeof r!=="undefined"){return E.ToBoolean(r)}}return N(e)},SameValueZero:function t(e,r){return e===r||p(e)&&p(r)}});delete A.CheckObjectCoercible;e.exports=A},{"./es5":16,"./helpers/assign":18,"./helpers/isFinite":19,"./helpers/isPrimitive":20,"./helpers/mod":21,"./helpers/sign":22,"es-to-primitive/es6":24,"function-bind":28,"is-regex":31}],18:[function(t,e,r){var n=Object.prototype.hasOwnProperty;e.exports=Object.assign||function t(e,r){for(var i in r){if(n.call(r,i)){e[i]=r[i]}}return e}},{}],19:[function(t,e,r){var n=Number.isNaN||function(t){return t!==t};e.exports=Number.isFinite||function(t){return typeof t==="number"&&!n(t)&&t!==Infinity&&t!==-Infinity}},{}],20:[function(t,e,r){e.exports=function t(e){return e===null||typeof e!=="function"&&typeof e!=="object"}},{}],21:[function(t,e,r){e.exports=function t(e,r){var n=e%r;return Math.floor(n>=0?n:n+r)}},{}],22:[function(t,e,r){e.exports=function t(e){return e>=0?1:-1}},{}],23:[function(t,e,r){"use strict";var n=Object.prototype.toString;var i=t("./helpers/isPrimitive");var o=t("is-callable");var p={"[[DefaultValue]]":function(t,e){var r=e||(n.call(t)==="[object Date]"?String:Number);if(r===String||r===Number){var p=r===String?["toString","valueOf"]:["valueOf","toString"];var u,a;for(a=0;a<p.length;++a){if(o(t[p[a]])){u=t[p[a]]();if(i(u)){return u}}}throw new TypeError("No default value")}throw new TypeError("invalid [[DefaultValue]] hint supplied")}};e.exports=function t(e,r){if(i(e)){return e}return p["[[DefaultValue]]"](e,r)}},{"./helpers/isPrimitive":25,"is-callable":29}],24:[function(t,e,r){"use strict";var n=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol";var i=t("./helpers/isPrimitive");var o=t("is-callable");var p=t("is-date-object");var u=t("is-symbol");var a=function t(e,r){if(typeof e==="undefined"||e===null){throw new TypeError("Cannot call method on "+e)}if(typeof r!=="string"||r!=="number"&&r!=="string"){throw new TypeError('hint must be "string" or "number"')}var n=r==="string"?["toString","valueOf"]:["valueOf","toString"];var p,u,a;for(a=0;a<n.length;++a){p=e[n[a]];if(o(p)){u=p.call(e);if(i(u)){return u}}}throw new TypeError("No default value")};var l=function t(e,r){var n=e[r];if(n!==null&&typeof n!=="undefined"){if(!o(n)){throw new TypeError(n+" returned for property "+r+" of object "+e+" is not a function")}return n}};e.exports=function t(e,r){if(i(e)){return e}var o="default";if(arguments.length>1){if(r===String){o="string"}else if(r===Number){o="number"}}var s;if(n){if(Symbol.toPrimitive){s=l(e,Symbol.toPrimitive)}else if(u(e)){s=Symbol.prototype.valueOf}}if(typeof s!=="undefined"){var c=s.call(e,o);if(i(c)){return c}throw new TypeError("unable to convert exotic object to primitive")}if(o==="default"&&(p(e)||u(e))){o="string"}return a(e,o==="default"?"number":o)}},{"./helpers/isPrimitive":25,"is-callable":29,"is-date-object":30,"is-symbol":32}],25:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],26:[function(t,e,r){var n=Object.prototype.hasOwnProperty;var i=Object.prototype.toString;e.exports=function t(e,r,o){if(i.call(r)!=="[object Function]"){throw new TypeError("iterator must be a function")}var p=e.length;if(p===+p){for(var u=0;u<p;u++){r.call(o,e[u],u,e)}}else{for(var a in e){if(n.call(e,a)){r.call(o,e[a],a,e)}}}}},{}],27:[function(t,e,r){var n="Function.prototype.bind called on incompatible ";var i=Array.prototype.slice;var o=Object.prototype.toString;var p="[object Function]";e.exports=function t(e){var r=this;if(typeof r!=="function"||o.call(r)!==p){throw new TypeError(n+r)}var u=i.call(arguments,1);var a;var l=function(){if(this instanceof a){var t=r.apply(this,u.concat(i.call(arguments)));if(Object(t)===t){return t}return this}else{return r.apply(e,u.concat(i.call(arguments)))}};var s=Math.max(0,r.length-u.length);var c=[];for(var f=0;f<s;f++){c.push("$"+f)}a=Function("binder","return function ("+c.join(",")+"){ return binder.apply(this,arguments); }")(l);if(r.prototype){var y=function t(){};y.prototype=r.prototype;a.prototype=new y;y.prototype=null}return a}},{}],28:[function(t,e,r){var n=t("./implementation");e.exports=Function.prototype.bind||n},{"./implementation":27}],29:[function(t,e,r){"use strict";var n=Function.prototype.toString;var i=/^\s*class /;var o=function t(e){try{var r=n.call(e);var o=r.replace(/\/\/.*\n/g,"");var p=o.replace(/\/\*[.\s\S]*\*\//g,"");var u=p.replace(/\n/gm," ").replace(/ {2}/g," ");return i.test(u)}catch(t){return false}};var p=function t(e){try{if(o(e)){return false}n.call(e);return true}catch(t){return false}};var u=Object.prototype.toString;var a="[object Function]";var l="[object GeneratorFunction]";var s=typeof Symbol==="function"&&typeof Symbol.toStringTag==="symbol";e.exports=function t(e){if(!e){return false}if(typeof e!=="function"&&typeof e!=="object"){return false}if(s){return p(e)}if(o(e)){return false}var r=u.call(e);return r===a||r===l}},{}],30:[function(t,e,r){"use strict";var n=Date.prototype.getDay;var i=function t(e){try{n.call(e);return true}catch(t){return false}};var o=Object.prototype.toString;var p="[object Date]";var u=typeof Symbol==="function"&&typeof Symbol.toStringTag==="symbol";e.exports=function t(e){if(typeof e!=="object"||e===null){return false}return u?i(e):o.call(e)===p}},{}],31:[function(t,e,r){"use strict";var n=RegExp.prototype.exec;var i=function t(e){try{n.call(e);return true}catch(t){return false}};var o=Object.prototype.toString;var p="[object RegExp]";var u=typeof Symbol==="function"&&typeof Symbol.toStringTag==="symbol";e.exports=function t(e){if(typeof e!=="object"){return false}return u?i(e):o.call(e)===p}},{}],32:[function(t,e,r){"use strict";var n=Object.prototype.toString;var i=typeof Symbol==="function"&&typeof Symbol()==="symbol";if(i){var o=Symbol.prototype.toString;var p=/^Symbol\(.*\)$/;var u=function t(e){if(typeof e.valueOf()!=="symbol"){return false}return p.test(o.call(e))};e.exports=function t(e){if(typeof e==="symbol"){return true}if(n.call(e)!=="[object Symbol]"){return false}try{return u(e)}catch(t){return false}}}else{e.exports=function t(e){return false}}},{}],33:[function(t,e,r){"use strict";var n=Object.prototype.hasOwnProperty;var i=Object.prototype.toString;var o=Array.prototype.slice;var p=t("./isArguments");var u=!{toString:null}.propertyIsEnumerable("toString");var a=function(){}.propertyIsEnumerable("prototype");var l=["toString","toLocaleString","valueOf","hasOwnProperty","isPrototypeOf","propertyIsEnumerable","constructor"];var s=function(t){var e=t.constructor;return e&&e.prototype===t};var c={$console:true,$frame:true,$frameElement:true,$frames:true,$parent:true,$self:true,$webkitIndexedDB:true,$webkitStorageInfo:true,$window:true};var f=function(){if(typeof window==="undefined"){return false}for(var t in window){try{if(!c["$"+t]&&n.call(window,t)&&window[t]!==null&&typeof window[t]==="object"){try{s(window[t])}catch(t){return true}}}catch(t){return true}}return false}();var y=function(t){if(typeof window==="undefined"||!f){return s(t)}try{return s(t)}catch(t){return false}};var v=function t(e){var r=e!==null&&typeof e==="object";var o=i.call(e)==="[object Function]";var s=p(e);var c=r&&i.call(e)==="[object String]";var f=[];if(!r&&!o&&!s){throw new TypeError("Object.keys called on a non-object")}var v=a&&o;if(c&&e.length>0&&!n.call(e,0)){for(var m=0;m<e.length;++m){f.push(String(m))}}if(s&&e.length>0){for(var b=0;b<e.length;++b){f.push(String(b))}}else{for(var d in e){if(!(v&&d==="prototype")&&n.call(e,d)){f.push(String(d))}}}if(u){var h=y(e);for(var g=0;g<l.length;++g){if(!(h&&l[g]==="constructor")&&n.call(e,l[g])){f.push(l[g])}}}return f};v.shim=function t(){if(Object.keys){var e=function(){return(Object.keys(arguments)||"").length===2}(1,2);if(!e){var r=Object.keys;Object.keys=function t(e){if(p(e)){return r(o.call(e))}else{return r(e)}}}}else{Object.keys=v}return Object.keys||v};e.exports=v},{"./isArguments":34}],34:[function(t,e,r){"use strict";var n=Object.prototype.toString;e.exports=function t(e){var r=n.call(e);var i=r==="[object Arguments]";if(!i){i=r!=="[object Array]"&&e!==null&&typeof e==="object"&&typeof e.length==="number"&&e.length>=0&&n.call(e.callee)==="[object Function]"}return i}},{}],35:[function(t,e,r){"use strict";var n=t("./implementation");e.exports=function t(){return Array.prototype.includes||n}},{"./implementation":13}],36:[function(t,e,r){"use strict";var n=t("define-properties");var i=t("./polyfill");e.exports=function t(){var e=i();if(Array.prototype.includes!==e){n(Array.prototype,{includes:e})}return e}},{"./polyfill":35,"define-properties":15}],37:[function(t,e,r){"use strict";var n=t("es-abstract/es7");var i=t("has");var o=t("function-bind");var p=o.call(Function.call,Object.prototype.propertyIsEnumerable);e.exports=function t(e){var r=n.RequireObjectCoercible(e);var o=[];for(var u in r){if(i(r,u)&&p(r,u)){o.push([u,r[u]])}}return o}},{"es-abstract/es7":42,"function-bind":53,has:54}],38:[function(t,e,r){"use strict";var n=t("define-properties");var i=t("./implementation");var o=t("./polyfill");var p=t("./shim");n(i,{getPolyfill:o,implementation:i,shim:p});e.exports=i},{"./implementation":37,"./polyfill":61,"./shim":62,"define-properties":39}],39:[function(t,e,r){arguments[4][15][0].apply(r,arguments)},{dup:15,foreach:51,"object-keys":59}],40:[function(t,e,r){arguments[4][16][0].apply(r,arguments)},{"./helpers/isFinite":44,"./helpers/mod":46,"./helpers/sign":47,dup:16,"es-to-primitive/es5":48,"is-callable":55}],41:[function(t,e,r){arguments[4][17][0].apply(r,arguments)},{"./es5":40,"./helpers/assign":43,"./helpers/isFinite":44,"./helpers/isPrimitive":45,"./helpers/mod":46,"./helpers/sign":47,dup:17,"es-to-primitive/es6":49,"function-bind":53,"is-regex":57}],42:[function(t,e,r){"use strict";var n=t("./es6");var i=t("./helpers/assign");var o=i(n,{SameValueNonNumber:function t(e,r){if(typeof e==="number"||typeof e!==typeof r){throw new TypeError("SameValueNonNumber requires two non-number values of the same type.")}return this.SameValue(e,r)}});e.exports=o},{"./es6":41,"./helpers/assign":43}],43:[function(t,e,r){arguments[4][18][0].apply(r,arguments)},{dup:18}],44:[function(t,e,r){arguments[4][19][0].apply(r,arguments)},{dup:19}],45:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],46:[function(t,e,r){arguments[4][21][0].apply(r,arguments)},{dup:21}],47:[function(t,e,r){arguments[4][22][0].apply(r,arguments)},{dup:22}],48:[function(t,e,r){arguments[4][23][0].apply(r,arguments)},{"./helpers/isPrimitive":50,dup:23,"is-callable":55}],49:[function(t,e,r){arguments[4][24][0].apply(r,arguments)},{"./helpers/isPrimitive":50,dup:24,"is-callable":55,"is-date-object":56,"is-symbol":58}],50:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],51:[function(t,e,r){arguments[4][26][0].apply(r,arguments)},{dup:26}],52:[function(t,e,r){arguments[4][27][0].apply(r,arguments)},{dup:27}],53:[function(t,e,r){arguments[4][28][0].apply(r,arguments)},{"./implementation":52,dup:28}],54:[function(t,e,r){var n=t("function-bind");e.exports=n.call(Function.call,Object.prototype.hasOwnProperty)},{"function-bind":53}],55:[function(t,e,r){arguments[4][29][0].apply(r,arguments)},{dup:29}],56:[function(t,e,r){arguments[4][30][0].apply(r,arguments)},{dup:30}],57:[function(t,e,r){arguments[4][31][0].apply(r,arguments)},{dup:31}],58:[function(t,e,r){arguments[4][32][0].apply(r,arguments)},{dup:32}],59:[function(t,e,r){arguments[4][33][0].apply(r,arguments)},{"./isArguments":60,dup:33}],60:[function(t,e,r){arguments[4][34][0].apply(r,arguments)},{dup:34}],61:[function(t,e,r){"use strict";var n=t("./implementation");e.exports=function t(){return typeof Object.entries==="function"?Object.entries:n}},{"./implementation":37}],62:[function(t,e,r){"use strict";var n=t("./polyfill");var i=t("define-properties");e.exports=function t(){var e=n();i(Object,{entries:e},{entries:function(){return Object.entries!==e}});return e}},{"./polyfill":61,"define-properties":39}],63:[function(t,e,r){"use strict";var n=t("es-abstract/es7");var i=Object.defineProperty;var o=Object.getOwnPropertyDescriptor;var p=Object.getOwnPropertyNames;var u=Object.getOwnPropertySymbols;var a=Function.call.bind(Array.prototype.concat);var l=Function.call.bind(Array.prototype.reduce);var s=u?function(t){return a(p(t),u(t))}:p;var c=n.IsCallable(o)&&n.IsCallable(p);var f=function t(e,r,n){if(i&&r in e){i(e,r,{configurable:true,enumerable:true,value:n,writable:true})}else{e[r]=n}};e.exports=function t(e){n.RequireObjectCoercible(e);if(!c){throw new TypeError("getOwnPropertyDescriptors requires Object.getOwnPropertyDescriptor")}var r=n.ToObject(e);return l(s(r),function(t,e){f(t,e,o(r,e));return t},{})}},{"es-abstract/es7":68}],64:[function(t,e,r){arguments[4][38][0].apply(r,arguments)},{"./implementation":63,"./polyfill":86,"./shim":87,"define-properties":65,dup:38}],65:[function(t,e,r){arguments[4][15][0].apply(r,arguments)},{dup:15,foreach:77,"object-keys":84}],66:[function(t,e,r){arguments[4][16][0].apply(r,arguments)},{"./helpers/isFinite":70,"./helpers/mod":72,"./helpers/sign":73,dup:16,"es-to-primitive/es5":74,"is-callable":80}],67:[function(t,e,r){arguments[4][17][0].apply(r,arguments)},{"./es5":66,"./helpers/assign":69,"./helpers/isFinite":70,"./helpers/isPrimitive":71,"./helpers/mod":72,"./helpers/sign":73,dup:17,"es-to-primitive/es6":75,"function-bind":79,"is-regex":82}],68:[function(t,e,r){arguments[4][42][0].apply(r,arguments)},{"./es6":67,"./helpers/assign":69,dup:42}],69:[function(t,e,r){arguments[4][18][0].apply(r,arguments)},{dup:18}],70:[function(t,e,r){arguments[4][19][0].apply(r,arguments)},{dup:19}],71:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],72:[function(t,e,r){arguments[4][21][0].apply(r,arguments)},{dup:21}],73:[function(t,e,r){arguments[4][22][0].apply(r,arguments)},{dup:22}],74:[function(t,e,r){arguments[4][23][0].apply(r,arguments)},{"./helpers/isPrimitive":76,dup:23,"is-callable":80}],75:[function(t,e,r){arguments[4][24][0].apply(r,arguments)},{"./helpers/isPrimitive":76,dup:24,"is-callable":80,"is-date-object":81,"is-symbol":83}],76:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],77:[function(t,e,r){arguments[4][26][0].apply(r,arguments)},{dup:26}],78:[function(t,e,r){arguments[4][27][0].apply(r,arguments)},{dup:27}],79:[function(t,e,r){arguments[4][28][0].apply(r,arguments)},{"./implementation":78,dup:28}],80:[function(t,e,r){arguments[4][29][0].apply(r,arguments)},{dup:29}],81:[function(t,e,r){arguments[4][30][0].apply(r,arguments)},{dup:30}],82:[function(t,e,r){arguments[4][31][0].apply(r,arguments)},{dup:31}],83:[function(t,e,r){arguments[4][32][0].apply(r,arguments)},{dup:32}],84:[function(t,e,r){arguments[4][33][0].apply(r,arguments)},{"./isArguments":85,dup:33}],85:[function(t,e,r){arguments[4][34][0].apply(r,arguments)},{dup:34}],86:[function(t,e,r){"use strict";var n=t("./implementation");e.exports=function t(){return typeof Object.getOwnPropertyDescriptors==="function"?Object.getOwnPropertyDescriptors:n}},{"./implementation":63}],87:[function(t,e,r){"use strict";var n=t("./polyfill");var i=t("define-properties");e.exports=function t(){var e=n();i(Object,{getOwnPropertyDescriptors:e},{getOwnPropertyDescriptors:function(){return Object.getOwnPropertyDescriptors!==e}});return e}},{"./polyfill":86,"define-properties":65}],88:[function(t,e,r){"use strict";var n=t("es-abstract/es7");var i=t("has");var o=t("function-bind");var p=o.call(Function.call,Object.prototype.propertyIsEnumerable);e.exports=function t(e){var r=n.RequireObjectCoercible(e);var o=[];for(var u in r){if(i(r,u)&&p(r,u)){o.push(r[u])}}return o}},{"es-abstract/es7":93,"function-bind":104,has:105}],89:[function(t,e,r){arguments[4][38][0].apply(r,arguments)},{"./implementation":88,"./polyfill":112,"./shim":113,"define-properties":90,dup:38}],90:[function(t,e,r){arguments[4][15][0].apply(r,arguments)},{dup:15,foreach:102,"object-keys":110}],91:[function(t,e,r){arguments[4][16][0].apply(r,arguments)},{"./helpers/isFinite":95,"./helpers/mod":97,"./helpers/sign":98,dup:16,"es-to-primitive/es5":99,"is-callable":106}],92:[function(t,e,r){arguments[4][17][0].apply(r,arguments)},{"./es5":91,"./helpers/assign":94,"./helpers/isFinite":95,"./helpers/isPrimitive":96,"./helpers/mod":97,"./helpers/sign":98,dup:17,"es-to-primitive/es6":100,"function-bind":104,"is-regex":108}],93:[function(t,e,r){arguments[4][42][0].apply(r,arguments)},{"./es6":92,"./helpers/assign":94,dup:42}],94:[function(t,e,r){arguments[4][18][0].apply(r,arguments)},{dup:18}],95:[function(t,e,r){arguments[4][19][0].apply(r,arguments)},{dup:19}],96:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],97:[function(t,e,r){arguments[4][21][0].apply(r,arguments)},{dup:21}],98:[function(t,e,r){arguments[4][22][0].apply(r,arguments)},{dup:22}],99:[function(t,e,r){arguments[4][23][0].apply(r,arguments)},{"./helpers/isPrimitive":101,dup:23,"is-callable":106}],100:[function(t,e,r){arguments[4][24][0].apply(r,arguments)},{"./helpers/isPrimitive":101,dup:24,"is-callable":106,"is-date-object":107,"is-symbol":109}],101:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],102:[function(t,e,r){arguments[4][26][0].apply(r,arguments)},{dup:26}],103:[function(t,e,r){arguments[4][27][0].apply(r,arguments)},{dup:27}],104:[function(t,e,r){arguments[4][28][0].apply(r,arguments)},{"./implementation":103,dup:28}],105:[function(t,e,r){arguments[4][54][0].apply(r,arguments)},{dup:54,"function-bind":104}],106:[function(t,e,r){arguments[4][29][0].apply(r,arguments)},{dup:29}],107:[function(t,e,r){arguments[4][30][0].apply(r,arguments)},{dup:30}],108:[function(t,e,r){arguments[4][31][0].apply(r,arguments)},{dup:31}],109:[function(t,e,r){arguments[4][32][0].apply(r,arguments)},{dup:32}],110:[function(t,e,r){arguments[4][33][0].apply(r,arguments)},{"./isArguments":111,dup:33}],111:[function(t,e,r){arguments[4][34][0].apply(r,arguments)},{dup:34}],112:[function(t,e,r){"use strict";var n=t("./implementation");e.exports=function t(){return typeof Object.values==="function"?Object.values:n}},{"./implementation":88}],113:[function(t,e,r){"use strict";var n=t("./polyfill");var i=t("define-properties");e.exports=function t(){var e=n();i(Object,{values:e},{values:function(){return Object.values!==e}});return e}},{"./polyfill":112,"define-properties":90}],114:[function(t,e,r){"use strict";var n=t("define-properties");var i=t("es-abstract/es7");var o=t("function-bind");var p=function t(e){i.RequireObjectCoercible(this);var r=i.ToObject(this);var n=i.ToString(r);var o=i.ToInteger(e);var p=n.length;if(o<0||o>=p){return""}var u=n.charCodeAt(o);var a;var l=o+1;var s=1;var c=u>=55296&&u<=56319;if(c&&p>l){a=n.charCodeAt(l);if(a>=56320&&a<=57343){s=2}}return n.slice(o,o+s)};var u=o.call(Function.call,p);n(u,{method:p,shim:function t(){n(String.prototype,{at:p});return String.prototype.at}});e.exports=u},{"define-properties":115,"es-abstract/es7":118,"function-bind":129}],115:[function(t,e,r){arguments[4][15][0].apply(r,arguments)},{dup:15,foreach:127,"object-keys":134}],116:[function(t,e,r){arguments[4][16][0].apply(r,arguments)},{"./helpers/isFinite":120,"./helpers/mod":122,"./helpers/sign":123,dup:16,"es-to-primitive/es5":124,"is-callable":130}],117:[function(t,e,r){arguments[4][17][0].apply(r,arguments)},{"./es5":116,"./helpers/assign":119,"./helpers/isFinite":120,"./helpers/isPrimitive":121,"./helpers/mod":122,"./helpers/sign":123,dup:17,"es-to-primitive/es6":125,"function-bind":129,"is-regex":132}],118:[function(t,e,r){arguments[4][42][0].apply(r,arguments)},{"./es6":117,"./helpers/assign":119,dup:42}],119:[function(t,e,r){arguments[4][18][0].apply(r,arguments)},{dup:18}],120:[function(t,e,r){arguments[4][19][0].apply(r,arguments)},{dup:19}],121:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],122:[function(t,e,r){arguments[4][21][0].apply(r,arguments)},{dup:21}],123:[function(t,e,r){arguments[4][22][0].apply(r,arguments)},{dup:22}],124:[function(t,e,r){arguments[4][23][0].apply(r,arguments)},{"./helpers/isPrimitive":126,dup:23,"is-callable":130}],125:[function(t,e,r){arguments[4][24][0].apply(r,arguments)},{"./helpers/isPrimitive":126,dup:24,"is-callable":130,"is-date-object":131,"is-symbol":133}],126:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],127:[function(t,e,r){arguments[4][26][0].apply(r,arguments)},{dup:26}],128:[function(t,e,r){arguments[4][27][0].apply(r,arguments)},{dup:27}],129:[function(t,e,r){arguments[4][28][0].apply(r,arguments)},{"./implementation":128,dup:28}],130:[function(t,e,r){arguments[4][29][0].apply(r,arguments)},{dup:29}],131:[function(t,e,r){arguments[4][30][0].apply(r,arguments)},{dup:30}],132:[function(t,e,r){arguments[4][31][0].apply(r,arguments)},{dup:31}],133:[function(t,e,r){arguments[4][32][0].apply(r,arguments)},{dup:32}],134:[function(t,e,r){arguments[4][33][0].apply(r,arguments)},{"./isArguments":135,dup:33}],135:[function(t,e,r){arguments[4][34][0].apply(r,arguments)},{dup:34}],136:[function(t,e,r){"use strict";var n=t("function-bind");var i=t("es-abstract/es7");var o=n.call(Function.call,String.prototype.slice);e.exports=function t(e){var r=i.RequireObjectCoercible(this);var n=i.ToString(r);var p=i.ToLength(n.length);var u;if(arguments.length>1){u=arguments[1]}var a=typeof u==="undefined"?"":i.ToString(u);if(a===""){a=" "}var l=i.ToLength(e);if(l<=p){return n}var s=l-p;while(a.length<s){var c=a.length;var f=s-c;a+=c>f?o(a,0,f):a}var y=a.length>s?o(a,0,s):a;return n+y}},{"es-abstract/es7":141,"function-bind":152}],137:[function(t,e,r){"use strict";var n=t("function-bind");var i=t("define-properties");var o=t("es-abstract/es7");var p=t("./implementation");var u=t("./polyfill");var a=t("./shim");var l=n.call(Function.apply,p);var s=function t(e,r){o.RequireObjectCoercible(e);var n=[r];if(arguments.length>2){n.push(arguments[2])}return l(e,n)};i(s,{getPolyfill:u,implementation:p,shim:a});e.exports=s},{"./implementation":136,"./polyfill":159,"./shim":160,"define-properties":138,"es-abstract/es7":141,"function-bind":152}],138:[function(t,e,r){arguments[4][15][0].apply(r,arguments)},{dup:15,foreach:150,"object-keys":157}],139:[function(t,e,r){arguments[4][16][0].apply(r,arguments)},{"./helpers/isFinite":143,"./helpers/mod":145,"./helpers/sign":146,dup:16,"es-to-primitive/es5":147,"is-callable":153}],140:[function(t,e,r){arguments[4][17][0].apply(r,arguments)},{"./es5":139,"./helpers/assign":142,"./helpers/isFinite":143,"./helpers/isPrimitive":144,"./helpers/mod":145,"./helpers/sign":146,dup:17,"es-to-primitive/es6":148,"function-bind":152,"is-regex":155}],141:[function(t,e,r){arguments[4][42][0].apply(r,arguments)},{"./es6":140,"./helpers/assign":142,dup:42}],142:[function(t,e,r){arguments[4][18][0].apply(r,arguments)},{dup:18}],143:[function(t,e,r){arguments[4][19][0].apply(r,arguments)},{dup:19}],144:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],145:[function(t,e,r){arguments[4][21][0].apply(r,arguments)},{dup:21}],146:[function(t,e,r){arguments[4][22][0].apply(r,arguments)},{dup:22}],147:[function(t,e,r){arguments[4][23][0].apply(r,arguments)},{"./helpers/isPrimitive":149,dup:23,"is-callable":153}],148:[function(t,e,r){arguments[4][24][0].apply(r,arguments)},{"./helpers/isPrimitive":149,dup:24,"is-callable":153,"is-date-object":154,"is-symbol":156}],149:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],150:[function(t,e,r){arguments[4][26][0].apply(r,arguments)},{dup:26}],151:[function(t,e,r){arguments[4][27][0].apply(r,arguments)},{dup:27}],152:[function(t,e,r){arguments[4][28][0].apply(r,arguments)},{"./implementation":151,dup:28}],153:[function(t,e,r){arguments[4][29][0].apply(r,arguments)},{dup:29}],154:[function(t,e,r){arguments[4][30][0].apply(r,arguments)},{dup:30}],155:[function(t,e,r){arguments[4][31][0].apply(r,arguments)},{dup:31}],156:[function(t,e,r){arguments[4][32][0].apply(r,arguments)},{dup:32}],157:[function(t,e,r){arguments[4][33][0].apply(r,arguments)},{"./isArguments":158,dup:33}],158:[function(t,e,r){arguments[4][34][0].apply(r,arguments)},{dup:34}],159:[function(t,e,r){"use strict";var n=t("./implementation");e.exports=function t(){return typeof String.prototype.padEnd==="function"?String.prototype.padEnd:n}},{"./implementation":136}],160:[function(t,e,r){"use strict";var n=t("./polyfill");var i=t("define-properties");e.exports=function t(){var e=n();i(String.prototype,{padEnd:e},{padEnd:function(){return String.prototype.padEnd!==e}});return e}},{"./polyfill":159,"define-properties":138}],161:[function(t,e,r){"use strict";var n=t("function-bind");var i=t("es-abstract/es7");var o=n.call(Function.call,String.prototype.slice);e.exports=function t(e){var r=i.RequireObjectCoercible(this);var n=i.ToString(r);var p=i.ToLength(n.length);var u;if(arguments.length>1){u=arguments[1]}var a=typeof u==="undefined"?"":i.ToString(u);if(a===""){a=" "}var l=i.ToLength(e);if(l<=p){return n}var s=l-p;while(a.length<s){var c=a.length;var f=s-c;a+=c>f?o(a,0,f):a}var y=a.length>s?o(a,0,s):a;return y+n}},{"es-abstract/es7":166,"function-bind":177}],162:[function(t,e,r){"use strict";var n=t("function-bind");var i=t("define-properties");var o=t("es-abstract/es7");var p=t("./implementation");var u=t("./polyfill");var a=t("./shim");var l=n.call(Function.apply,p);var s=function t(e,r){o.RequireObjectCoercible(e);var n=[r];if(arguments.length>2){
+n.push(arguments[2])}return l(e,n)};i(s,{getPolyfill:u,implementation:p,shim:a});e.exports=s},{"./implementation":161,"./polyfill":184,"./shim":185,"define-properties":163,"es-abstract/es7":166,"function-bind":177}],163:[function(t,e,r){arguments[4][15][0].apply(r,arguments)},{dup:15,foreach:175,"object-keys":182}],164:[function(t,e,r){arguments[4][16][0].apply(r,arguments)},{"./helpers/isFinite":168,"./helpers/mod":170,"./helpers/sign":171,dup:16,"es-to-primitive/es5":172,"is-callable":178}],165:[function(t,e,r){arguments[4][17][0].apply(r,arguments)},{"./es5":164,"./helpers/assign":167,"./helpers/isFinite":168,"./helpers/isPrimitive":169,"./helpers/mod":170,"./helpers/sign":171,dup:17,"es-to-primitive/es6":173,"function-bind":177,"is-regex":180}],166:[function(t,e,r){arguments[4][42][0].apply(r,arguments)},{"./es6":165,"./helpers/assign":167,dup:42}],167:[function(t,e,r){arguments[4][18][0].apply(r,arguments)},{dup:18}],168:[function(t,e,r){arguments[4][19][0].apply(r,arguments)},{dup:19}],169:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],170:[function(t,e,r){arguments[4][21][0].apply(r,arguments)},{dup:21}],171:[function(t,e,r){arguments[4][22][0].apply(r,arguments)},{dup:22}],172:[function(t,e,r){arguments[4][23][0].apply(r,arguments)},{"./helpers/isPrimitive":174,dup:23,"is-callable":178}],173:[function(t,e,r){arguments[4][24][0].apply(r,arguments)},{"./helpers/isPrimitive":174,dup:24,"is-callable":178,"is-date-object":179,"is-symbol":181}],174:[function(t,e,r){arguments[4][20][0].apply(r,arguments)},{dup:20}],175:[function(t,e,r){arguments[4][26][0].apply(r,arguments)},{dup:26}],176:[function(t,e,r){arguments[4][27][0].apply(r,arguments)},{dup:27}],177:[function(t,e,r){arguments[4][28][0].apply(r,arguments)},{"./implementation":176,dup:28}],178:[function(t,e,r){arguments[4][29][0].apply(r,arguments)},{dup:29}],179:[function(t,e,r){arguments[4][30][0].apply(r,arguments)},{dup:30}],180:[function(t,e,r){arguments[4][31][0].apply(r,arguments)},{dup:31}],181:[function(t,e,r){arguments[4][32][0].apply(r,arguments)},{dup:32}],182:[function(t,e,r){arguments[4][33][0].apply(r,arguments)},{"./isArguments":183,dup:33}],183:[function(t,e,r){arguments[4][34][0].apply(r,arguments)},{dup:34}],184:[function(t,e,r){"use strict";var n=t("./implementation");e.exports=function t(){return typeof String.prototype.padStart==="function"?String.prototype.padStart:n}},{"./implementation":161}],185:[function(t,e,r){"use strict";var n=t("./polyfill");var i=t("define-properties");e.exports=function t(){var e=n();i(String.prototype,{padStart:e},{padStart:function(){return String.prototype.padStart!==e}});return e}},{"./polyfill":184,"define-properties":163}],186:[function(t,e,r){"use strict";var n=t("function-bind");var i=n.call(Function.call,String.prototype.replace);var o=/^[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]*/;e.exports=function t(){return i(this,o,"")}},{"function-bind":191}],187:[function(t,e,r){"use strict";var n=t("function-bind");var i=t("define-properties");var o=t("./implementation");var p=t("./polyfill");var u=t("./shim");var a=n.call(Function.call,p());i(a,{getPolyfill:p,implementation:o,shim:u});e.exports=a},{"./implementation":186,"./polyfill":194,"./shim":195,"define-properties":188,"function-bind":191}],188:[function(t,e,r){arguments[4][15][0].apply(r,arguments)},{dup:15,foreach:189,"object-keys":192}],189:[function(t,e,r){arguments[4][26][0].apply(r,arguments)},{dup:26}],190:[function(t,e,r){arguments[4][27][0].apply(r,arguments)},{dup:27}],191:[function(t,e,r){arguments[4][28][0].apply(r,arguments)},{"./implementation":190,dup:28}],192:[function(t,e,r){arguments[4][33][0].apply(r,arguments)},{"./isArguments":193,dup:33}],193:[function(t,e,r){arguments[4][34][0].apply(r,arguments)},{dup:34}],194:[function(t,e,r){"use strict";var n=t("./implementation");e.exports=function t(){if(!String.prototype.trimLeft){return n}var e="\u200b";if(e.trimLeft()!==e){return n}return String.prototype.trimLeft}},{"./implementation":186}],195:[function(t,e,r){"use strict";var n=t("define-properties");var i=t("./polyfill");e.exports=function t(){var e=i();n(String.prototype,{trimLeft:e},{trimLeft:function(){return String.prototype.trimLeft!==e}});return e}},{"./polyfill":194,"define-properties":188}],196:[function(t,e,r){"use strict";var n=t("function-bind");var i=n.call(Function.call,String.prototype.replace);var o=/[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]*$/;e.exports=function t(){return i(this,o,"")}},{"function-bind":201}],197:[function(t,e,r){arguments[4][187][0].apply(r,arguments)},{"./implementation":196,"./polyfill":204,"./shim":205,"define-properties":198,dup:187,"function-bind":201}],198:[function(t,e,r){arguments[4][15][0].apply(r,arguments)},{dup:15,foreach:199,"object-keys":202}],199:[function(t,e,r){arguments[4][26][0].apply(r,arguments)},{dup:26}],200:[function(t,e,r){arguments[4][27][0].apply(r,arguments)},{dup:27}],201:[function(t,e,r){arguments[4][28][0].apply(r,arguments)},{"./implementation":200,dup:28}],202:[function(t,e,r){arguments[4][33][0].apply(r,arguments)},{"./isArguments":203,dup:33}],203:[function(t,e,r){arguments[4][34][0].apply(r,arguments)},{dup:34}],204:[function(t,e,r){"use strict";var n=t("./implementation");e.exports=function t(){if(!String.prototype.trimRight){return n}var e="\u200b";if(e.trimRight()!==e){return n}return String.prototype.trimRight}},{"./implementation":196}],205:[function(t,e,r){"use strict";var n=t("define-properties");var i=t("./polyfill");e.exports=function t(){var e=i();n(String.prototype,{trimRight:e},{trimRight:function(){return String.prototype.trimRight!==e}});return e}},{"./polyfill":204,"define-properties":198}],206:[function(t,e,r){"use strict";e.exports=t("./es7-shim").shim()},{"./es7-shim":12}]},{},[206]);
+//# sourceMappingURL=dist/es7-shim.map
 var CindyJS = (function() {
             "use strict";
 
@@ -281,6 +305,27 @@ var CindyJS = (function() {
                         while (i < n)
                             toStart[i++].startup();
                     }
+                };
+            }
+
+            if (!Math.sign) {
+                //polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sign#Polyfill
+                //needed for IE
+                Math.sign = function(x) {
+                    // If x is NaN, the result is NaN.
+                    // If x is -0, the result is -0.
+                    // If x is +0, the result is +0.
+                    // If x is negative and not -0, the result is -1.
+                    // If x is positive and not +0, the result is +1.
+                    return ((x > 0) - (x < 0)) || +x;
+                    // A more aesthetical persuado-representation is shown below
+                    //
+                    // ( (x > 0) ? 0 : 1 )  // if x is negative then negative one
+                    //          +           // else (because you cant be both - and +)
+                    // ( (x < 0) ? 0 : -1 ) // if x is positive then positive one
+                    //         ||           // if x is 0, -0, or NaN, or not a number,
+                    //         +x           // Then the result will be x, (or) if x is
+                    //                      // not a number, then x converts to number
                 };
             }
 
@@ -414,9 +459,27 @@ var CindyJS = (function() {
 
             CindyJS.dumpState = function(index) {
                 // Call this if you find a rendering bug you'd like to reproduce.
-                // The save the printed JSON to a file and include it in your report.
+                // Then save the printed JSON to a file and include it in your report.
                 var state = CindyJS.instances[index || 0].saveState();
                 console.log(JSON.stringify(state));
+            };
+
+            CindyJS.debugState = function(index) {
+                // Call this to test how a widget handles a save & reload.
+                // You can paste javascript:CindyJS.debugState() into the
+                // address bar of your browser to achieve this.
+                CindyJS.instances.map(function(instance) {
+                    var cfg = instance.config;
+                    cfg = JSON.parse(JSON.stringify(cfg));
+                    var state = instance.saveState();
+                    console.log(JSON.stringify(state));
+                    for (var key in state)
+                        cfg[key] = state[key];
+                    instance.shutdown();
+                    return cfg;
+                }).forEach(function(cfg) {
+                    CindyJS(cfg);
+                });
             };
 
             CindyJS.newInstance = function(instanceInvocationArguments) {
@@ -427,10 +490,49 @@ var cslib;
 
 var cscompiled = {};
 
+// Simulation settings
 var csanimating = false;
 var csstopped = true;
+var simtime = 0; // accumulated simulation time since start
+var simspeed = 0.5; // global speed setting, will get scaled for applications
+var simcap = 1000 / 20; // max. ms between frames for fps-independent sim
+var simtick = 0; // Date.now of the most recent simulation tick
+var simaccuracy = 10; // number of sub-steps per frame
+
+var simunit = 5 / 360; // reported simulationtime() per internal simtime unit
+/* Cinderella has a factor 5 for its internal animation clock,
+ * and the division by 360 is in the simulationtime function implementation.
+ */
+
+// internal simtime units per millisecond at simspeed 1
+var simfactor = 0.32 / simunit / 1000 * 2;
+/*              ^^^^ simulationtime per second, observed in Cinderella
+ *                     ^^^^^^^ simulationtime per simtime unit
+ *                               ^^^^ milliseconds per second
+ *                                      ^ default accuracy factor
+ *
+ * Cinderella does timing different from CindyJS, so here are some notes.
+ * The default in Cinderella is speed=1.0, accuracy=2, frames=1 in its terms,
+ * which in CindyJS terminology would mean speed=0.5, accuracy=1.
+ * It schedules animation frames with 20ms between, so the actual framerate
+ * depends on the time each such frame takes to compute.
+ * The step in simulated time for each such job is computed in Cinderella
+ * as speed * 2^(frames - accuracy), so it's 0.5 units by default.
+ * This amount is internal only; the simulationtime() divides the accumulated
+ * time by 360.  Using its output, one can observe the amount of simulated
+ * time for each second of wall time.  It will vary with hardware, but
+ * on current desktops was observed to be close to 0.32 per second,
+ * corresponding to 23.04ms between consecutive frames on average.
+ * So that's where all the magic values in the simfactor computation come from.
+ *
+ * Should these values (simunit and simfactor) be different for widgets
+ * which were not exported from Cinderella? (gagern, 2016-09-02)
+ */
+
+// Coordinate system settings
 var csscale = 1;
 var csgridsize = 0;
+var cstgrid = 0;
 var csgridscript;
 var cssnap = false;
 var csaxes = false;
@@ -456,7 +558,6 @@ function evalcs(a) {
 
 function evokeCS(code) {
     var parsed = analyse(code, false);
-    console.log(parsed);
     evaluate(parsed);
     scheduleUpdate();
 }
@@ -570,9 +671,20 @@ function canvasWithContainingDiv(elt) {
     if (position === "static")
         div.style.position = "relative"; // serve as a positioning root
     div.appendChild(canvas);
-    // TODO: implement component resizing detection, probably similar to
-    // github.com/marcj/css-element-queries/blob/bfa9a7f/src/ResizeSensor.js
     return canvas;
+}
+
+function isCinderellaBeforeVersion() {
+    var c = instanceInvocationArguments.cinderella;
+    if (!c || !c.version)
+        return false;
+    for (var i = 0; i < arguments.length; ++i) {
+        var x = c.version[i];
+        var y = arguments[i];
+        if (x !== y)
+            return (typeof x === typeof y) && (x < y);
+    }
+    return false;
 }
 
 function createCindyNow() {
@@ -617,6 +729,8 @@ function createCindyNow() {
                 trafos = port.transform;
             if (isFiniteNumber(port.grid) && port.grid > 0)
                 csgridsize = port.grid;
+            if (isFiniteNumber(port.tgrid) && port.tgrid > 0)
+                cstgrid = port.tgrid;
             if (port.snap)
                 cssnap = true;
             if (port.axes)
@@ -637,7 +751,16 @@ function createCindyNow() {
         if (!csctx.setLineDash)
             csctx.setLineDash = function() {};
         if (data.animation ? data.animation.controls : data.animcontrols)
-            setupAnimControls();
+            setupAnimControls(data);
+        if (data.animation && isFiniteNumber(data.animation.speed)) {
+            if (data.animation.accuracy === undefined &&
+                isCinderellaBeforeVersion(2, 9, 1875))
+                setSpeed(data.animation.speed * 0.5);
+            else
+                setSpeed(data.animation.speed);
+        }
+        if (data.animation && isFiniteNumber(data.animation.accuracy))
+            simaccuracy = data.animation.accuracy;
     }
     if (data.statusbar) {
         if (typeof data.statusbar === "string") {
@@ -648,13 +771,14 @@ function createCindyNow() {
     }
 
     //Setup the scripts
-    var scripts = ["move", "keydown",
+    var scripts = ["move",
+        "keydown", "keyup", "keytyped", "keytype",
         "mousedown", "mouseup", "mousedrag", "mousemove", "mouseclick",
         "init", "tick", "draw",
         "simulationstep", "simulationstart", "simulationstop", "ondrop"
     ];
-    var scriptconf = data.scripts,
-        scriptpat = null;
+    var scriptconf = data.scripts;
+    var scriptpat = null;
     if (typeof scriptconf === "string" && scriptconf.search(/\*/))
         scriptpat = scriptconf;
     if (typeof scriptconf !== "object")
@@ -684,9 +808,15 @@ function createCindyNow() {
                 cscode.message
             );
         } else {
-            cscompiled[s] = cscode;
+            cscompiled[s] = labelCode(cscode, s);
         }
     });
+    if (isCinderellaBeforeVersion(2, 9, 1888) && !cscompiled.keydown) {
+        // Cinderella backwards-compatible naming of key events
+        cscompiled.keydown = cscompiled.keytyped;
+        cscompiled.keytyped = cscompiled.keytype;
+        cscompiled.keytype = undefined;
+    }
 
     if (isFiniteNumber(data.grid) && data.grid > 0) {
         csgridsize = data.grid;
@@ -714,9 +844,15 @@ function createCindyNow() {
         csinitphys(data.behavior);
 
     for (var k in data.images) {
-        var img = loadImage(data.images[k]);
+        var img = loadImage(data.images[k], false);
         if (img !== nada)
             images[k] = img;
+    }
+
+    for (var l in data.videos) {
+        var video = loadImage(data.videos[l], true);
+        if (video !== nada)
+            images[l] = video;
     }
 
     globalInstance.canvas = c;
@@ -742,10 +878,20 @@ function createCindyNow() {
  * live: boolean indicating whether the image is expected to change continuously
  * generation: A counter that is increased once the drawable is changed.
  */
-function loadImage(obj) {
+function loadImage(obj, video) {
     var img;
     if (typeof obj === "string") {
-        img = new Image();
+        if (video) {
+            img = document.createElement("video");
+            img.preload = "auto";
+            img.loop = true; //loop videos as default
+
+            //https://www.npmjs.com/package/iphone-inline-video
+            img.setAttribute("playsinline", "");
+            enableInlineVideo(img);
+        } else {
+            img = new Image();
+        }
         img.src = obj;
     } else {
         img = obj;
@@ -817,20 +963,48 @@ var animcontrols = {
     stop: noop
 };
 
-function setupAnimControls() {
-    var animContainer = document.createElement("div");
-    animContainer.className = "CindyJS-animcontrols";
-    canvas.parentNode.appendChild(animContainer);
+function setupAnimControls(data) {
+    var controls = document.createElement("div");
+    controls.className = "CindyJS-animcontrols";
+    canvas.parentNode.appendChild(controls);
+    var speedLo = 0;
+    var speedHi = 1;
+    var speedScale = 1;
+    if (data.animation && data.animation.speedRange &&
+        isFiniteNumber(data.animation.speedRange[0]) &&
+        isFiniteNumber(data.animation.speedRange[1])) {
+        speedLo = data.animation.speedRange[0];
+        speedHi = data.animation.speedRange[1];
+        speedScale = speedHi - speedLo;
+    }
+    var slider = document.createElement("div");
+    slider.className = "CindyJS-animspeed";
+    controls.appendChild(slider);
+    var knob = document.createElement("div");
+    slider.appendChild(knob);
+    addAutoCleaningEventListener(slider, "mousedown", speedDown);
+    addAutoCleaningEventListener(slider, "mousemove", speedDrag);
+    addAutoCleaningEventListener(canvas.parentNode, "mouseup", speedUp, true);
+    var buttons = document.createElement("div");
+    buttons.className = "CindyJS-animbuttons";
+    controls.appendChild(buttons);
     setupAnimButton("play", csplay);
     setupAnimButton("pause", cspause);
     setupAnimButton("stop", csstop);
     animcontrols.stop(true);
 
+    setSpeedKnob = function(speed) {
+        speed = (speed - speedLo) / speedScale;
+        speed = Math.max(0, Math.min(1, speed));
+        speed = Math.round(speed * 1000) * 0.1; // avoid scientific notation
+        knob.style.width = speed + "%";
+    };
+
     function setupAnimButton(id, ctrl) {
         var button = document.createElement("button");
         var img = document.createElement("img");
         button.appendChild(img);
-        animContainer.appendChild(button);
+        buttons.appendChild(button);
         loadSvgIcon(img, id);
         button.addEventListener("click", ctrl);
         animcontrols[id] = setActive;
@@ -840,6 +1014,32 @@ function setupAnimControls() {
             else button.classList.remove("CindyJS-active");
         }
     }
+
+    var speedDragging = false;
+
+    function speedDown(event) {
+        speedDragging = true;
+        speedDrag(event);
+    }
+
+    function speedDrag(event) {
+        if (!speedDragging) return;
+        var rect = slider.getBoundingClientRect();
+        var x = event.clientX - rect.left - slider.clientLeft + 0.5;
+        setSpeed(speedScale * x / rect.width + speedLo);
+    }
+
+    function speedUp(event) {
+        speedDragging = false;
+    }
+
+}
+
+var setSpeedKnob = null;
+
+function setSpeed(speed) {
+    simspeed = speed;
+    if (setSpeedKnob) setSpeedKnob(speed);
 }
 
 /* Install layer ‹id› of Icons.svg as the src of the given img element.
@@ -923,15 +1123,20 @@ function callFunctionNow(f) {
 }
 
 function loadExtraModules() {
-    if (usedFunctions.convexhull3d$1)
-        loadExtraPlugin("quickhull3d", "quickhull3d/quickhull3d.nocache.js");
-    if (usedFunctions.playtone$1 || usedFunctions.playmelody$1)
+    if (usedFunctions.convexhull3d$1) {
+        loadExtraPlugin("QuickHull3D", "QuickHull3D.js");
+    }
+    if (usedFunctions.colorplot$1 || usedFunctions.colorplot$2 || usedFunctions.colorplot$3 || usedFunctions.colorplot$4) {
+        loadExtraPlugin("CindyGL", "CindyGL.js");
+    }
+    if (usedFunctions.playtone$1 || usedFunctions.playmelody$1) {
         loadExtraPlugin("midi", "midi-plugin.js");
+    }
 }
 
 var modulesToLoad = 1;
 
-function loadExtraPlugin(name, path) {
+function loadExtraPlugin(name, path, skipInit) {
     var cb = null;
     if (instanceInvocationArguments.plugins)
         cb = instanceInvocationArguments.plugins[name];
@@ -944,7 +1149,7 @@ function loadExtraPlugin(name, path) {
     ++modulesToLoad;
     CindyJS.autoLoadPlugin(name, path, function() {
         evaluator.use$1([General.wrap(name)], {});
-        doneLoadingModule();
+        doneLoadingModule(skipInit);
     });
 }
 
@@ -957,19 +1162,21 @@ function loadExtraModule(name, path) {
     });
 }
 
-function doneLoadingModule() {
+function doneLoadingModule(skipInit) {
     if (--modulesToLoad !== 0)
         return;
 
-    //Evaluate Init script
-    evaluate(cscompiled.init);
+    if (!skipInit) {
+        //Evaluate Init script
+        evaluate(cscompiled.init);
 
-    if ((instanceInvocationArguments.animation ||
-            instanceInvocationArguments).autoplay)
-        csplay();
+        if ((instanceInvocationArguments.animation ||
+                instanceInvocationArguments).autoplay)
+            csplay();
 
-    if (globalInstance.canvas)
-        setuplisteners(globalInstance.canvas, instanceInvocationArguments);
+        if (globalInstance.canvas)
+            setuplisteners(globalInstance.canvas, instanceInvocationArguments);
+    } else scheduleUpdate();
 }
 
 var backup = null;
@@ -1019,11 +1226,13 @@ function csplay() {
     if (!csanimating) { // stop or pause state
         if (csstopped) { // stop state
             backupGeo();
+            simtime = 0;
             csstopped = false;
             animcontrols.stop(false);
         } else {
             animcontrols.pause(false);
         }
+        simtick = Date.now();
         animcontrols.play(true);
         if (typeof csinitphys === 'function') {
             if (csPhysicsInited) {
@@ -1288,10 +1497,10 @@ function getmover(mouse) {
         if (el.pinned || el.visible === false || el.tmp === true)
             continue;
 
-        var dx, dy, dist;
+        var dx, dy, dist, p;
         var sc = csport.drawingstate.matrix.sdet;
         if (el.kind === "P") {
-            var p = List.normalizeZ(el.homog);
+            p = List.normalizeZ(el.homog);
             if (!List._helper.isAlmostReal(p))
                 continue;
             dx = p.value[0].value.real - mouse.x;
@@ -1301,20 +1510,35 @@ function getmover(mouse) {
                     el.narrow : 20) / sc)
                 continue;
         } else if (el.kind === "C") { //Must be CircleMr
-            var mid = csgeo.csnames[el.args[0]];
+            var normalizedmid = List.normalizeZ(csgeo.csnames[el.args[0]].homog);
             var rad = el.radius;
-            var xx = CSNumber.div(mid.homog.value[0], mid.homog.value[2]).value.real;
-            var yy = CSNumber.div(mid.homog.value[1], mid.homog.value[2]).value.real;
-            dx = xx - mouse.x;
-            dy = yy - mouse.y;
-            var ref = Math.sqrt(dx * dx + dy * dy);
-            dist = ref - rad.value.real;
-            dx = 0;
-            dy = 0;
-            if (dist < 0) {
-                dist = -dist;
-            }
+
+            if (!List._helper.isAlmostReal(normalizedmid) || !CSNumber._helper.isAlmostReal(rad))
+                continue;
+
+            var midx = normalizedmid.value[0].value.real; //center of circle
+            var midy = normalizedmid.value[1].value.real;
+
+            var vx = mouse.x - midx; //vector from center to mouse
+            var vy = mouse.y - midy;
+
+            var vlength = Math.sqrt(vx * vx + vy * vy);
+            if (vlength === 0)
+                continue;
+
+            var refx = midx + vx / vlength * rad.value.real; //reference point: the to mouse projected on the circle
+            var refy = midy + vy / vlength * rad.value.real;
+
+            dx = refx - mouse.x; //vector from mouse to reference point
+            dy = refy - mouse.y;
+
+            dist = Math.sqrt(dx * dx + dy * dy);
+
             dist = dist + 30 / sc;
+
+            if (el.narrow && dist > ((typeof el.narrow === "number" ?
+                    el.narrow : 20) + 30) / sc)
+                continue;
 
         } else if (el.kind === "L") { //Must be ThroughPoint(Horizontal/Vertical not treated yet)
             var l = el.homog;
@@ -1329,7 +1553,23 @@ function getmover(mouse) {
             if (dist < 0) {
                 dist = -dist;
             }
-            dist = dist + 1;
+            dist = dist + 25 / sc;
+        } else if (el.kind === "Text") {
+            if (!el.homog || el.dock || !el._bbox) continue;
+            p = csport.from(mouse.x, mouse.y, 1);
+            dx = Math.max(0, p[0] - el._bbox.right, el._bbox.left - p[0]);
+            dy = Math.max(0, p[1] - el._bbox.bottom, el._bbox.top - p[1]);
+            dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > 20)
+                continue;
+            dist = dist / sc;
+            p = List.normalizeZ(el.homog);
+            if (!List._helper.isAlmostReal(p))
+                continue;
+            dx = p.value[0].value.real - mouse.x;
+            dy = p.value[1].value.real - mouse.y;
+        } else {
+            continue;
         }
 
         if (dist < adist + 0.2 / sc) { //A bit a dirty hack, prefers new points
@@ -1366,6 +1606,8 @@ function addAutoCleaningEventListener(target, type, listener, useCapture) {
 function setuplisteners(canvas, data) {
 
     var MO = null;
+    var mousedownevent = null;
+    var hasmoved = false;
     if (typeof MutationObserver !== "undefined")
         MO = MutationObserver;
     if (!MO && typeof WebKitMutationObserver !== "undefined")
@@ -1388,7 +1630,7 @@ function setuplisteners(canvas, data) {
         addAutoCleaningEventListener(canvas, "DOMNodeRemoved", shutdown);
     }
 
-    function updatePostition(event) {
+    function updatePosition(event) {
         var rect = canvas.getBoundingClientRect();
         var x = event.clientX - rect.left - canvas.clientLeft + 0.5;
         var y = event.clientY - rect.top - canvas.clientTop + 0.5;
@@ -1404,26 +1646,46 @@ function setuplisteners(canvas, data) {
 
     if (data.keylistener === true) {
         addAutoCleaningEventListener(document, "keydown", function(e) {
-            cs_keypressed(e);
+            cs_keydown(e);
             return false;
         });
-    } else if (cscompiled.keydown) {
+        addAutoCleaningEventListener(document, "keyup", function(e) {
+            cs_keyup(e);
+            return false;
+        });
+        addAutoCleaningEventListener(document, "keypress", function(e) {
+            cs_keytyped(e);
+            return false;
+        });
+    } else if (cscompiled.keydown || cscompiled.keyup || cscompiled.keytyped) {
         canvas.setAttribute("tabindex", "0");
         addAutoCleaningEventListener(canvas, "mousedown", function() {
             canvas.focus();
         });
         addAutoCleaningEventListener(canvas, "keydown", function(e) {
-            // console.log("Got key " + e.charCode + " / " + e.keyCode);
-            if (e.keyCode !== 9 /* tab */ ) {
-                cs_keypressed(e);
+            if (e.keyCode === 9 /* tab */ ) return;
+            cs_keydown(e);
+            if (!cscompiled.keytyped) {
+                // this must bubble in order to trigger a keypress event
                 e.preventDefault();
             }
+        });
+        addAutoCleaningEventListener(canvas, "keyup", function(e) {
+            cs_keyup(e);
+            e.preventDefault();
+        });
+        addAutoCleaningEventListener(canvas, "keypress", function(e) {
+            if (e.keyCode === 9 /* tab */ ) return;
+            cs_keytyped(e);
+            e.preventDefault();
         });
     }
 
     addAutoCleaningEventListener(canvas, "mousedown", function(e) {
+        mousedownevent = e;
+        hasmoved = false;
         mouse.button = e.which;
-        updatePostition(e);
+        updatePosition(e);
         cs_mousedown();
         manage("mousedown");
         mouse.down = true;
@@ -1433,7 +1695,6 @@ function setuplisteners(canvas, data) {
     addAutoCleaningEventListener(canvas, "mouseup", function(e) {
         mouse.down = false;
         cindy_cancelmove();
-        stateContinueFromHere();
         cs_mouseup();
         manage("mouseup");
         scheduleUpdate();
@@ -1441,8 +1702,10 @@ function setuplisteners(canvas, data) {
     });
 
     addAutoCleaningEventListener(canvas, "mousemove", function(e) {
-        updatePostition(e);
+        updatePosition(e);
         if (mouse.down) {
+            if (mousedownevent && (Math.abs(mousedownevent.clientX - e.clientX) > 2 || Math.abs(mousedownevent.clientY - e.clientY) > 2))
+                hasmoved = true;
             cs_mousedrag();
         } else {
             cs_mousemove();
@@ -1452,8 +1715,9 @@ function setuplisteners(canvas, data) {
     });
 
     addAutoCleaningEventListener(canvas, "click", function(e) {
-        updatePostition(e);
-        cs_mouseclick();
+        updatePosition(e);
+        if (!hasmoved)
+            cs_mouseclick();
         e.preventDefault();
     });
 
@@ -1479,27 +1743,133 @@ function setuplisteners(canvas, data) {
         var y = e.clientY - rect.top - canvas.clientTop + 0.5;
         var pos = List.realVector(csport.to(x, y));
 
-        Array.prototype.forEach.call(files, function(file, i) {
-            var reader = new FileReader();
-            if ((/^text\//).test(file.type)) {
-                reader.onload = function() {
-                    var value = General.string(reader.result);
-                    oneDone(i, value);
-                };
-                reader.readAsText(file);
-            } else if ((/^image\//).test(file.type)) {
-                reader.onload = function() {
-                    var img = new Image();
-                    img.onload = function() {
-                        oneDone(i, loadImage(img));
+        if (files.length > 0) {
+            Array.prototype.forEach.call(files, function(file, i) {
+                var reader = new FileReader();
+                if (textType(file.type)) {
+                    reader.onload = function() {
+                        textDone(i, reader.result);
                     };
-                    img.src = reader.result;
-                };
-                reader.readAsDataURL(file);
-            } else {
-                oneDone(i, nada);
+                    reader.readAsText(file);
+                } else if ((/^image\//).test(file.type)) {
+                    reader.onload = function() {
+                        imgDone(i, reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    console.log("Unknown MIME type: " + file.type);
+                    oneDone(i, nada);
+                }
+            });
+        } else {
+            var data = dt.getData("text/uri-list");
+            if (data) {
+                data = data.split("\n").filter(function(line) {
+                    return !/^\s*(#|$)/.test(line);
+                });
+                countDown = data.length;
+                dropped = Array(countDown);
+                files = Array(countDown);
+                data.forEach(dropUri);
             }
-        });
+        }
+
+        function dropUri(uri, i) {
+            var name = uri.replace(/[?#][^]*/, "");
+            name = name.replace(/[^]*\/([^\/])/, "$1");
+            files[i] = {
+                type: "",
+                name: name
+            };
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = haveHead;
+            req.open("HEAD", uri);
+            req.send();
+
+            function haveHead() {
+                if (req.readyState !== XMLHttpRequest.DONE)
+                    return;
+                if (req.status !== 200) {
+                    console.error("HEAD request for " + uri + " failed: " +
+                        (req.responseText || "(no error message)"));
+                    oneDone(i, nada);
+                    return;
+                }
+                var type = req.getResponseHeader("Content-Type");
+                files[i].type = type;
+                if ((/^image\//).test(type)) {
+                    imgDone(i, uri);
+                } else if (textType(type)) {
+                    req = new XMLHttpRequest();
+                    req.onreadystatechange = haveText;
+                    req.open("GET", uri);
+                    req.send();
+                } else {
+                    oneDone(i, nada);
+                }
+            }
+
+            function haveText() {
+                if (req.readyState !== XMLHttpRequest.DONE)
+                    return;
+                if (req.status !== 200) {
+                    console.error("GET request for " + uri + " failed: " +
+                        (req.responseText || "(no error message)"));
+                    oneDone(i, nada);
+                    return;
+                }
+                textDone(i, req.responseText);
+            }
+
+        }
+
+        function textType(type) {
+            type = type.replace(/;[^]*/, "");
+            if ((/^text\//).test(type)) return 1;
+            if (type === "application/json") return 2;
+            return 0;
+        }
+
+        function textDone(i, text) {
+            switch (textType(files[i].type)) {
+                case 1:
+                    oneDone(i, General.string(text));
+                    break;
+                case 2:
+                    var data, value;
+                    try {
+                        data = JSON.parse(text);
+                        value = General.wrapJSON(data);
+                    } catch (err) {
+                        console.error(err);
+                        value = nada;
+                    }
+                    oneDone(i, value);
+                    break;
+                default:
+                    oneDone(i, nada);
+                    break;
+            }
+        }
+
+        function imgDone(i, src) {
+            var img = new Image();
+            var reported = false;
+            img.onload = function() {
+                if (reported) return;
+                reported = true;
+                oneDone(i,
+
+                    loadImage(img, false));
+            };
+            img.onerror = function(err) {
+                if (reported) return;
+                reported = true;
+                console.error(err);
+                oneDone(i, nada);
+            };
+            img.src = src;
+        }
 
         function oneDone(i, value, type) {
             dropped[i] = List.turnIntoCSList([
@@ -1516,8 +1886,22 @@ function setuplisteners(canvas, data) {
 
 
     function touchMove(e) {
-        updatePostition(e.targetTouches[0]);
+
+        var activeTouchIDList = e.changedTouches;
+        var gotit = false;
+        for (var i = 0; i < activeTouchIDList.length; i++) {
+            if (activeTouchIDList[i].identifier === activeTouchID) {
+                gotit = true;
+            }
+        }
+        if (!gotit) {
+            return;
+        }
+
+        updatePosition(e.targetTouches[0]);
         if (mouse.down) {
+            if (mousedownevent && (Math.abs(mousedownevent.clientX - e.targetTouches[0].clientX) > 2 || Math.abs(mousedownevent.clientY - e.targetTouches[0].clientY) > 2))
+                hasmoved = true;
             cs_mousedrag();
         } else {
             cs_mousemove();
@@ -1527,22 +1911,48 @@ function setuplisteners(canvas, data) {
 
         e.preventDefault();
     }
+    var activeTouchID = -1;
 
     function touchDown(e) {
-        updatePostition(e.targetTouches[0]);
+        if (activeTouchID !== -1) {
+            return;
+        }
+
+        var activeTouchIDList = e.changedTouches;
+        if (activeTouchIDList.length === 0) {
+            return;
+        }
+        activeTouchID = activeTouchIDList[0].identifier;
+
+        updatePosition(e.targetTouches[0]);
         cs_mousedown();
         mouse.down = true;
+        mousedownevent = e.targetTouches[0];
+        hasmoved = false;
         //move = getmover(mouse);
         manage("mousedown");
         e.preventDefault();
     }
 
     function touchUp(e) {
+        var activeTouchIDList = e.changedTouches;
+        var gotit = false;
+        for (var i = 0; i < activeTouchIDList.length; i++) {
+            if (activeTouchIDList[i].identifier === activeTouchID) {
+                gotit = true;
+            }
+        }
+
+        if (!gotit) {
+            return;
+        }
+        activeTouchID = -1;
         mouse.down = false;
         cindy_cancelmove();
-        stateContinueFromHere();
         cs_mouseup();
         manage("mouseup");
+        if (!hasmoved)
+            cs_mouseclick();
         scheduleUpdate();
         e.preventDefault();
     }
@@ -1563,8 +1973,60 @@ function setuplisteners(canvas, data) {
             });
         }, false);
     }
+    resizeSensor(canvas.parentNode);
 
     scheduleUpdate();
+}
+
+function mkdiv(parent, style) {
+    var div = document.createElement("div");
+    div.setAttribute("style", style);
+    parent.appendChild(div);
+    return div;
+}
+
+// Inspired by
+// github.com/marcj/css-element-queries/blob/bfa9a7f/src/ResizeSensor.js
+// written by Marc J. Schmidt and others, licensed under the MIT license.
+function resizeSensor(element) {
+    if (typeof document === "undefined") return;
+    var styleChild = "position: absolute; transition: 0s; left: 0; top: 0;";
+    var style = styleChild + " right: 0; bottom: 0; overflow: hidden;" +
+        " z-index: -1; visibility: hidden;";
+    var expand = mkdiv(element, style);
+    var expandChild = mkdiv(
+        expand, styleChild + " width: 100000px; height: 100000px");
+    var shrink = mkdiv(element, style);
+    mkdiv(shrink, styleChild + " width: 200%; height: 200%");
+
+    function reset() {
+        expand.scrollLeft = expand.scrollTop =
+            shrink.scrollLeft = shrink.scrollTop = 100000;
+    }
+
+    reset();
+    var w = element.clientWidth;
+    var h = element.clientHeight;
+    var scheduled = false;
+
+    function onScroll() {
+        if (w !== element.clientWidth || h !== element.clientHeight) {
+            w = element.clientWidth;
+            h = element.clientHeight;
+            if (!scheduled) {
+                scheduled = true;
+                requestAnimFrame(function() {
+                    scheduled = false;
+                    updateCanvasDimensions();
+                    scheduleUpdate();
+                });
+            }
+        }
+        reset();
+    }
+
+    expand.addEventListener("scroll", onScroll);
+    shrink.addEventListener("scroll", onScroll);
 }
 
 var requestAnimFrame;
@@ -1607,14 +2069,14 @@ function updateCindy() {
     csctx.save();
     csctx.clearRect(0, 0, csw, csh);
     var m = csport.drawingstate.matrix;
+    var d, a, b, i, p;
     // due to the csport.reset(), m is initial, i.e. a = d and b = c = 0
-    if (csgridsize !== 0) {
+    if (csgridsize !== 0) { // Square grid
         csctx.beginPath();
         csctx.strokeStyle = "rgba(0,0,0,0.1)";
         csctx.lineWidth = 1;
         csctx.lineCap = "butt";
-        var d = csgridsize * m.a;
-        var i, p;
+        d = csgridsize * m.a;
         i = Math.ceil(-m.tx / d);
         while ((p = i * d + m.tx) < csw) {
             if (i || !csaxes) {
@@ -1623,6 +2085,41 @@ function updateCindy() {
             }
             i++;
         }
+        i = Math.floor(m.ty / d);
+        while ((p = i * d - m.ty) < csh) {
+            if (i || !csaxes) {
+                csctx.moveTo(0, p);
+                csctx.lineTo(csw, p);
+            }
+            i++;
+        }
+        csctx.stroke();
+    }
+    if (cstgrid !== 0) { // Triangular grid
+        csctx.beginPath();
+        csctx.strokeStyle = "rgba(0,0,0,0.1)";
+        csctx.lineWidth = 1;
+        csctx.lineCap = "butt";
+        d = cstgrid * m.a;
+        var sqrt3 = Math.sqrt(3);
+        a = m.ty / sqrt3;
+        b = (csh + m.ty) / sqrt3;
+        // down slope first
+        i = Math.ceil(-(m.tx + b) / d);
+        while ((p = i * d + m.tx) + a < csw) {
+            csctx.moveTo(p + a, 0);
+            csctx.lineTo(p + b, csh);
+            i++;
+        }
+        // up slope second
+        i = Math.ceil(-(m.tx - a) / d);
+        while ((p = i * d + m.tx) - b < csw) {
+            csctx.moveTo(p - a, 0);
+            csctx.lineTo(p - b, csh);
+            i++;
+        }
+        // horizontal last
+        d *= 0.5 * sqrt3;
         i = Math.floor(m.ty / d);
         while ((p = i * d - m.ty) < csh) {
             if (i || !csaxes) {
@@ -1662,14 +2159,26 @@ function updateCindy() {
     csctx.restore();
 }
 
-function cs_keypressed(e) {
+function keyEvent(e, script) {
     var evtobj = window.event ? event : e;
     var unicode = evtobj.charCode ? evtobj.charCode : evtobj.keyCode;
     var actualkey = String.fromCharCode(unicode);
     cskey = actualkey;
     cskeycode = unicode;
-    evaluate(cscompiled.keydown);
+    evaluate(script);
     scheduleUpdate();
+}
+
+function cs_keydown(e) {
+    keyEvent(e, cscompiled.keydown);
+}
+
+function cs_keyup(e) {
+    keyEvent(e, cscompiled.keyup);
+}
+
+function cs_keytyped(e) {
+    keyEvent(e, cscompiled.keytyped);
 }
 
 function cs_mousedown(e) {
@@ -1693,11 +2202,14 @@ function cs_mouseclick(e) {
 }
 
 function cs_tick(e) {
-    if (csPhysicsInited) { //TODO: Check here if physics is required
-        if (typeof(lab) !== 'undefined') {
-            lab.tick();
-        }
+    var now = Date.now();
+    var delta = Math.min(simcap, now - simtick) * simspeed * simfactor;
+    simtick = now;
+    var time = simtime + delta;
+    if (csPhysicsInited && typeof(lab) !== 'undefined') {
+        lab.tick(delta);
     }
+    simtime = time;
     if (csanimating) {
         evaluate(cscompiled.tick);
     }
@@ -1727,7 +2239,7 @@ function cs_onDrop(lst, pos) {
 function cindy_cancelmove() {
     move = undefined;
 }
-var version = [0,0,0,-1,"g776ab7b"];
+var version = [0,8,7,325,"g2739aa4"];
 //==========================================
 //      Complex Numbers
 //==========================================
@@ -1982,9 +2494,7 @@ CSNumber.multiMult = function(arr) {
     return erg;
 };
 
-// BUG?
-// why do we have two argument but throw away the second argument?
-CSNumber.abs2 = function(a, b) {
+CSNumber.abs2 = function(a) {
     return {
         "ctype": "number",
         "value": {
@@ -1994,8 +2504,8 @@ CSNumber.abs2 = function(a, b) {
     };
 };
 
-CSNumber.abs = function(a1) {
-    return CSNumber.sqrt(CSNumber.abs2(a1));
+CSNumber.abs = function(a) {
+    return CSNumber.sqrt(CSNumber.abs2(a));
 };
 
 
@@ -2012,7 +2522,18 @@ CSNumber.inv = function(a) {
 
 
 CSNumber.div = function(a, b) {
-    return CSNumber.mult(a, CSNumber.inv(b));
+    var ar = a.value.real;
+    var ai = a.value.imag;
+    var br = b.value.real;
+    var bi = b.value.imag;
+    var s = br * br + bi * bi;
+    return {
+        "ctype": "number",
+        "value": {
+            'real': (ar * br + ai * bi) / s,
+            'imag': (ai * br - ar * bi) / s
+        }
+    };
 };
 
 CSNumber.eps = 1e-10;
@@ -2495,183 +3016,20 @@ CSNumber._helper.solveCubicHelper = function(a, b, c, d) {
     ]);
 };
 
+CSNumber._helper.getRangeRand = function(min, max) {
+    return Math.random() * (max - min) + min;
+};
 
-//CSNumber._helper.solveCubicBlinn = function(alpha, beta, gamma, delta) {
-//    // Blinn
-//    var beta2 = CSNumber.mult(beta,beta);
-//    var beta3 = CSNumber.mult(beta2,beta);
-//    var gamma2 = CSNumber.mult(gamma,gamma);
-//    var gamma3 = CSNumber.mult(gamma2,gamma);
-//
-//    var d1 = CSNumber.mult(alpha,gamma);
-//    d1 = CSNumber.sub(d1, beta2);
-//
-//    var d2 = CSNumber.mult(alpha,delta);
-//    d2 = CSNumber.sub(d2, CSNumber.mult(beta,gamma));
-//
-//    var d3 = CSNumber.mult(beta,delta);
-//    d3 = CSNumber.sub(d3, gamma2);
-//
-//    var ldel = CSNumber.multiMult([CSNumber.real(4), d1, d3]);
-//    ldel = CSNumber.sub(ldel, CSNumber.mult(d2,d2));
-//
-//    console.log("ldel", ldel.value.real);
-//
-//    var lambda, mu;
-//    // large if else switch in paper
-//    if(ldel.value.real < 0){
-//        console.log("ldel value real < 0 true");
-//        var abar;
-//        var dbar;
-//        var bbar;
-//        var gbar;
-//    
-//        var ifone = CSNumber.sub(CSNumber.mult(beta3, delta), CSNumber.mult(alpha,gamma3));
-//        //console.log("ifone", ifone);
-//        if(ifone.value.real >= 0){
-//        console.log("ifone value real >= 0 true");
-//            abar = CSNumber.clone(alpha);
-//            gbar = CSNumber.clone(d1);
-//            dbar = CSNumber.add(CSNumber.multiMult([CSNumber.real(-2), beta,d1]), CSNumber.mult(alpha,d2));
-//        }
-//        else{
-//        console.log("ifone value real >= 0 false");
-//            abar = delta;
-//            gbar = d3;
-//            dbar = CSNumber.add(CSNumber.multiMult([CSNumber.real(-1), delta, d2]), CSNumber.multiMult([CSNumber.real(2), gamma, d3]));
-//        }
-//    
-//        var signum = function(a){
-//            if(a.value.real > 0) return CSNumber.real(1);
-//            else return CSNumber.real(-1);
-//        }
-//    
-//        var T0 = CSNumber.multiMult([CSNumber.real(-1), signum(dbar), CSNumber.abs(abar), CSNumber.sqrt(CSNumber.mult(CSNumber.real(-1), ldel))]);
-//        var T1 = CSNumber.add(CSNumber.mult(CSNumber.real(-1), dbar), T0);
-//    
-//        var pp = CSNumber.powRealExponent(CSNumber.mult(T1, CSNumber.real(0.5)), 1/3);
-//    
-//        var qq;
-//        if(CSNumber.abs(T1, T0).value.real < 0.00000001){
-//            console.log("p = -q");
-//            qq = CSNumber.mult(CSNumber.real(-1), pp);
-//        }
-//        else {
-//            console.log("p !!!!= -q");
-//            qq = CSNumber.div(CSNumber.mult(CSNumber.real(-1),gbar), pp);
-//        }
-//    
-//        var x1;
-//        if(gbar.value.real <= 0){ 
-//            console.log("gbar.value.real <= 0 true");
-//            x1 = CSNumber.add(pp,qq);}
-//        else {
-//            console.log("gbar.value.real <= 0 false");
-//            x1 = CSNumber.mult(CSNumber.real(-1), dbar);
-//            var tmp = CSNumber.add(CSNumber.mult(pp,pp), CSNumber.mult(qq,qq));
-//            tmp = CSNumber.add(tmp,gbar);
-//            x1 = CSNumber.mult(x1, CSNumber.inv(tmp));
-//        }
-//    
-//        var res1;
-//        if(ifone.value.real >= 0) {
-//            console.log("ifone.value.real >= 0 true")
-//            res1 = [CSNumber.sub(x1, beta), alpha];
-//        }
-//        else {
-//            console.log("ifone.value.real >= 0 false")
-//            res1 = [CSNumber.mult(CSNumber.real(-1),delta), CSNumber.add(x1, gamma)];
-//        }
-//    
-//        //console.log("res1", res1);
-//        lambda = res1[0];
-//        mu = res1[1];
-//    }   //  if(ldel.value.real < 0)
-//    else{
-//console.log("ldel.value.real < 0 false");
-//        // left side of Blinn's paper
-//        //
-//        var DAbar = CSNumber.add(CSNumber.multiMult([CSNumber.real(-2), beta, d1]), CSNumber.mult(alpha,d2));
-//        var CAbar = CSNumber.clone(d1);
-//
-//        var sigA = CSNumber.arctan2(CSNumber.mult(alpha, CSNumber.sqrt(ldel)), CSNumber.mult(CSNumber.real(-1), DAbar));
-//        sigA = CSNumber.mult(CSNumber.real(1/3), CSNumber.abs(sigA));
-//
-//        var CAsqrt = CSNumber.multiMult([CSNumber.real(2), CSNumber.sqrt(CSNumber.mult(CSNumber.real(-1), CAbar))]);
-//
-//        var x1A = CSNumber.mult(CAsqrt, CSNumber.cos(sigA));
-//        var x3A = CSNumber.clone(CAsqrt);
-//        var x3Ainner = CSNumber.mult(CSNumber.real(-0.5), CSNumber.cos(sigA));
-//        // cos - sin
-//        x3Ainner = CSNumber.add(x3Ainner, CSNumber.multiMult([CSNumber.real(-0.5), CSNumber.sqrt(CSNumber.real(3)), CSNumber.sin(sigA)]));
-//        x3A = CSNumber.mult(CAsqrt, x3Ainner);
-//
-////        console.log("x1A, x3A, x3Ainner", x1A, x3A,x3Ainner);
-//        var ifxa = CSNumber.sub(CSNumber.add(x1A, x3A), CSNumber.mult(CSNumber.real(2), beta));
-//
-//        var xL;
-//        if(ifxa.value.real > 0){
-//            console.log( "ifxa.value.real > 0 true");
-//            xL = x1A;
-//        }
-//        else{
-//            console.log( "ifxa.value.real > 0 false");
-//            xL = x3A;
-//        }
-//
-//        var resL = [CSNumber.sub(xL, beta), alpha];
-//
-//        // right side of Blinn's paper
-//        //
-//        var DDbar = CSNumber.add(CSNumber.multiMult([CSNumber.real(-1), delta, d2]), CSNumber.multiMult([CSNumber.real(2),gamma,d3]));
-//        var CDbar = CSNumber.clone(d3);
-//        var sigD = CSNumber.arctan2(CSNumber.mult(delta, CSNumber.sqrt(ldel)), CSNumber.mult(CSNumber.real(-1), DDbar));
-//        sigD = CSNumber.mult(CSNumber.real(1/3), CSNumber.abs(sigD));
-//
-//        var CDsqrt = CSNumber.multiMult([CSNumber.real(2), CSNumber.sqrt(CSNumber.mult(CSNumber.real(-1), CDbar))]);
-//
-//        var x1D = CSNumber.mult(CDsqrt, CSNumber.cos(sigD));
-//        var x3D = CSNumber.clone(CDsqrt);
-//        // cos - sin
-//        var x3Dinner = CSNumber.mult(CSNumber.real(-0.5), CSNumber.cos(sigD));
-//        x3Dinner = CSNumber.add(x3Dinner, CSNumber.multiMult([CSNumber.real(-0.5), CSNumber.sqrt(CSNumber.real(3)), CSNumber.sin(sigA)]));
-//        x3D = CSNumber.mult(CAsqrt,x3Dinner);
-//
-//        console.log("x1D, x3d, x3Dinner", x1D, x3D, x3Dinner);
-//
-//        var ifxs = CSNumber.sub(CSNumber.add(x1D, x3D), CSNumber.mult(CSNumber.real(2), gamma));
-//
-//        var xS;
-//        if(ifxa.value.real < 0){
-//            console.log("ifxa.value.real < 0 true");
-//            xS = x1D;
-//        }
-//        else{
-//            console.log("ifxa.value.real < 0 false");
-//            xS = x3D;
-//        }
-//
-//        var resS = [CSNumber.mult(CSNumber.real(-1), delta), CSNumber.add(xS, gamma)];
-//
-//
-////        console.log("resL, resS", resL, resS);
-//        // combine both -- lower end of Blinn's paper
-//        var EE = CSNumber.mult(resL[1], resS[1]);
-//        var FF = CSNumber.multiMult([CSNumber.real(-1), resL[0], resS[1]]);
-//        FF = CSNumber.sub(FF, CSNumber.mult(resL[1], resS[0]));
-//        var GG = CSNumber.mult(resL[0], resS[0]);
-//
-// //       console.log("ee, ff, gg", EE, FF, GG);
-//        var resg1 = CSNumber.sub(CSNumber.mult(gamma, FF), CSNumber.mult(beta, GG));
-//        var resg2 = CSNumber.sub(CSNumber.mult(gamma, EE), CSNumber.mult(beta, FF));
-////        var regGes = [resg1, resg2];
-//        lambda = resg1;
-//        mu = resg2;
-//
-//        return [lambda, mu];
-//
-//    } // end else
-//};
+CSNumber.getRandReal = function(min, max) {
+    var real = CSNumber._helper.getRangeRand(min, max);
+    return CSNumber.real(real);
+};
+
+CSNumber.getRandComplex = function(min, max) {
+    var real = CSNumber._helper.getRangeRand(min, max);
+    var imag = CSNumber._helper.getRangeRand(min, max);
+    return CSNumber.complex(real, imag);
+};
 //==========================================
 //      Lists
 //==========================================
@@ -2691,13 +3049,11 @@ List.asList = function(x) {
     if (x.ctype === "list") {
         return x;
     }
-    if (x.ctype === "number" || x.ctype === "boolean") {
+    if (x.ctype === "number" || x.ctype === "boolean" || x.ctype === "geo") {
         return List.turnIntoCSList([x]);
     }
-    if (x.ctype === "string" || x.ctype === "undefined") {
-        return List.EMPTY;
-    }
-    return nada;
+    // else: string, undefined, shape, image
+    return List.EMPTY;
 };
 
 List.realVector = function(l) {
@@ -2885,9 +3241,9 @@ List.consecutive = function(a) {
 };
 
 List.reverse = function(a) {
-    var erg = [];
-    for (var i = a.value.length - 1; i >= 0; i--) {
-        erg.push(a.value[i]);
+    var erg = new Array(a.value.length);
+    for (var i = a.value.length - 1, j = 0; i >= 0; i--, j++) {
+        erg[j] = a.value[i];
     }
 
     return {
@@ -3087,7 +3443,7 @@ List.almostequals = function(a1, a2) {
         var av2 = a2.value[i];
 
         if (av1.ctype === 'list' && av2.ctype === 'list') {
-            erg = erg && List.comp_almostequals(av1, av2).value;
+            erg = erg && List.almostequals(av1, av2).value;
         } else {
             erg = erg && comp_almostequals([av1, av2], []).value;
 
@@ -3569,6 +3925,13 @@ List.isNumberMatrix = function(a) {
 };
 
 
+List._helper.isNumberMatrixMN = function(a, m, n) {
+    return List.isNumberMatrix(a).value &&
+        a.value.length === m &&
+        a.value[0].value.length === n;
+};
+
+
 List.scalproduct = function(a1, a2) {
     if (a1.value.length !== a2.value.length) {
         return nada;
@@ -3705,7 +4068,7 @@ List.mult = function(a, b) {
         return List.productVM(a, b);
     }
 
-    if (List.isNumberMatrix(a).value && List.isNumberMatrix(b) && b.value.length === a.value[0].value.length) {
+    if (List.isNumberMatrix(a).value && List.isNumberMatrix(b).value && b.value.length === a.value[0].value.length) {
         return List.productMM(a, b);
     }
 
@@ -3755,7 +4118,7 @@ function conicMat2Vec(m) {
 List.conicDist = function(mat1, mat2) {
     var vec1 = conicMat2Vec(mat1);
     var vec2 = conicMat2Vec(mat2);
-    console.log(niceprint(vec1), niceprint(vec2));
+    //    console.log(niceprint(vec1), niceprint(vec2));
     return List.projectiveDistMinScal(vec1, vec2);
 };
 
@@ -5200,6 +5563,95 @@ List.ofGeos = function(geos) {
         };
     }));
 };
+
+List._helper.isAlmostFarpoint = function(a) {
+    var z = List.normalizeMax(a).value[2];
+    return CSNumber.abs(z).value.real < CSNumber.eps;
+};
+
+List.getRandRealVec3 = function(min, max) {
+    var RR = CSNumber.getRandReal;
+    return List.turnIntoCSList([RR(min, max), RR(min, max), RR(min, max)]);
+};
+
+List.getRandComplexVec3 = function(min, max) {
+    var RC = CSNumber.getRandComplex;
+    return List.turnIntoCSList([RC(min, max), RC(min, max), RC(min, max)]);
+};
+/*
+ * Dictionaries map CindyScript values to CindyScript values.
+ * Since values are immutable and support equality testing,
+ * they can be easily used as keys.
+ *
+ * Internally the map is an object with properties
+ * whose names are stringified versions of the CindyScript keys.
+ * The values are objects which hold the original key and value.
+ * To keep overhead low, avoid deeply nested data structures as keys.
+ */
+
+var Dict = {};
+
+Dict.key = function(x) {
+    if (x.ctype === "string")
+        return "s" + x.value.length + ":" + x.value + ";";
+    if (x.ctype === "number")
+        return "n" + x.value.real + "," + x.value.imag + ";";
+    if (x.ctype === "list")
+        return "l" + x.value.length + ":" +
+            x.value.map(Dict.key).join(",") + ";";
+    if (x.ctype === "boolean")
+        return "b" + x.value + ";";
+    if (x.ctype === "dict") {
+        var keys = Object.keys(x.value).sort();
+        return "d" + keys.length + ":" + keys.join(",") + ";";
+    }
+    if (x.ctype !== "undefined")
+        csconsole.err("Bad dictionary key: " + niceprint(x));
+    return "undef";
+};
+
+// Dictionary creation is a two-step process:
+// one creates a dictionary (empty or cloned), then adds entries to it.
+// During this process, the dictionary is considered mutable.
+// But as for all other CindyJS data structures, once the construction
+// is complete and other code gains access to the dictionary,
+// the dictionary is considered immutable.
+
+Dict.create = function() {
+    return {
+        ctype: "dict",
+        value: {} // or Map or Object.create(null)?
+    };
+};
+
+Dict.clone = function(dict) {
+    var res = Dict.create();
+    for (var key in dict.value)
+        if (dict.value.hasOwnProperty(key))
+            res.value[key] = dict.value[key];
+    return res;
+};
+
+// Modifying operation
+Dict.put = function(dict, key, value) {
+    dict.value[Dict.key(key)] = {
+        key: key,
+        value: value
+    };
+};
+
+Dict.get = function(dict, key, dflt) {
+    var kv = dict.value[Dict.key(key)];
+    if (kv) return kv.value; // check kv.key?
+    return dflt;
+};
+
+Dict.niceprint = function(dict) {
+    return "{" + Object.keys(dict.value).sort().map(function(key) {
+        var kv = dict.value[key];
+        return niceprint(kv.key) + ":" + niceprint(kv.value);
+    }).join(", ") + "}";
+};
 //==========================================
 //      Things that apply to several types
 //==========================================
@@ -5445,6 +5897,60 @@ General.withUsage = function(v, usage) {
         "usage": usage
     };
 };
+
+General.wrapJSON = function(data) {
+    switch (typeof data) {
+        case "number":
+            return CSNumber.real(data);
+        case "string":
+            return General.string(data);
+        case "boolean":
+            return General.bool(data);
+        case "object":
+            if (data === null)
+                return nada;
+            if (Array.isArray(data))
+                return List.turnIntoCSList(data.map(General.wrapJSON));
+            var d = Dict.create();
+            for (var k in data)
+                Dict.put(d, General.string(k), General.wrapJSON(data[k]));
+            return d;
+        default:
+            console.log(
+                "Failed to convert " + (typeof data) + " to CindyJS data type");
+            return nada;
+    }
+};
+
+General.identity = function(x) {
+    return x;
+};
+
+General.deeplyEqual = function(a, b) {
+    if (typeof a !== "object" || typeof b !== "object" ||
+        a === null || b === null)
+        return a === b;
+    var cnt = 0;
+    var k;
+    for (k in a) {
+        ++cnt;
+        if (!(k in b && General.deeplyEqual(a[k], b[k])))
+            return false;
+    }
+    for (k in b)
+        --cnt;
+    return cnt === 0;
+};
+
+General.DeepCloneJSON = function(o) {
+    var out, v, key;
+    out = Array.isArray(o) ? [] : {};
+    for (key in o) {
+        v = o[key];
+        out[key] = (typeof v === "object" && v !== null) ? General.DeepCloneJSON(v) : v;
+    }
+    return out;
+};
 /*jshint -W069 */
 
 var myfunctions = {};
@@ -5539,6 +6045,9 @@ function niceprint(a) {
 
         }
         return erg + "]";
+    }
+    if (a.ctype === 'dict') {
+        return Dict.niceprint(a);
     }
     if (a.ctype === 'function') {
         return 'FUNCTION';
@@ -5738,7 +6247,7 @@ namespace.undefinedWarning = {};
 
 namespace.getvar = function(name) {
 
-    var stack = this.vars[name];
+    var stack = this.vars[name] || [];
     if (stack.length === 0) console.error("Getting non-existing variable " + name);
     var erg = stack[stack.length - 1];
     if (erg === null) {
@@ -5794,18 +6303,22 @@ var csAssets = {};
 
 var Accessor = {};
 
-Accessor.generalFields = { //Übersetungstafel der Feldnamen 
+Accessor.generalFields = { // fieldname translation
     color: "color",
     colorhsb: "",
     size: "size",
     alpha: "alpha",
+    fillcolor: "fillcolor",
+    fillalpha: "fillalpha",
     isshowing: "isshowing",
     visible: "visible",
     name: "name",
     caption: "caption",
     trace: "",
     tracelength: "",
-    selected: ""
+    selected: "",
+    labeled: "labeled",
+    labelled: "labeled",
 };
 
 Accessor.getGeoField = function(geoname, field) {
@@ -5835,7 +6348,6 @@ Accessor.getField = function(geo, field) {
             return General.withUsage(geo.homog, "Point");
         }
 
-
         if (field === "x") {
             return CSNumber.div(geo.homog.value[0], geo.homog.value[2]);
         }
@@ -5851,6 +6363,10 @@ Accessor.getField = function(geo, field) {
         if (field === "angle") {
             erg = List.eucangle(List.ey, geo.homog);
             return General.withUsage(erg, "Angle");
+        }
+        if (field === "slope") {
+            return CSNumber.neg(CSNumber.div(
+                geo.homog.value[0], geo.homog.value[1]));
         }
 
     }
@@ -5905,12 +6421,27 @@ Accessor.getField = function(geo, field) {
                 return General.bool(false);
             }
         }
+        if (field === "xy") {
+            erg = List.dehom(geo.homog);
+            return General.withUsage(erg, "Point");
+        }
+        if (field === "homog") {
+            return General.withUsage(geo.homog, "Point");
+        }
+        if (field === "x") {
+            return CSNumber.div(geo.homog.value[0], geo.homog.value[2]);
+        }
+        if (field === "y") {
+            return CSNumber.div(geo.homog.value[1], geo.homog.value[2]);
+        }
     }
     if (field === "trace") {
         return General.bool(!!geo.drawtrace);
     }
-
-    if (Accessor.generalFields[field]) { //must be defined an an actual string
+    if (field === "pinned") {
+        return General.bool(!!geo.pinned);
+    }
+    if (Accessor.generalFields[field]) { //must be defined as an actual string
         erg = geo[Accessor.generalFields[field]];
         if (erg && erg.ctype) {
             return erg;
@@ -5952,7 +6483,14 @@ Accessor.getField = function(geo, field) {
         if (field === "f" && geo.behavior.type === "Mass") {
             return List.realVector([geo.behavior.fx, geo.behavior.fy]);
         }
+        if (field === "ldiff" && geo.behavior.type === "Spring") {
+            return CSNumber.real(geo.behavior.ldiff);
+        }
 
+    }
+    var getter = geoOps[geo.type]["get_" + field];
+    if (typeof getter === "function") {
+        return getter(geo);
     }
     return nada;
 
@@ -5962,14 +6500,20 @@ Accessor.getField = function(geo, field) {
 Accessor.setField = function(geo, field, value) {
     var dir;
 
-    if (field === "color") {
+    if (field === "color" && List._helper.isNumberVecN(value, 3)) {
         geo.color = value;
     }
-    if (field === "size") {
+    if (field === "size" && value.ctype === "number") {
         geo.size = value;
     }
-    if (field === "alpha") {
+    if (field === "alpha" && value.ctype === "number") {
         geo.alpha = value;
+    }
+    if (field === "fillcolor" && List._helper.isNumberVecN(value, 3)) {
+        geo.fillcolor = value;
+    }
+    if (field === "fillalpha" && value.ctype === "number") {
+        geo.fillalpha = value;
     }
     if (field === "visible") {
         if (value.ctype === "boolean") {
@@ -5979,6 +6523,11 @@ Accessor.setField = function(geo, field, value) {
     if (field === "pinned") {
         if (value.ctype === "boolean") {
             geo.pinned = value.value;
+        }
+    }
+    if (field === "labeled" || field === "labelled") {
+        if (value.ctype === "boolean") {
+            geo.labeled = value.value;
         }
     }
     if (field === "printlabel") {
@@ -5995,45 +6544,50 @@ Accessor.setField = function(geo, field, value) {
         }
     }
 
-    if (field === "xy" && geo.kind === "P" && geo.movable && List._helper.isNumberVecN(value, 2)) {
-        movepointscr(geo, List.turnIntoCSList([value.value[0], value.value[1], CSNumber.real(1)]), "homog");
-    }
+    if (geo.kind === "P" && geo.movable) {
+        if (field === "xy" && List._helper.isNumberVecN(value, 2)) {
+            movepointscr(geo, List.turnIntoCSList([value.value[0], value.value[1], CSNumber.real(1)]), "homog");
+        }
 
-    if (field === "xy" && geo.kind === "P" && geo.movable && List._helper.isNumberVecN(value, 3)) {
-        movepointscr(geo, value, "homog");
-    }
+        if (field === "xy" && List._helper.isNumberVecN(value, 3)) {
+            movepointscr(geo, value, "homog");
+        }
 
-    if (field === "x" && geo.kind === "P" && geo.movable && value.ctype === "number") {
-        movepointscr(geo, List.turnIntoCSList([CSNumber.mult(value, geo.homog.value[2]), geo.homog.value[1], geo.homog.value[2]]), "homog");
-    }
+        if (field === "x" && value.ctype === "number") {
+            movepointscr(geo, List.turnIntoCSList([CSNumber.mult(value, geo.homog.value[2]), geo.homog.value[1], geo.homog.value[2]]), "homog");
+        }
 
-    if (field === "y" && geo.kind === "P" && geo.movable && value.ctype === "number") {
-        movepointscr(geo, List.turnIntoCSList([geo.homog.value[0], CSNumber.mult(value, geo.homog.value[2]), geo.homog.value[2]]), "homog");
-    }
+        if (field === "y" && value.ctype === "number") {
+            movepointscr(geo, List.turnIntoCSList([geo.homog.value[0], CSNumber.mult(value, geo.homog.value[2]), geo.homog.value[2]]), "homog");
+        }
 
-
-    if (field === "homog" && geo.kind === "P" && geo.movable && List._helper.isNumberVecN(value, 3)) {
-        movepointscr(geo, value, "homog");
+        if (field === "homog" && List._helper.isNumberVecN(value, 3)) {
+            movepointscr(geo, value, "homog");
+        }
     }
 
     if (field === "homog" && geo.kind === "L" && geo.movable && List._helper.isNumberVecN(value, 3)) {
         movepointscr(geo, value, "homog");
     }
 
-    if (field === "angle" && geo.type === "Through") {
-        var cc = CSNumber.cos(value);
-        var ss = CSNumber.sin(value);
-        dir = List.turnIntoCSList([cc, ss, CSNumber.real(0)]);
-        movepointscr(geo, dir, "dir");
-    }
-    if (geo.kind === "C") {
-        if (field === "radius" && geo.type === "CircleMr" && value.ctype === "number") {
-            movepointscr(geo, value, "radius");
-        }
-    }
     if (geo.kind === "Text") {
         if (field === "pressed" && value.ctype === "boolean" && geo.checkbox) {
             geo.checkbox.checked = value.value;
+        }
+        if (geo.movable) { // Texts may move without tracing
+            if (field === "xy") {
+                if (List._helper.isNumberVecN(value, 2)) {
+                    geo.homog = List.turnIntoCSList([value.value[0], value.value[1], CSNumber.real(1)]);
+                } else if (List._helper.isNumberVecN(value, 3)) {
+                    geo.homog = value;
+                }
+            } else if (field === "homog" && List._helper.isNumberVecN(value, 3)) {
+                geo.homog = value;
+            } else if (field === "x" && value.ctype === "number") {
+                geo.homog = List.turnIntoCSList([CSNumber.mult(value, geo.homog.value[2]), geo.homog.value[1], geo.homog.value[2]]);
+            } else if (field === "y" && value.ctype === "number") {
+                geo.homog = List.turnIntoCSList([geo.homog.value[0], CSNumber.mult(value, geo.homog.value[2]), geo.homog.value[2]]);
+            }
         }
     }
     if (geo.behavior) {
@@ -6063,8 +6617,30 @@ Accessor.setField = function(geo, field, value) {
             geo.behavior.vy = value.value[1].value.real;
         }
     }
+    var setter = geoOps[geo.type]["set_" + field];
+    if (typeof setter === "function") {
+        return setter(geo, value);
+    }
 
 
+};
+
+Accessor.getuserData = function(obj, key) {
+    var val;
+    if (obj.userData && obj.userData[key]) val = obj.userData[key];
+
+    if (val && val.ctype) {
+        return val;
+    } else if (typeof val !== "object") {
+        return General.wrap(val);
+    } else {
+        return nada;
+    }
+};
+
+Accessor.setuserData = function(obj, key, value) {
+    if (!obj.userData) obj.userData = {};
+    obj.userData[key] = value;
 };
 //*******************************************************
 // and here are the definitions of the operators
@@ -6074,27 +6650,6 @@ evaluator.version$0 = function(args, modifs) {
     var ver = ["CindyJS"].concat(version);
     return List.turnIntoCSList(ver.map(General.wrap));
 };
-
-evaluator.timestamp$0 = function(args, modifs) {
-    return {
-        "ctype": "number",
-        "value": {
-            "real": new Date().getTime(),
-            "imag": 0
-        }
-    };
-};
-
-evaluator.seconds$0 = function(args, modifs) { //OK
-    return {
-        "ctype": "number",
-        "value": {
-            'real': (new Date().getTime() / 1000),
-            'imag': 0
-        }
-    };
-};
-
 
 evaluator.clearconsole$0 = function(args, modifs) {
     csconsole.clear();
@@ -6111,7 +6666,7 @@ evaluator.err$1 = function(args, modifs) { //OK
     }
     s = varname + " ===> " + niceprint(evaluate(s));
 
-    csconsole.err(s);
+    printStackTrace(s);
 
     return nada;
 };
@@ -6138,6 +6693,17 @@ evaluator.print$1 = function(args, modifs) {
 
 evaluator.println$1 = function(args, modifs) {
     csconsole.out(niceprint(evaluate(args[0])));
+    return nada;
+};
+
+evaluator.assert$2 = function(args, modifs) {
+    var v0 = evaluate(args[0]);
+    if (v0.ctype === 'boolean') {
+        if (v0.value === false)
+            return evaluator.println$1([args[1]], modifs);
+    } else {
+        printStackTrace("Condition for assert is not boolean");
+    }
     return nada;
 };
 
@@ -6516,6 +7082,8 @@ eval_helper.assigntake = function(data, what) { //TODO: Bin nicht ganz sicher ob
                 var lst = where.value.slice();
                 lst[ind1 - 1] = evaluate(what);
                 rhs = List.turnIntoCSList(lst);
+                // update colon op
+                if (where.userData) rhs.userData = where.userData;
             } else {
                 var str = where.value;
                 str = str.substring(0, ind1 - 1) +
@@ -6532,12 +7100,61 @@ eval_helper.assigntake = function(data, what) { //TODO: Bin nicht ganz sicher ob
 eval_helper.assigndot = function(data, what) {
     var where = evaluate(data.obj);
     var field = data.key;
+
     if (where.ctype === 'geo' && field) {
-        Accessor.setField(where.value, field, what);
+        Accessor.setField(where.value, field, evaluateAndVal(what));
     }
 
     return nada;
+};
 
+eval_helper.assigncolon = function(data, what) {
+    var lhs = data.obj;
+    var where = evaluate(lhs);
+
+    var key = niceprint(evaluate(data.key));
+    if (key === "_?_") key = undefined;
+
+    if (where.ctype === 'geo' && key) {
+        Accessor.setuserData(where.value, key, evaluateAndVal(what));
+    } else if (where.ctype === 'list' || where.ctype === 'string' && key) {
+        // copy object
+        var rhs = {};
+        for (var i in where) rhs[i] = where[i];
+
+        if (!rhs.userData) rhs.userData = {};
+        else { // avoid reference copy
+            var tmpObj = {};
+            for (var j in rhs.userData) tmpObj[j] = rhs.userData[j];
+            rhs.userData = tmpObj;
+        }
+
+        rhs.userData[key] = evaluateAndVal(what);
+
+        infix_assign([lhs, rhs]);
+    } else {
+        if (!key) console.log("Key is undefined");
+        else console.log("User data can only be assigned to geo objects and lists.");
+    }
+
+    return nada;
+};
+
+
+evaluator.keys$1 = function(args, modifs) {
+    var obj = evaluate(args[0]);
+    var ctype = obj.ctype;
+    if (ctype === "geo" || ctype === "list") {
+        var keys = [];
+
+        var data = ctype === "geo" ? obj.value.userData : obj.userData;
+        if (data) {
+            keys = Object.keys(data).map(General.string);
+        }
+        return List.turnIntoCSList(keys);
+    }
+
+    return nada;
 };
 
 
@@ -6572,24 +7189,26 @@ function infix_assign(args, modifs) {
             // Copy on write
             eval_helper.assigntake(args[0], v1);
         } else {
-            console.error("Can't use infix expression as lvalue");
+            printStackTrace("Can't use infix expression as lvalue");
         }
     } else if (args[0].ctype === 'field') {
         eval_helper.assigndot(args[0], v1);
+    } else if (args[0].ctype === 'userdata') {
+        eval_helper.assigncolon(args[0], v1);
     } else if (args[0].ctype === 'function' && args[0].oper === 'genList') {
         if (v1.ctype === "list") {
             eval_helper.assignlist(args[0].args, v1.value);
         } else {
-            console.error("Expected list in rhs of assignment");
+            printStackTrace("Expected list in rhs of assignment");
         }
     } else {
-        console.error("Left hand side of assignment is not a recognized lvalue");
+        printStackTrace("Left hand side of assignment is not a recognized lvalue");
     }
     return v1;
 }
 
 
-function infix_define(args, modifs) {
+function infix_define(args, modifs, self) {
 
     var u0 = (args[0].ctype === 'undefined');
     var u1 = (args[1].ctype === 'undefined');
@@ -6601,10 +7220,22 @@ function infix_define(args, modifs) {
         var fname = args[0].oper;
         var ar = args[0].args;
         var body = args[1];
+        var generation = 1;
+        if (myfunctions.hasOwnProperty(fname)) {
+            var previous = myfunctions[fname];
+            if (previous.definer === self) {
+                // Redefinition using the same piece of code changes nothing.
+                // This needs some work once we have closures.
+                return nada;
+            }
+            generation = previous.generation + 1;
+        }
         myfunctions[fname] = {
             'oper': fname,
             'body': body,
-            'arglist': ar
+            'arglist': ar,
+            'definer': self,
+            'generation': generation
         };
     }
     if (args[0].ctype === 'variable') {
@@ -6643,7 +7274,7 @@ evaluator.if$3 = function(args, modifs) { //OK
             return evaluate(args[2]);
         }
     } else {
-      //  csconsole.err("Condition for if is not boolean");
+        printStackTrace("Condition for if is not boolean");
     }
 
     return nada;
@@ -7066,7 +7697,7 @@ function infix_div(args, modifs) {
     var v0 = evaluateAndVal(args[0]);
     var v1 = evaluateAndVal(args[1]);
     if (v1.ctype === "number" && CSNumber._helper.isZero(v1))
-        csconsole.err("WARNING: Division by zero!");
+        printStackTrace("WARNING: Division by zero!");
     var erg = General.div(v0, v1);
     if (v0.usage === "Angle" && !v1.usage)
         erg = General.withUsage(erg, "Angle");
@@ -7255,14 +7886,14 @@ evaluator.autodiff$3 = function(args, modifs) {
     } else if (typeof(args[0].impl) === "function")
         ffunc = args[0];
     else {
-        console.log("could not parse function");
+        printStackTrace("could not parse function");
         return nada;
     }
     var xarr = evaluateAndVal(args[1]);
     var grade = evaluateAndVal(args[2]);
 
     if (grade.value.real < 1) {
-        console.log("grade cant be < 1");
+        printStackTrace("grade cant be < 1");
         return nada;
     }
 
@@ -7636,30 +8267,12 @@ evaluator.isgeometric$1 = function(args, modifs) {
 
 evaluator.isnumbermatrix$1 = function(args, modifs) {
     var v0 = evaluate(args[0]);
-    if ((List.isNumberMatrix(v0)).value) {
-        return {
-            'ctype': 'boolean',
-            'value': true
-        };
-    }
-    return {
-        'ctype': 'boolean',
-        'value': false
-    };
+    return List.isNumberMatrix(v0);
 };
 
 evaluator.isnumbervector$1 = function(args, modifs) {
     var v0 = evaluate(args[0]);
-    if ((List.isNumberVector(v0)).value) {
-        return {
-            'ctype': 'boolean',
-            'value': true
-        };
-    }
-    return {
-        'ctype': 'boolean',
-        'value': false
-    };
+    return List.isNumberVector(v0);
 };
 
 
@@ -7734,6 +8347,122 @@ evaluator.isundefined$1 = function(args, modifs) {
         'ctype': 'boolean',
         'value': false
     };
+};
+
+// See AlgoMap.java in the Cinderella codebase, but also geoMacros in GeoOps.js
+var cinderellaAlgoNames = {
+    ArcBy3: "Arc",
+    CenterOfConic: "Center",
+    ConicBy1p4l: "Conic1P4L",
+    ConicBy4p1l: "Conic4P1L",
+    ConicBy5lines: "Conic5L",
+    ConicBy2Foci1P: "ConicFoci", // sometimes "ConicFociH" instead
+    ConicFromPrincipalDirections: "ConicPrincipleDirs",
+    // Mid: "EuclideanMid", (only sometimes)
+    Free: "FreePoint",
+    PolarOfLine: "PolarLine",
+    PolarOfPoint: "PolarPoint",
+    PointOnSegment: "PointOnLine",
+    Button: "Text",
+    ToggleButton: "Text",
+    TrReflectionL: "TrReflection",
+    TrReflectionP: "TrReflection",
+    TrReflectionC: "TrReflection",
+    TrTranslation: "TrProjection", // or TrTranslationPP?
+    TrSimilarity: "TrProjection",
+    TrAffine: "TrProjection",
+    TransformP: "Transform",
+    TransformL: "Transform",
+    TransformSegment: "Transform",
+    TransformS: "Transform",
+    TransformPolygon: "Transform",
+    TransformArc: "Transform",
+    TransformConic: "Transform",
+    TransformC: "Transform",
+    TrMoebiusP: "Transform",
+    TrMoebiusL: "Transform",
+    TrMoebiusSegment: "Transform",
+    TrMoebiusS: "Transform",
+    TrMoebiusPolygon: "Transform",
+    TrMoebiusArc: "Transform",
+    TrMoebiusCircle: "Transform",
+    TrMoebiusC: "Transform",
+    TrInverseMoebius: "TrInverse",
+    Perp: "Orthogonal",
+    Para: "Parallel",
+    AngleBisector: "AngularBisector",
+    IntersectLC: "IntersectionConicLine",
+    IntersectCirCir: "IntersectionCircleCircle",
+    OtherPointOnCircle: "PointOnCircle",
+};
+
+evaluator.algorithm$1 = function(args, modifs) {
+    var v0 = evaluate(args[0]);
+    if (v0.ctype === "geo") {
+        var el = v0.value;
+        var type = el.type;
+        var compat = evaluateAndVal(modifs.compatibility);
+        if (compat.ctype === "string" &&
+            (/^cinderella$/i).test(compat.value)) {
+            if (/^Select/.test(type)) {
+                el = csgeo.csnames[el.args[0]];
+                type = el.type;
+            }
+            if (cinderellaAlgoNames.hasOwnProperty(type))
+                type = cinderellaAlgoNames[type];
+            else if (type === "CircleMr")
+                type = el.pinned ? "CircleByFixedRadius" : "CircleByRadius";
+        }
+        return General.string(type);
+    }
+    return nada;
+};
+
+evaluator.inputs$1 = function(args, modifs) {
+    var v0 = evaluate(args[0]);
+    if (v0.ctype === "geo") {
+        var el = v0.value;
+        var type = el.type;
+        var res = [];
+        if (el.args) res = el.args.map(function(name) {
+            return {
+                ctype: "geo",
+                value: csgeo.csnames[name]
+            };
+        });
+        if (/^Select/.test(type) || geoOps[type].isMovable) {
+            switch (el.kind) { // compare savePos in StateIO
+                case "P":
+                case "L":
+                    res.push(el.homog);
+                    break;
+                case "C":
+                    res.push(el.matrix);
+                    break;
+            }
+        }
+        return List.turnIntoCSList(res);
+    }
+    return nada;
+};
+
+evaluator.moveto$2 = function(args, modifs) {
+    var v0 = evaluate(args[0]);
+    var v1 = evaluateAndVal(args[1]);
+    if (v0.ctype === "geo") {
+        var el = v0.value;
+        if (List._helper.isNumberVecN(v1, 2)) {
+            Accessor.setField(el, "xy", v1);
+        } else if (List._helper.isNumberVecN(v1, 3)) {
+            Accessor.setField(el, "homog", v1);
+        }
+    }
+    return nada;
+};
+
+evaluator.continuefromhere$0 = function(args, modifs) {
+    stateContinueFromHere();
+    return nada;
 };
 
 evaluator.matrixrowcolumn$1 = function(args, modifs) {
@@ -8369,7 +9098,7 @@ function hungarianMethod(w) {
 
 evaluator.mincostmatching$1 = function(args, modifs) {
     var costMatrix = evaluate(args[0]);
-    if (List.isNumberMatrix(costMatrix)) {
+    if (List.isNumberMatrix(costMatrix).value) {
         var nr = costMatrix.value.length;
         var nc = List._helper.colNumb(costMatrix);
         var size = (nr < nc ? nc : nr);
@@ -8405,25 +9134,28 @@ evaluator.mincostmatching$1 = function(args, modifs) {
 function infix_take(args, modifs) {
     var v0 = evaluate(args[0]);
     var v1 = evaluateAndVal(args[1]);
+    if (v0.ctype !== 'string') {
+        v0 = List.asList(v0);
+    }
     if (v1.ctype === 'number') {
         var ind = Math.floor(v1.value.real);
-        if (v0.ctype === 'list' || v0.ctype === 'string') {
-            if (ind < 0) {
-                ind = v0.value.length + ind + 1;
+        if (ind < 0) {
+            ind = v0.value.length + ind + 1;
+        }
+        if (ind > 0 && ind < v0.value.length + 1) {
+            if (v0.ctype === 'list') {
+                return v0.value[ind - 1];
             }
-            if (ind > 0 && ind < v0.value.length + 1) {
-                if (v0.ctype === 'list') {
-                    return v0.value[ind - 1];
-                }
-                return {
-                    "ctype": "string",
-                    "value": v0.value.charAt(ind - 1)
-                };
-            }
+            return {
+                "ctype": "string",
+                "value": v0.value.charAt(ind - 1)
+            };
+        } else {
+            printStackTrace("WARNING: Index out of range!");
             return nada;
         }
     }
-    if (v1.ctype === 'list') { //Hab das jetzt mal rekursiv gemacht, ist anders als in Cindy
+    if (v1.ctype === 'list') { // This is recursive, different from Cinderella
         var li = [];
         for (var i = 0; i < v1.value.length; i++) {
             var v1i = evaluateAndVal(v1.value[i]);
@@ -8767,6 +9499,40 @@ evaluator.column$2 = function(args, modifs) {
 
 
 ///////////////////////////////
+//        DICTIONARIES       //
+///////////////////////////////
+
+evaluator.dict$0 = function(args, modifs) {
+    var d = Dict.create();
+    for (var key in modifs)
+        if (modifs.hasOwnProperty(key))
+            Dict.put(d, General.string(key), evaluate(modifs[key]));
+    return d;
+};
+
+evaluator.put$3 = function(args, modifs) {
+    var d = evaluate(args[0]);
+    var k = evaluate(args[1]);
+    var v = evaluate(args[2]);
+    if (d.ctype === "dict") {
+        d = Dict.clone(d);
+        Dict.put(d, k, v);
+        return d;
+    }
+    return nada;
+};
+
+evaluator.get$2 = function(args, modifs) {
+    var d = evaluate(args[0]);
+    var k = evaluate(args[1]);
+    if (d.ctype === "dict") {
+        return Dict.get(d, k, nada);
+    }
+    return nada;
+};
+
+
+///////////////////////////////
 //         COLOR OPS         //
 ///////////////////////////////
 
@@ -8928,7 +9694,7 @@ eval_helper.shapeop = function(a, b, op) {
     var solution_paths = new ClipperLib.Paths();
     cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
     ClipperLib.JS.ScaleDownPaths(solution_paths, scale);
-    //    console.log(JSON.stringify(solution_paths));    
+    //    console.log(JSON.stringify(solution_paths));
     return {
         ctype: "shape",
         type: "polygon",
@@ -9135,6 +9901,12 @@ evaluator.stopanimation$0 = function(args, modifs) {
 ///////////////////////////////
 
 
+evaluator.text$1 = function(args, modifs) {
+    var v0 = evaluateAndVal(args[0]); // Cinderella compatible
+    // if (v0 === nada) return nada; // Cinderella compatible
+    return General.string(niceprint(v0));
+};
+
 evaluator.replace$3 = function(args, modifs) {
     var v0 = evaluate(args[0]);
     var v1 = evaluate(args[1]);
@@ -9181,7 +9953,7 @@ evaluator.replace$2 = function(args, modifs) {
         return s;
     }
 
-    //////////////// 
+    ////////////////
 
     var v0 = evaluate(args[0]);
     var v1 = evaluate(args[1]);
@@ -9254,8 +10026,8 @@ evaluator.tokenize$2 = function(args, modifs) {
                     convert = erg.value;
                 }
             }
-            if (convert) {
-                var fl = parseFloat(str);
+            if (convert && str !== "") {
+                var fl = Number(str);
                 if (!isNaN(fl)) {
                     return CSNumber.real(fl);
                 }
@@ -9647,7 +10419,7 @@ evaluator.halfplane$2 = function(args, modifs) {
         var l = w1;
         if (u0 === "Line" || u1 === "Point") {
             p = w1;
-            l = v0;
+            l = w0;
         }
         //OK im Folgenden lässt sich viel optimieren
         var tt = List.turnIntoCSList([l.value[0], l.value[1], CSNumber.zero]);
@@ -9802,6 +10574,94 @@ evaluator.allelements$1 = function(args, modifs) {
     });
 };
 
+evaluator.elementsatmouse$0 = function(args, modifs) {
+    var eps = 0.5;
+    var mouse = List.realVector([csmouse[0], csmouse[1], 1]);
+
+    var distMouse = function(p) {
+        if (CSNumber._helper.isAlmostZero(p.value[2])) return Infinity;
+        var pz = List.normalizeZ(p);
+        return List.abs(List.sub(pz, mouse)).value.real;
+    };
+
+    var getPerp = function(l) {
+        var fp = List.turnIntoCSList([l.value[0], l.value[1], CSNumber.zero]);
+        return List.normalizeMax(List.cross(mouse, fp));
+    };
+
+    var inciPP = function(p) {
+        return (distMouse(p.homog) < eps);
+    };
+
+    var inciPL = function(l) {
+        var perp = getPerp(l.homog);
+        var pp = List.normalizeMax(List.cross(l.homog, perp));
+        var d = distMouse(pp);
+        return (d < eps);
+    };
+
+    var inciPC = function(c) {
+        var l = General.mult(c.matrix, mouse);
+        var perp = getPerp(l);
+        var sect = geoOps._helper.IntersectLC(perp, c.matrix);
+        var dists = sect.map(function(el) {
+            return distMouse(el);
+        });
+
+        var erg = Math.min(dists[0], dists[1]);
+
+        return (erg < eps);
+    };
+
+    var points = csgeo.points.filter(inciPP);
+
+    var lines = csgeo.lines.filter(function(el) {
+        var val = inciPL(el);
+        // fetch segment
+        if (val && el.kind === "S") {
+            var line = el.homog;
+            var tt = List.turnIntoCSList([line.value[0], line.value[1], CSNumber.zero]);
+            var cr = List.crossratio3(
+                el.farpoint, el.startpos, el.endpos, mouse, tt).value.real;
+            if (cr < 0 || cr > 1) val = false;
+        }
+
+        return val;
+    });
+
+    var conics = csgeo.conics.filter(function(el) {
+        var val = inciPC(el);
+        // fetch arc
+        if (val && el.isArc) {
+            var cr = List.crossratio3harm(el.startPoint, el.endPoint,
+                el.viaPoint, mouse, List.ii);
+            var m = cr.value[0];
+            var n = cr.value[1];
+            if (!CSNumber._helper.isAlmostZero(m)) {
+                n = CSNumber.div(n, m);
+                m = CSNumber.real(1);
+            } else {
+                m = CSNumber.div(m, n);
+                n = CSNumber.real(1);
+            }
+            var nor = List.abs(List.turnIntoCSList([n, m]));
+            m = CSNumber.div(m, nor);
+            n = CSNumber.div(n, nor);
+
+            var prod = CSNumber.mult(n, m);
+            if (m.value.real < 0) prod = CSNumber.neg(prod);
+
+            if (prod.value.real < 0) val = false;
+        }
+        return val;
+    });
+
+
+    var elts = points.concat(lines, conics);
+
+    return List.ofGeos(elts);
+};
+
 evaluator.incidences$1 = evaluator.allelements$1;
 
 evaluator.createpoint$2 = function(args, modifs) {
@@ -9809,12 +10669,12 @@ evaluator.createpoint$2 = function(args, modifs) {
     var pos = evaluateAndHomog(args[1]);
 
     if (name.ctype !== "string") {
-        console.log("Name must be a string");
+        printStackTrace("Name must be a string");
         return nada;
     }
 
     if (pos.ctype !== "list" && List.isNumberVector(pos)) {
-        console.log("Position must be a number vector");
+        printStackTrace("Position must be a number vector");
         return nada;
     }
 
@@ -9825,63 +10685,90 @@ evaluator.createpoint$2 = function(args, modifs) {
         pos: pos
     };
 
-    return addElement(el);
+    return {
+        'ctype': 'geo',
+        'value': addElement(el, true)
+    };
 };
+
 
 evaluator.create$3 = function(args, modifs) {
     var names = evaluate(args[0]);
     var type = evaluate(args[1]);
     var defs = evaluate(args[2]);
+    var emodifs = {};
+    for (var key in modifs) {
+        emodifs[key] = evaluateAndVal(modifs[key]);
+    }
 
-    var name;
+    var name, el, i;
     if (names.ctype === "string") {
         name = names.value;
     } else if (names.ctype !== "list") {
-        console.log("Names must be a string or a list of strings");
+        printStackTrace("Names must be a string or a list of strings");
         return nada;
     } else if (names.value.length !== 1) {
-        console.log("multi-result compatibility operations not supported yet");
-        return nada;
+        // Create the compound object, then Select objects to split it up
+        name = General.string(names.value.map(function(name) {
+            return name.value;
+        }).join("__"));
+        el = evaluator.create$3([name, type, defs], emodifs);
+        var ellist = [];
+        if (el !== nada) {
+            type = General.string(el.value.kind.replace(/^(.*)s$/, "Select$1"));
+            defs = List.turnIntoCSList([General.string(el.value.name)]);
+            for (i = 0; i < names.value.length; ++i) {
+                emodifs.index = CSNumber.real(i + 1);
+                ellist.push(
+                    evaluator.create$3([names.value[i], type, defs], emodifs)
+                );
+            }
+        }
+        return List.turnIntoCSList(ellist);
     } else if (names.value[0].ctype !== "string") {
-        console.log("Element of names list must be a string");
+        printStackTrace("Element of names list must be a string");
         return nada;
     } else {
         name = names.value[0].value;
     }
     if (type.ctype !== "string") {
-        console.log("Type must be a string");
+        printStackTrace("Type must be a string");
         return nada;
     }
     if (defs.ctype !== "list") {
-        console.log("Arguments must be a list");
+        printStackTrace("Arguments must be a list");
         return nada;
     }
 
-    if (geoOps[type.value] === undefined) {
-        console.log("Invalid geometric operation: '" + type.value + "'");
+    if (!geoOps.hasOwnProperty(type.value) &&
+        !geoAliases.hasOwnProperty(type.value) &&
+        !geoMacros.hasOwnProperty(type.value)) {
+        printStackTrace("Invalid geometric operation: '" + type.value + "'");
         return nada;
     }
 
     var a = [];
     var pos = null;
 
-    for (var i = 0; i < defs.value.length; i++) {
+    for (i = 0; i < defs.value.length; i++) {
         var def = defs.value[i];
 
         if (def.ctype === "string") {
             a.push(def.value);
+        } else if (def.ctype === "geo") {
+            a.push(def.value.name);
         } else {
             var vec = evaluateAndHomog(def);
             if (vec !== nada) {
                 pos = vec;
             } else {
-                console.log("Unknown argument type");
+                printStackTrace("Unknown argument type");
                 return nada;
             }
         }
     }
 
-    var el = {
+    el = {
         name: name,
         type: type.value,
         labeled: true
@@ -9893,7 +10780,107 @@ evaluator.create$3 = function(args, modifs) {
     if (a.length > 0)
         el.args = a;
 
-    return addElement(el);
+    for (var field in emodifs) {
+        el[field] = General.unwrap(emodifs[field]);
+    }
+
+    return {
+        'ctype': 'geo',
+        'value': addElement(el, true)
+    };
+};
+
+evaluator.create$2 = function(args, modifs) {
+    var type = evaluate(args[0]);
+    var defs = evaluate(args[1]);
+    var emodifs = {};
+    for (var key in modifs) {
+        emodifs[key] = evaluateAndVal(modifs[key]);
+    }
+
+    if (!geoOps.hasOwnProperty(type.value) &&
+        !geoAliases.hasOwnProperty(type.value) &&
+        !geoMacros.hasOwnProperty(type.value)) {
+        printStackTrace("Invalid geometric operation: '" + type.value + "'");
+        return nada;
+    }
+
+    // Recursively apply aliases
+    while (geoAliases.hasOwnProperty(type.value)) {
+        type.value = geoAliases[type.value];
+    }
+
+    // Detect unsupported operations or missing or incorrect arguments
+    var op = geoOps[type.value];
+
+
+    function getFirstFreeName(kind) {
+        var ans = false;
+
+        function useiffree(name) {
+            if (!csgeo.csnames[name]) {
+                ans = name;
+            }
+        }
+        var name, i;
+        if (kind === 'P') {
+            for (i = 0; i < 26 & !ans; i++) {
+                if (i === 8 || i === 9) continue; //skip I and J
+                useiffree(String.fromCharCode(65 + i)); //A, B, C...
+            }
+        } else if (kind === 'L' || kind === 'S') {
+            for (i = 0; i < 26 & !ans; i++) {
+                if (i === 8 || i === 9) continue; //skip i and j
+                useiffree(String.fromCharCode(97 + i)); //a, b, c...
+            }
+        }
+        for (i = 0; !ans; i++) {
+            useiffree(kind + i); //P0, P1, P2, ...
+        }
+        return ans;
+    }
+
+    var name = General.string(getFirstFreeName(op.kind));
+
+
+    if (defs.value.length > op.signature.length) {
+        var warning = "Operation " + type.value + " requieres only " + op.signature.length + " argument" + (op.signature.length === 1 ? '' : 's') + " (" + defs.value.length + " argument" + (defs.value.length === 1 ? '' : 's') + " given) to create " + name.value + ". Ignoring the last arguments.";
+        if (!emodifs.pos) {
+            var pos = evaluateAndHomog(defs.value[defs.value.length - 1]); //interpret last argument as pos
+            if (pos !== nada) {
+                warning = warning + " Use the last argument as modifier `pos`.";
+                emodifs.pos = pos;
+            }
+        }
+        printStackTrace(warning);
+        defs = List.turnIntoCSList(defs.value.slice(0, op.signature.length)); //ignore additional defs
+    }
+
+    var el = evaluator.create$3([name, type, defs], emodifs);
+    if (el !== nada && el.value.kind[1] === 's' && el.value.results) { //Ps, Ls, etc.
+        type = General.string("Select" + el.value.kind[0]);
+        defs = List.turnIntoCSList([General.string(el.value.name)]);
+
+        if (emodifs.pos) {
+            //if there is a pos attribute (or the defs list is to long), then select only the given point
+            name = General.string(getFirstFreeName(el.value.kind[0]));
+            return evaluator.create$3([name, type, defs], emodifs);
+        } else {
+            //if a compound is generated with no pos specified, then the list of all points is returned.
+            var ellist = [];
+            for (var i = 0; i < el.value.results.value.length; i++) {
+                emodifs.index = CSNumber.real(i + 1);
+                name = General.string(getFirstFreeName(el.value.kind[0]));
+                ellist.push(evaluator.create$3([name, type, defs], emodifs));
+            }
+            return List.turnIntoCSList(ellist);
+        }
+
+    } else {
+        if (el.isDuplicate) delete el.isDuplicate;
+        return el;
+    }
+
 };
 
 ///////////////////////////////
@@ -9910,18 +10897,14 @@ evaluator.javascript$1 = function(args, modifs) {
     return nada;
 };
 
-var loadedPlugins = {};
-
 evaluator.use$1 = function(args, modifs) {
     function defineFunction(name, arity, impl) {
         evaluator[name.toLowerCase() + "$" + arity] = impl;
     }
     var v0 = evaluate(args[0]);
     if (v0.ctype === "string") {
-        var name = v0.value;
-        if (loadedPlugins.hasOwnProperty(name) && loadedPlugins[name] === true)
-            return General.bool(true); // plugin already loaded
-        var cb;
+        var name = v0.value,
+            cb;
         if (instanceInvocationArguments.plugins)
             cb = instanceInvocationArguments.plugins[name];
         if (!cb)
@@ -9963,11 +10946,16 @@ evaluator.use$1 = function(args, modifs) {
                     return myfunctions[name];
                 }
             });
-            loadedPlugins[name] = true;
-            return General.bool(true);
+            return {
+                "ctype": "boolean",
+                "value": true
+            };
         } else {
-            console.log("Plugin " + name + " not found");
-            return General.bool(false);
+            printStackTrace("Plugin " + name + " not found");
+            return {
+                "ctype": "boolean",
+                "value": false
+            };
         }
     }
     return nada;
@@ -10016,7 +11004,7 @@ evaluator.format$2 = function(args, modifs) { //TODO Angles
         };
     }
     if ((v0.ctype === 'number' || v0.ctype === 'list') && v1.ctype === 'number') {
-        dec = Math.round(v1.value.real);
+        dec = Math.max(0, Math.min(20, Math.round(v1.value.real)));
         return fmt(v0);
     }
     return nada;
@@ -10031,14 +11019,12 @@ if (!Date.now) Date.now = function() {
 };
 var epoch = 0;
 
+evaluator.timestamp$0 = function(args, modifs) {
+    return CSNumber.real(Date.now());
+};
+
 evaluator.seconds$0 = function(args, modifs) { //OK
-    return {
-        "ctype": "number",
-        "value": {
-            'real': ((Date.now() - epoch) / 1000),
-            'imag': 0
-        }
-    };
+    return CSNumber.real((Date.now() - epoch) / 1000);
 };
 
 evaluator.resetclock$0 = function(args, modifs) {
@@ -10061,7 +11047,11 @@ evaluator.date$0 = function(args, modifs) {
     ]);
 };
 
-evaluator.setTimeout$2 = function(args, modifs) {
+evaluator.simulationtime$0 = function(args, modifs) {
+    return CSNumber.real(simtime * simunit);
+};
+
+evaluator.settimeout$2 = function(args, modifs) {
     var delay = evaluate(args[0]); // delay in seconds
     var code = args[1]; // code to execute, cannot refer to regional variables
     function callback() {
@@ -10390,18 +11380,16 @@ evaluator.compileToWebGL$1 = function(args, modifs) {
 };
 
 
-/***********************************/
-/**********    PHYSIC    ***********/
-/***********************************/
+/************************************/
+/**********    PHYSICS    ***********/
+/************************************/
 
 
 evaluator.setsimulationspeed$1 = function(args, modifs) {
 
     var v0 = evaluateAndVal(args[0]);
     if (v0.ctype === 'number') {
-        if (typeof(labObjects) !== "undefined" && typeof(labObjects.env) !== "undefined") {
-            labObjects.env.deltat = v0.value.real;
-        }
+        setSpeed(v0.value.real);
     }
     return nada;
 };
@@ -10411,7 +11399,7 @@ evaluator.setsimulationaccuracy$1 = function(args, modifs) {
     var v0 = evaluateAndVal(args[0]);
     if (v0.ctype === 'number') {
         if (typeof(labObjects) !== "undefined" && typeof(labObjects.env) !== "undefined") {
-            labObjects.env.accuracy = v0.value.real;
+            labObjects.env.accuracy = Math.max(1, v0.value.real | 0);
         }
     }
     return nada;
@@ -10525,14 +11513,14 @@ evaluator.createtool$3 = function(args, modifs) {
             }
         });
     } else {
-        console.log("Name must be a string or a list of strings");
+        printStackTrace("Name must be a string or a list of strings");
         return nada;
     }
 
     if (modifs.flipped) {
         modif = evaluate(modifs.flipped);
         if (modif.ctype === "boolean" && modif.value) {
-            console.log("Flipping");
+            printStackTrace("Flipping");
             var ncols = 0;
             var nrows = names.length;
             names.forEach(function(row) {
@@ -10557,7 +11545,7 @@ evaluator.createtool$3 = function(args, modifs) {
         toolbar.appendChild(rowElt);
         row.forEach(function(name) {
             if (!tools.hasOwnProperty(name)) {
-                console.log("Tool '" + name + "' not implemented yet.");
+                printStackTrace("Tool '" + name + "' not implemented yet.");
                 name = null;
             }
             if (name === null) {
@@ -10596,6 +11584,127 @@ evaluator.dropped$0 = function() {
 
 evaluator.droppoint$0 = function() {
     return dropPoint;
+};
+
+evaluator.parsecsv$1 = function(args, modifs) {
+    var autoconvert = true;
+    var mcon = evaluateAndVal(modifs.autoconvert);
+    if (mcon.ctype === "boolean") autoconvert = mcon.value;
+
+    var delim = null;
+    var md = evaluateAndVal(modifs.delimiter);
+    if (md.ctype === "string" && /^[^\"\r\n]$/.test(md.value))
+        delim = md.value;
+
+    var str = evaluateAndVal(args[0]);
+    if (str.ctype !== "string") {
+        printStackTrace("CSV data is not a string");
+        return nada;
+    }
+    str = str.value;
+
+    var re = '(?:"((?:[^"]+|"")*)"|([^]*?))(\r\n|(,)|[\r\n]|$)';
+    // captures:  1             1  2     2 3     4 4         3
+    if (delim) {
+        // see replace$3
+        delim = delim
+            .replace(/[^A-Za-z0-9]/g, "\\$&")
+            .replace(/\$/g, "$$$$");
+        re = re.replace(/,/g, delim);
+    }
+    re = new RegExp(re, "g");
+
+    var row = [];
+    var data = [];
+    var ncols = null;
+    while (re.lastIndex < str.length) {
+        var match = re.exec(str);
+        var itm = match[2];
+        if (typeof match[1] === "string")
+            itm = match[1].replace(/""/g, '"');
+        if (!autoconvert)
+            itm = General.string(itm);
+        else if (/^[Tt]rue$/.test(itm))
+            itm = General.bool(true);
+        else if (/^[Ff]alse$/.test(itm))
+            itm = General.bool(false);
+        else if (/^[\-+]?([0-9]+(\.[0-9]*)?|\.[0-9]+|Infinity)$/.test(itm))
+            itm = CSNumber.real(Number(itm));
+        else
+            itm = General.string(itm);
+        row.push(itm);
+        if (match[4] && re.lastIndex === str.length) {
+            // last row ended with a delimiter
+            row.push(General.string(""));
+            match = {}; // fall through to end-of-input handling below
+        }
+        if (!match[4]) { // end of row
+            if (ncols === null)
+                ncols = row.length;
+            if (ncols < row.length) {
+                ncols = row.length;
+                for (var i = 0; i < data.length; ++i)
+                    for (var j = data[i].length; j < ncols; ++j)
+                        data[i][j] = nada;
+            } else if (ncols > row.length) {
+                for (var k = row.length; k < ncols; ++k)
+                    row[k] = nada;
+            }
+            data.push(row);
+            row = [];
+        }
+    }
+    return List.turnIntoCSList(data.map(List.turnIntoCSList));
+};
+
+evaluator.load$2 = function(args, modifs) {
+    return evaluator.load$3([args[0], null, args[1]], modifs);
+};
+
+evaluator.load$3 = function(args, modifs) {
+    var varname = '#';
+    if (args[1] !== null) {
+        if (args[1].ctype === 'variable') {
+            varname = args[1].name;
+        }
+    }
+    var arg0 = evaluateAndVal(args[0]);
+    var url = null;
+    var req = null;
+    if (arg0.ctype === "string" && /^https?:\/\//.test(arg0.value)) {
+        url = arg0.value;
+    }
+    if (url !== null) {
+        req = new XMLHttpRequest();
+        req.onreadystatechange = handleStateChange;
+        req.open("GET", url);
+        req.send();
+        return General.bool(true);
+    }
+    return nada;
+
+    function handleStateChange() {
+        if (req.readyState !== XMLHttpRequest.DONE) return;
+        var value;
+        if (req.status === 200) {
+            value = General.string(String(req.responseText));
+        } else {
+            printStackTrace("Failed to load " + url + ": " + req.statusText);
+            value = nada;
+        }
+        namespace.newvar(varname);
+        namespace.setvar(varname, value);
+        evaluate(args[2]);
+        namespace.removevar(varname);
+        scheduleUpdate();
+    }
+
+};
+
+evaluator.removeelement$1 = function(args, modifs) {
+    var arg = evaluate(args[0]);
+    if (arg.ctype === "geo") removeElement(arg.value.name);
+    else console.log("argument of removeelement is undefined or not of type <geo>");
 };
 //*******************************************************
 // and here are the definitions of the drawing operators
@@ -10787,7 +11896,8 @@ eval_helper.drawarc = function(args, modifs, df) {
         csctx.translate(xx, yy);
 
         // use the canvas arc function -- buggy in Chrome at least in Okt 15
-        var useArc = false;
+        // looks fine in Sept 16
+        var useArc = true;
 
         if (useArc) {
             csctx.arc(0, 0, arcDist.value.real * m.sdet, startAngle, endAngle, cclock);
@@ -10844,30 +11954,7 @@ eval_helper.drawarc = function(args, modifs, df) {
         if (Bmiddle) {
             Render2D.drawsegcore(ptA, ptC);
         } else { // nasty case -- B not in the middle -- we have 2 ray to infinity
-
-            // flip the orientation to the right side 
-            var sflip = dAB > dBC ? 1 : -1;
-
-            // first ray
-            // get direction and normalise
-            var dx = sflip * (ptA.x - ptB.x);
-            var dy = sflip * (ptA.y - ptB.y);
-            var norm = Math.sqrt(dx * dx + dy * dy);
-
-            // get points outside canvas (at "infinity")
-            var sc = csport.drawingstate.matrix.sdet;
-            var farAway = 25000 / sc; // 25000px in user coordinates
-            var factor = farAway / norm;
-            dx = dx * factor;
-            dy = dy * factor;
-            Render2D.drawsegcore(ptA, {
-                x: ptA.x + dx,
-                y: ptA.y + dy
-            });
-            Render2D.drawsegcore(ptC, {
-                x: ptC.x - dx,
-                y: ptC.y - dy
-            });
+            Render2D.drawRaySegment(a, c);
         }
     }
 
@@ -10931,9 +12018,6 @@ eval_helper.drawcircle = function(args, modifs, df) {
 };
 
 evaluator.drawconic$1 = function(args, modifs) {
-    var Conic = {};
-    Conic.usage = "conic";
-
     var arr = evaluateAndVal(args[0]);
 
     if (arr.ctype !== "list" || arr.value.length !== 3 && arr.value.length !== 6) {
@@ -10961,413 +12045,452 @@ evaluator.drawconic$1 = function(args, modifs) {
         e = CSNumber.mult(e, half);
         var f = arr.value[5];
 
-        var mat = List.turnIntoCSList([
+        arr = List.turnIntoCSList([
             List.turnIntoCSList([a, b, d]),
             List.turnIntoCSList([b, c, e]),
             List.turnIntoCSList([d, e, f])
         ]);
-        Conic.matrix = mat;
     } else { // matrix case
 
-        for (var ii = 0; ii < 3; ii++) // check for faulty arrays
-            for (var jj = 0; jj < 3; jj++)
-            if (arr.value[ii].value[jj].ctype !== "number") {
-                console.error("could not parse conic");
-                return nada;
-            }
+        if (!(List.isNumberMatrix(arr).value &&
+                arr.value.length === 3 &&
+                arr.value[0].value.length === 3))
+            return nada;
 
-        if (!List.equals(arr, List.transpose(arr)).value) { // not symm case
-            var aa = General.mult(arr, CSNumber.real(0.5));
-            var bb = General.mult(List.transpose(arr), CSNumber.real(0.5));
-            arr = List.add(aa, bb);
-            Conic.matrix = arr;
-        } else {
-            Conic.matrix = arr;
+        var tarr = List.transpose(arr);
+        if (!List.equals(arr, tarr).value) { // not symm case
+            arr = List.add(tarr, arr);
         }
 
-
     }
-    Conic.matrix = List.normalizeMax(Conic.matrix);
-    return eval_helper.drawconic(Conic.matrix, modifs);
+    return eval_helper.drawconic(arr, modifs);
+};
+
+// See also eval_helper.quadratic_roots for the complex case
+// Returns either null (if solutions would be complex or NaN)
+// or two pairs [x, y] satisfying ax^2 + bxy + cy^2 = 0
+function solveRealQuadraticHomog(a, b, c) {
+    var d = b * b - 4 * a * c;
+    /*jshint -W018 */
+    if (!(d >= 0)) return null; // also return null if d is NaN
+    /*jshint +W018 */
+    var r = Math.sqrt(d);
+    if (b > 0) r = -r;
+    return [
+        [r - b, 2 * a],
+        [2 * c, r - b]
+    ];
+}
+
+// Returns either null (if solutions would be complex or NaN)
+// or two values x satisfying ax^2 + bx + c = 0
+function solveRealQuadratic(a, b, c) {
+    var hom = solveRealQuadraticHomog(a, b, c);
+    if (hom === null) return null;
+    var s1 = hom[0][0] / hom[0][1];
+    var s2 = hom[1][0] / hom[1][1];
+    return s2 < s1 ? [s2, s1] : [s1, s2];
+}
+
+function DbgCtx() {
+    this.delegate = csctx;
+    this.special = [];
+    this.lines = [];
+}
+DbgCtx.prototype = {
+    beginPath: function() {
+        console.log("beginPath()");
+        this.pts = [];
+        this.ctls = [];
+        this.delegate.beginPath();
+    },
+    moveTo: function(x, y) {
+        console.log("moveTo(" + x + ", " + y + ")");
+        this.pts.push([x, y]);
+        this.delegate.moveTo(x, y);
+    },
+    lineTo: function(x, y) {
+        console.log("lineTo(" + x + ", " + y + ")");
+        this.pts.push([x, y]);
+        this.delegate.lineTo(x, y);
+    },
+    quadraticCurveTo: function(x1, y1, x, y) {
+        console.log("quadratocCurveTo(" + x1 + ", " + y1 + ", " + x + ", " + y + ")");
+        this.ctls.push([x1, y1]);
+        this.pts.push([x, y]);
+        this.delegate.quadraticCurveTo(x1, y1, x, y);
+    },
+    closePath: function() {
+        console.log("closePath()");
+        this.delegate.closePath();
+    },
+    fillCircle: function(p) {
+        this.delegate.beginPath();
+        this.delegate.arc(p[0], p[1], 3, 0, 2 * Math.PI);
+        this.delegate.fill();
+    },
+    stroke: function() {
+        console.log("stroke()");
+        this.delegate.stroke();
+        var oldFill = this.delegate.fillStyle;
+        this.delegate.fillStyle = "rgb(255,0,255)";
+        this.pts.forEach(this.fillCircle, this);
+        this.delegate.fillStyle = "rgb(0,255,255)";
+        this.ctls.forEach(this.fillCircle, this);
+        this.delegate.fillStyle = "rgb(64,0,255)";
+        this.special.forEach(this.fillCircle, this);
+        this.delegate.strokeStyle = "rgb(0,255,0)";
+        this.lines.forEach(function(line) {
+            this.delegate.beginPath();
+            this.delegate.moveTo(line[0], line[1]);
+            this.delegate.lineTo(line[2], line[3]);
+            this.delegate.stroke();
+        }, this);
+        if (oldFill)
+            this.delegate.fillStyle = oldFill;
+    },
 };
 
 eval_helper.drawconic = function(conicMatrix, modifs) {
-
+    //var csctx = new DbgCtx();
     Render2D.handleModifs(modifs, Render2D.conicModifs);
     if (Render2D.lsize === 0)
         return;
     Render2D.preDrawCurve();
 
-    var eps = 1e-14; //JRG Hab ih von 1e-16 runtergesetzt
+    var maxError = 0.04; // squared distance in px^2
+    var eps = 1e-14;
+    var sol, x, y, i;
+
+    // Transform matrix of conic to match canvas coordinate system
     var mat = List.normalizeMax(conicMatrix);
-    var origmat = mat;
+    if (!List._helper.isAlmostReal(mat))
+        return;
+    var tmat = csport.toMat();
+    mat = List.mult(List.transpose(tmat), mat);
+    mat = List.mult(mat, tmat);
+    mat = List.normalizeMax(mat);
 
-    // check for complex values
-    for (var i = 0; i < 2; i++)
-        for (var j = 0; j < 2; j++) {
-            if (Math.abs(mat.value[i].value[j].value.imag) > CSNumber.eps) return;
-        }
+    // Using polynomial coefficients instead of matrix
+    // since it generalizes to higher degrees more easily.
+    // cij is the coefficient of the monomial x^i * y^j.
+    var c20 = mat.value[0].value[0].value.real;
+    var c11 = mat.value[0].value[1].value.real * 2;
+    var c10 = mat.value[0].value[2].value.real * 2;
+    var c02 = mat.value[1].value[1].value.real;
+    var c01 = mat.value[1].value[2].value.real * 2;
+    var c00 = mat.value[2].value[2].value.real;
 
-    // transform matrix to canvas coordiantes
-    var tMatrix1 = List.turnIntoCSList([ // inverse of homog points (0,0), (1,0), (0, 1)
-        List.realVector([-1, -1, 1]),
-        List.realVector([1, 0, 0]),
-        List.realVector([0, 1, 0])
-    ]);
+    // The adjoint matrix k## values
+    var k20 = 4 * c00 * c02 - c01 * c01;
+    var k11 = c01 * c10 - 2 * c00 * c11;
+    var k10 = c01 * c11 - 2 * c02 * c10;
+    var k02 = 4 * c00 * c20 - c10 * c10;
+    var k01 = c10 * c11 - 2 * c01 * c20;
+    var k00 = 4 * c02 * c20 - c11 * c11;
 
-    // get canvas coordiantes
-    var pt0 = csport.from(0, 0, 1);
-    pt0[2] = 1;
-    var pt1 = csport.from(1, 0, 1);
-    pt1[2] = 1;
-    var pt2 = csport.from(0, 1, 1);
-    pt2[2] = 1;
+    var discr = k00;
+    var det = c02 * k02 + c11 * k11 + c20 * k20 - c00 * k00;
 
-    var tMatrix2 = List.turnIntoCSList([
-        List.realVector(pt0),
-        List.realVector(pt1),
-        List.realVector(pt2)
-    ]);
-    tMatrix2 = List.transpose(tMatrix2);
+    // conic center
+    var ccx = k10 / k00;
+    var ccy = k01 / k00;
 
-    var ttMatrix = General.mult(tMatrix2, tMatrix1); // get transformation matrix
-
-    var ittMatrix = List.inverse(ttMatrix);
-
-    // transform Conic
-    mat = General.mult(List.transpose(ittMatrix), mat);
-    mat = General.mult(mat, ittMatrix);
-
-
-    var a = mat.value[0].value[0].value.real;
-    var b = mat.value[1].value[0].value.real;
-    var c = mat.value[1].value[1].value.real;
-    var d = mat.value[2].value[0].value.real;
-    var e = mat.value[2].value[1].value.real;
-    var f = mat.value[2].value[2].value.real;
-
-    var myMat = [
-        [a, b, d],
-        [b, c, e],
-        [d, e, f]
-    ];
-
-
-    var det = a * c * f - a * e * e - b * b * f + 2 * b * d * e - c * d * d;
-    var degen = Math.abs(det) < eps;
-
-    // check for circles with very large radius 
-    if (degen && conicMatrix.usage === "Circle") {
-        var cen = General.mult(List.adjoint3(origmat), List.linfty);
-        var zabs = CSNumber.abs(cen.value[2]).value.real;
-        // we are not a degenrate circle if our center is finite
-        if (zabs > CSNumber.eps) degen = false;
+    if (det < 0) {
+        c20 = -c20;
+        c11 = -c11;
+        c10 = -c10;
+        c02 = -c02;
+        c01 = -c01;
+        c00 = -c00;
+        det = -det;
     }
 
-    var cswh_max = csw > csh ? csw : csh;
-
-    var x_zero = -1.5 * cswh_max;
-    var x_w = 1.5 * cswh_max; //2 * cswh_max;
-    var y_zero = -1.5 * cswh_max;
-    var y_h = 1.5 * cswh_max;
-
-    var useRot = 1;
-    if (degen) { // since we split then - rotation unnecessary
-        useRot = 0;
+    // Check which side of the conic a given point is on.
+    // Sign 1 means inside, i.e. polar has complex points of intersection.
+    // Sign -1 means outside, i.e. polar has real points of intersection.
+    // Sign 0 would be on conic, but numeric noise will drown those out.
+    // Note that this distinction is arbitrary for degenerate conics.
+    function sign(x, y) {
+        var s = (c20 * x + c11 * y + c10) * x + (c02 * y + c01) * y + c00;
+        if (s >= 0) return 1;
+        if (s < 0) return -1;
+        return NaN;
     }
 
-
-    if (useRot) {
-        var C = [a, b, c, d, e, f];
-        var A = [
-            [C[0], C[1]],
-            [C[1], C[2]]
-        ];
-        var angle = 0;
-        if (Math.abs(a - b) > eps) {
-            angle = Math.atan(b / a - c) / 2;
-        } else {
-            angle = Math.PI / 4;
-        }
-        var get_rMat = function(angle) {
-            var acos = Math.cos(angle);
-            var asin = Math.sin(angle);
-            return [
-                [acos, -asin, 0],
-                [asin, acos, 0],
-                [0, 0, 1]
-            ];
+    function mkp(x, y) {
+        return {
+            x: x,
+            y: y,
         };
-
-
-        var rMat = get_rMat(angle);
-        rMat = List.realMatrix(rMat);
-        var TrMat = List.transpose(rMat);
-        var tmp = General.mult(List.realMatrix(myMat), rMat);
-        tmp = General.mult(TrMat, tmp);
-        a = tmp.value[0].value[0].value.real;
-        b = tmp.value[1].value[0].value.real;
-        c = tmp.value[1].value[1].value.real;
-        d = tmp.value[2].value[0].value.real;
-        e = tmp.value[2].value[1].value.real;
-        f = tmp.value[2].value[2].value.real;
-
     }
 
-    var Conic = [a, b, c, d, e, f];
+    var margin = Render2D.lsize;
+    var minx = -margin;
+    var miny = -margin;
+    var maxx = csw + margin;
+    var maxy = csh + margin;
+    var boundary = [];
+    var dummy = {};
+    var prev = dummy;
 
-    // split degenerate conic into 1 or 2 lines
-    var split_degen = function() {
+    function link(pt) {
+        prev.next = pt;
+        pt.prev = prev;
+        prev = pt;
+        return pt;
+    }
 
-        //modifs.size= CSNumber.real(2); // TODO fix this
-        var erg = geoOps._helper.splitDegenConic(origmat);
-        if (erg === nada) return;
-        var lg = erg[0];
-        var lh = erg[1];
+    function verticalBoundary(x, y1, y2, index) {
+        return {
+            a: x,
+            b1: y1,
+            b2: y2,
+            vertical: true,
+            index: index,
+            sign: function(y) {
+                return sign(x, y);
+            },
+            mkp: function(y) {
+                return mkp(x, y);
+            },
+            sol: solveRealQuadratic(
+                c02, c11 * x + c01, (c20 * x + c10) * x + c00),
+            discr: function() {
+                // Compute the roots of the y discriminant
+                // for points with vertical tangents
+                return solveRealQuadratic(k00, -2 * k10, k20);
+            },
+            tpt: function(x) {
+                // y coordinate of point with vertical tangent
+                return mkp(x, -0.5 * (c11 * x + c01) / c02);
+            },
+        };
+    }
 
-        var arg = [lg];
-        evaluator.draw$1(arg, modifs);
-        arg[0] = lh;
-        evaluator.draw$1(arg, modifs);
+    function horizontalBoundary(y, x1, x2, index) {
+        return {
+            a: y,
+            b1: x1,
+            b2: x2,
+            vertical: false,
+            index: index,
+            sign: function(x) {
+                return sign(x, y);
+            },
+            mkp: function(x) {
+                return mkp(x, y);
+            },
+            sol: solveRealQuadratic(
+                c20, c11 * y + c10, (c02 * y + c01) * y + c00),
+            discr: function() {
+                // Compute the roots of the x discriminant
+                // for points with horizontal tangents
+                return solveRealQuadratic(k00, -2 * k01, k02);
+            },
+            tpt: function(y) {
+                // x coordinate of point with horizontal tangent
+                return mkp(-0.5 * (c11 * y + c10) / c20, y);
+            },
+        };
+    }
 
-    };
-
-    var get_concic_type = function(C) {
-        if (C === 'undefined' || C.length !== 6) {
-            console.error("this does not define a Conic");
-        }
-
-        if (degen) return "degenerate";
-
-        var det = C[0] * C[2] - C[1] * C[1];
-
-        if (Math.abs(det) < eps) {
-            return "parabola";
-        } else if (det > eps) {
-            return "ellipsoid";
-        } else {
-            return "hyperbola";
-        }
-
-    }; // end get_concic_type
-
-    var type = get_concic_type(Conic);
-
-    var norm = function(x0, y0, x1, y1) {
-        var norm = Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2);
-        return Math.sqrt(norm);
-    };
-
-    var is_inside = function(x, y) {
-        return (x > 0 && x < csw && y > 0 && y < csh);
-    };
-
-    var drawRect = function(x, y, col) {
-        csctx.strokeStyle = 'red';
-        if (col !== 'undefined') csctx.strokeStyle = col;
-        csctx.beginPath();
-        csctx.rect(x, y, 10, 10);
-        csctx.stroke();
-    };
-    // arrays to save points on conic
-    var arr_x1 = [];
-    var arr_x2 = [];
-    var arr_y1 = [];
-    var arr_y2 = [];
-    var arr_xg = [];
-    var arr_yg = [];
-
-    var resetArrays = function() {
-        arr_x1 = [];
-        arr_x2 = [];
-        arr_y1 = [];
-        arr_y2 = [];
-        arr_xg = [];
-        arr_yg = [];
-    };
-
-    var drawArray = function(x, y) {
-        csctx.beginPath();
-        csctx.moveTo(x[0], y[0]);
-        for (var i = 1; i < x.length; i++) {
-            //csctx.moveTo(x[i - 1], y[i - 1]);
-            //csctx.fillRect(x[i],y[i],5,5);
-            csctx.lineTo(x[i], y[i]);
-        }
-        csctx.stroke();
-    }; // end drawArray
-
-
-    var eval_conic_x = function(C, ymin, ymax) {
-        var x1, x2;
-        var type = get_concic_type(C);
-
-        if (C.length !== 6) {
-            console.error("Conic needs 6 Parameters");
-            return;
-        }
-
-        var a = C[0];
-        var b = C[1];
-        var c = C[2];
-        var d = C[3];
-        var e = C[4];
-        var f = C[5];
-
-
-        var step;
-        var perc = 0.1;
-        var diff = ymax - ymin;
-        var ssmall = perc * diff + ymin;
-        var slarge = ymax - perc * diff;
-        for (var y = ymin; y <= ymax; y += step) {
-            if (y < ssmall || y > slarge || Math.abs(ymax - ymin) < 100) {
-                step = 1 / 2;
-            } else if (y < 0 || y > csh) {
-                step = 10;
+    function doBoundary(bd) {
+        var bMin = Math.min(bd.b1, bd.b2);
+        var bMax = Math.max(bd.b1, bd.b2);
+        var sign1 = bd.sign(bMin);
+        var sign2 = bd.sign(bMax);
+        if (!isFinite(sign1 * sign2))
+            return false;
+        var sol = bd.sol;
+        var b, signMid;
+        if (sign1 !== sign2) { // we need exactly one point of intersection
+            if (sol === null)
+                return false; // don't have one, give up and don't draw
+            b = 0.5 * (sol[0] + sol[1]);
+            if (b > bMin && b < bMax) {
+                // solutions might be close to opposite corners,
+                // so we use the sign to pick the appropriate one
+                signMid = bd.sign(b);
+                // We have two possible arrangements or corners and crossings:
+                //          sign1 == signMid != sign2
+                //    sol[0]               sol[1]
+                // sign1 != signMid == sign2
+                b = sol[signMid === sign2 ? 0 : 1];
             } else {
-                step = 3;
+                // solutions will be off to one side, so we pick the
+                // one which is closer to the center of this egde
+                var center = (bMin + bMax) * 0.5;
+                var dist0 = Math.abs(center - sol[0]);
+                var dist1 = Math.abs(center - sol[1]);
+                b = sol[dist0 < dist1 ? 0 : 1];
             }
-
-            var inner = -a * c * y * y - 2 * a * e * y - a * f + b * b * y * y + 2 * b * d * y + d * d;
-            inner = Math.sqrt(inner);
-
-
-            x1 = 1 / a * (-b * y - d + inner);
-            x2 = -1 / a * (b * y + d + inner);
-
-
-            var ya, yb, y1, y2;
-            if (useRot) {
-                var r1 = [x1, y, 1];
-                var r2 = [x2, y, 1];
-                r1 = General.mult(rMat, List.realVector(r1));
-                r2 = General.mult(rMat, List.realVector(r2));
-                x1 = r1.value[0].value.real;
-                x2 = r2.value[0].value.real;
-                y1 = r1.value[1].value.real;
-                y2 = r2.value[1].value.real;
-            } else {
-                y1 = y;
-                y2 = y;
+            boundary.push(link(bd.mkp(b)));
+        } else { // we need zero or two points of intersection
+            if (sol === null) { // have zero intersections
+                if (discr <= 0) // not an ellipse
+                    return true;
+                sol = bd.discr();
+                if (sol === null)
+                    return true; // an ellipse without tangent?
+                var pt = bd.tpt(sol[bd.index]);
+                if (pt.x >= minx && pt.x <= maxx &&
+                    pt.y >= miny && pt.y <= maxy)
+                    link(pt); // link but don't add to boundary
+                return true;
             }
-
-
-            // for ellipsoids we go out of canvas
-            if (!isNaN(x1) && type === "ellipsoid") {
-                arr_x1.push(x1);
-                arr_y1.push(y1);
-            } else if (!isNaN(x1) && x1 >= x_zero && x1 <= x_w) {
-                arr_x1.push(x1);
-                arr_y1.push(y1);
-            }
-
-            if (!isNaN(x2) && type === "ellipsoid") {
-                arr_x2.push(x2);
-                arr_y2.push(y2);
-            } else if (!isNaN(x2) && x2 >= x_zero && x2 <= x_w) {
-                arr_x2.push(x2);
-                arr_y2.push(y2);
-            }
+            // have two points of intersection with line
+            b = 0.5 * (sol[0] + sol[1]);
+            if (!(b > bMin && b < bMax))
+                return true; // both intersections off to one end
+            signMid = bd.sign(b);
+            if (signMid === sign1)
+                return true; // one intersection outside each end
+            if (isNaN(signMid))
+                return true;
+            // have two points of intersection with segment
+            if (bd.b1 > bd.b2)
+                sol = [sol[1], sol[0]];
+            boundary.push(link(bd.mkp(sol[0])));
+            boundary.push(link(bd.mkp(sol[1])));
         }
-    }; // end eval_conic_x
+        return true;
+    }
 
-    // calc and draw conic
-    var calc_draw = function(C) {
-        var ymin, ymax, y0, y1;
-        var ttemp;
+    if (!(doBoundary(verticalBoundary(minx, miny, maxy, 0)) &&
+            doBoundary(horizontalBoundary(maxy, minx, maxx, 1)) &&
+            doBoundary(verticalBoundary(maxx, maxy, miny, 1)) &&
+            doBoundary(horizontalBoundary(miny, maxx, minx, 0))))
+        return;
 
-        var type = get_concic_type(C);
+    if (prev === dummy)
+        return; // no boundary or tangent points at all, nothing to draw
+    // close the cycle
+    prev.next = dummy.next;
+    dummy.next.prev = prev;
 
-
-        if (C.length !== 6) {
-            console.error("Conic needs 6 Parameters");
+    csctx.beginPath();
+    var pt1, pt2, pt3;
+    if (boundary.length === 0) {
+        pt1 = prev;
+        csctx.moveTo(pt1.x, pt1.y);
+        do {
+            pt2 = pt1.next;
+            drawArc(pt1, pt2);
+            pt1 = pt2;
+        } while (pt1 !== prev);
+        csctx.closePath();
+    }
+    var startIndex = (sign(minx, miny) === 1 ? 0 : 1);
+    if (boundary.length === 4) {
+        // We have 4 points of intersection.  For a hyperbola, these
+        // may belong to different branches.  If the line joining them
+        // intersects the line at infinity on the inside, they belong
+        // to different branches and the boundary between the points
+        // we want to connect is on the inside es well.  If the line
+        // intersects infinity on the outside, they belong to the same
+        // branch and we want to connect points which have some
+        // outside boundary between them.  We do the computation twice
+        // and take the stronger signal, i.e. larger absolute value.
+        var best = 0;
+        for (i = 0; i < 2; ++i) {
+            pt1 = boundary[i];
+            pt2 = boundary[i + 2];
+            var dx = pt2.x - pt1.x;
+            var dy = pt2.y - pt1.y;
+            // compute sign at infinity
+            var s = (c20 * dx + c11 * dy) * dx + c02 * dy * dy;
+            if (Math.abs(s) > Math.abs(best))
+                best = s;
+        }
+        if (isNaN(best))
             return;
+        if (best >= 0)
+            startIndex = 1 - startIndex;
+    }
+
+    for (i = startIndex; i < boundary.length; i += 2) {
+        pt1 = boundary[i];
+        pt3 = boundary[(i + 1) % boundary.length];
+        csctx.moveTo(pt1.x, pt1.y);
+        for (pt2 = pt1.next; pt1 !== pt3; pt2 = (pt1 = pt2).next) {
+            drawArc(pt1, pt2);
         }
+    }
+    csctx.stroke();
 
-        var a = C[0];
-        var b = C[1];
-        var c = C[2];
-        var d = C[3];
-        var e = C[4];
-        var f = C[5];
+    function drawArc(pt1, pt2) {
+        refine(pt1.x, pt1.y, pt2.x, pt2.y, 0);
+    }
 
-        // these are the actual formulas - we use variables to speed up
-        //y0 = (-a*e + b*d - Math.sqrt(a*(-a*c*f + a*Math.pow(e, 2) + Math.pow(b, 2)*f - 2*b*d*e + c*Math.pow(d,2))))/(a*c - Math.pow(b, 2));
-        //y1 = (-a*e + b*d + Math.sqrt(a*(-a*c*f + a*Math.pow(e, 2) + Math.pow(b, 2)*f - 2*b*d*e + c*Math.pow(d,2))))/(a*c - Math.pow(b, 2));
-
-        var aebd = -a * e + b * d;
-        var largeSqrt = Math.sqrt(a * (-a * c * f + a * Math.pow(e, 2) + Math.pow(b, 2) * f - 2 * b * d * e + c * Math.pow(d, 2)));
-        var deNom = a * c - Math.pow(b, 2);
-
-        if (Math.abs(deNom) > eps) {
-            y0 = (aebd - largeSqrt) / deNom;
-            y1 = (aebd + largeSqrt) / deNom;
-        } else {
-            y0 = (-a * f + d * d) / (2 * a * e - 2 * b * d);
-            y1 = y0;
-        }
-
-        if (!isNaN(y0) && y0 > y_zero && y0 < y_h) { // ungly but works
-        } else {
-            y0 = y_zero;
-        }
-
-        if (!isNaN(y1) && y1 > y_zero && y1 < y_h) {} else {
-            y1 = y_zero;
-        }
-
-        ymin = (y0 < y1 ? y0 : y1);
-        ymax = (y0 > y1 ? y0 : y1);
-
-
-        eval_conic_x(C, y_zero, ymin);
-        arr_xg = arr_x1.concat(arr_x2.reverse());
-        arr_yg = arr_y1.concat(arr_y2.reverse());
-        drawArray(arr_xg, arr_yg);
-        resetArrays();
-
-
-        eval_conic_x(C, ymax, y_h);
-        drawArray(arr_x1, arr_y1);
-        //drawRect(arr_x1[0], arr_y1[0], "red");
-        //console.log(arr_x1, arr_y1);
-        //drawRect(arr_x2[0], arr_y2[0], "green");
-        // bridge branches
-        if (is_inside(arr_x1[0], arr_y1[1]) || is_inside(arr_x2[0], arr_y2[0])) { // drawing bug fix
-            csctx.beginPath();
-            csctx.moveTo(arr_x1[0], arr_y1[0]);
-            csctx.lineTo(arr_x2[0], arr_y2[0]);
-            csctx.stroke();
-        }
-        drawArray(arr_x2, arr_y2);
-        resetArrays();
-
-
-        eval_conic_x(C, ymin, ymax);
-        drawArray(arr_x1, arr_y1);
-        // bridge branches
-        // if (type === "ellipsoid") {
-        csctx.beginPath();
-        csctx.moveTo(arr_x1[0], arr_y1[0]);
-        csctx.lineTo(arr_x2[0], arr_y2[0]);
-        csctx.stroke();
-        csctx.beginPath();
-        csctx.moveTo(arr_x1[arr_x1.length - 1], arr_y1[arr_y1.length - 1]);
-        csctx.lineTo(arr_x2[arr_x2.length - 1], arr_y2[arr_y2.length - 1]);
-        csctx.stroke();
-        //}
-        // }
-        drawArray(arr_x2, arr_y2);
-        resetArrays();
-    }; // end calc_draw
-
-
-    // actually start drawing
-    if (!degen) {
-        calc_draw(Conic);
-    } else {
-        split_degen();
+    // Find the control points of a quadratic Bézier which at the
+    // endpoints agrees with the conic in position and tangent direction.
+    function refine(x1, y1, x2, y2, depth) {
+        // u is the line joining pt1 and pt2
+        var ux = y1 - y2;
+        var uy = x2 - x1;
+        var uz = x1 * y2 - y1 * x2;
+        // c is the proposed control point, computed as pole of u
+        var cz = k10 * ux + k01 * uy + k00 * uz;
+        if (Math.abs(cz) < eps)
+            return csctx.lineTo(x2, y2);
+        var cx = (k20 * ux + k11 * uy + k10 * uz) / cz;
+        var cy = (k11 * ux + k02 * uy + k01 * uz) / cz;
+        if (!(isFinite(cx) && isFinite(cy))) // probably already linear
+            return csctx.lineTo(x2, y2);
+        var area = Math.abs(
+            x1 * cy + cx * y2 + x2 * y1 -
+            x2 * cy - cx * y1 - x1 * y2);
+        if (area < maxError) // looks linear, too
+            return csctx.lineTo(x2, y2);
+        do { // so break defaults to single curve and return skips that
+            if (depth > 10)
+                break;
+            // Compute pt3 as the intersection of the segment h-c and the conic
+            var hx = 0.5 * (x1 + x2);
+            var hy = 0.5 * (y1 + y2);
+            var dx = cx - hx;
+            var dy = cy - hy;
+            if (dx * dx + dy * dy < maxError)
+                break;
+            // using d=(dx,dy,0) and h=(hx,hy,1) compute bilinear forms
+            var dMd = c20 * dx * dx + c11 * dx * dy + c02 * dy * dy;
+            var dMh = 2 * c20 * dx * hx + c11 * (dx * hy + dy * hx) +
+                2 * c02 * dy * hy + c10 * dx + c01 * dy;
+            var hMh = (c20 * hx + c11 * hy + c10) * hx +
+                (c02 * hy + c01) * hy + c00;
+            var sol = solveRealQuadratic(dMd, dMh, hMh);
+            if (!sol) {
+                // discriminant is probably slightly negative due to error.
+                // The following values SHOULD be pretty much identical now.
+                sol = [-0.5 * dMh / dMd, -2 * hMh / dMh];
+            }
+            // Now we have to points, h + sol[i] * d, and have to pick one.
+            if (sol[0] > 0) {
+                // both roots positive, so we pick the one which is closer
+                sol = sol[0];
+            } else if (sol[1] >= 0) {
+                // one root negative one positive, so we pick the one
+                // in the positive direction
+                sol = sol[1];
+            } else {
+                // signs messed up somehow, so try to recover gracefully
+                break;
+            }
+            var x3 = hx + sol * dx;
+            var y3 = hy + sol * dy;
+            // The point m = (c+h)/2 lies on the Bézier curve
+            var mx = 0.5 * (cx + hx);
+            var my = 0.5 * (cy + hy);
+            var ex = x3 - mx;
+            var ey = y3 - my;
+            if (ex * ex + ey * ey < maxError)
+                break;
+            refine(x1, y1, x3, y3, depth + 1);
+            refine(x3, y3, x2, y2, depth + 1);
+            return;
+        } while (false);
+        csctx.quadraticCurveTo(cx, cy, x2, y2);
     }
 
 }; // end eval_helper.drawconic
@@ -11408,10 +12531,9 @@ evaluator.fillpolygon$1 = function(args, modifs) {
 
 
 eval_helper.drawpolygon = function(args, modifs, df, cycle) {
-
     Render2D.handleModifs(modifs, Render2D.conicModifs);
     Render2D.preDrawCurve();
-    csctx.mozFillRule = 'evenodd';
+
 
     var m = csport.drawingstate.matrix;
 
@@ -11452,6 +12574,7 @@ eval_helper.drawpolygon = function(args, modifs, df, cycle) {
     }
 
     var v0 = evaluate(args[0]);
+
     csctx.beginPath();
     if (v0.ctype === 'list') {
         drawpoly();
@@ -11461,11 +12584,15 @@ eval_helper.drawpolygon = function(args, modifs, df, cycle) {
     }
 
     if (df === "D") {
+        if (Render2D.fillColor) {
+            csctx.fillStyle = Render2D.fillColor;
+            csctx.fill(Render2D.fillrule);
+        }
         csctx.stroke();
     }
     if (df === "F") {
         csctx.fillStyle = Render2D.lineColor;
-        csctx.fill();
+        csctx.fill(Render2D.fillrule);
     }
     if (df === "C") {
         csctx.clip();
@@ -11475,29 +12602,66 @@ eval_helper.drawpolygon = function(args, modifs, df, cycle) {
 
 };
 
+function defaultTextRendererCanvas(ctx, text, x, y, align, size, lineHeight) {
+    if (text.indexOf("\n") !== -1) {
+        var left = Infinity;
+        var right = -Infinity;
+        var top = Infinity;
+        var bottom = -Infinity;
+        text.split("\n").forEach(function(row) {
+            var box = defaultTextRendererCanvas(ctx, row, x, y, align, size);
+            if (left > box.left) left = box.left;
+            if (right < box.right) right = box.right;
+            if (top > box.top) top = box.top;
+            if (bottom < box.bottom) bottom = box.bottom;
+            y += lineHeight;
+        });
+        return {
+            left: left,
+            right: right,
+            top: top,
+            bottom: bottom
+        };
+    }
+    var m = ctx.measureText(text);
+    ctx.fillText(text, x - m.width * align, y);
+    // We can't rely on advanced text metrics due to lack of browser support,
+    // so we have to guess sizes, the vertical ones in particular.
+    return {
+        left: x - m.width * align,
+        right: x + m.width * (1 - align),
+        top: y - 0.7 * 1.2 * size,
+        bottom: y + 0.3 * 1.2 * size
+    };
+}
+
 // This is a hook: the following function may get replaced by a plugin.
-var textRendererCanvas = function(ctx, text, x, y, align) {
-    var width = ctx.measureText(text).width;
-    ctx.fillText(text, x - width * align, y);
-};
+var textRendererCanvas = defaultTextRendererCanvas;
 
 // This is a hook: the following function may get replaced by a plugin.
 var textRendererHtml = function(element, text, font) {
+    if (text.indexOf("\n") !== -1) {
+        // TODO: find a way to align the element by its FIRST row
+        // as Cinderella does it, instead of by the last row as we do now.
+        var rows = text.split("\n");
+        element.textContent = rows[0];
+        for (var i = 1; i < rows.length; ++i) {
+            element.appendChild(document.createElement("br"));
+            element.appendChild(document.createTextNode(rows[i]));
+        }
+        return;
+    }
     element.textContent = text;
 };
 
-// This is a special function: when called internally, additional arguments
-// may be used which are not accessible from a script invocation.
-evaluator.drawtext$2 = function(args, modifs, callback) {
+eval_helper.drawtext = function(args, modifs, callback) {
     var v0 = evaluateAndVal(args[0]);
     var v1 = evaluate(args[1]);
     var pt = eval_helper.extractPoint(v0);
 
     if (!pt.ok) {
-        return nada;
+        return null;
     }
-
-    var m = csport.drawingstate.matrix;
 
     var col = csport.drawingstate.textcolor;
     Render2D.handleModifs(modifs, Render2D.textModifs);
@@ -11506,21 +12670,140 @@ evaluator.drawtext$2 = function(args, modifs, callback) {
     if (Render2D.size !== null) size = Render2D.size;
     csctx.fillStyle = Render2D.textColor;
 
+    var m = csport.drawingstate.matrix;
     var xx = pt.x * m.a - pt.y * m.b + m.tx + Render2D.xOffset;
     var yy = pt.x * m.c - pt.y * m.d - m.ty - Render2D.yOffset;
 
     var txt = niceprint(v1);
+
+    if (!(CindyJS._pluginRegistry.katex) && typeof(txt) === "string") {
+        // split string by "$", if we have latex $...$ then the length is >=3
+        if (txt.split("$").length >= 3) {
+            loadExtraPlugin("katex", "katex-plugin.js", true /*skipInit*/ );
+        }
+    }
+
     var font = (
         Render2D.bold + Render2D.italics +
         Math.round(size * 10) / 10 + "px " +
         Render2D.family);
     csctx.font = font;
     if (callback) {
-        callback(txt, font, xx, yy, Render2D.align);
+        return callback(txt, font, xx, yy, Render2D.align, size);
     } else {
-        textRendererCanvas(csctx, txt, xx, yy, Render2D.align);
+        return textRendererCanvas(
+            csctx, txt, xx, yy, Render2D.align,
+            size, size * defaultAppearance.lineHeight);
+    }
+};
+
+evaluator.drawtext$2 = function(args, modifs) {
+    eval_helper.drawtext(args, modifs, null);
+    return nada;
+};
+
+evaluator.drawtable$2 = function(args, modifs) {
+    var v0 = evaluateAndVal(args[0]);
+    var v1 = evaluateAndVal(args[1]);
+    var pt = eval_helper.extractPoint(v0);
+    if (!pt.ok) return nada;
+    if (v1.ctype !== "list") return nada;
+    var data = v1.value;
+    var nr = data.length;
+    var nc = -1;
+    var r, c;
+    for (r = 0; r < nr; ++r)
+        if (data[r].ctype === "list" && data[r].value.length > nc)
+            nc = data[r].value.length;
+    if (nc === -1) { // depth 1, no nested lists
+        data = data.map(function(row) {
+            return [row];
+        });
+        nc = 1;
+    } else {
+        data = data.map(function(row) {
+            return List.asList(row).value;
+        });
     }
 
+    // Modifier handling
+    var sx = 100;
+    var sy = null;
+    var border = true;
+    var color = csport.drawingstate.textcolor;
+    Render2D.handleModifs(modifs, {
+        "size": true,
+        "color": function(v) {
+            if (List._helper.isNumberVecN(v, 3))
+                color = Render2D.makeColor([
+                    v.value[0].value.real,
+                    v.value[1].value.real,
+                    v.value[2].value.real
+                ]);
+        },
+        "alpha": true,
+        "bold": true,
+        "italics": true,
+        "family": true,
+        "align": true,
+        "x_offset": true,
+        "y_offset": true,
+        "offset": true,
+        "width": function(v) {
+            if (v.ctype === "number")
+                sx = v.value.real;
+        },
+        "height": function(v) {
+            if (v.ctype === "number")
+                sy = v.value.real;
+        },
+        "border": function(v) {
+            if (v.ctype === "boolean")
+                border = v.value;
+        },
+    });
+    var size = csport.drawingstate.textsize;
+    if (size === null) size = defaultAppearance.textsize;
+    if (Render2D.size !== null) size = Render2D.size;
+    if (sy === null) sy = 1.6 * size;
+
+    var font = (
+        Render2D.bold + Render2D.italics +
+        Math.round(size * 10) / 10 + "px " +
+        Render2D.family);
+    csctx.font = font;
+    var m = csport.drawingstate.matrix;
+    var ww = nc * sx;
+    var hh = nr * sy;
+    var xx = pt.x * m.a - pt.y * m.b + m.tx + Render2D.xOffset;
+    var yy = pt.x * m.c - pt.y * m.d - m.ty - Render2D.yOffset - hh;
+    if (border) {
+        Render2D.preDrawCurve();
+        csctx.strokeStyle = Render2D.lineColor;
+        csctx.beginPath();
+        for (r = 1; r < nr; ++r) {
+            csctx.moveTo(xx, yy + r * sy);
+            csctx.lineTo(xx + ww, yy + r * sy);
+        }
+        for (c = 1; c < nc; ++c) {
+            csctx.moveTo(xx + c * sx, yy);
+            csctx.lineTo(xx + c * sx, yy + hh);
+        }
+        csctx.stroke();
+        csctx.lineWidth = Render2D.lsize + 1;
+        csctx.beginPath();
+        csctx.rect(xx, yy, ww, hh);
+        csctx.stroke();
+    }
+    xx += Render2D.align * sx + (1 - 2 * Render2D.align) * sy * 0.3;
+    yy += sy * 0.7;
+    csctx.fillStyle = color;
+    for (r = 0; r < nr; ++r) {
+        for (c = 0; c < nc; ++c) {
+            var txt = niceprint(data[r][c]);
+            textRendererCanvas(csctx, txt, xx + c * sx, yy + r * sy, Render2D.align);
+        }
+    }
     return nada;
 };
 
@@ -11598,7 +12881,7 @@ evaluator.plot$2 = function(args, modifs) {
     var stroking = false;
     var start = -10; //TODO Anpassen auf PortScaling
     var stop = 10;
-    var step = 1;
+    var step = 0.1;
     var steps = 1000;
 
     var v1 = args[0];
@@ -12017,7 +13300,7 @@ evaluator.createimage$3 = function(args, modifs) {
     // canvas.style.border="1px solid #FF0000";
     canvas.style.display = "none";
     document.body.appendChild(canvas);
-    images[v0.value] = loadImage(canvas);
+    images[v0.value] = loadImage(canvas, false);
 
     return nada;
 };
@@ -12032,6 +13315,9 @@ evaluator.clearimage$1 = function(args, modifs) {
     }
 
     var image = imageFromValue(name);
+    if (!image)
+        return nada;
+
     var localcanvas = image.img;
 
     if (typeof(localcanvas) === "undefined" || localcanvas === null) {
@@ -12301,6 +13587,14 @@ evaluator.drawimage$2 = function(args, modifs) {
 
             }
 
+            csctx.imageSmoothingEnabled = true;
+            if (modifs.interpolate !== undefined) {
+                erg = evaluate(modifs.interpolate);
+                if (erg.ctype === 'boolean') {
+                    csctx.imageSmoothingEnabled = erg.value;
+                }
+            }
+
 
         }
 
@@ -12352,6 +13646,9 @@ evaluator.drawimage$2 = function(args, modifs) {
         var sc = Math.sqrt(xx1 * xx1 + yy1 * yy1) / Math.sqrt(ixx1 * ixx1 + iyy1 * iyy1);
         var ang = -Math.atan2(xx1, yy1) + Math.atan2(ixx1, iyy1);
 
+        var viewScale = csport.drawingstate.matrix.sdet / 72;
+        scax *= viewScale;
+        scay *= viewScale;
 
         if (alpha !== 1)
             csctx.globalAlpha = alpha;
@@ -12415,6 +13712,14 @@ evaluator.drawimage$2 = function(args, modifs) {
                     if (erg.value) {
                         flipy = -1;
                     }
+                }
+            }
+
+            csctx.imageSmoothingEnabled = true;
+            if (modifs.interpolate !== undefined) {
+                erg = evaluate(modifs.interpolate);
+                if (erg.ctype === 'boolean') {
+                    csctx.imageSmoothingEnabled = erg.value;
                 }
             }
 
@@ -12537,12 +13842,104 @@ evaluator.allimages$0 = function() {
     return List.turnIntoCSList(lst);
 };
 
-evaluator.cameravideo$0 = function() {
+
+var cameravideo = {};
+evaluator.cameravideo$0 = function(args, modifs) {
+    var maximal = true; //use maximal as default (if no other modifier is given)
+    var constraints = {};
+
+    function makeconstraints(width) {
+        return {
+            video: {
+                width: width,
+                advanced: [{
+                    width: {
+                        max: width, //see below for details
+                        min: width
+                    }
+                }, {
+                    width: {
+                        ideal: width
+                    }
+                }]
+            },
+            audio: false
+        };
+    }
+
+    if (modifs.resolution !== undefined) {
+        var val = evaluate(modifs.resolution);
+        if (val.ctype === 'string' && val.value === 'maximal') maximal = true;
+        else {
+            if (val.ctype === 'number') {
+                maximal = false;
+                constraints = makeconstraints(val.value.real);
+            } else if (List._helper.isNumberVecN(val, 2)) {
+                maximal = false;
+                constraints = makeconstraints(val.value[0].value.real);
+                var heightorratio = val.value[1].value.real;
+                if (heightorratio < 10 || !Number.isInteger(heightorratio)) {
+                    constraints.video.aspectRatio = heightorratio;
+                    constraints.video.advanced[0].aspectRatio = {
+                        min: heightorratio,
+                        max: heightorratio
+                    };
+                    constraints.video.advanced[1].aspectRatio = {
+                        ideal: heightorratio,
+                    };
+                } else {
+                    constraints.video.height = heightorratio;
+                    constraints.video.advanced[0].height = {
+                        min: heightorratio,
+                        max: heightorratio
+                    };
+                    constraints.video.advanced[1].height = {
+                        ideal: heightorratio,
+                    };
+                }
+            }
+        }
+    }
+    if (maximal) {
+        // As per https://bugs.chromium.org/p/chromium/issues/detail?id=543997#c47,
+        // Chrome 54 doesn't actually honor ideal constraints yet, so we need
+        // to explicitely list some common widths to control resolution selection.
+        constraints = [320, 640, 1024, 1280, 1920, 2560];
+        constraints = constraints.map(function(w) {
+            return {
+                width: {
+                    min: w
+                }
+            };
+        });
+        // We'd like to also minimize aspect ratio i.e. maximize height for a given
+        // width, but Chrome again appears to have a problem with this. See also
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=657145
+        if (false) {
+            constraints = constraints.concat([1.34, 1.59, 1.78, 2].map(function(a) {
+                return {
+                    aspectRatio: {
+                        max: a
+                    }
+                };
+            }));
+        }
+        constraints = {
+            video: {
+                width: 16000, // ideal dimensions, will
+                height: 9000, // prefer big resolutions
+                advanced: constraints
+            },
+            audio: false
+        };
+    }
+    var constraintsstr = JSON.stringify(constraints);
+
+    if (cameravideo[constraintsstr])
+        return cameravideo[constraintsstr];
+
     var openVideoStream = null;
-    var constraints = {
-        video: true,
-        audio: false
-    };
+
     var gum = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
     if (gum) {
         openVideoStream = function(success, failure) {
@@ -12563,20 +13960,224 @@ evaluator.cameravideo$0 = function() {
     }
     if (!openVideoStream) {
         console.warn("getUserMedia call not supported");
+        cameravideo[constraintsstr] = nada;
         return nada;
     }
     var video = document.createElement("video");
     video.autoplay = true;
-    var img = loadImage(video);
+    cameravideo[constraintsstr] = loadImage(video, true);
     console.log("Opening stream.");
     openVideoStream(function success(stream) {
+        /* does not work in Safari 11.0 (beta)
         var url = window.URL.createObjectURL(stream);
         video.src = url;
+        */
+        video.srcObject = stream;
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.play();
         video.addEventListener("loadeddata", csplay);
     }, function failure(err) {
         console.error("Could not get user video:", String(err), err);
     });
-    return img;
+    return cameravideo[constraintsstr];
+};
+
+evaluator.playvideo$1 = function(args, modifs) {
+    var img = imageFromValue(evaluateAndVal(args[0]));
+    if (img.live && img.img.play) {
+        img.img.play();
+    }
+    return nada;
+};
+
+evaluator.pausevideo$1 = function(args, modifs) {
+    var img = imageFromValue(evaluateAndVal(args[0]));
+    if (img.live && img.img.pause) {
+        img.img.pause();
+    }
+    return nada;
+};
+
+var helpercanvas; //invisible helper canvas.
+function getHelperCanvas(width, height) {
+    if (!helpercanvas) {
+        //creating helpercanvas only once increases the running time
+        helpercanvas = /** @type {HTMLCanvasElement} */ (document.createElement("canvas"));
+    }
+    helpercanvas.width = width;
+    helpercanvas.height = height;
+    return helpercanvas;
+}
+
+/**
+ * reads a rectangular block of pixels from the upper left corner.
+ * The colors are representent as a 4 component RGBA vector with entries in [0,1]
+ */
+function readPixelsIndirection(img, x, y, width, height) {
+    var res = [];
+    if (img.readPixels) {
+        res = img.readPixels(x, y, width, height);
+    } else { //use canvas-approach
+        var data, ctx;
+        if (img.img.getContext) { //img is a canvas
+            ctx = img.img.getContext('2d');
+            data = ctx.getImageData(x, y, width, height).data;
+        } else { //copy corresponding subimage of img.img to temporary canvas
+            try {
+                var helpercanvas = getHelperCanvas(width, height);
+                ctx = helpercanvas.getContext('2d');
+                ctx.drawImage(img.img, x, y, width, height, 0, 0, width, height);
+                data = ctx.getImageData(0, 0, width, height).data;
+            } catch (exception) {
+                console.log(exception);
+            }
+
+        }
+        for (var i in data) res.push(data[i] / 255);
+    }
+    return res;
+}
+
+/**
+ * imagergba(‹image›,x,y) implements imagergb(‹imagename›,x,y) from Cinderella, i.e.
+ * returns a 4 component vector ranging from (0-255, 0-255, 0-255, 0-1)
+ */
+evaluator.imagergba$3 = function(args, modifs) {
+    var img = imageFromValue(evaluateAndVal(args[0]));
+    var x = evaluateAndVal(args[1]);
+    var y = evaluateAndVal(args[2]);
+
+    if (!img || x.ctype !== 'number' || y.ctype !== 'number' || !img.ready) return nada;
+
+    x = Math.round(x.value.real);
+    y = Math.round(y.value.real);
+    if (!isFiniteNumber(x) || !isFiniteNumber(y)) return nada;
+
+    var rgba = readPixelsIndirection(img, x, y, 1, 1);
+    return List.realVector([rgba[0] * 255, rgba[1] * 255, rgba[2] * 255, rgba[3]]);
+};
+
+evaluator.imagergb$3 = evaluator.imagergba$3; //According to reference
+
+function readimgatcoord(img, coord, modifs) {
+    if (!coord.ok) return nada;
+
+    var w = img.width;
+    var h = img.height;
+
+    var interpolate = true; //default values
+    var repeat = false;
+
+    function handleModifs() {
+        var erg;
+        if (modifs.interpolate !== undefined) {
+            erg = evaluate(modifs.interpolate);
+            if (erg.ctype === 'boolean') {
+                interpolate = (erg.value);
+            }
+        }
+
+        if (modifs.repeat !== undefined) {
+            erg = evaluate(modifs.repeat);
+            if (erg.ctype === 'boolean') {
+                repeat = (erg.value);
+            }
+        }
+    }
+    handleModifs();
+    if (interpolate) {
+        coord.x -= 0.5; //center of pixels are in the middle of them.
+        coord.y -= 0.5; //Now pixel-centers have wlog integral coordinates
+    }
+
+    if (repeat) {
+        coord.x = (coord.x % w + w) % w;
+        coord.y = (coord.y % h + h) % h;
+    }
+
+    var xi = Math.floor(coord.x); //integral part
+    var yi = Math.floor(coord.y);
+
+    if (!isFiniteNumber(xi) || !isFiniteNumber(yi)) return nada;
+
+    var rgba = [0, 0, 0, 0];
+    if (interpolate) {
+        var i, j;
+
+        var xf = coord.x - xi; //fractional part
+        var yf = coord.y - yi;
+
+        var pixels = readPixelsIndirection(img, xi, yi, 2, 2);
+
+        //modify pixels for boundary cases:
+        if (repeat) { //read pixels at boundary seperately
+            if (xi === w - 1 || yi === h - 1) {
+                var p10 = readPixelsIndirection(img, (xi + 1) % w, yi, 1, 1);
+                var p01 = readPixelsIndirection(img, xi, (yi + 1) % h, 1, 1);
+                var p11 = readPixelsIndirection(img, (xi + 1) % w, (yi + 1) % h, 1, 1);
+                pixels = pixels.slice(0, 4).concat(p10, p01, p11);
+            }
+        } else { //clamp to boundary
+            if (xi === -1 || xi === w - 1) xf = Math.round(xf);
+            if (yi === -1 || yi === h - 1) yf = Math.round(yf);
+        }
+
+        //bilinear interpolation for each component i
+        for (i = 0; i < 4; i++)
+            rgba[i] = (1 - yf) * ((1 - xf) * pixels[i] + xf * pixels[i + 4]) +
+            yf * ((1 - xf) * pixels[i + 8] + xf * pixels[i + 12]);
+    } else {
+        rgba = readPixelsIndirection(img, xi, yi, 1, 1);
+    }
+    return List.realVector(rgba);
+}
+
+/**
+ * imagergba(<point1>, <point2>, ‹image›, <point3>) returns the color at the coordinate
+ * <point3> assuming that the left/right lower corner is <point1>/<point2> resp.
+ */
+evaluator.imagergba$4 = function(args, modifs) {
+    var img = imageFromValue(evaluateAndVal(args[2]));
+    if (!img || !img.ready) return nada;
+
+    var w = img.width;
+    var h = img.height;
+
+    var w0 = evaluateAndHomog(args[0]);
+    var w1 = evaluateAndHomog(args[1]);
+    var v0 = evaluateAndHomog(List.realVector([0, h, 1]));
+    var v1 = evaluateAndHomog(List.realVector([w, h, 1]));
+
+    if (w0 === nada || w1 === nada || p === nada) return nada;
+
+    //create an orientation-reversing similarity transformation that maps w0->v0, w1->v1
+    var ii = List.ii;
+    var jj = List.jj;
+
+    var m1 = eval_helper.basismap(v0, v1, ii, jj); //interchange I and J,
+    var m2 = eval_helper.basismap(w0, w1, jj, ii); //see Thm. 18.4 of Perspectives on Projective Geometry
+    var p = evaluateAndHomog(args[3]);
+    var coord = eval_helper.extractPoint(General.mult(m1, General.mult(List.adjoint3(m2), p)));
+    return readimgatcoord(img, coord, modifs);
+};
+
+
+evaluator.imagergb$4 = function(args, modifs) {
+    var rgba = evaluator.imagergba$4(args, modifs);
+    if (rgba === nada) return nada;
+    return List.turnIntoCSList(rgba.value.slice(0, 3));
+};
+
+evaluator.readpixels$1 = function(args, modifs) {
+    var img = imageFromValue(evaluateAndVal(args[0]));
+    var data = readPixelsIndirection(img, 0, 0, img.width, img.height);
+    var pixels = [];
+    for (var i = 0; i + 3 < data.length; i += 4) {
+        pixels.push(List.turnIntoCSList([CSNumber.real(data[i + 0]), CSNumber.real(data[i + 1]), CSNumber.real(data[i + 2]), CSNumber.real(data[i + 3])]));
+    }
+    return List.turnIntoCSList(pixels);
 };
 /*jshint -W030 */
 'use strict'; // So this file can be used as a stand-alone node module
@@ -12721,7 +14322,7 @@ operatorSymbols.sort(function(a, b) {
 var brackets = '[](){}||';
 
 var inTokenWhitespace = '[ \t]*';
-var whitespaceToken = '[ \t\n]+';
+var whitespaceToken = '[ \t\n\r]+';
 
 // Allow spaces in tokens. Any occurrence of ' ' is replaced by '[…]*',
 // with […] matching the class of allowed in-token whitespace.
@@ -13033,7 +14634,7 @@ function parseRec(tokens, closing) {
                 var op = operators[tok.text];
                 if (op.sym === '_' &&
                     seq.length && !(seq.length & 1) && // preceding op
-                    seq[seq.length - 1].toktype === 'OP' && // 
+                    seq[seq.length - 1].toktype === 'OP' && //
                     seq[seq.length - 1].op.sym === ':=') {
                     seq.pop();
                     op = operators[':=_'];
@@ -13245,6 +14846,17 @@ Parser.prototype.postprocess = function(expr) {
                 expr.key = expr.args[1].name;
                 delete expr.args;
             }
+            if (expr.oper === ':') {
+                if (!(expr.args[1])) {
+                    throw ParseError(
+                        'Data key undefined', expr.start, expr.text);
+                }
+                expr.ctype = 'userdata';
+                expr.obj = expr.args[0];
+                expr.key = expr.args[1];
+
+                delete expr.args;
+            }
             if (this.infixmap)
                 expr.impl = this.infixmap[expr.oper];
         } else if (expr.ctype === 'variable') {
@@ -13306,6 +14918,13 @@ Parser.prototype.postprocess = function(expr) {
             key: String(expr.key),
         };
     }
+    if (expr.ctype === 'userdata') {
+        return {
+            ctype: 'userdata',
+            obj: expr.obj,
+            key: expr.key,
+        };
+    }
     throw Error("Unsupported AST node of type " + expr.ctype);
 };
 
@@ -13345,13 +14964,16 @@ function evaluate(a) {
         return nada;
     }
     if (a.ctype === 'infix') {
-        return a.impl(a.args, {});
+        return a.impl(a.args, {}, a);
     }
     if (a.ctype === 'variable') {
         return evaluate(namespace.getvar(a.name));
     }
     if (a.ctype === 'function') {
-        return eval_helper.evaluate(a.oper, a.args, a.modifs);
+        callStack.push(a);
+        a = eval_helper.evaluate(a.oper, a.args, a.modifs);
+        callStack.pop();
+        return a;
     }
     if (a.ctype === 'void') {
         return nada;
@@ -13363,6 +14985,19 @@ function evaluate(a) {
         }
         if (obj.ctype === "list") {
             return List.getField(obj, a.key);
+        }
+        return nada;
+    }
+    if (a.ctype === 'userdata') {
+        var uobj = evaluate(a.obj);
+        var key = niceprint(evaluate(a.key));
+        if (key === "_?_") key = undefined;
+
+        if (uobj.ctype === "geo") {
+            return Accessor.getuserData(uobj.value, key);
+        }
+        if (uobj.ctype === "list" || uobj.ctype === "string") {
+            return Accessor.getuserData(uobj, key);
         }
         return nada;
     }
@@ -13378,6 +15013,9 @@ function evaluateAndVal(a) {
         var val = x.value;
         if (val.kind === "P") {
             return Accessor.getField(val, "xy");
+        }
+        if (val.kind === "V") {
+            return val.value;
         }
 
     }
@@ -13485,6 +15123,32 @@ function analyse(code) {
     for (var name in parser.usedVariables)
         namespace.create(name);
     return res;
+}
+
+var callStack = [];
+
+function labelCode(code, label) {
+    function run() {
+        return evaluate(code);
+    }
+    return {
+        ctype: "infix",
+        args: [],
+        impl: function() {
+            callStack = [{
+                oper: label
+            }];
+            var res = evaluate(code);
+            callStack = [];
+            return res;
+        }
+    };
+}
+
+function printStackTrace(msg) {
+    csconsole.err(msg + callStack.map(function(frame) {
+        return "\n  at " + frame.oper;
+    }).join("\n"));
 }
 //*******************************************************
 // and here are the definitions of the sound operators
@@ -13917,6 +15581,8 @@ Render2D.handleModifs = function(modifs, handlers) {
     if (Render2D.dashing)
         Render2D.unSetDash();
     Render2D.colorraw = null;
+    Render2D.fillcolorraw = null;
+    Render2D.fillrule = "nonzero";
     Render2D.size = null;
     if (Render2D.psize <= 0) Render2D.psize = 0;
     if (Render2D.lsize <= 0) Render2D.lsize = 0;
@@ -13928,6 +15594,7 @@ Render2D.handleModifs = function(modifs, handlers) {
     Render2D.headlen = 10; // arrow head length - perhaps set this relative to canvas size
     Render2D.arrowShape = Render2D.arrowShapes.line;
     Render2D.alpha = csport.drawingstate.alpha;
+    Render2D.fillalpha = 0;
     Render2D.bold = "";
     Render2D.italics = "";
     Render2D.family = "sans-serif";
@@ -13937,6 +15604,7 @@ Render2D.handleModifs = function(modifs, handlers) {
     Render2D.lineCap = "round";
     Render2D.lineJoin = "round";
     Render2D.miterLimit = 10;
+    Render2D.noborder = false;
 
     // Process handlers
     var key, handler;
@@ -13985,6 +15653,12 @@ Render2D.handleModifs = function(modifs, handlers) {
     } else {
         Render2D.black = "rgba(0,0,0," + Render2D.alpha + ")";
     }
+    if (Render2D.fillcolorraw && Render2D.fillalpha > 0) {
+        Render2D.fillColor =
+            Render2D.makeColor(Render2D.fillcolorraw, Render2D.fillalpha);
+    } else {
+        Render2D.fillColor = null;
+    }
 
 };
 
@@ -14007,9 +15681,25 @@ Render2D.modifHandlers = {
         }
     },
 
+    "fillcolor": function(v) {
+        if (List.isNumberVector(v).value && v.value.length === 3) {
+            Render2D.fillcolorraw = [
+                v.value[0].value.real,
+                v.value[1].value.real,
+                v.value[2].value.real
+            ];
+        }
+    },
+
     "alpha": function(v) {
         if (v.ctype === "number") {
             Render2D.alpha = v.value.real;
+        }
+    },
+
+    "fillalpha": function(v) {
+        if (v.ctype === "number") {
+            Render2D.fillalpha = v.value.real;
         }
     },
 
@@ -14142,7 +15832,7 @@ Render2D.modifHandlers = {
                 Render2D.align = 0;
             if (s === "right")
                 Render2D.align = 1;
-            if (s === "mid")
+            if (s === "mid" || s === "center")
                 Render2D.align = 0.5;
         }
     },
@@ -14174,10 +15864,28 @@ Render2D.modifHandlers = {
         if (v.ctype === "string" && (v.value === "round" || v.value === "bevel" || v.value === "miter"))
             Render2D.lineJoin = v.value;
     },
+    "fillrule": function(v) {
+        if (v.ctype === "string" && (v.value === "nonzero" || v.value === "evenodd"))
+            Render2D.fillrule = v.value;
+    },
 
     "miterLimit": function(v) {
         if (v.ctype === "number" && v.value.real > 0) {
             Render2D.miterLimit = Math.round(v.value.real);
+        }
+    },
+    "noborder": function(v) {
+        if (v.ctype === 'boolean') {
+            Render2D.noborder = v.value;
+        } else {
+            console.error("noborder needs to be of type boolean");
+        }
+    },
+    "border": function(v) {
+        if (v.ctype === 'boolean') {
+            Render2D.noborder = !(v.value);
+        } else {
+            console.error("border needs to be of type boolean");
         }
     }
 };
@@ -14204,6 +15912,8 @@ Render2D.pointModifs = {
     "size": true,
     "color": true,
     "alpha": true,
+    "noborder": true,
+    "border": true,
 };
 
 Render2D.pointAndLineModifs = Render2D.lineModifs;
@@ -14212,6 +15922,9 @@ Render2D.conicModifs = {
     "size": true,
     "color": true,
     "alpha": true,
+    "fillcolor": true,
+    "fillrule": true,
+    "fillalpha": true,
     "lineCap": true,
     "lineJoin": true,
     "miterLimit": true
@@ -14231,8 +15944,8 @@ Render2D.textModifs = {
 };
 
 
-Render2D.makeColor = function(colorraw) {
-    var alpha = Render2D.alpha;
+Render2D.makeColor = function(colorraw, alpha) {
+    if (alpha === undefined) alpha = Render2D.alpha;
     var r = Math.floor(colorraw[0] * 255);
     var g = Math.floor(colorraw[1] * 255);
     var b = Math.floor(colorraw[2] * 255);
@@ -14243,6 +15956,8 @@ Render2D.preDrawCurve = function() {
     csctx.lineWidth = Render2D.lsize;
     csctx.lineCap = Render2D.lineCap;
     csctx.lineJoin = Render2D.lineJoin;
+    csctx.mozFillRule = Render2D.fillrule;
+    csctx.fillrule = Render2D.fillrule;
     csctx.miterLimit = Render2D.miterLimit;
     csctx.strokeStyle = Render2D.lineColor;
 };
@@ -14439,12 +16154,13 @@ Render2D.drawpoint = function(pt) {
     csctx.fillStyle = Render2D.pointColor;
 
     csctx.fill();
-
-    csctx.beginPath();
-    csctx.arc(xx, yy, Render2D.psize * 1.15, 0, 2 * Math.PI);
-    csctx.fillStyle = Render2D.black;
-    csctx.strokeStyle = Render2D.black;
-    csctx.stroke();
+    if (!Render2D.noborder) {
+        csctx.beginPath();
+        csctx.arc(xx, yy, Render2D.psize * 1.15, 0, 2 * Math.PI);
+        csctx.fillStyle = Render2D.black;
+        csctx.strokeStyle = Render2D.black;
+        csctx.stroke();
+    }
 };
 
 Render2D.clipLineCore = function(a, b, c) {
@@ -14503,6 +16219,35 @@ Render2D.drawline = function(homog) {
         csctx.lineTo(res[1].x, res[1].y);
         csctx.stroke();
     }
+};
+
+// draws a segment through infinity, consisting of 2 rays
+Render2D.drawRaySegment = function(A, B) {
+    var ptA = eval_helper.extractPoint(A);
+    var ptB = eval_helper.extractPoint(B);
+    if (!ptA.ok || !ptB.ok) {
+        return;
+    }
+
+    var dx = ptA.x - ptB.x;
+    var dy = ptA.y - ptB.y;
+    var norm = Math.sqrt(dx * dx + dy * dy);
+
+    // get points outside canvas (at "infinity")
+    var sc = csport.drawingstate.matrix.sdet;
+    var farAway = 25000 / sc; // 25000px in user coordinates
+    var factor = farAway / norm;
+    dx = dx * factor;
+    dy = dy * factor;
+
+    Render2D.drawsegcore(ptA, {
+        x: ptA.x + dx,
+        y: ptA.y + dy
+    });
+    Render2D.drawsegcore(ptB, {
+        x: ptB.x - dx,
+        y: ptB.y - dy
+    });
 };
 
 Render2D.dashTypes = {
@@ -15312,10 +17057,10 @@ function pngChunks(bytes) {
 
 function parseColor(spec, cb) {
     var match;
-    if ((match = /^rgba\(([0-9]+), *([0-9]+), *([0-9]+), *([0-9]+)\)$/
+    if ((match = /^rgba\(([0-9.]+), *([0-9.]+), *([0-9.]+), *([0-9.]+)\)$/
             .exec(spec))) {
         cb(+match[1], +match[2], +match[3], +match[4]);
-    } else if ((match = /^rgb\(([0-9]+), *([0-9]+), *([0-9]+)\)$/
+    } else if ((match = /^rgb\(([0-9.]+), *([0-9.]+), *([0-9.]+)\)$/
             .exec(spec))) {
         cb(+match[1], +match[2], +match[3], 1);
     } else {
@@ -15381,7 +17126,7 @@ shutdownHooks.push(releaseExportedObject);
 // result in a new tab.  Note that Firefox fails to show images embedded
 // into an SVG.  So in the long run, saving is probably better than opening.
 // Note: See https://github.com/eligrey/FileSaver.js/ for saving Blobs
-function exportWith(Context, wnd) {
+function exportWith(Context) {
     cacheImages(function() {
         var origctx = csctx;
         try {
@@ -15390,9 +17135,9 @@ function exportWith(Context, wnd) {
             csctx.height = csh;
             updateCindy();
             var blob = csctx.toBlob();
-            releaseExportedObject();
             exportedCanvasURL = window.URL.createObjectURL(blob);
-            wnd.location.href = exportedCanvasURL;
+
+            downloadHelper(exportedCanvasURL);
         } finally {
             csctx = origctx;
         }
@@ -15400,14 +17145,31 @@ function exportWith(Context, wnd) {
 }
 
 globalInstance.exportSVG = function() {
-    exportWith(SvgWriterContext, window.open('about:blank', '_blank'));
+    exportWith(SvgWriterContext);
 };
 
 globalInstance.exportPDF = function() {
-    var wnd = window.open('about:blank', '_blank');
     CindyJS.loadScript('pako', 'pako.min.js', function() {
-        exportWith(PdfWriterContext, wnd);
+        exportWith(PdfWriterContext);
     });
+};
+
+globalInstance.exportPNG = function() {
+    downloadHelper(csctx.canvas.toDataURL());
+};
+
+
+var downloadHelper = function(data) {
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    a.href = data;
+    a.download = "CindyJSExport";
+    a.click();
+    setTimeout(function() {
+        document.body.removeChild(a);
+        releaseExportedObject();
+    }, 100);
 };
 var activeTool = "Move"; // Current selected tool
 var element; // The constructed element
@@ -16150,7 +17912,8 @@ csport.reset = function() {
     csport.drawingstate.matrix.sdet = csport.drawingstate.initialmatrix.sdet;
 };
 
-csport.from = function(x, y, z) { //Rechnet Homogene Koordinaten in Pixelkoordinaten um
+// Convert homogeneous user coordinates to Euclidean pixel coordinates
+csport.from = function(x, y, z) {
     var xx = x / z;
     var yy = y / z;
     var m = csport.drawingstate.matrix;
@@ -16159,7 +17922,8 @@ csport.from = function(x, y, z) { //Rechnet Homogene Koordinaten in Pixelkoordin
     return [xxx, yyy];
 };
 
-csport.to = function(px, py) { //Rechnet Pixelkoordinaten in Homogene Koordinaten um
+// Convert Euclidean pixel coordinates to homogeneous user coordinates
+csport.to = function(px, py) {
     var m = csport.drawingstate.matrix;
     var xx = px - m.tx;
     var yy = py + m.ty;
@@ -16367,11 +18131,21 @@ defaultAppearance.lineColor = [0, 0, 1];
 defaultAppearance.pointSize = 5;
 defaultAppearance.lineSize = 1;
 defaultAppearance.alpha = 1;
-defaultAppearance.overhangLine = 1.1;
+defaultAppearance.overhangLine = 1;
 defaultAppearance.overhangSeg = 1;
 defaultAppearance.dimDependent = 0.7;
 defaultAppearance.fontFamily = "sans-serif";
+defaultAppearance.textColor = [0, 0, 0];
 defaultAppearance.textsize = 20; // Cinderella uses 12 by default
+defaultAppearance.noborder = false;
+
+defaultAppearance.lineHeight = 1.45;
+/* The value of 1.45 for the line height agrees reasonably well with
+ * the default font and size in Cinderella on OS X, but it might well
+ * be that the Java line height is read from the font file, so that
+ * other fonts should use other line heights.
+ * Not sure whether we can reasonably reproduce this.
+ */
 
 function setDefaultAppearance(obj) {
     var key;
@@ -16415,6 +18189,15 @@ function csinit(gslp) {
     csgeo.conics = [];
     csgeo.texts = [];
     csgeo.free = [];
+    csgeo.polygons = [];
+    csgeo.ifs = [];
+
+    // sets
+    csgeo.sets = {
+        "points": [],
+        "lines": [],
+        "conics": []
+    };
 
     gslp.forEach(addElementNoProof);
     checkConjectures();
@@ -16443,6 +18226,12 @@ function pointDefault(el) {
     }
     if (el.alpha === undefined) el.alpha = defaultAppearance.alpha;
     el.alpha = CSNumber.real(el.alpha);
+
+    if (typeof(el.noborder) !== 'boolean') el.noborder = defaultAppearance.noborder;
+    el.noborder = General.bool(el.noborder);
+
+    if (typeof(el.border) !== 'boolean') el.border = !(defaultAppearance.noborder);
+    el.border = General.bool(el.border);
 
     if (el.drawtrace) {
         setupTraceDrawing(el);
@@ -16480,9 +18269,36 @@ function segmentDefault(el) {
     el.clip = General.string("end");
 }
 
-function addElement(el) {
+function textDefault(el) {
+    var size;
+    if (el.textsize !== undefined) el.size = el.textsize;
+    else if (el.size !== undefined) el.size = el.size;
+    else el.size = defaultAppearance.textsize;
+    el.size = CSNumber.real(+el.size);
+}
+
+function polygonDefault(el) {
+    el.filled = (el.filled !== undefined ? General.bool(el.filled) : General.bool(true));
+    if (el.fillcolor === undefined) el.fillcolor = nada;
+    else el.fillcolor = List.realVector(el.fillcolor);
+    if (el.fillalpha === undefined) el.fillalpha = 0;
+    el.fillalpha = CSNumber.real(el.fillalpha);
+
+    lineDefault(el);
+}
+
+function addElement(el, removeDuplicates) {
     el = addElementNoProof(el);
     checkConjectures();
+
+    // remove element if it's a proven duplicate
+    if (typeof removeDuplicates === 'boolean' && removeDuplicates && el.Duplicate) {
+        var dup = el.Duplicate;
+        console.log("duplication detected: removing " + el.name + " (type " + el.kind + ") (duplicate of " + dup.name + ").");
+        removeElement(el.name);
+        return dup;
+    }
+
     return el;
 }
 
@@ -16494,13 +18310,16 @@ function addElementNoProof(el) {
         console.log("Element name '" + el.name + "' already exists");
 
         var existingEl = csgeo.csnames[el.name];
-        if (geoOps[existingEl.type].isMovable)
+        if (geoOps[existingEl.type].isMovable &&
+            geoOps[existingEl.type].kind === "P")
             movepointscr(existingEl, el.pos, "homog");
 
-        return {
-            'ctype': 'geo',
-            'value': existingEl
-        };
+        return existingEl;
+    }
+
+    // Recursively apply aliases
+    while (geoAliases.hasOwnProperty(el.type)) {
+        el.type = geoAliases[el.type];
     }
 
     // Expand macros
@@ -16516,14 +18335,38 @@ function addElementNoProof(el) {
 
     // Detect unsupported operations or missing or incorrect arguments
     var op = geoOps[el.type];
+    var isSet = false;
+    var getKind = function(name) {
+        return csgeo.csnames[name].kind;
+    };
+
     if (!op) {
         console.error(el);
         console.error("Operation " + el.type + " not implemented yet");
         return null;
     }
     if (op.signature !== "**") {
-        if (op.signature.length !== (el.args ? el.args.length : 0)) {
-            window.alert("Wrong number of arguments for " + el.name);
+        // check for sets
+        if (!Array.isArray(op.signature) && op.signature.charAt(1) === "*") {
+            isSet = true;
+            el.args.forEach(function(val) {
+                if (csgeo.csnames[val].kind !== op.signature.charAt(0)) {
+                    console.error(
+                        "Not all elements in set are of same type: " +
+                        el.name + " expects " + op.signature +
+                        " but " + val + " is of kind " +
+                        csgeo.csnames[val].kind);
+                    if (typeof window !== "undefined")
+                        window.alert("Not all elements in set are of same type: " + el.name);
+                    return null;
+                }
+            });
+        } else if (op.signature.length !== (el.args ? el.args.length : 0)) {
+            console.error(
+                "Wrong number of arguments for " + el.name +
+                " of type " + el.type);
+            if (typeof window !== "undefined")
+                window.alert("Wrong number of arguments for " + el.name);
             return null;
         }
     }
@@ -16535,13 +18378,14 @@ function addElementNoProof(el) {
                     " due to missing argument " + el.args[i]);
                 return null;
             }
-            if (op.signature !== "**") {
+            if (op.signature !== "**" && !isSet) {
                 var argKind = csgeo.csnames[el.args[i]].kind;
-                if (!(op.signature[i] === argKind ||
-                        (argKind === "S" && op.signature[i] === "L"))) {
-                    window.alert(
-                        "Wrong argument kind " + argKind + " as argument " + i +
-                        " to element " + el.name + " of type " + el.type);
+                if (!(op.signature[i] === argKind || (argKind === "S" &&
+                        op.signature[i] ===
+                        "L"))) {
+                    window.alert("Wrong argument kind " + argKind +
+                        " as argument " + i + " to element " +
+                        el.name + " of type " + el.type);
                     return null;
                 }
             }
@@ -16584,6 +18428,28 @@ function addElementNoProof(el) {
     }
     if (el.kind === "Text") {
         csgeo.texts.push(el);
+        textDefault(el);
+    }
+    if (el.kind === "Poly") {
+        csgeo.polygons.push(el);
+        polygonDefault(el);
+    }
+    if (el.kind === "IFS") {
+        csgeo.ifs.push(el);
+    }
+
+    // collect sets
+    var setsRe = /^[P|L|S|C]s$/; // Ps, Ls, ...
+
+    if (setsRe.test(el.kind)) {
+        var nameMap = {
+            "P": "points",
+            "L": "lines",
+            "S": "lines",
+            "C": "conics"
+        };
+        var name = nameMap[el.kind[0]];
+        csgeo.sets[name].push(el);
     }
 
     if (true || op.stateSize !== 0) {
@@ -16614,63 +18480,99 @@ function addElementNoProof(el) {
     isShowing(el, op);
 
     geoDependantsCache = {};
+    guessDuplicate(el);
     guessIncidences(el);
 
     return csgeo.csnames[el.name];
 }
 
-// TODO Remove dependencies also
 function removeElement(name) {
-    var i, el;
-    console.log("Remove element " + name);
-
-    // TODO Check if name exists
-    delete csgeo.csnames[name];
-
-    for (i = 0; i < csgeo.gslp.length; i++) {
-        el = csgeo.gslp[i];
-
-        if (el.name === name) {
-            console.log("Removed element from gslp " + name);
-            csgeo.gslp.splice(i, 1);
-        }
+    if (!csgeo.csnames.hasOwnProperty(name)) {
+        console.log("removeElement: name " + name + "does not exist.");
+        return;
     }
 
-    for (i = 0; i < csgeo.free.length; i++) {
-        el = csgeo.free[i];
+    // build dependency tree
+    var depTree = {};
+    var cskeys = Object.keys(csgeo.csnames);
+    cskeys.forEach(function(name) {
+        var el = csgeo.csnames[name];
+        if (!el.hasOwnProperty("args")) return;
+        var args = el.args;
 
-        if (el.name === name) {
-            console.log("Removed element from free " + name);
-            csgeo.free.splice(i, 1);
+        args.forEach(function(argn) {
+            if (!depTree.hasOwnProperty(argn)) {
+                depTree[argn] = {};
+            }
+            depTree[argn][name] = true;
+        });
+    });
+
+    // recursively find all dependencies
+    var recFind = function(elname, map) {
+        map[elname] = true;
+        if (!depTree.hasOwnProperty(elname)) return map;
+
+        for (var dn in depTree[elname]) {
+            if (!map[dn]) {
+                recFind(dn, map);
+            }
         }
+
+        return map;
+    };
+
+    // collect all objects to delete
+    var delArr = recFind(name, {});
+
+    removeAllElements(delArr);
+
+}
+
+function removeAllElements(nameMap) {
+    var i, el, debug = false;
+    var keys = Object.keys(nameMap);
+    if (debug) console.log("Remove elements: " + String(keys));
+
+
+    var nameCmp = function(cmpMap, arrn) {
+        return function(setel) {
+            if (cmpMap[setel.name]) {
+                if (debug) console.log("Removed element " + setel.name + " from " + arrn);
+                return false;
+            } else return true;
+        };
+    };
+
+    // update incidences
+    var isFiltered = {}; // track filtered arrays
+    keys.forEach(function(name) {
+        var allIncis = csgeo.csnames[name].incidences;
+        allIncis.forEach(function(iname) {
+            if (isFiltered[iname]) return;
+            var incis = csgeo.csnames[iname].incidences;
+            csgeo.csnames[iname].incidences = incis.filter(function(n) {
+                return !(nameMap[n]);
+            });
+            isFiltered[iname] = true;
+        });
+    });
+
+    // process GeoArrays
+    var geoArrs = ["conics", "free", "gslp", "ifs", "lines", "points", "polygons", "texts"];
+    geoArrs.map(function(arrn) {
+        csgeo[arrn] = csgeo[arrn].filter(nameCmp(nameMap, arrn));
+    });
+
+    // remove from sets of geos -- PointSet (Ps), LineSet (Ls)...
+    for (var sname in csgeo.sets) {
+        csgeo.sets[sname] = csgeo.sets[sname].filter(nameCmp(nameMap, "set of " + sname));
     }
 
-    for (i = 0; i < csgeo.points.length; i++) {
-        el = csgeo.points[i];
 
-        if (el.name === name) {
-            console.log("Removed element from points " + name);
-            csgeo.points.splice(i, 1);
-        }
-    }
-
-    for (i = 0; i < csgeo.lines.length; i++) {
-        el = csgeo.lines[i];
-
-        if (el.name === name) {
-            console.log("Removed element from lines " + name);
-            csgeo.lines.splice(i, 1);
-        }
-    }
-
-    for (i = 0; i < csgeo.conics.length; i++) {
-        el = csgeo.conics[i];
-
-        if (el.name === name) {
-            console.log("Removed element from conics " + name);
-            csgeo.conics.splice(i, 1);
-        }
-    }
+    keys.forEach(function(name) {
+        delete csgeo.csnames[name];
+    });
 
     geoDependantsCache = {};
 }
@@ -16765,6 +18667,32 @@ function getGeoDependants(mover) {
     */
     return deps;
 }
+function drawlabel(el, lbl, pos, lpos, color) {
+    var textsize = el.textsize || defaultAppearance.textsize;
+    var bold = (el.textbold === true);
+    var italics = (el.textitalics === true);
+    var family = el.text_fontfamily || defaultAppearance.fontFamily;
+    var dist = lpos.x * lpos.x + lpos.y * lpos.y;
+    var factor = 1.0;
+    if (dist > 0) {
+        factor = 1.0 + el.size.value.real / Math.sqrt(dist);
+    }
+
+
+    var alpha = el.alpha || CSNumber.real(defaultAppearance.alpha);
+    eval_helper.drawtext(
+        [pos, General.wrap(lbl)], {
+            'x_offset': General.wrap(factor * lpos.x),
+            'y_offset': General.wrap(factor * lpos.y),
+            'size': General.wrap(textsize),
+            'bold': General.wrap(bold),
+            'italics': General.wrap(italics),
+            'family': General.wrap(family),
+            'color': color,
+            'alpha': alpha
+        });
+}
+
 function drawgeopoint(el) {
     if (!el.isshowing || el.visible === false || !List._helper.isAlmostReal(el.homog))
         return;
@@ -16776,7 +18704,9 @@ function drawgeopoint(el) {
     evaluator.draw$1([el.homog], {
         size: el.size,
         color: col,
-        alpha: el.alpha
+        alpha: el.alpha,
+        noborder: el.noborder,
+        border: el.border,
     });
     if (el.labeled && !el.tmp) {
         var lbl = el.printname || el.name || "P";
@@ -16784,24 +18714,9 @@ function drawgeopoint(el) {
             'x': 3,
             'y': 3
         };
-        var textsize = el.textsize || defaultAppearance.textsize;
-        var bold = (el.textbold === true);
-        var italics = (el.textitalics === true);
-        var family = el.text_fontfamily || defaultAppearance.fontFamily;
-        var dist = lpos.x * lpos.x + lpos.y * lpos.y;
-        var factor = 1.0;
-        if (dist > 0) {
-            factor = 1.0 + el.size.value.real / Math.sqrt(dist);
-        }
-        evaluator.drawtext$2(
-            [el.homog, General.wrap(lbl)], {
-                'x_offset': General.wrap(factor * lpos.x),
-                'y_offset': General.wrap(factor * lpos.y),
-                'size': General.wrap(textsize),
-                'bold': General.wrap(bold),
-                'italics': General.wrap(italics),
-                'family': General.wrap(family)
-            });
+        var color = Render2D.makeColor(defaultAppearance.textColor);
+        if (el.noborder.value === true || el.border.value === false) color = col;
+        drawlabel(el, lbl, el.homog, lpos, color);
     }
 }
 
@@ -16841,21 +18756,56 @@ function drawgeoline(el) {
         return;
 
     if (el.kind === "S") {
-        // Segments always join their endpoints.
-        evaluator.draw$2(
-            [el.startpos, el.endpos], {
-                overhang: el.overhang,
-                dashtype: el.dashtype,
-                size: el.size,
-                color: el.color,
-                alpha: el.alpha,
-                arrow: el.arrow,
-                arrowsize: el.arrowsize,
-                arrowposition: el.arrowposition,
-                arrowshape: el.arrowshape,
-                arrowsides: el.arrowsides,
-            });
-        return;
+        var modifs = {
+            overhang: el.overhang,
+            dashtype: el.dashtype,
+            size: el.size,
+            color: el.color,
+            alpha: el.alpha,
+            arrow: el.arrow,
+            arrowsize: el.arrowsize,
+            arrowposition: el.arrowposition,
+            arrowshape: el.arrowshape,
+            arrowsides: el.arrowsides,
+        };
+        var zz = CSNumber.mult(el.startpos.value[2],
+            CSNumber.conjugate(el.endpos.value[2]));
+        if (zz.value.real >= 0) { // finite segment
+            evaluator.draw$2(
+                [el.startpos, el.endpos], modifs);
+            if (el.labeled && !el.tmp) {
+                var lbl = el.printname || el.name || "S";
+                var orientedline = List.scalmult(
+                    CSNumber.real(Math.sign(el.startpos.value[2].value.real) * Math.sign(el.endpos.value[2].value.real)),
+                    List.cross(el.startpos, el.endpos)
+                );
+
+                var npos = {
+                    'x': orientedline.value[0].value.real,
+                    'y': orientedline.value[1].value.real
+                };
+
+                //normalize npos
+                var nposlength = Math.sqrt(npos.x * npos.x + npos.y * npos.y);
+
+                // TODO: synchronize these constants with Cinderella
+                npos = {
+                    'x': 8 * npos.x / nposlength - 3,
+                    'y': 8 * npos.y / nposlength - 3
+                };
+                var lpos = el.labelpos || npos;
+                var color = Render2D.makeColor(defaultAppearance.textColor);
+
+                // TODO: synchronize these constants with Cinderella
+                var pos = geoOps._helper.midpoint(geoOps._helper.midpoint(el.startpos, el.endpos), el.endpos);
+                drawlabel(el, lbl, pos, lpos, color);
+            }
+            return;
+        } else { // transformed segment through infinity, consisting of 2 rays
+            Render2D.handleModifs(modifs, Render2D.lineModifs);
+            Render2D.drawRaySegment(el.startpos, el.endpos);
+            return;
+        }
     }
     if (el.clip.value === "end" && el.type === "Join") {
         // Lines clipped to their defining points join these.
@@ -16941,12 +18891,24 @@ var textCornerNames = {
 };
 
 function drawgeotext(el) {
+    el._bbox = null;
+    if (!el.isshowing || el.visible === false) {
+        if (el.html) {
+            el.html.parentNode.parentNode.style.display = "none";
+            el._textCache = {
+                invisible: true
+            };
+        }
+        return;
+    }
     var opts = {
         "size": el.size,
     };
-    var pos = el.pos;
+    var pos = el.homog;
     var text = el.text;
-    text = text.replace(/@[$#]"([^"\\]|\\.)*"/g, function(match) {
+    var getText = geoOps[el.type].getText;
+    if (getText) text = getText(el);
+    else text = text.replace(/@[$#]"([^"\\]|\\.)*"/g, function(match) {
         var name, el2;
         try {
             name = JSON.parse(match.substring(2));
@@ -16965,17 +18927,23 @@ function drawgeotext(el) {
     });
     var htmlCallback = null;
     if (el.html) {
-        var cache = el._textCache || {};
+        var cache = el._textCache || {
+            text: false
+        };
         var label = el.html;
         var inlinebox = label.parentNode;
         var outer = inlinebox.parentNode;
         htmlCallback = function(text, font, x, y, align) {
+            if (cache.invisible)
+                outer.style.removeProperty("display");
             if (text === cache.text && font === cache.font &&
                 x === cache.x && y === cache.y && align === cache.align)
                 return;
-            if (font !== cache.font)
+            if (font !== cache.font) {
                 label.style.font = font;
-            if (text !== cache.text)
+                label.style.lineHeight = defaultAppearance.lineHeight;
+            }
+            if (text !== cache.text && text !== false)
                 if (textRendererHtml(label, text, font) === false)
                     text = false; // Do not cache, must re-run
             outer.style.left = x + "px";
@@ -17005,12 +18973,42 @@ function drawgeotext(el) {
     if (el.align)
         opts.align = General.string(el.align);
     if (pos)
-        evaluator.drawtext$2([pos, text], opts, htmlCallback);
+        el._bbox = eval_helper.drawtext([pos, text], opts, htmlCallback);
+}
+
+function drawgeopolygon(el) {
+    if (!el.isshowing || el.visible === false)
+        return;
+    var modifs = {
+        color: el.color,
+        alpha: el.alpha,
+        fillcolor: el.fillcolor,
+        fillalpha: el.fillalpha,
+        size: el.size,
+        lineJoin: General.string("miter"),
+        fillrule: General.string(el.fillrule),
+    };
+    eval_helper.drawpolygon([el.vertices], modifs, "D", true);
+}
+
+function drawgeoifs() {
+    if (ifs.dirty ||
+        !General.deeplyEqual(ifs.mat, csport.drawingstate.matrix)) {
+        geoOps.IFS.updateParameters();
+        ifs.dirty = false;
+    }
+    if (ifs.img) {
+        csctx.drawImage(ifs.img, 0, 0, csw, csh);
+    }
 }
 
 function render() {
 
     var i;
+
+    for (i = 0; i < csgeo.polygons.length; i++) {
+        drawgeopolygon(csgeo.polygons[i]);
+    }
 
     for (i = 0; i < csgeo.conics.length; i++) {
         if (csgeo.conics[i].isArc) drawgeoarc(csgeo.conics[i]);
@@ -17029,6 +19027,10 @@ function render() {
 
     for (i = 0; i < csgeo.texts.length; i++) {
         drawgeotext(csgeo.texts[i]);
+    }
+
+    if (csgeo.ifs.length) {
+        drawgeoifs();
     }
 
 }
@@ -17086,7 +19088,8 @@ function assert(condition, message) {
 }
 
 var totalStateSize = 0;
-var stateArrayNames = ["in", "out", "good", "backup"];
+// prover: prover is the backup for the state before we start proving, proverTmp will hold states which have been sucessfully traced
+var stateArrayNames = ["in", "out", "good", "backup", "prover"];
 // Initialize all state to zero-length arrays, can be reallocated later on
 var stateMasterArray = new Float64Array(0);
 var stateArrays = {};
@@ -17129,6 +19132,7 @@ function stateAlloc(newSize) {
  */
 function stateContinueFromHere() {
     stateLastGood.set(stateIn);
+    tracingFailed = false;
     tracingStateReport(false);
 
     // Make numbers which are almost real totally real. This avoids
@@ -17174,8 +19178,6 @@ function traceMouseAndScripts() {
         traceLog.currentMouseAndScripts = [];
     }
     inMouseMove = true;
-    tracingFailed = false;
-    stateIn.set(stateLastGood); // copy stateLastGood and use it as input
     if (move) {
         var mover = move.mover;
         var sx = mouse.x + move.offset.x;
@@ -17205,15 +19207,14 @@ function traceMouseAndScripts() {
 }
 
 function movepointscr(mover, pos, type) {
-    if (inMouseMove) {
-        traceMover(mover, pos, type);
-        return;
-    }
-    stateContinueFromHere();
-    tracingFailed = false;
     traceMover(mover, pos, type);
-    stateContinueFromHere();
+    if (!inMouseMove && !tracingFailed)
+        stateContinueFromHere();
 }
+
+// Remember the last point which got moved.
+// @todo: be careful with this variable when doing automatic proving.
+var previousMover = null;
 
 /*
  * traceMover moves mover from current param to param for pos along a complex detour.
@@ -17221,6 +19222,13 @@ function movepointscr(mover, pos, type) {
 function traceMover(mover, pos, type) {
     if (traceLog && traceLog.currentMouseAndScripts) {
         traceLog.currentMover = [];
+    }
+    if (mover === previousMover) {
+        stateIn.set(stateLastGood); // copy stateLastGood and use it as input
+        tracingFailed = false;
+    } else {
+        previousMover = mover;
+        stateContinueFromHere(); // make changes up to now permanent
     }
     stateOut.set(stateIn); // copy in to out, for elements we don't recalc
     var traceLimit = 10000; // keep UI responsive in evil situations
@@ -17299,7 +19307,7 @@ function traceMover(mover, pos, type) {
 
         var stateTmp = stateOut;
         stateOut = stateIn;
-        opMover.putParamToState(el, param);
+        opMover.putParamToState(mover, param);
         stateOut = stateTmp;
         stateOutIdx = mover.stateIdx;
 
@@ -17850,11 +19858,246 @@ function tracingSesq(newVecs) {
     }
     return res;
 }
+
+function tracing2Conics(c1, c2) {
+    var n1 = geoOps._helper.flattenConicMatrix(c1);
+    var n2 = geoOps._helper.flattenConicMatrix(c2);
+    var o1 = getStateComplexVector(6);
+    var o2 = getStateComplexVector(6);
+    var res = tracing2core(n1, n2, o1, o2);
+    putStateComplexVector(res[0]);
+    putStateComplexVector(res[1]);
+    var r1 = geoOps._helper.buildConicMatrix(res[0].value);
+    var r2 = geoOps._helper.buildConicMatrix(res[1].value);
+    return List.turnIntoCSList([r1, r2]);
+}
+
+tracing2Conics.stateSize = 24;
 var conjectures = [];
 
+
+function guessDuplicate(el) {
+    if (guessDuplicate.hasOwnProperty(el.kind))
+        guessDuplicate[el.kind](el);
+}
+guessDuplicate._helper = {};
+
+// check if point-point or line-line p/q are duplicates
+guessDuplicate._helper.duplicatePPLL = function(p, q) {
+    return {
+        getInvolved: function() {
+            return [p, q];
+        },
+        toString: function() {
+            var nameMap = {
+                "P": "point",
+                "L": "line"
+            };
+            return nameMap[p.kind] + " " + p.name + " is duplicate of " + q.name;
+        },
+        apply: markAsDuplicate(p, q),
+        holds: function() {
+            var dist = List.projectiveDistMinScal(p.homog, q.homog);
+            return dist < CSNumber.epsbig;
+        }
+    };
+};
+
+
+// check if point/line sets are duplicates
+guessDuplicate._helper.duplicatePsLs = function(p, q) {
+    return {
+        getInvolved: function() {
+            return [p, q];
+        },
+        toString: function() {
+            var nameMap = {
+                "Ps": "point set",
+                "Ls": "line set"
+            };
+            return nameMap[p.kind] + " " + p.name + " is duplicate of " + q.name;
+        },
+        apply: markAsDuplicate(p, q),
+        holds: function() {
+            var pv = p.results.value;
+            var qv = q.results.value;
+            var truth = guessDuplicate._helper.isSetEq(pv, qv, List.projectiveDistMinScal);
+            return truth;
+        }
+    };
+};
+
+
+// check if two conics are duplicates
+guessDuplicate._helper.duplicateCC = function(C0, C1) {
+    return {
+        getInvolved: function() {
+            return [C0, C1];
+        },
+        toString: function() {
+            return "Conic " + C0.name + " is duplicate of " + C1.name;
+        },
+        apply: markAsDuplicate(C0, C1),
+        holds: function() {
+            var dist = List.conicDist(C0.matrix, C1.matrix);
+            return dist < CSNumber.epsbig;
+        }
+    };
+};
+
+
+// check if two sets of conics are duplicates
+guessDuplicate._helper.duplicateCs = function(Cs0, Cs1) {
+    return {
+        getInvolved: function() {
+            return [Cs0, Cs1];
+        },
+        toString: function() {
+            return "Conic set" + Cs0.name + " is duplicate of " + Cs1.name;
+        },
+        apply: markAsDuplicate(Cs0, Cs1),
+        holds: function() {
+            var res0 = Cs0.results;
+            var res1 = Cs1.results;
+            return guessDuplicate._helper.isSetEq(res0, res1, List.conicDist);
+        }
+    };
+};
+
+
+// segments
+guessDuplicate._helper.duplicateSS = function(p, q) {
+    return {
+        getInvolved: function() {
+            return [p, q];
+        },
+        toString: function() {
+            return "Segment " + p.name + " is duplicate of " + q.name;
+        },
+        apply: markAsDuplicate(p, q),
+        holds: function() {
+            var p0 = csgeo.csnames[p.args[0]];
+            var p1 = csgeo.csnames[p.args[1]];
+
+            var q0 = csgeo.csnames[q.args[0]];
+            var q1 = csgeo.csnames[q.args[1]];
+
+            var dist1 = List.projectiveDistMinScal(p0.homog, q0.homog);
+            dist1 = dist1 + List.projectiveDistMinScal(p1.homog, q1.homog);
+
+            var dist2 = List.projectiveDistMinScal(p1.homog, q0.homog);
+            dist2 = dist2 + List.projectiveDistMinScal(p0.homog, q1.homog);
+
+            return Math.min(dist1, dist2) < CSNumber.epsbig;
+        }
+    };
+};
+
+guessDuplicate.P = function(p) {
+    csgeo.points.forEach(function(q) {
+        if (p.name === q.name) return;
+        var conjecture = guessDuplicate._helper.duplicatePPLL(p, q);
+        if (conjecture.holds()) {
+            conjectures.push(conjecture);
+        }
+    });
+};
+
+guessDuplicate.Ps = function(ps) {
+    csgeo.sets.points.forEach(function(qs) {
+        if (ps.name === qs.name) return;
+
+        var conjecture = guessDuplicate._helper.duplicatePsLs(ps, qs);
+        if (conjecture.holds()) {
+            conjectures.push(conjecture);
+        }
+    });
+};
+
+guessDuplicate.Ls = function(ps) {
+    csgeo.sets.lines.forEach(function(qs) {
+        if (ps.name === qs.name) return;
+
+        var conjecture = guessDuplicate._helper.duplicatePsLs(ps, qs);
+        if (conjecture.holds()) {
+            conjectures.push(conjecture);
+        }
+    });
+};
+
+
+guessDuplicate.Cs = function(ps) {
+    csgeo.sets.conics.forEach(function(qs) {
+        if (ps.name === qs.name) return;
+
+        var conjecture = guessDuplicate._helper.duplicateCs(ps, qs);
+        if (conjecture.holds()) {
+            conjectures.push(conjecture);
+        }
+    });
+};
+
+guessDuplicate.L = function(p) {
+    csgeo.lines.forEach(function(q) {
+        if (p.name === q.name) return;
+        if (p.kind !== q.kind) return; // Don't compare lines and segments
+
+        var conjecture = guessDuplicate._helper.duplicatePPLL(p, q);
+        if (conjecture.holds()) {
+            conjectures.push(conjecture);
+        }
+    });
+};
+
+guessDuplicate.S = function(p) {
+    csgeo.lines.forEach(function(q) {
+        if (p.name === q.name) return;
+        if (q.kind !== "S") return; // only compare segments
+
+        var conjecture = guessDuplicate._helper.duplicateSS(p, q);
+        if (conjecture.holds()) {
+            conjectures.push(conjecture);
+        }
+    });
+};
+
+
+guessDuplicate.C = function(p) {
+    csgeo.conics.forEach(function(q) {
+        if (p.name === q.name) return;
+        var conjecture = guessDuplicate._helper.duplicateCC(p, q);
+        if (conjecture.holds()) {
+            conjectures.push(conjecture);
+        }
+    });
+};
+
+// checks if two arrays are permutations of each other 
+// elements are compares using the 'cmp' using JavaScript's native number types
+guessDuplicate._helper.isSetEq = function(arrA, arrB, cmp) {
+    var A = arrA.slice(),
+        B = arrB.slice();
+
+    if (A.length !== B.length) return false;
+    if (A.length === 0 && B.length === 0) return true;
+    var Afront = A.shift();
+    // find best matching index
+    var idx = B.reduce(function(iMax, x, i, arr) {
+        return cmp(x, Afront) < cmp(arr[iMax], Afront) ? i : iMax;
+    }, 0); // initial value
+
+    if (cmp(B[idx], Afront) < CSNumber.epsbig) {
+        B.splice(idx, 1);
+        return guessDuplicate._helper.isSetEq(A, B, cmp);
+    } else return false;
+};
+
 function guessIncidences(el) {
-    if (guessIncidences.hasOwnProperty(el.kind))
+    if (guessIncidences.hasOwnProperty(el.kind)) {
+        // reset incidences
+        el.incidences = [];
         guessIncidences[el.kind](el);
+    }
 }
 
 guessIncidences.P = function(p) {
@@ -17895,8 +20138,18 @@ function applyIncidence(a, b) {
     };
 }
 
+// mark p as duplicate of q
+function markAsDuplicate(p, q) {
+    return function() {
+        p.Duplicate = q;
+    };
+}
+
 function incidentPL(p, l) {
     return {
+        getInvolved: function() {
+            return [p, l];
+        },
         toString: function() {
             return "point " + p.name + " incident line " + l.name;
         },
@@ -17905,13 +20158,16 @@ function incidentPL(p, l) {
             var pn = List.scaldiv(List.abs(p.homog), p.homog);
             var ln = List.scaldiv(List.abs(l.homog), l.homog);
             var prod = CSNumber.abs(List.scalproduct(pn, ln));
-            return (prod.value.real < 0.0000000000001);
+            return (prod.value.real < CSNumber.epsbig);
         }
     };
 }
 
 function incidentPC(p, c) {
     return {
+        getInvolved: function() {
+            return [p, c];
+        },
         toString: function() {
             return "point " + p.name + " incident conic " + c.name;
         },
@@ -17920,23 +20176,105 @@ function incidentPC(p, c) {
             var erg = General.mult(c.matrix, p.homog);
             erg = General.mult(p.homog, erg);
             erg = CSNumber.abs(erg);
-            if (erg.value.real < 0.0000000000001) {
-                p.incidences.push(c.name);
-                c.incidences.push(p.name);
-            }
+            return (erg.value.real < CSNumber.epsbig);
         }
     };
 }
 
 function checkConjectures() {
+    var debug = false;
+    if (debug) console.log("conjectures", conjectures.length);
     if (conjectures.length === 0) return;
-    // TODO: we need some randomized proving here:
-    // move free elements and check conjectures a number of times.
-    // For now assume that all conjectures could be verified.
+    //backupGeo
+    stateArrays.prover.set(stateIn);
+
+    var nummoves = 3;
+
+    // filter free objects which are involved in conjectures
+    var involved;
+
+    var recalcInvolved = function() {
+        involved = {};
+        conjectures.forEach(function(con) {
+            var invs = con.getInvolved();
+            var incis;
+            invs.forEach(function(el) {
+                if (!involved[el.name]) {
+                    involved[el.name] = true;
+                    // also add incidences of involved objects
+                    incis = findAllIncis(el, {});
+                    incis.forEach(function(name) {
+                        involved[name] = true;
+                    });
+                }
+            });
+        });
+    };
+
+    // recursively find all incidences to an geo object
+    var findAllIncis = function(el, map) {
+        el.incidences.forEach(function(iels) {
+            if (!map[iels]) {
+                map[iels] = true;
+                findAllIncis(csgeo.csnames[iels], map);
+            }
+        });
+        return Object.keys(map);
+    };
+
+    recalcInvolved();
+
+    // for jshint move the function definition outside loop 
+    var checkCon = function(con) {
+        return con.holds();
+    };
+
+    // add defining elements 
+    Object.keys(involved).forEach(function(inv) {
+        var n = csgeo.csnames[inv].args;
+        if (typeof(n) === 'undefined') return;
+        n.forEach(function(name) {
+            involved[name] = true;
+        });
+    });
+
+    var emove, nconject = conjectures.length;
+    for (var kk = 0; kk < nummoves; kk++) {
+        for (var name in involved) {
+            var el = csgeo.csnames[name];
+            if (!el.pinned && geoOps[el.type].isMovable) {
+                if (debug) console.log("prover: moving element", el.name);
+                // get random move and move free element
+                emove = geoOps[el.type].getRandomMove(el);
+                movepointscr(el, emove.value, emove.type);
+                // check if conjecture still holds
+                conjectures = conjectures.filter(checkCon);
+            }
+        }
+        recalcInvolved();
+    }
+
+    if (debug) {
+        console.log("dropped ", nconject - conjectures.length, " conjectures");
+    }
+
+
+    //restoreGeo
+    if (!debug) {
+        stateIn.set(stateArrays.prover);
+        recalcAll();
+    }
+
+
     for (var i = 0; i < conjectures.length; ++i) {
         conjectures[i].apply();
     }
     conjectures = [];
+    if (debug) {
+        csgeo.gslp.forEach(function(el) {
+            console.log(el.name, el.incidences);
+        });
+    }
 }
 var geoOps = {};
 geoOps._helper = {};
@@ -17948,11 +20286,12 @@ geoOps._helper = {};
  * C  - Conic (including circle)
  * *s - Set of *
  * Tr - Projective transformation
- * Mt - Moebius transformation
- * Rc - Reflection in a circle
+ * Mt - Moebius transformation (or anti-Moebius)
  * V  - (numeric) value
  * Text - Text
  * "**" - arbitrary number of arguments with arbitrary types
+ * Poly - Polygon
+ * IFS  - Iterated Function System
  */
 
 
@@ -17966,6 +20305,40 @@ geoOps.RandomLine.updatePosition = function(el) {
     el.homog = List.realVector([Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5]);
     el.homog = List.normalizeMax(el.homog);
     el.homog = General.withUsage(el.homog, "Line");
+};
+
+geoOps._helper.getRandMove = function(el) {
+    var l = el.homog;
+    var rand = List.getRandComplexVec3(-0.05, 0.05);
+    var move = List.add(l, rand);
+
+    return {
+        type: "homog",
+        value: move
+    };
+};
+
+geoOps._helper.getRandPointMove = function(el) {
+    var oldpos = List.normalizeMax(el.homog);
+    var oz = oldpos.value[2];
+    var ozabs = CSNumber.abs(oz).value.real;
+
+    var rZ = CSNumber.real(0);
+    // far points 
+    if (ozabs < CSNumber.eps) {
+        rZ = CSNumber.getRandComplex(-0.05, 0.05);
+        oz = CSNumber.real(1);
+    }
+
+    var rvect = List.turnIntoCSList([CSNumber.getRandComplex(-0.1, 0.1), CSNumber.getRandComplex(-0.1, 0.1), rZ]);
+
+    var move = List.scalmult(oz, rvect);
+
+    move = List.add(oldpos, move);
+    return {
+        type: "homog",
+        value: move
+    };
 };
 
 
@@ -18000,6 +20373,7 @@ geoOps.FreeLine.updatePosition = function(el) {
     putStateComplexVector(param); // copy param
     el.homog = General.withUsage(param, "Line");
 };
+geoOps.FreeLine.getRandomMove = geoOps._helper.getRandMove;
 geoOps.FreeLine.stateSize = 6;
 
 
@@ -18033,12 +20407,21 @@ geoOps.Segment.signature = ["P", "P"];
 geoOps.Segment.updatePosition = function(el) {
     var el1 = csgeo.csnames[(el.args[0])];
     var el2 = csgeo.csnames[(el.args[1])];
-    el.homog = List.cross(el1.homog, el2.homog);
-    el.homog = List.normalizeMax(el.homog);
-    el.homog = General.withUsage(el.homog, "Line");
-    el.startpos = el1.homog;
-    el.endpos = el2.homog;
-    el.farpoint = List.cross(el.homog, List.linfty);
+    geoOps.Segment.setSegmentPos(el,
+        List.cross(el1.homog, el2.homog),
+        List.scalmult(el2.homog.value[2], el1.homog),
+        List.scalmult(el1.homog.value[2], el2.homog)
+    );
+};
+geoOps.Segment.setSegmentPos = function(el, line, start, end) {
+    line = List.normalizeMax(line);
+    el.homog = General.withUsage(line, "Line");
+    var startend = List.turnIntoCSList([start, end]);
+    startend = List.normalizeMax(startend); // Normalize together!
+    el.startpos = startend.value[0];
+    el.endpos = startend.value[1];
+    // So  midpoint = startpos + endpos
+    // and farpoint = startpos - endpos
 };
 
 
@@ -18120,7 +20503,6 @@ geoOps.Horizontal.updatePosition = function(el) {
     el.homog = General.withUsage(el.homog, "Line");
 };
 
-
 // Cinderella's freely movable HorizontalLine (Cinderella semantics)
 geoOps.HorizontalLine = {};
 geoOps.HorizontalLine.kind = "L";
@@ -18156,6 +20538,7 @@ geoOps.HorizontalLine.updatePosition = function(el) {
     putStateComplexVector(param); // copy param
     el.homog = General.withUsage(param, "Line");
 };
+geoOps.HorizontalLine.getRandomMove = geoOps._helper.getRandMove;
 geoOps.HorizontalLine.stateSize = 6;
 
 
@@ -18206,6 +20589,7 @@ geoOps.VerticalLine.updatePosition = function(el) {
     putStateComplexVector(param); // copy param
     el.homog = General.withUsage(param, "Line");
 };
+geoOps.VerticalLine.getRandomMove = geoOps._helper.getRandMove;
 geoOps.VerticalLine.stateSize = 6;
 
 
@@ -18277,7 +20661,23 @@ geoOps.Through.updatePosition = function(el) {
     homog = List.normalizeMax(homog);
     el.homog = General.withUsage(homog, "Line");
 };
+geoOps.Through.getRandomMove = geoOps._helper.getRandMove;
 geoOps.Through.stateSize = 6;
+geoOps.Through.set_angle = function(el, value) {
+    if (value.ctype === "number") {
+        var cc = CSNumber.cos(value);
+        var ss = CSNumber.sin(value);
+        var dir = List.turnIntoCSList([cc, ss, CSNumber.real(0)]);
+        movepointscr(el, dir, "dir");
+    }
+};
+geoOps.Through.set_slope = function(el, value) {
+    if (value.ctype === "number") {
+        var dir = List.turnIntoCSList(
+            [CSNumber.real(1), value, CSNumber.real(0)]);
+        movepointscr(el, dir, "dir");
+    }
+};
 
 
 geoOps.Free = {};
@@ -18312,6 +20712,8 @@ geoOps.Free.updatePosition = function(el) {
     putStateComplexVector(param); // copy param
     el.homog = General.withUsage(param, "Point");
 };
+geoOps.Free.getRandomMove = geoOps._helper.getRandPointMove;
+
 geoOps.Free.stateSize = 6;
 
 geoOps._helper.projectPointToLine = function(point, line) {
@@ -18379,7 +20781,9 @@ geoOps.PointOnLine.updatePosition = function(el, isMover) {
 geoOps.PointOnLine.getParamForInput = function(el, pos, type) {
     var line = csgeo.csnames[(el.args[0])].homog;
     pos = geoOps._helper.projectPointToLine(pos, line);
-    // TODO: snap to grid
+    if (type === "mouse" && cssnap && csgridsize !== 0) {
+        pos = geoOps._helper.snapPointToLine(pos, line);
+    }
     return pos;
 };
 geoOps.PointOnLine.getParamFromState = function(el) {
@@ -18388,6 +20792,7 @@ geoOps.PointOnLine.getParamFromState = function(el) {
 geoOps.PointOnLine.putParamToState = function(el, param) {
     return putStateComplexVector(param);
 };
+geoOps.PointOnLine.getRandomMove = geoOps._helper.getRandPointMove;
 geoOps.PointOnLine.stateSize = 12;
 
 
@@ -18398,7 +20803,7 @@ geoOps.PointOnCircle.isMovable = true;
 geoOps.PointOnCircle.initialize = function(el) {
     var circle = csgeo.csnames[el.args[0]];
     var pos = List.normalizeZ(geoOps._helper.initializePoint(el));
-    var mid = List.normalizeZ(geoOps._helper.CenterOfConic(circle.matrix));
+    var mid = List.normalizeZ(geoOps._helper.CenterOfCircle(circle.matrix));
     var dir = List.sub(pos, mid);
     var param = List.turnIntoCSList([
         dir.value[1],
@@ -18431,7 +20836,7 @@ geoOps.PointOnCircle.getParamFromState = function(el) {
 };
 geoOps.PointOnCircle.getParamForInput = function(el, pos, type) {
     var circle = csgeo.csnames[el.args[0]];
-    var mid = List.normalizeZ(geoOps._helper.CenterOfConic(circle.matrix));
+    var mid = List.normalizeZ(geoOps._helper.CenterOfCircle(circle.matrix));
     var dir = List.sub(pos, mid);
     stateInIdx = el.stateIdx;
     var oldparam = getStateComplexVector(3);
@@ -18499,7 +20904,41 @@ geoOps.PointOnCircle.updatePosition = function(el) {
     el.homog = General.withUsage(pos, "Point");
     el.antipodalPoint = candidates.value[1];
 };
+geoOps.PointOnCircle.getRandomMove = geoOps._helper.getRandPointMove;
 geoOps.PointOnCircle.stateSize = 6 + tracing2.stateSize;
+geoOps.PointOnCircle.get_angle = function(el) {
+    var circle = csgeo.csnames[el.args[0]];
+    var mid = geoOps._helper.CenterOfCircle(circle.matrix);
+
+    var isFP = List._helper.isAlmostFarpoint;
+    if (isFP(el.homog) || isFP(mid)) return nada;
+
+    var pos = List.normalizeZ(el.homog);
+    mid = List.normalizeZ(mid);
+    var dir = List.sub(pos, mid);
+    var angle = CSNumber.arctan2(dir.value[0], dir.value[1]); //lives in [-pi, pi)
+    //technically, we are done here. But we like to have the same behavior as Cinderella:
+    var twpopi = CSNumber.real(TWOPI);
+    angle = CSNumber.mod(CSNumber.add(angle, twpopi), twpopi); //lives in [0, 2*pi)
+    return General.withUsage(angle, "Angle");
+};
+geoOps.PointOnCircle.set_angle = function(el, value) {
+    if (value.ctype === "number") {
+        var circle = csgeo.csnames[el.args[0]];
+        var mid = geoOps._helper.CenterOfCircle(circle.matrix);
+
+        if (!List._helper.isAlmostFarpoint(mid)) {
+            mid = List.normalizeZ(mid);
+
+            var cc = CSNumber.cos(value);
+            var ss = CSNumber.sin(value);
+            var dir = List.turnIntoCSList([CSNumber.mult(cc, circle.radius), CSNumber.mult(ss, circle.radius), CSNumber.real(0)]);
+
+            movepointscr(el, List.add(mid, dir), "homog");
+        }
+    }
+    return nada;
+};
 
 geoOps.OtherPointOnCircle = {};
 geoOps.OtherPointOnCircle.kind = "P";
@@ -18523,12 +20962,19 @@ geoOps.PointOnSegment.initialize = function(el) {
     var cr = geoOps.PointOnSegment.getParamForInput(el, pos);
     putStateComplexNumber(cr);
 };
-geoOps.PointOnSegment.getParamForInput = function(el, pos) {
+geoOps.PointOnSegment.getParamForInput = function(el, pos, type) {
     var seg = csgeo.csnames[el.args[0]];
     var line = seg.homog;
+
+    // snap to grid
+    if (type === "mouse" && cssnap && csgridsize !== 0) {
+        pos = geoOps._helper.snapPointToLine(pos, line);
+    }
+
     var tt = List.turnIntoCSList([line.value[0], line.value[1], CSNumber.zero]);
+    var farpoint = List.sub(seg.startpos, seg.endpos);
     var cr = List.crossratio3(
-        seg.farpoint, seg.startpos, seg.endpos, pos, tt);
+        farpoint, seg.startpos, seg.endpos, pos, tt);
     if (cr.value.real < 0)
         cr = CSNumber.complex(0, cr.value.imag);
     if (cr.value.real > 1)
@@ -18545,18 +20991,104 @@ geoOps.PointOnSegment.updatePosition = function(el) {
     var param = getStateComplexNumber();
     putStateComplexNumber(param); // copy parameter
     var seg = csgeo.csnames[el.args[0]];
-    // TODO: Handle case where seg is the result of a projective transform,
-    // where seg.farpoint would not have z==0. Can't happen yet.
-    var start = List.scalmult(seg.endpos.value[2], seg.startpos);
-    var end = List.scalmult(seg.startpos.value[2], seg.endpos);
-    // now they have the same z coordinate, so their difference is far
+    var start = seg.startpos;
+    var end = seg.endpos;
     var far = List.sub(end, start);
     var homog = List.add(start, List.scalmult(param, far));
     homog = List.normalizeMax(homog);
     el.homog = General.withUsage(homog, "Point");
 };
+geoOps.PointOnSegment.getRandomMove = geoOps._helper.getRandPointMove;
 geoOps.PointOnSegment.stateSize = 2;
 
+geoOps._helper.projectPointToCircle = function(cir, P) {
+    var cen = geoOps._helper.CenterOfCircle(cir.matrix);
+    cen = List.normalizeMax(cen);
+    var l = List.normalizeMax(List.cross(P, cen));
+    var isec = geoOps._helper.IntersectLC(l, cir.matrix);
+    var d1 = List.projectiveDistMinScal(P, isec[0]);
+    var d2 = List.projectiveDistMinScal(P, isec[1]);
+    var erg = d1 < d2 ? isec[0] : isec[1];
+    return erg;
+};
+
+geoOps.PointOnArc = {};
+geoOps.PointOnArc.kind = "P";
+geoOps.PointOnArc.signature = ["C"];
+geoOps.PointOnArc.signatureConstraints = function(el) {
+    return csgeo.csnames[el.args[0]].isArc;
+};
+geoOps.PointOnArc.isMovable = true;
+geoOps.PointOnArc.initialize = function(el) {
+    var pos = geoOps._helper.initializePoint(el);
+    var cr = geoOps.PointOnArc.getParamForInput(el, pos);
+    putStateComplexVector(cr);
+};
+geoOps.PointOnArc.getParamForInput = function(el, pos) {
+    var arc = csgeo.csnames[el.args[0]];
+    var P = geoOps._helper.projectPointToCircle(arc, pos);
+    var A = arc.startPoint;
+    var B = arc.viaPoint;
+    var C = arc.endPoint;
+    var crh = List.normalizeMax(List.crossratio3harm(A, C, B, P, List.ii));
+    // Now restrict cross ratio to the range [0,∞]
+    var cr = CSNumber.div(crh.value[0], crh.value[1]);
+    if (cr.value.real < 0) {
+        if (cr.value.real < -1) {
+            crh = List.realVector([1, 0]); // ∞, use end point
+        } else {
+            crh = List.realVector([0, 1]); // 0, use start point
+        }
+    }
+    return crh;
+};
+geoOps.PointOnArc.getParamFromState = function(el) {
+    return getStateComplexVector(2);
+};
+geoOps.PointOnArc.putParamToState = function(el, param) {
+    putStateComplexVector(param);
+};
+geoOps.PointOnArc.updatePosition = function(el) {
+    var arc = csgeo.csnames[el.args[0]];
+    var A = arc.startPoint;
+    var B = arc.viaPoint;
+    var C = arc.endPoint;
+    var I = List.ii;
+    var AI = List.cross(A, I);
+    var BI = List.cross(B, I);
+    var CI = List.cross(C, I);
+    // Now we want to scale AI and CI such that λ⋅BI = AI + CI.
+    // a*AI + c*CI = BI => [AI, CI]*(a,c) = BI but [AI, CI] is not square so
+    // we solve this least-squares-style (see Moore-Penrose pseudoinverse),
+    // multiplying both sides by M2x3c and then using the adjoint to solve.
+    var M2x3 = List.turnIntoCSList([AI, CI]);
+    var M3x2 = List.transpose(M2x3);
+    var M2x3c = List.conjugate(M2x3);
+    var M2x2 = List.productMM(M2x3c, M3x2);
+    var v2x1 = List.productMV(M2x3c, BI);
+    var ab = List.productMV(List.adjoint2(M2x2), v2x1);
+    var a = ab.value[0];
+    var c = ab.value[1];
+    var crh = getStateComplexVector(2);
+    putStateComplexVector(crh);
+    var Q = List.normalizeMax(List.add(
+        List.scalmult(CSNumber.mult(a, crh.value[0]), A),
+        List.scalmult(CSNumber.mult(c, crh.value[1]), C)));
+    var P = geoOps._helper.conicOtherIntersection(arc.matrix, I, Q);
+    el.homog = General.withUsage(P, "Point");
+};
+geoOps.PointOnArc.getRandomMove = geoOps._helper.getRandPointMove;
+geoOps.PointOnArc.stateSize = 4;
+
+geoOps._helper.CenterOfCircle = function(c) {
+    // Treating this special case of CenterOfConic avoids some computation
+    // and also allows dealing with the degenerate case of center at infinity
+    return List.turnIntoCSList([
+        c.value[2].value[0],
+        c.value[2].value[1],
+        CSNumber.neg(c.value[0].value[0])
+    ]);
+};
 
 geoOps._helper.CenterOfConic = function(c) {
     // The center is the pole of the dual conic of the line at infinity
@@ -18654,7 +21186,32 @@ geoOps.CircleMr.updatePosition = function(el) {
     el.matrix = General.withUsage(matrix, "Circle");
     el.radius = r;
 };
+geoOps.CircleMr.getRandomMove = function(el) {
+    // radius 
+    var r;
+    var oldr = el.radius;
+    var oabs = CSNumber.abs(oldr).value.real;
+
+    // if radius was small we want something larger and if not we scale the old one
+    if (oabs < CSNumber.eps) {
+        r = CSNumber.getRandComplex(0.05, 0.10);
+    } else {
+        r = CSNumber.mult(oldr, CSNumber.getRandReal(0.95, 1.05));
+    }
+
+    var rad = {
+        type: "radius",
+        value: r
+    };
+
+    return rad;
+};
 geoOps.CircleMr.stateSize = 2;
+geoOps.CircleMr.set_radius = function(el, value) {
+    if (value.ctype === "number") {
+        movepointscr(el, value, "radius");
+    }
+};
 
 
 geoOps._helper.ScaledCircleMrr = function(M, rr) {
@@ -18765,6 +21322,41 @@ geoOps.ConicBy5.updatePosition = function(el) {
     el.matrix = General.withUsage(el.matrix, "Conic");
 };
 
+geoOps.FreeConic = {};
+geoOps.FreeConic.kind = "C";
+geoOps.FreeConic.signature = [];
+geoOps.FreeConic.initialize = function(el) {
+    var pos;
+    if (el.pos)
+        pos = geoOps._helper.inputConic(el.pos);
+    else
+        pos = List.zeromatrix(CSNumber.real(3), CSNumber.real(3));
+    geoOps.FreeConic.putParamToState(el, pos);
+};
+geoOps.FreeConic.getParamForInput = function(el, pos, type) {
+    return List.normalizeMax(pos);
+};
+geoOps.FreeConic.getParamFromState = function(el) {
+    return geoOps._helper.buildConicMatrix(getStateComplexVector(6).value);
+};
+geoOps.FreeConic.putParamToState = function(el, param) {
+    for (var i = 0; i < 3; ++i)
+        for (var j = 0; j <= i; ++j)
+            putStateComplexNumber(param.value[i].value[j]);
+};
+geoOps.FreeConic.updatePosition = function(el) {
+    var pos = getStateComplexVector(6);
+    putStateComplexVector(pos);
+    el.matrix = geoOps._helper.buildConicMatrix(pos.value);
+    el.matrix = List.normalizeMax(el.matrix);
+    el.matrix = General.withUsage(el.matrix, "Conic");
+};
+geoOps.FreeConic.set_matrix = function(el, value) {
+    if (List._helper.isNumberMatrixMN(value, 3, 3))
+        movepointscr(el, List.add(value, List.transpose(value)), "matrix");
+};
+geoOps.FreeConic.stateSize = 6 * 2;
+
 geoOps._helper.buildConicMatrix = function(arr) {
     var a = arr[0];
     var b = arr[1];
@@ -18779,6 +21371,17 @@ geoOps._helper.buildConicMatrix = function(arr) {
         List.turnIntoCSList([d, e, f])
     ]);
     return M;
+};
+
+geoOps._helper.flattenConicMatrix = function(mat) {
+    return List.turnIntoCSList([
+        mat.value[0].value[0],
+        mat.value[0].value[1],
+        mat.value[1].value[1],
+        mat.value[0].value[2],
+        mat.value[1].value[2],
+        mat.value[2].value[2]
+    ]);
 };
 
 geoOps._helper.splitDegenConic = function(mat) {
@@ -18848,23 +21451,22 @@ geoOps._helper.splitDegenConic = function(mat) {
     return [lg, lh];
 };
 
+geoOps._helper.inputConic = function(pos) {
+    var v = "xx xy yy xz yz zz".split(" ").map(function(name) {
+        var num = CSNumber._helper.input(pos[name]);
+        if (name[0] !== name[1]) num = CSNumber.realmult(0.5, num);
+        return num;
+    });
+    return geoOps._helper.buildConicMatrix(v);
+};
+
 geoOps.SelectConic = {};
 geoOps.SelectConic.kind = "C";
 geoOps.SelectConic.signature = ["Cs"];
 geoOps.SelectConic.initialize = function(el) {
     if (el.index !== undefined)
         return el.index - 1;
-    var xx = CSNumber._helper.input(el.pos.xx);
-    var yy = CSNumber._helper.input(el.pos.yy);
-    var zz = CSNumber._helper.input(el.pos.zz);
-    var xy = CSNumber.realmult(0.5, CSNumber._helper.input(el.pos.xy));
-    var xz = CSNumber.realmult(0.5, CSNumber._helper.input(el.pos.xz));
-    var yz = CSNumber.realmult(0.5, CSNumber._helper.input(el.pos.yz));
-    var pos = List.turnIntoCSList([
-        List.turnIntoCSList([xx, xy, xz]),
-        List.turnIntoCSList([xy, yy, yz]),
-        List.turnIntoCSList([xz, yz, zz])
-    ]);
+    var pos = geoOps._helper.inputConic(el.pos);
     var set = csgeo.csnames[(el.args[0])].results;
     var d1 = List.conicDist(pos, set[0]);
     var best = 0;
@@ -18886,27 +21488,27 @@ geoOps.SelectConic.updatePosition = function(el) {
 
 // conic by 4 Points and 1 line
 geoOps._helper.ConicBy4p1l = function(el, a, b, c, d, l) {
+    var al = List.scalproduct(a, l);
+    var bl = List.scalproduct(b, l);
+    var cl = List.scalproduct(c, l);
+    var dl = List.scalproduct(d, l);
+    var bcd = List.det3(b, c, d);
+    var abd = List.det3(a, b, d);
+    var acd = List.det3(a, c, d);
+    var abc = List.det3(a, b, c);
+    var mul = CSNumber.mult;
+    var r1 = CSNumber.sqrt(mul(mul(bl, dl), mul(bcd, abd)));
+    var r2 = CSNumber.sqrt(mul(mul(al, cl), mul(acd, abc)));
     var a1 = List.cross(List.cross(a, c), l);
     var a2 = List.cross(List.cross(b, d), l);
-    var b1 = List.cross(List.cross(a, b), l);
-    var b2 = List.cross(List.cross(c, d), l);
-    var o = List.realVector(csport.to(100 * Math.random(), 100 * Math.random()));
-
-    var r1 = CSNumber.mult(List.det3(o, a2, b1), List.det3(o, a2, b2));
-    r1 = CSNumber.sqrt(r1);
-    var r2 = CSNumber.mult(List.det3(o, a1, b1), List.det3(o, a1, b2));
-    r2 = CSNumber.sqrt(r2);
-
     var k1 = List.scalmult(r1, a1);
     var k2 = List.scalmult(r2, a2);
-
-    var x = List.add(k1, k2);
-    var y = List.sub(k1, k2);
-
-    var t1 = geoOps._helper.ConicBy5(el, a, b, c, d, x);
-    var t2 = geoOps._helper.ConicBy5(el, a, b, c, d, y);
-
-    return [t1, t2];
+    var x = List.normalizeMax(List.add(k1, k2));
+    var y = List.normalizeMax(List.sub(k1, k2));
+    var xy = tracing2(x, y);
+    var t1 = geoOps._helper.ConicBy5(el, a, b, c, d, xy.value[0]);
+    var t2 = geoOps._helper.ConicBy5(el, a, b, c, d, xy.value[1]);
+    return [List.normalizeMax(t1), List.normalizeMax(t2)];
 };
 
 geoOps.ConicBy4p1l = {};
@@ -18925,6 +21527,7 @@ geoOps.ConicBy4p1l.updatePosition = function(el) {
     el.results = erg;
 
 };
+geoOps.ConicBy4p1l.stateSize = tracing2.stateSize;
 
 
 geoOps._helper.ConicBy3p2l = function(a, b, c, g, h) {
@@ -19067,6 +21670,7 @@ geoOps.ConicBy1p4l.updatePosition = function(el) {
     el.results = erg;
 
 };
+geoOps.ConicBy1p4l.stateSize = tracing2.stateSize;
 
 geoOps.ConicParabolaPL = {};
 geoOps.ConicParabolaPL.kind = "C";
@@ -19166,6 +21770,300 @@ geoOps.ConicBy2Foci1P.updatePosition = function(el) {
     el.results = erg;
 
 };
+
+// Given (A, a, B, b, C), compute conic such that
+// 1. (A, a) and (B, b) are pole-polar pairs and
+// 2. C is incident with the conic
+geoOps.ConicBy2Pol1P = {};
+geoOps.ConicBy2Pol1P.kind = "C";
+geoOps.ConicBy2Pol1P.signature = ["P", "L", "P", "L", "P"];
+geoOps.ConicBy2Pol1P.updatePosition = function(el) {
+    var A = csgeo.csnames[(el.args[0])].homog;
+    var a = csgeo.csnames[(el.args[1])].homog;
+    var B = csgeo.csnames[(el.args[2])].homog;
+    var b = csgeo.csnames[(el.args[3])].homog;
+    var C = csgeo.csnames[(el.args[4])].homog;
+
+    var sp = List.scalproduct;
+    var sm = List.scalmult;
+    var sub = List.sub;
+    var mm = List.productMM;
+    var rm = CSNumber.realmult;
+    var transpose = List.transpose;
+    var asList = List.turnIntoCSList;
+
+    // D = ⟨a,A⟩⋅C − 2⟨a,C⟩⋅A, E = ⟨b,B⟩⋅C − 2⟨b,C⟩⋅B
+    var D = sub(sm(sp(a, A), C), sm(rm(2, sp(a, C)), A));
+    var E = sub(sm(sp(b, B), C), sm(rm(2, sp(b, C)), B));
+    var AC = asList([List.cross(A, C)]);
+    var BC = asList([List.cross(B, C)]);
+    var M1 = mm(transpose(AC), asList([List.cross(A, E)]));
+    var M2 = mm(transpose(BC), asList([List.cross(B, D)]));
+    var M3 = mm(transpose(AC), BC);
+    var Ab = sp(A, b);
+    var Ba = sp(B, a);
+    // M = Ba * M1 + Ab * M2 - 2 * Ab * Ba * M3
+    var M = List.add(sm(Ba, M1), sm(Ab, M2));
+    M = sub(M, sm(rm(2, CSNumber.mult(Ab, Ba)), M3));
+    M = List.add(M, transpose(M));
+    M = List.normalizeMax(M);
+    M = General.withUsage(M, "Conic");
+    el.matrix = M;
+};
+
+// Given (A, a, B, b, c), compute conic such that
+// 1. (A, a) and (B, b) are pole-polar pairs and
+// 2. c is a tangent to the conic
+geoOps.ConicBy2Pol1L = {};
+geoOps.ConicBy2Pol1L.kind = "C";
+geoOps.ConicBy2Pol1L.signature = ["P", "L", "P", "L", "L"];
+geoOps.ConicBy2Pol1L.updatePosition = function(el) {
+    var A = csgeo.csnames[(el.args[0])].homog;
+    var a = csgeo.csnames[(el.args[1])].homog;
+    var B = csgeo.csnames[(el.args[2])].homog;
+    var b = csgeo.csnames[(el.args[3])].homog;
+    var c = csgeo.csnames[(el.args[4])].homog;
+
+    var sp = List.scalproduct;
+    var sm = List.scalmult;
+    var mm = List.productMM;
+    var mul = CSNumber.mult;
+    var rm = CSNumber.realmult;
+    var transpose = List.transpose;
+    var asList = List.turnIntoCSList;
+
+    var aA = sp(a, A);
+    var aB = sp(a, B);
+    var bA = sp(b, A);
+    var bB = sp(b, B);
+    var cA = sp(c, A);
+    var cB = sp(c, B);
+    var v = asList([List.sub(sm(mul(bA, cB), a), sm(mul(aB, cA), b))]);
+
+    var M = List.add(
+        mm(
+            transpose(asList([sm(mul(bA, aB), c)])),
+            asList([List.sub(
+                List.add(
+                    sm(CSNumber.sub(mul(aA, cB), mul(aB, cA)), b),
+                    sm(CSNumber.sub(mul(bB, cA), mul(bA, cB)), a)
+                ),
+                sm(List.det3(a, b, c), List.cross(A, B))
+            )])
+        ),
+        mm(transpose(v), v)
+    );
+    M = List.add(M, transpose(M));
+    M = List.normalizeMax(M);
+    M = General.withUsage(M, "Conic");
+    el.matrix = M;
+};
+
+// Conic by one polar pair and three incident flats
+geoOps._helper.conic1Pol3Inc = function(A, a, B, C, D) {
+    var sp = List.scalproduct;
+    var sm = List.scalmult;
+    var mm = List.productMM;
+    var cp = List.cross;
+    var rm = CSNumber.realmult;
+    var mult = CSNumber.mult;
+    var transpose = List.transpose;
+    var asList = List.turnIntoCSList;
+    var det3 = List.det3;
+
+    var ABC = det3(A, B, C);
+    var BD = asList([cp(B, D)]);
+    var AD = asList([cp(A, D)]);
+    var BC = asList([cp(B, C)]);
+    var aA = sp(a, A);
+    var aB = sp(a, B);
+    var aD = sp(a, D);
+    var v = asList([cp(C, List.sub(sm(aA, D), sm(rm(2, aD), A)))]);
+    var M = sm(ABC, mm(transpose(BD), v));
+    var f = rm(2, CSNumber.add(mult(det3(A, C, D), aB), mult(ABC, aD)));
+    f = CSNumber.sub(mult(det3(B, C, D), aA), f);
+    M = List.add(M, sm(f, mm(transpose(AD), BC)));
+    M = List.add(M, transpose(M));
+    M = List.normalizeMax(M);
+    return M;
+};
+
+// Given (A, a, B, C, D), compute conic such that
+// 1. (A, a) is a pole-polar pair and
+// 2. B, C, D are incident with the conic
+geoOps.ConicBy1Pol3P = {};
+geoOps.ConicBy1Pol3P.kind = "C";
+geoOps.ConicBy1Pol3P.signature = ["P", "L", "P", "P", "P"];
+geoOps.ConicBy1Pol3P.updatePosition = function(el) {
+    var A = csgeo.csnames[(el.args[0])].homog;
+    var a = csgeo.csnames[(el.args[1])].homog;
+    var B = csgeo.csnames[(el.args[2])].homog;
+    var C = csgeo.csnames[(el.args[3])].homog;
+    var D = csgeo.csnames[(el.args[4])].homog;
+
+    var M = geoOps._helper.conic1Pol3Inc(A, a, B, C, D);
+    M = General.withUsage(M, "Conic");
+    el.matrix = M;
+};
+
+// Given (A, a, b, c, d), compute conic such that
+// 1. (A, a) is a pole-polar pair and
+// 2. b, c, d are tangents to the conic
+geoOps.ConicBy1Pol3L = {};
+geoOps.ConicBy1Pol3L.kind = "C";
+geoOps.ConicBy1Pol3L.signature = ["P", "L", "L", "L", "L"];
+geoOps.ConicBy1Pol3L.updatePosition = function(el) {
+    var A = csgeo.csnames[(el.args[0])].homog;
+    var a = csgeo.csnames[(el.args[1])].homog;
+    var b = csgeo.csnames[(el.args[2])].homog;
+    var c = csgeo.csnames[(el.args[3])].homog;
+    var d = csgeo.csnames[(el.args[4])].homog;
+
+    var M = geoOps._helper.conic1Pol3Inc(a, A, b, c, d);
+    M = List.normalizeMax(List.adjoint3(M));
+    M = General.withUsage(M, "Conic");
+    el.matrix = M;
+};
+
+// Given (A, a, B, C, d), compute conic such that
+// 1. (A, a) is a pole-polar pair,
+// 2. B, C are incident with the conic and
+// 3. d is a tangent to the conic
+geoOps.ConicBy1Pol2P1L = {};
+geoOps.ConicBy1Pol2P1L.kind = "Cs";
+geoOps.ConicBy1Pol2P1L.signature = ["P", "L", "P", "P", "L"];
+geoOps.ConicBy1Pol2P1L.updatePosition = function(el) {
+    var A = csgeo.csnames[(el.args[0])].homog;
+    var a = csgeo.csnames[(el.args[1])].homog;
+    var B = csgeo.csnames[(el.args[2])].homog;
+    var C = csgeo.csnames[(el.args[3])].homog;
+    var d = csgeo.csnames[(el.args[4])].homog;
+
+    var add = CSNumber.add;
+    var asList = List.turnIntoCSList;
+    var cp = List.cross;
+    var mm = List.productMM;
+    var mul = CSNumber.mult;
+    var rm = CSNumber.realmult;
+    var sm = List.scalmult;
+    var sp = List.scalproduct;
+    var sub = CSNumber.sub;
+    var transpose = List.transpose;
+
+    var aA = sp(a, A);
+    var aB = sp(a, B);
+    var aC = sp(a, C);
+    var dA = sp(d, A);
+    var dB = sp(d, B);
+    var dC = sp(d, C);
+    var AB = asList([cp(A, B)]);
+    var AC = asList([cp(A, C)]);
+    var BC = asList([cp(B, C)]);
+    var r = CSNumber.sqrt(mul(mul(dB, dC), mul(
+        sub(mul(aA, dB), rm(2, mul(dA, aB))),
+        sub(mul(aA, dC), rm(2, mul(dA, aC))))));
+    var ABAC = mm(transpose(AB), AC);
+    var M1 = sm(r, List.add(ABAC, transpose(ABAC)));
+    var M2 = sm(
+        sub(mul(aA, mul(dB, dC)),
+            add(mul(dA, mul(aB, dC)),
+                mul(dA, mul(dB, aC)))),
+        ABAC);
+    var v = List.add(
+        List.sub(sm(aC, AB), sm(aB, AC)),
+        sm(rm(0.5, aA), BC));
+    M2 = List.add(M2, sm(mul(dA, dA), mm(transpose(BC), v)));
+    M2 = List.add(M2, transpose(M2));
+    var res1 = List.normalizeMax(List.add(M1, M2));
+    var res2 = List.normalizeMax(List.sub(M1, M2));
+    el.results = tracing2Conics(res1, res2).value;
+};
+geoOps.ConicBy1Pol2P1L.stateSize = tracing2Conics.stateSize;
+
+// Given (A, a, B, c, d), compute conic such that
+// 1. (A, a) is a pole-polar pair,
+// 2. B is incident with the conic and
+// 3. c, d are tangents to the conic
+geoOps.ConicBy1Pol1P2L = {};
+geoOps.ConicBy1Pol1P2L.kind = "Cs";
+geoOps.ConicBy1Pol1P2L.signature = ["P", "L", "P", "L", "L"];
+geoOps.ConicBy1Pol1P2L.updatePosition = function(el) {
+    var A = csgeo.csnames[(el.args[0])].homog;
+    var a = csgeo.csnames[(el.args[1])].homog;
+    var B = csgeo.csnames[(el.args[2])].homog;
+    var c = csgeo.csnames[(el.args[3])].homog;
+    var d = csgeo.csnames[(el.args[4])].homog;
+
+    var add = CSNumber.add;
+    var asList = List.turnIntoCSList;
+    var cp = List.cross;
+    var mm = List.productMM;
+    var mul = CSNumber.mult;
+    var rm = CSNumber.realmult;
+    var sm = List.scalmult;
+    var sp = List.scalproduct;
+    var sub = CSNumber.sub;
+    var transpose = List.transpose;
+
+    var aA = sp(a, A);
+    var aB = sp(a, B);
+    var cA = sp(c, A);
+    var cB = sp(c, B);
+    var dA = sp(d, A);
+    var dB = sp(d, B);
+    var aAA = mul(aA, aA);
+    var aAB = mul(aA, aB);
+    var aBB = mul(aB, aB);
+    var cAA = mul(cA, cA);
+    var cAB = mul(cA, cB);
+    var cBB = mul(cB, cB);
+    var dAA = mul(dA, dA);
+    var dAB = mul(dA, dB);
+    var dBB = mul(dB, dB);
+    var fa = mul(mul(aAA, cBB), dBB);
+    fa = sub(fa, rm(2, mul(mul(aAB, cAB), dBB)));
+    fa = sub(fa, rm(2, mul(mul(aAB, cBB), dAB)));
+    fa = add(fa, rm(0.5, mul(mul(aBB, cAA), dBB)));
+    fa = add(fa, rm(3, mul(mul(aBB, cAB), dAB)));
+    fa = add(fa, rm(0.5, mul(mul(aBB, cBB), dAA)));
+    var fc = mul(mul(aA, cB), dB);
+    fc = sub(fc, mul(mul(aB, cA), dB));
+    fc = sub(fc, mul(mul(aB, cB), dA));
+    fc = mul(fc, mul(aBB, dA));
+    var fd = sub(mul(aA, cB), rm(2, mul(aB, cA)));
+    fd = mul(fd, mul(aBB, mul(cB, dA)));
+    var M1 = mm(transpose(asList([a])), asList([List.add(List.add(
+        sm(fa, a), sm(fc, c)), sm(fd, d))]));
+    var cv = asList([c]);
+    M1 = List.add(M1, sm(
+        rm(0.5, mul(mul(aBB, aBB), dAA)), mm(transpose(cv), cv)));
+    M1 = List.add(M1, sm(aBB, mm(transpose(asList([d])), asList([
+        List.add(
+            sm(sub(
+                sub(rm(2, mul(aAB, cAB)), mul(aAA, cBB)),
+                rm(0.5, mul(aBB, cAA))), d),
+            sm(
+                mul(List.det3(a, c, d), sub(mul(aA, cB), mul(aB, cA))),
+                cp(A, B)))
+    ]))));
+    M1 = List.add(M1, transpose(M1));
+    var r = CSNumber.sqrt(mul(mul(cB, dB), mul(
+        sub(mul(aA, cB), rm(2, mul(aB, cA))),
+        sub(mul(aA, dB), rm(2, mul(aB, dA))))));
+    var M2 = mm(transpose(asList([a])), asList([List.sub(
+        sm(sub(
+            mul(aB, add(mul(cA, dB), mul(cB, dA))),
+            mul(aA, mul(cB, dB))), a),
+        sm(aBB, List.add(sm(dA, c), sm(cA, d))))]));
+    M2 = List.add(M2, sm(mul(aA, aBB), mm(
+        transpose(asList([c])), asList([d]))));
+    M2 = sm(r, M2);
+    M2 = List.add(M2, transpose(M2));
+    var res1 = List.normalizeMax(List.add(M1, M2));
+    var res2 = List.normalizeMax(List.sub(M1, M2));
+    el.results = tracing2Conics(res1, res2).value;
+};
+geoOps.ConicBy1Pol1P2L.stateSize = tracing2Conics.stateSize;
 
 geoOps._helper.coHarmonic = function(a1, a2, b1, b2) {
     var poi = List.realVector([100 * Math.random(), 100 * Math.random(), 1]);
@@ -19730,18 +22628,24 @@ geoOps.TrMoebius.updatePosition = function(el) {
         [neg(A[2]), A[0]],
         [neg(A[3]), A[1]]
     ]));
-    var C = List.productMM(mB, mAa);
+    var C = List.normalizeMax(List.productMM(mB, mAa));
 
     // Read from that the (doubly) complex matrix [[a, b], [c, d]]
-    var ar = C.value[0].value[0];
-    var ai = C.value[1].value[0];
-    var br = C.value[0].value[1];
-    var bi = C.value[1].value[1];
-    var cr = C.value[2].value[0];
-    var ci = C.value[3].value[0];
-    var dr = C.value[2].value[1];
-    var di = C.value[3].value[1];
+    el.moebius = {
+        anti: false,
+        ar: C.value[0].value[0],
+        ai: C.value[1].value[0],
+        br: C.value[0].value[1],
+        bi: C.value[1].value[1],
+        cr: C.value[2].value[0],
+        ci: C.value[3].value[0],
+        dr: C.value[2].value[1],
+        di: C.value[3].value[1]
+    };
+    geoOps._helper.moebiusPair(el);
+};
 
+geoOps._helper.moebiusPair = function(el) {
     /*
     Build two matrices with the interesting property that for pxy = px + i*py
     this essentially encodes a Möbius transformation including division:
@@ -19750,16 +22654,45 @@ geoOps.TrMoebius.updatePosition = function(el) {
     cross(mat1 * p, mat2 * p) = ⎜Im((a*pxy + b*pz)*conj(c*pxy + d*pz))⎟
                                 ⎝   (c*pxy + d*pz)*conj(c*pxy + d*pz) ⎠
     */
-    el.mat1 = List.normalizeMax(List.matrix([
-        [neg(cr), ci, neg(dr)],
-        [ci, cr, di],
-        [ar, neg(ai), br]
-    ]));
-    el.mat2 = List.normalizeMax(List.matrix([
-        [neg(ci), neg(cr), neg(di)],
-        [neg(cr), ci, neg(dr)],
-        [ai, ar, bi]
-    ]));
+    var m = el.moebius;
+    var neg = CSNumber.neg;
+    var flip = m.anti ? neg : General.identity;
+    var mats = List.normalizeMax(List.turnIntoCSList([List.matrix([
+        [neg(m.cr), flip(m.ci), neg(m.dr)],
+        [m.ci, flip(m.cr), m.di],
+        [m.ar, neg(flip(m.ai)), m.br]
+    ]), List.matrix([
+        [neg(m.ci), neg(flip(m.cr)), neg(m.di)],
+        [neg(m.cr), flip(m.ci), neg(m.dr)],
+        [m.ai, flip(m.ar), m.bi]
+    ])]));
+    el.mat1 = mats.value[0];
+    el.mat2 = mats.value[1];
+};
+
+geoOps._helper.inverseMoebius = function(m) {
+    var neg = CSNumber.neg;
+    var flip = m.anti ? neg : General.identity;
+    return {
+        anti: m.anti,
+        ar: m.dr,
+        ai: flip(m.di),
+        br: neg(m.br),
+        bi: neg(flip(m.bi)),
+        cr: neg(m.cr),
+        ci: neg(flip(m.ci)),
+        dr: m.ar,
+        di: flip(m.ai)
+    };
+};
+
+geoOps.TrInverseMoebius = {};
+geoOps.TrInverseMoebius.kind = "Mt";
+geoOps.TrInverseMoebius.signature = ["Mt"];
+geoOps.TrInverseMoebius.updatePosition = function(el) {
+    var m = csgeo.csnames[el.args[0]].moebius;
+    el.moebius = geoOps._helper.inverseMoebius(m);
+    geoOps._helper.moebiusPair(el);
 };
 
 geoOps.TrMoebiusP = {};
@@ -19804,43 +22737,66 @@ geoOps.TrMoebiusL.updatePosition = function(el) {
     el.matrix = General.withUsage(el.matrix, "Circle");
 };
 
+geoOps.TrMoebiusS = {};
+geoOps.TrMoebiusS.kind = "C";
+geoOps.TrMoebiusS.signature = ["Mt", "S"];
+geoOps.TrMoebiusS.updatePosition = function(el) {
+    var tr = csgeo.csnames[(el.args[0])];
+    var s = csgeo.csnames[(el.args[1])];
+
+    var a1 = s.startpos;
+    var a3 = s.endpos;
+    var a2 = List.add(a1, a3);
+
+    var b1 = geoOps._helper.TrMoebiusP(a1, tr);
+    var b2 = geoOps._helper.TrMoebiusP(a2, tr);
+    var b3 = geoOps._helper.TrMoebiusP(a3, tr);
+    el.startPoint = b1;
+    el.viaPoint = b2;
+    el.endPoint = b3;
+
+    el.isArc = true;
+    el.matrix = List.normalizeMax(geoOps._helper.ConicBy5(null, b1, b2, b3, List.ii, List.jj));
+    el.matrix = General.withUsage(el.matrix, "Circle");
+};
+
 
 geoOps.TrMoebiusC = {};
 geoOps.TrMoebiusC.kind = "C";
 geoOps.TrMoebiusC.signature = ["Mt", "C"];
+geoOps.TrMoebiusC.signatureConstraints = function(el) {
+    return csgeo.csnames[el.args[1]].matrix.usage === "Circle";
+};
 geoOps.TrMoebiusC.updatePosition = function(el) {
     var t = csgeo.csnames[(el.args[0])];
     var cir = csgeo.csnames[(el.args[1])].matrix;
 
-    if (cir.usage !== "Circle") {
-        console.log("applying Moebius transform to conics is not implemented yet");
-        var th = CSNumber.real(3);
-        el.matrix = List.zeromatrix(th, th);
-    } else {
-        var getRandLine = function() {
-            var rline = List.realVector([Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5]);
-            return List.normalizeMax(rline);
-        };
+    var getRandLine = function() {
+        var rline = List.realVector([Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5]);
+        return List.normalizeMax(rline);
+    };
 
-        var pts1 = geoOps._helper.IntersectLC(getRandLine(), cir);
-        var pts2 = geoOps._helper.IntersectLC(getRandLine(), cir);
+    var pts1 = geoOps._helper.IntersectLC(getRandLine(), cir);
+    var pts2 = geoOps._helper.IntersectLC(getRandLine(), cir);
 
-        var a1 = pts1[0],
-            a2 = pts1[1],
-            a3 = pts2[1];
+    var a1 = pts1[0];
+    var a2 = pts1[1];
+    var a3 = pts2[1];
 
-        var b1 = geoOps._helper.TrMoebiusP(a1, t);
-        var b2 = geoOps._helper.TrMoebiusP(a2, t);
-        var b3 = geoOps._helper.TrMoebiusP(a3, t);
+    var b1 = geoOps._helper.TrMoebiusP(a1, t);
+    var b2 = geoOps._helper.TrMoebiusP(a2, t);
+    var b3 = geoOps._helper.TrMoebiusP(a3, t);
 
-        el.matrix = List.normalizeMax(geoOps._helper.ConicBy5(null, b1, b2, b3, List.ii, List.jj));
-    }
+    el.matrix = List.normalizeMax(geoOps._helper.ConicBy5(null, b1, b2, b3, List.ii, List.jj));
     el.matrix = General.withUsage(el.matrix, "Circle");
 };
 
 geoOps.TrMoebiusArc = {};
 geoOps.TrMoebiusArc.kind = "C";
 geoOps.TrMoebiusArc.signature = ["Mt", "C"];
+geoOps.TrMoebiusArc.signatureConstraints = function(el) {
+    return csgeo.csnames[el.args[1]].isArc;
+};
 geoOps.TrMoebiusArc.updatePosition = function(el) {
     var t = csgeo.csnames[(el.args[0])];
     var Arc = csgeo.csnames[(el.args[1])];
@@ -19875,6 +22831,9 @@ geoOps._helper.trBuildMatrix = function(el, oneStep) {
 geoOps.TrProjection = {};
 geoOps.TrProjection.kind = "Tr";
 geoOps.TrProjection.signature = ["P", "P", "P", "P", "P", "P", "P", "P"];
+geoOps.TrProjection.initialize = function(el) {
+    el.isEuclidean = 0;
+};
 geoOps.TrProjection.updatePosition = function(el) {
     geoOps._helper.trBuildMatrix(el, function(offset) {
         return eval_helper.basismap(
@@ -19893,6 +22852,9 @@ geoOps.TrProjection.updatePosition = function(el) {
 geoOps.TrAffine = {};
 geoOps.TrAffine.kind = "Tr";
 geoOps.TrAffine.signature = ["P", "P", "P", "P", "P", "P"];
+geoOps.TrAffine.initialize = function(el) {
+    el.isEuclidean = 0;
+};
 geoOps.TrAffine.updatePosition = function(el) {
     var mult = CSNumber.mult;
     var sm = List.scalmult;
@@ -19936,6 +22898,9 @@ geoOps.TrAffine.updatePosition = function(el) {
 geoOps.TrSimilarity = {};
 geoOps.TrSimilarity.kind = "Tr";
 geoOps.TrSimilarity.signature = ["P", "P", "P", "P"];
+geoOps.TrSimilarity.initialize = function(el) {
+    el.isEuclidean = 1;
+};
 geoOps.TrSimilarity.updatePosition = function(el) {
     geoOps._helper.trBuildMatrix(el, function(offset) {
         var a = csgeo.csnames[el.args[0 + offset]].homog,
@@ -19948,6 +22913,9 @@ geoOps.TrSimilarity.updatePosition = function(el) {
 geoOps.TrTranslation = {};
 geoOps.TrTranslation.kind = "Tr";
 geoOps.TrTranslation.signature = ["P", "P"];
+geoOps.TrTranslation.initialize = function(el) {
+    el.isEuclidean = 1;
+};
 geoOps.TrTranslation.updatePosition = function(el) {
     /*
         Build this matrix when a is [aX, aY, aZ] and  b is [bX, bY, bZ]:
@@ -19980,10 +22948,64 @@ geoOps.TrTranslation.updatePosition = function(el) {
     el.dualMatrix = m;
 };
 
+// Define a rotation transformation given the center of rotation point and an angle
+geoOps.TrRotationPNumb = {};
+geoOps.TrRotationPNumb.kind = "Tr";
+geoOps.TrRotationPNumb.signature = ["P", "V"];
+geoOps.TrRotationPNumb.updatePosition = function(el) {
+    /*
+        Given a point p as [x, y, z] and an angle θ, where c is cos(θ)
+        and s is sin(θ), build this matrix:
+        ⎛    c*z        -s*z     (1-c)*x+s*y⎞
+        ⎜    s*z         c*z     (1-c)*y-s*x⎟
+        ⎝     0           0           z     ⎠
+        and its dual:
+        ⎛    c*z        -s*z          0     ⎞
+        ⎜    s*z         c*z          0     ⎟
+        ⎝(1-c)*x-s*y (1-c)*y+s*x      z     ⎠
+        Based on the matrix formula in terms of θ and pivot [x/z, y/z, 1]:
+        z*translate([x/z, y/z, 1])·rotate(θ)·translate([-x/z, -y/z, 1]).
+    */
+    var p = csgeo.csnames[el.args[0]].homog.value;
+    var th = csgeo.csnames[el.args[1]].value;
+    var mult = CSNumber.mult;
+    var add = CSNumber.add;
+    var sub = CSNumber.sub;
+    var mat = List.turnIntoCSList;
+    var nm = List.normalizeMax;
+    var zero = CSNumber.zero;
+    var x = p[0];
+    var y = p[1];
+    var z = p[2];
+    var c = CSNumber.cos(th);
+    var s = CSNumber.sin(th);
+    var t = sub(CSNumber.real(1), c);
+    var tx = mult(t, x);
+    var ty = mult(t, y);
+    var sx = mult(s, x);
+    var sy = mult(s, y);
+    var cz = mult(c, z);
+    var sz = mult(s, z);
+    var nsz = CSNumber.neg(sz);
+    el.matrix = nm(mat([
+        mat([cz, nsz, add(tx, sy)]),
+        mat([sz, cz, sub(ty, sx)]),
+        mat([zero, zero, z])
+    ]));
+    el.dualMatrix = nm(mat([
+        mat([cz, nsz, zero]),
+        mat([sz, cz, zero]),
+        mat([sub(tx, sy), add(ty, sx), z])
+    ]));
+};
+
 // Define a reflective transformation given a point
 geoOps.TrReflectionP = {};
 geoOps.TrReflectionP.kind = "Tr";
 geoOps.TrReflectionP.signature = ["P"];
+geoOps.TrReflectionP.initialize = function(el) {
+    el.isEuclidean = 1;
+};
 geoOps.TrReflectionP.updatePosition = function(el) {
     /*
         Build this matrix when p is [x, y, z]:
@@ -20009,6 +23031,9 @@ geoOps.TrReflectionP.updatePosition = function(el) {
 geoOps.TrReflectionL = {};
 geoOps.TrReflectionL.kind = "Tr";
 geoOps.TrReflectionL.signature = ["L"];
+geoOps.TrReflectionL.initialize = function(el) {
+    el.isEuclidean = -1;
+};
 geoOps.TrReflectionL.updatePosition = function(el) {
     /*
         Build this matrix when l is [x, y, z]:
@@ -20046,156 +23071,40 @@ geoOps.TrReflectionS.updatePosition = geoOps.TrReflectionL.updatePosition;
 
 // Define a reflective transformation given a circle (not a general conic)
 geoOps.TrReflectionC = {};
-geoOps.TrReflectionC.kind = "Rc";
+geoOps.TrReflectionC.kind = "Mt";
 geoOps.TrReflectionC.signature = ["C"];
+geoOps.TrReflectionC.signatureConstraints = function(el) {
+    return csgeo.csnames[el.args[0]].matrix.usage === "Circle";
+};
 geoOps.TrReflectionC.updatePosition = function(el) {
-    var m1 = csgeo.csnames[(el.args[0])].matrix;
-    if (m1.usage !== "Circle") {
-        console.log("reflection in general conics is not defined");
-        el.sclRsq = CSNumber.zero;
-        el.matrix = List.fund;
-    } else {
-        var add = CSNumber.add;
-        var sub = CSNumber.sub;
-        var mult = CSNumber.mult;
-        var m1r3 = m1.value[2].value;
-        var nx1 = m1r3[0];
-        var ny1 = m1r3[1];
-        var zz1 = m1r3[2];
-        var z1 = m1.value[0].value[0];
-        el.sclRsq = CSNumber.sub(add(mult(nx1, nx1), mult(ny1, ny1)), mult(z1, zz1));
-    }
-    el.dualMatrix = el.matrix = m1;
-};
-
-geoOps._helper.ReflectC = function(Tr, m2) {
-    var add = CSNumber.add;
-    var sub = CSNumber.sub;
-    var mult = CSNumber.mult;
-    var scalmult = List.scalmult;
-    var m1 = Tr.matrix;
-    var z1 = m1.value[0].value[0];
-    var m1r3 = m1.value[2].value;
-    var nx1 = m1r3[0];
-    var ny1 = m1r3[1];
-    var zz1 = m1r3[2];
-    var z2 = m2.value[0].value[0];
-    var m2r3 = m2.value[2].value;
-    var nx2 = m2r3[0];
-    var ny2 = m2r3[1];
-    var zz2 = m2r3[2];
-    var u = sub(CSNumber.realmult(2, add(mult(nx1, nx2), mult(ny1, ny2))), add(mult(z1, zz2), mult(z2, zz1)));
-    return General.withUsage(List.normalizeMax(List.sub(scalmult(u, m1), scalmult(Tr.sclRsq, m2))), "Circle");
-};
-
-// Reflect a circle (not a general conic) in a circle
-geoOps.ReflectCC = {};
-geoOps.ReflectCC.kind = "C";
-geoOps.ReflectCC.signature = ["Rc", "C"];
-geoOps.ReflectCC.updatePosition = function(el) {
-    var cir = csgeo.csnames[(el.args[1])];
-    if (cir.matrix.usage !== "Circle") {
-        console.log("reflecting general conics in circles is not defined");
-        el.matrix = General.withUsage(List.fund, "Circle");
-    } else {
-        el.matrix = geoOps._helper.ReflectC(csgeo.csnames[(el.args[0])], cir.matrix);
-    }
-};
-
-// Reflect a line in a circle
-geoOps.ReflectCL = {};
-geoOps.ReflectCL.kind = "C";
-geoOps.ReflectCL.signature = ["Rc", "L"];
-geoOps.ReflectCL.updatePosition = function(el) {
-    /*
-        Define the line as this circle matrix when l is [x, y, z]:
-        ⎛  0   0   x ⎞
-        ⎜  0   0   y ⎟
-        ⎝  x   y  2*z⎠
-    */
-    var z = CSNumber.zero;
-    var l = csgeo.csnames[(el.args[1])].homog.value;
-    var c = geoOps._helper.buildConicMatrix([z, z, z, l[0], l[1], CSNumber.realmult(2, l[2])]);
-    el.matrix = geoOps._helper.ReflectC(csgeo.csnames[(el.args[0])], c);
-};
-
-geoOps._helper.ReflectCP = function(p, Tr) {
-    var m1 = Tr.matrix;
-    var m1r3 = m1.value[2].value;
-    var center = List.turnIntoCSList([m1r3[0], m1r3[1], CSNumber.neg(m1.value[0].value[0])]);
-    var cc = List.cross;
-    // Returns intersection of polar of p and line thru center and p
-    return List.normalizeMax(cc(List.productMV(m1, p), cc(center, p)));
-};
-
-// Reflect a point in a circle
-geoOps.ReflectCP = {};
-geoOps.ReflectCP.kind = "P";
-geoOps.ReflectCP.signature = ["Rc", "P"];
-geoOps.ReflectCP.updatePosition = function(el) {
-    el.homog = General.withUsage(
-        geoOps._helper.ReflectCP(csgeo.csnames[(el.args[1])].homog,
-            csgeo.csnames[(el.args[0])]), "Point");
-};
-
-// Reflect an arc in a circle
-geoOps.ReflectCArc = {};
-geoOps.ReflectCArc.kind = "C";
-geoOps.ReflectCArc.signature = ["Rc", "C"];
-geoOps.ReflectCArc.updatePosition = function(el) {
-    var t = csgeo.csnames[(el.args[0])];
-    var Arc = csgeo.csnames[(el.args[1])];
-
-    var a1 = Arc.startPoint;
-    var a2 = Arc.viaPoint;
-    var a3 = Arc.endPoint;
-
-    var b1 = geoOps._helper.ReflectCP(a1, t);
-    var b2 = geoOps._helper.ReflectCP(a2, t);
-    var b3 = geoOps._helper.ReflectCP(a3, t);
-    el.startPoint = b1;
-    el.viaPoint = b2;
-    el.endPoint = b3;
-
-    el.isArc = true;
-    el.matrix = geoOps._helper.ReflectC(t, Arc.matrix);
-};
-
-// Reflect a segment in a circle
-geoOps.ReflectCS = {};
-geoOps.ReflectCS.kind = "C";
-geoOps.ReflectCS.signature = ["Rc", "S"];
-geoOps.ReflectCS.updatePosition = function(el) {
-    var t = csgeo.csnames[(el.args[0])];
-    var Segment = csgeo.csnames[(el.args[1])];
-
-    var a1 = Segment.startpos;
-    var a3 = Segment.endpos;
-    var a2 = geoOps._helper.midpoint(a1, a3);
-
-    var b1 = geoOps._helper.ReflectCP(a1, t);
-    var b2 = geoOps._helper.ReflectCP(a2, t);
-    var b3 = geoOps._helper.ReflectCP(a3, t);
-    el.startPoint = b1;
-    el.viaPoint = b2;
-    el.endPoint = b3;
-
-    el.isArc = true;
-    /*
-        Define the line as this circle matrix when l is [x, y, z]:
-        ⎛  0   0   x ⎞
-        ⎜  0   0   y ⎟
-        ⎝  x   y  2*z⎠
-    */
-    var z = CSNumber.zero;
-    var l = Segment.homog.value;
-    var c = geoOps._helper.buildConicMatrix([z, z, z, l[0], l[1], CSNumber.realmult(2, l[2])]);
-    el.matrix = geoOps._helper.ReflectC(t, c);
+    var m = csgeo.csnames[(el.args[0])].matrix;
+    // m = [[a, 0, b], [0, a, c], [b, c, d]]
+    var a = m.value[0].value[0];
+    var b = m.value[0].value[2];
+    var c = m.value[1].value[2];
+    var d = m.value[2].value[2];
+    var neg = CSNumber.neg;
+    el.moebius = {
+        anti: true,
+        ar: b,
+        ai: c,
+        br: d,
+        bi: CSNumber.zero,
+        cr: neg(a),
+        ci: CSNumber.zero,
+        dr: neg(b),
+        di: c
+    };
+    geoOps._helper.moebiusPair(el);
 };
 
 geoOps.TrInverse = {};
 geoOps.TrInverse.kind = "Tr";
 geoOps.TrInverse.signature = ["Tr"];
+geoOps.TrInverse.initialize = function(el) {
+    var tr = csgeo.csnames[(el.args[0])];
+    el.isEuclidean = tr.isEuclidean;
+};
 geoOps.TrInverse.updatePosition = function(el) {
     var tr = csgeo.csnames[(el.args[0])];
     var m = tr.matrix;
@@ -20219,6 +23128,9 @@ geoOps.TransformC.updatePosition = function(el) {
 geoOps.TransformArc = {};
 geoOps.TransformArc.kind = "C";
 geoOps.TransformArc.signature = ["Tr", "C"];
+geoOps.TransformArc.signatureConstraints = function(el) {
+    return csgeo.csnames[el.args[0]].isArc;
+};
 geoOps.TransformArc.updatePosition = function(el) {
     var t = csgeo.csnames[(el.args[0])].matrix;
     var Arc = csgeo.csnames[(el.args[1])];
@@ -20269,12 +23181,133 @@ geoOps.TransformS.signature = ["Tr", "S"];
 geoOps.TransformS.updatePosition = function(el) {
     var tr = csgeo.csnames[(el.args[0])];
     var s = csgeo.csnames[(el.args[1])];
-    el.homog = List.normalizeMax(List.productMV(tr.dualMatrix, s.homog));
-    el.homog = General.withUsage(el.homog, "Line");
-    el.startpos = List.normalizeMax(List.productMV(tr.matrix, s.startpos));
-    el.endpos = List.normalizeMax(List.productMV(tr.matrix, s.endpos));
-    el.farpoint = List.normalizeMax(List.productMV(tr.matrix, s.farpoint));
-    //console.log(niceprint(List.turnIntoCSList([el.homog, el.startpos, el.endpos])));
+    geoOps.Segment.setSegmentPos(el,
+        List.productMV(tr.dualMatrix, s.homog),
+        List.productMV(tr.matrix, s.startpos),
+        List.productMV(tr.matrix, s.endpos)
+    );
+};
+
+geoOps.TransformPolygon = {};
+geoOps.TransformPolygon.kind = "Poly";
+geoOps.TransformPolygon.signature = ["Tr", "Poly"];
+geoOps.TransformPolygon.updatePosition = function(el) {
+    var m = csgeo.csnames[(el.args[0])].matrix;
+    var ps = csgeo.csnames[(el.args[1])].vertices.value;
+    el.vertices = List.turnIntoCSList(ps.map(function(p) {
+        var homog = List.normalizeMax(List.productMV(m, p));
+        homog = General.withUsage(homog, "Point");
+        return homog;
+    }));
+};
+
+geoOps.TrComposeTrTr = {};
+geoOps.TrComposeTrTr.kind = "Tr";
+geoOps.TrComposeTrTr.signature = ["Tr", "Tr"];
+geoOps.TrComposeTrTr.initialize = function(el) {
+    var a = csgeo.csnames[el.args[0]];
+    var b = csgeo.csnames[el.args[1]];
+    el.isEuclidean = a.isEuclidean * b.isEuclidean;
+};
+geoOps.TrComposeTrTr.updatePosition = function(el) {
+    var a = csgeo.csnames[el.args[0]];
+    var b = csgeo.csnames[el.args[1]];
+    el.matrix = List.normalizeMax(List.productMM(b.matrix, a.matrix));
+    el.dualMatrix = List.normalizeMax(List.productMM(b.dualMatrix, a.dualMatrix));
+};
+
+geoOps._helper.composeMtMt = function(el, m, n) {
+    var add = CSNumber.add;
+    var sub = CSNumber.sub;
+    var mult = CSNumber.mult;
+
+    function f1(a, b, c, d) { // a*b + c*d
+        return add(mult(a, b), mult(c, d));
+    }
+
+    function f2(a, b, c, d, e, f, g, h) {
+        return add(f1(a, b, c, d), f1(e, f, g, h));
+    }
+
+    function f3(a, b, c, d, e, f, g, h) {
+        return sub(f1(a, b, c, d), f1(e, f, g, h));
+    }
+
+    var addsub = n.anti ? f3 : f2;
+    var subadd = n.anti ? f2 : f3;
+    var v = List.normalizeMax(List.turnIntoCSList([
+        subadd(m.ar, n.ar, m.cr, n.br, m.ai, n.ai, m.ci, n.bi),
+        addsub(m.ar, n.ai, m.cr, n.bi, m.ai, n.ar, m.ci, n.br),
+        subadd(m.br, n.ar, m.dr, n.br, m.bi, n.ai, m.di, n.bi),
+        addsub(m.br, n.ai, m.dr, n.bi, m.bi, n.ar, m.di, n.br),
+        subadd(m.ar, n.cr, m.cr, n.dr, m.ai, n.ci, m.ci, n.di),
+        addsub(m.ar, n.ci, m.cr, n.di, m.ai, n.cr, m.ci, n.dr),
+        subadd(m.br, n.cr, m.dr, n.dr, m.bi, n.ci, m.di, n.di),
+        addsub(m.br, n.ci, m.dr, n.di, m.bi, n.cr, m.di, n.dr)
+    ])).value;
+    el.moebius = {
+        anti: m.anti !== n.anti,
+        ar: v[0],
+        ai: v[1],
+        br: v[2],
+        bi: v[3],
+        cr: v[4],
+        ci: v[5],
+        dr: v[6],
+        di: v[7]
+    };
+    geoOps._helper.moebiusPair(el);
+};
+
+geoOps._helper.euc2moeb = function(el) {
+    var m = el.matrix.value;
+    return {
+        anti: el.isEuclidean < 0,
+        ar: m[0].value[0],
+        ai: m[1].value[0],
+        br: m[0].value[2],
+        bi: m[1].value[2],
+        cr: CSNumber.zero,
+        ci: CSNumber.zero,
+        dr: m[2].value[2],
+        di: CSNumber.zero
+    };
+};
+
+geoOps.TrComposeMtMt = {};
+geoOps.TrComposeMtMt.kind = "Mt";
+geoOps.TrComposeMtMt.signature = ["Mt", "Mt"];
+geoOps.TrComposeMtMt.updatePosition = function(el) {
+    geoOps._helper.composeMtMt(
+        el,
+        csgeo.csnames[el.args[0]].moebius,
+        csgeo.csnames[el.args[1]].moebius);
+};
+
+geoOps.TrComposeTrMt = {};
+geoOps.TrComposeTrMt.kind = "Mt";
+geoOps.TrComposeTrMt.signature = ["Tr", "Mt"];
+geoOps.TrComposeTrMt.signatureConstraints = function(el) {
+    return !!csgeo.csnames[el.args[0]].isEuclidean;
+};
+geoOps.TrComposeTrMt.updatePosition = function(el) {
+    geoOps._helper.composeMtMt(
+        el,
+        geoOps._helper.euc2moeb(csgeo.csnames[el.args[0]]),
+        csgeo.csnames[el.args[1]].moebius);
+};
+
+geoOps.TrComposeMtTr = {};
+geoOps.TrComposeMtTr.kind = "Mt";
+geoOps.TrComposeMtTr.signature = ["Mt", "Tr"];
+geoOps.TrComposeMtTr.signatureConstraints = function(el) {
+    return !!csgeo.csnames[el.args[1]].isEuclidean;
+};
+geoOps.TrComposeMtTr.updatePosition = function(el) {
+    geoOps._helper.composeMtMt(
+        el,
+        csgeo.csnames[el.args[0]].moebius,
+        geoOps._helper.euc2moeb(csgeo.csnames[el.args[1]]));
 };
 
 geoOps._helper.pointReflection = function(center, point) {
@@ -20339,11 +23372,11 @@ geoOps.Angle.stateSize = 2;
 geoOps.Text = {};
 geoOps.Text.kind = "Text";
 geoOps.Text.signature = "**";
+geoOps.Text.isMovable = true;
 geoOps.Text.updatePosition = noop;
 geoOps.Text.initialize = function(el) {
     el.text = String(el.text);
-    el.size = CSNumber.real(el.size ? +el.size : defaultAppearance.textsize);
-    if (el.pos) el.pos = geoOps._helper.initializePoint(el);
+    if (el.pos) el.homog = geoOps._helper.initializePoint(el);
     if (el.dock) {
         if (el.dock.offset && el.dock.offset.length === 2)
             el.dock.offset = List.realVector([+el.dock.offset[0], +el.dock.offset[1]]);
@@ -20351,6 +23384,82 @@ geoOps.Text.initialize = function(el) {
             el.dock.offset = List.realVector([0, 0]);
     }
 };
+geoOps.Text.getParamForInput = function(el, pos, type) {
+    return geoOps.Free.getParamForInput(el, pos, type);
+};
+geoOps.Text.getParamFromState = function(el) {
+    return el.homog;
+};
+geoOps.Text.putParamToState = function(el, param) {
+    el.homog = param;
+};
+
+geoOps.Calculation = {};
+geoOps.Calculation.kind = "Text";
+geoOps.Calculation.signature = "**";
+geoOps.Calculation.isMovable = true;
+geoOps.Calculation.updatePosition = noop;
+geoOps.Calculation.initialize = function(el) {
+    geoOps.Text.initialize(el);
+    el.calculation = analyse(el.text);
+};
+geoOps.Calculation.getText = function(el) {
+    return niceprint(evaluate(el.calculation));
+};
+geoOps.Calculation.getParamForInput = geoOps.Text.getParamForInput;
+geoOps.Calculation.getParamFromState = geoOps.Text.getParamFromState;
+geoOps.Calculation.putParamToState = geoOps.Text.putParamToState;
+
+geoOps.Equation = {};
+geoOps.Equation.kind = "Text";
+geoOps.Equation.isMovable = true;
+geoOps.Equation.signature = "**";
+geoOps.Equation.updatePosition = noop;
+geoOps.Equation.initialize = function(el) {
+    geoOps.Text.initialize(el);
+    el.calculation = analyse(el.text);
+};
+geoOps.Equation.getText = function(el) {
+    return el.text + " = " + niceprint(evaluate(el.calculation));
+};
+geoOps.Equation.getParamForInput = geoOps.Text.getParamForInput;
+geoOps.Equation.getParamFromState = geoOps.Text.getParamFromState;
+geoOps.Equation.putParamToState = geoOps.Text.putParamToState;
+
+geoOps.Evaluate = {};
+geoOps.Evaluate.kind = "Text";
+geoOps.Evaluate.isMovable = true;
+geoOps.Evaluate.signature = "**";
+geoOps.Evaluate.updatePosition = noop;
+geoOps.Evaluate.initialize = function(el) {
+    geoOps.Text.initialize(el);
+    el.calculation = analyse(el.text);
+};
+geoOps.Evaluate.getText = function(el) {
+    evaluate(el.calculation); // ugly: side effects in draw
+    return el.text;
+};
+geoOps.Evaluate.getParamForInput = geoOps.Text.getParamForInput;
+geoOps.Evaluate.getParamFromState = geoOps.Text.getParamFromState;
+geoOps.Evaluate.putParamToState = geoOps.Text.putParamToState;
+
+geoOps.Plot = {};
+geoOps.Plot.kind = "Text";
+geoOps.Plot.isMovable = true;
+geoOps.Plot.signature = "**";
+geoOps.Plot.updatePosition = noop;
+geoOps.Plot.initialize = function(el) {
+    geoOps.Text.initialize(el);
+    // Parenthesize expression to avoid modifier injection
+    el.calculation = analyse("plot((" + el.text + "))");
+};
+geoOps.Plot.getText = function(el) {
+    evaluate(el.calculation);
+    return el.text;
+};
+geoOps.Plot.getParamForInput = geoOps.Text.getParamForInput;
+geoOps.Plot.getParamFromState = geoOps.Text.getParamFromState;
+geoOps.Plot.putParamToState = geoOps.Text.putParamToState;
 
 function commonButton(el, event, button) {
     var outer = document.createElement("div");
@@ -20367,6 +23476,12 @@ function commonButton(el, event, button) {
         inlinebox.appendChild(arguments[i]);
     canvas.parentNode.appendChild(outer);
     el.html = arguments[arguments.length - 1];
+    if (!isFiniteNumber(el.fillalpha))
+        el.fillalpha = 1.0;
+    if (el.fillcolor) {
+        el.html.style.backgroundColor =
+            Render2D.makeColor(el.fillcolor, el.fillalpha);
+    }
     var onEvent = scheduleUpdate;
     if (el.script) {
         var code = analyse(el.script);
@@ -20376,21 +23491,49 @@ function commonButton(el, event, button) {
         };
     }
     button.addEventListener(event, onEvent);
+    if (!instanceInvocationArguments.keylistener &&
+        (cscompiled.keydown || cscompiled.keyup || cscompiled.keytyped)) {
+        button.addEventListener("keydown", function(e) {
+            if (e.keyCode === 9 /* tab */ ) return;
+            cs_keydown(e);
+        });
+        button.addEventListener("keyup", function(e) {
+            cs_keyup(e);
+        });
+        button.addEventListener("keypress", function(e) {
+            if (e.keyCode === 9 /* tab */ ) return;
+            cs_keytyped(e);
+        });
+    }
     geoOps.Text.initialize(el);
 }
 
 geoOps.Button = {};
 geoOps.Button.kind = "Text";
 geoOps.Button.signature = "**";
+geoOps.Button.isMovable = true; // not using mouse, only via scripts
 geoOps.Button.updatePosition = noop;
 geoOps.Button.initialize = function(el) {
     var button = document.createElement("button");
     commonButton(el, "click", button);
 };
+geoOps.Button.getParamForInput = geoOps.Text.getParamForInput;
+geoOps.Button.getParamFromState = geoOps.Text.getParamFromState;
+geoOps.Button.putParamToState = geoOps.Text.putParamToState;
+geoOps.Button.set_fillcolor = function(el, value) {
+    if (List._helper.isNumberVecN(value, 3)) {
+        el.fillcolor = value.value.map(function(i) {
+            return i.value.real;
+        });
+        el.html.style.backgroundColor =
+            Render2D.makeColor(el.fillcolor, el.fillalpha);
+    }
+};
 
 geoOps.ToggleButton = {};
 geoOps.ToggleButton.kind = "Text";
 geoOps.ToggleButton.signature = "**";
+geoOps.ToggleButton.isMovable = true; // not using mouse, only via scripts
 geoOps.ToggleButton.updatePosition = noop;
 geoOps.ToggleButton.initialize = function(el) {
     var id = generateId();
@@ -20404,6 +23547,59 @@ geoOps.ToggleButton.initialize = function(el) {
     el.checkbox = checkbox;
     commonButton(el, "change", checkbox, label);
 };
+geoOps.ToggleButton.getParamForInput = geoOps.Text.getParamForInput;
+geoOps.ToggleButton.getParamFromState = geoOps.Text.getParamFromState;
+geoOps.ToggleButton.putParamToState = geoOps.Text.putParamToState;
+geoOps.ToggleButton.set_fillcolor = geoOps.Button.set_fillcolor;
+
+geoOps.EditableText = {};
+geoOps.EditableText.kind = "Text";
+geoOps.EditableText.isMovable = true; // not using mouse, only via scripts
+geoOps.EditableText.signature = [];
+geoOps.EditableText.updatePosition = noop;
+geoOps.EditableText.initialize = function(el) {
+    var textbox = document.createElement("input");
+    textbox.setAttribute("type", "text");
+    textbox.className = "CindyJS-editabletext";
+    if (isFiniteNumber(el.minwidth))
+        textbox.style.width = (el.minwidth - 3) + "px";
+    if (typeof el.text === "string")
+        textbox.value = el.text;
+    textbox.addEventListener("keydown", function(event) {
+        if (event.keyCode === 13) {
+            el.text = el.html.value;
+            textbox.blur();
+        }
+    });
+    textbox.addEventListener("change", function(event) {
+        el.text = el.html.value;
+    });
+    commonButton(el, "change", textbox);
+};
+geoOps.EditableText.getText = function(el) {
+    return false;
+};
+geoOps.EditableText.getParamForInput = geoOps.Text.getParamForInput;
+geoOps.EditableText.getParamFromState = geoOps.Text.getParamFromState;
+geoOps.EditableText.putParamToState = geoOps.Text.putParamToState;
+geoOps.EditableText.set_fillcolor = geoOps.Button.set_fillcolor;
+geoOps.EditableText.get_currenttext = function(el) {
+    return General.string(String(el.html.value));
+};
+
+geoOps.EditableText.get_text = function(el) {
+    return General.string(String(el.text));
+};
+
+geoOps.EditableText.set_currenttext = function(el, value) {
+    el.html.value = el.text = niceprint(value);
+};
+geoOps.EditableText.get_text = geoOps.EditableText.get_text;
+geoOps.EditableText.set_text = geoOps.EditableText.set_currenttext;
+geoOps.EditableText.get_val = geoOps.EditableText.get_text;
+geoOps.EditableText.set_val = geoOps.EditableText.set_currenttext;
+geoOps.EditableText.get_currenttext = geoOps.EditableText.get_currenttext;
+geoOps.EditableText.set_currenttext = geoOps.EditableText.set_currenttext;
 
 function noop() {}
 
@@ -20458,6 +23654,250 @@ geoOps._helper.initializeLine = function(el) {
     return pos;
 };
 
+geoOps.Poly = {};
+geoOps.Poly.kind = "Poly";
+geoOps.Poly.signature = "P*";
+geoOps.Poly.updatePosition = function(el) {
+    el.vertices = List.turnIntoCSList(el.args.map(function(x) {
+        return csgeo.csnames[x].homog;
+    }));
+};
+
+var ifs = null;
+
+geoOps.IFS = {};
+geoOps.IFS.kind = "IFS";
+geoOps.IFS.signature = "**"; // (Tr|Mt)*
+geoOps.IFS.signatureConstraints = function(el) {
+    for (var i = 0; i < el.args.length; ++i) {
+        var kind = csgeo.csnames[el.args[i]].kind;
+        if (kind !== "Tr" && kind !== "Mt")
+            return false;
+    }
+    return el.args.length > 0;
+};
+geoOps.IFS.initialize = function(el) {
+    if (ifs) {
+        ifs.dirty = true;
+        return;
+    }
+    var baseDir = CindyJS.getBaseDir();
+    if (baseDir === false)
+        return;
+    ifs = {
+        dirty: false,
+        params: {
+            generation: 0
+        },
+    };
+    var worker = ifs.worker = new Worker(baseDir + "ifs.js");
+    worker.onmessage = function(msg) {
+        if (ifs.img && typeof ifs.img.close === "function")
+            ifs.img.close();
+        if (isShutDown) return;
+        var d = msg.data;
+        if (d.generation === ifs.params.generation) {
+            if (d.buffer) {
+                if (!ifs.canvas) {
+                    ifs.canvas = document.createElement("canvas");
+                    ifs.ctx = ifs.canvas.getContext("2d");
+                }
+                ifs.canvas.width = d.width;
+                ifs.canvas.height = d.height;
+                var imgSize = d.width * d.height * 4;
+                var imgBytes = new Uint8ClampedArray(
+                    d.buffer, d.imgPtr, imgSize);
+                var imgData = new ImageData(imgBytes, d.width, d.height);
+                ifs.ctx.putImageData(imgData, 0, 0);
+                ifs.img = ifs.canvas;
+            } else {
+                ifs.img = d.img;
+            }
+            scheduleUpdate();
+        } else {
+            ifs.img = null;
+        }
+        if (d.buffer) {
+            worker.postMessage({
+                cmd: "next",
+                buffer: d.buffer
+            }, [d.buffer]);
+        } else {
+            worker.postMessage({
+                cmd: "next",
+            });
+        }
+    };
+    shutdownHooks.push(worker.terminate.bind(worker));
+};
+geoOps.IFS.updatePosition = function(el) {
+    ifs.dirty = true;
+};
+geoOps.IFS.updateParameters = function() {
+    if (!ifs.worker)
+        return; // no worker, nothing we can do
+    var supersampling = 4;
+    var msg = {
+        cmd: "init",
+        generation: ifs.params.generation,
+        width: csw * supersampling,
+        height: csh * supersampling
+    };
+    msg.systems = csgeo.ifs.map(function(el) {
+        var sum = 0;
+        var i;
+        var params = el.ifs || [];
+        var trs = el.args.map(function(name, i) {
+            var p = params[i] || {};
+            return {
+                prob: p.prob || 1,
+                color: p.color || [0, 0, 0]
+            };
+        });
+        for (i = 0; i < trs.length; ++i)
+            sum += trs[i].prob;
+        var scale = List.realMatrix([
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, supersampling]
+        ]);
+        var px2hom = List.productMM(csport.toMat(), scale);
+        for (i = 0; i < el.args.length; ++i) {
+            var trel = csgeo.csnames[el.args[i]];
+            var kind = trel.kind;
+            var tr = trs[i];
+            tr.kind = kind;
+            tr.prob /= sum;
+            if (kind === "Tr") {
+                var mat = List.normalizeMax(List.productMM(
+                    List.adjoint3(px2hom),
+                    List.productMM(trel.matrix, px2hom)));
+                if (!List._helper.isAlmostReal(mat)) {
+                    tr.kind = "cplx";
+                    continue;
+                }
+                tr.mat = mat.value.map(function(row) {
+                    return row.value.map(function(entry) {
+                        return entry.value.real;
+                    });
+                });
+            } else if (kind === "Mt") {
+                // drawingstate matrix as a Möbius transformation
+                // from homogeneous coordinates to pixels
+                var view = csport.drawingstate.matrix;
+                view = {
+                    anti: view.det > 0,
+                    ar: CSNumber.real(view.a),
+                    ai: CSNumber.real(view.c),
+                    br: CSNumber.real(view.tx),
+                    bi: CSNumber.real(-view.ty),
+                    cr: CSNumber.zero,
+                    ci: CSNumber.zero,
+                    dr: CSNumber.real(1 / supersampling),
+                    di: CSNumber.zero
+                };
+                // now compose view * trel * view^{-1}
+                var elLike = {};
+                geoOps._helper.composeMtMt(elLike, trel.moebius, view);
+                view = geoOps._helper.inverseMoebius(view);
+                geoOps._helper.composeMtMt(elLike, view, elLike.moebius);
+                var moeb = elLike.moebius;
+                moeb = List.turnIntoCSList([
+                    moeb.ar,
+                    moeb.ai,
+                    moeb.br,
+                    moeb.bi,
+                    moeb.cr,
+                    moeb.ci,
+                    moeb.dr,
+                    moeb.di
+                ]);
+                if (!List._helper.isAlmostReal(moeb)) {
+                    tr.kind = "cplx";
+                    continue;
+                }
+                moeb = moeb.value;
+                tr.moebius = {
+                    ar: moeb[0].value.real,
+                    ai: moeb[1].value.real,
+                    br: moeb[2].value.real,
+                    bi: moeb[3].value.real,
+                    cr: moeb[4].value.real,
+                    ci: moeb[5].value.real,
+                    dr: moeb[6].value.real,
+                    di: moeb[7].value.real,
+                    sign: trel.moebius.anti ? -1 : 1
+                };
+            }
+        }
+        return {
+            trafos: trs
+        };
+    });
+    if (General.deeplyEqual(msg, ifs.params)) {
+        // console.log("IFS not modified");
+        return;
+    }
+    ++msg.generation;
+    ifs.img = null;
+    ifs.params = msg;
+    ifs.mat = csport.drawingstate.matrix;
+    // console.log(msg);
+    ifs.worker.postMessage(msg);
+};
+geoOps.IFS.probSetter = function(i, el, value) {
+    if (value.ctype === "number") {
+        el.ifs[i].prob = value.value.real;
+        ifs.dirty = true;
+    }
+};
+(function() {
+    for (var i = 0; i < 10; ++i)
+        geoOps.IFS["set_prob" + i] = geoOps.IFS.probSetter.bind(null, i);
+})();
+
+geoOps._helper.snapPointToLine = function(pos, line) {
+    // fail safe for far points
+    if (CSNumber._helper.isAlmostZero(pos.value[2])) return pos;
+    // project point to line - useful for semi free elements
+    var projPos = geoOps._helper.projectPointToLine(pos, line);
+    projPos = List.normalizeZ(projPos);
+
+    var sx = projPos.value[0].value.real;
+    var sy = projPos.value[1].value.real;
+    var rx = Math.round(sx / csgridsize) * csgridsize;
+    var ry = Math.round(sy / csgridsize) * csgridsize;
+    var newpos = List.realVector([rx, ry, 1]);
+    if (Math.abs(rx - sx) < 0.2 && Math.abs(ry - sy) < 0.2 &&
+        CSNumber._helper.isAlmostZero(List.scalproduct(line, newpos))) {
+        pos = geoOps._helper.projectPointToLine(newpos, line);
+    }
+    return pos;
+};
+
+
+var geoAliases = {
+    "CircleByRadius": "CircleMr",
+    "IntersectionCircleCircle": "IntersectCirCir",
+    "IntersectionConicConic": "IntersectConicConic",
+    "FreePoint": "Free",
+    "Orthogonal": "Perp",
+    "Parallel": "Para",
+    "Pole": "PolarOfLine",
+    "Polar": "PolarOfPoint",
+    "Arc": "ArcBy3",
+    "EuclideanMid": "Mid",
+    "AngularBisector": "AngleBisector",
+    "TransformConic": "TransformC",
+    "TransformSegment": "TransformS",
+    "TrMoebiusSegment": "TrMoebiusS",
+    "ReflectCC": "TrMoebiusC",
+    "ReflectCL": "TrMoebiusL",
+    "ReflectCP": "TrMoebiusP",
+    "ReflectCArc": "TrMoebiusArc",
+    "ReflectCS": "TrMoebiusS",
+    "TrMoebiusCircle": "TrMoebiusC"
+};
 
 var geoMacros = {};
 
@@ -20480,79 +23920,9 @@ geoMacros.CircleByFixedRadius = function(el) {
     return [el];
 };
 
-geoMacros.CircleByRadius = function(el) {
-    el.type = "CircleMr";
-    return [el];
-};
-
 geoMacros.IntersectionConicLine = function(el) {
     el.args = [el.args[1], el.args[0]];
     el.type = "IntersectLC";
-    return [el];
-};
-
-geoMacros.IntersectionCircleCircle = function(el) {
-    el.type = "IntersectCirCir";
-    return [el];
-};
-
-geoMacros.IntersectionConicConic = function(el) {
-    el.type = "IntersectConicConic";
-    return [el];
-};
-
-geoMacros.FreePoint = function(el) {
-    el.type = "Free";
-    return [el];
-};
-
-geoMacros.Orthogonal = function(el) {
-    el.type = "Perp";
-    return [el];
-};
-
-geoMacros.Parallel = function(el) {
-    el.type = "Para";
-    return [el];
-};
-
-geoMacros.Pole = function(el) {
-    el.type = "PolarOfLine";
-    return [el];
-};
-
-geoMacros.Polar = function(el) {
-    el.type = "PolarOfPoint";
-    return [el];
-};
-
-geoMacros.Calculation = function(el) {
-    console.log("Calculation stripped from construction");
-    return [];
-};
-
-geoMacros.Arc = function(el) {
-    el.type = "ArcBy3";
-    return [el];
-};
-
-geoMacros.EuclideanMid = function(el) {
-    el.type = "Mid";
-    return [el];
-};
-
-geoMacros.AngularBisector = function(el) {
-    el.type = "AngleBisector";
-    return [el];
-};
-
-geoMacros.TransformConic = function(el) {
-    el.type = "TransformC";
-    return [el];
-};
-
-geoMacros.TransformSegment = function(el) {
-    el.type = "TransformS";
     return [el];
 };
 
@@ -20576,8 +23946,7 @@ geoMacros.Transform = function(el) {
 
     var map = {
         Tr: "Transform",
-        Mt: "TrMoebius",
-        Rc: "ReflectC"
+        Mt: "TrMoebius"
     };
     var op = map[tr.kind] + akind;
     if (geoOps.hasOwnProperty(op)) {
@@ -20599,6 +23968,19 @@ geoMacros.TrReflection = function(el) {
         return [];
     }
 };
+
+geoMacros.TrCompose = function(el) {
+    var op = "TrCompose" + el.args.map(function(name) {
+        return csgeo.csnames[name].kind;
+    }).join("");
+    if (geoOps.hasOwnProperty(op)) {
+        el.type = op;
+        return [el];
+    } else {
+        console.log(op + " not implemented yet");
+        return [];
+    }
+};
 var geoscripts = {};
 // Functions to save and restore geometric state
 
@@ -20606,6 +23988,7 @@ var attributesToClone = [
     //"_traces", // internal
     //"_traces_index", // internal
     //"_traces_tick", // internal
+    "align",
     "alpha",
     "angle", // LineByFixedAngle, may need update once we have inspect
     //"antipodalPoint", // internal, PointOnCircle to OtherPointOnCircle
@@ -20616,6 +23999,7 @@ var attributesToClone = [
     "arrowsides",
     "arrowsize",
     //"behavior", // needs dedicated code
+    //"calculation", // internal
     "clip",
     "color",
     "dashtype",
@@ -20626,6 +24010,8 @@ var attributesToClone = [
     //"endPoint", // output for arc
     //"endpos", // output for segment
     //"farpoint", // output for segment
+    "fillalpha",
+    "fillcolor",
     "filled", // drawgeoarc
     //"homog", // save as pos
     //"incidences", // internal
@@ -20653,6 +24039,7 @@ var attributesToClone = [
     //"startPoint", // output for arc
     //"startpos", // output for segment
     //"stateIdx", // internal
+    "text",
     "text_fontfamily",
     "textbold",
     "textitalics",
@@ -20675,6 +24062,7 @@ function savePos(el) {
     switch (el.kind) {
         case "P":
         case "L":
+        case "Text":
             return unwrap(el.homog);
         case "C":
             var mat = el.matrix.value;
@@ -20701,12 +24089,45 @@ function saveDockingInfo(dock) {
 
 function saveGeoElement(el) {
     var res = {};
+
+    var defel = {
+        pinned: false,
+        movable: true
+    };
+
+    if (el.kind === "P") {
+        pointDefault(defel);
+    }
+    if (el.kind === "L") {
+        lineDefault(defel);
+    }
+    if (el.kind === "C") {
+        lineDefault(defel);
+    }
+    if (el.kind === "S") {
+        segmentDefault(defel);
+    }
+    if (el.kind === "Text") {
+        textDefault(defel);
+    }
+    if (el.kind === "Poly") {
+        polygonDefault(defel);
+    }
+
+
     attributesToClone.forEach(function(key) {
         if (!el.hasOwnProperty(key)) return;
         var val = General.unwrap(el[key]);
-        if (val !== null && val !== undefined)
+        var defval = General.unwrap(defel[key]);
+        if (val !== null && val !== undefined && val !== defval && JSON.stringify(val) !== JSON.stringify(defval)) {
             res[key] = val;
+        }
+
     });
+    if (el.kind === "P" && (!el.movable || el.pinned) && res.color) {
+        var undim = CSNumber.real(1 / defaultAppearance.dimDependent);
+        res.color = General.unwrap(List.scalmult(undim, el.color));
+    }
     var pos = savePos(el);
     if (pos) res.pos = pos;
     if (el.dock) res.dock = saveDockingInfo(el.dock);
@@ -20835,10 +24256,11 @@ function csinitphys(behavs) {
 }
 
 
-lab.tick = function() {
-
-    for (var i = 0; i < labObjects.env.accuracy; i++) {
-        lab.tick1(labObjects.env.deltat / labObjects.env.accuracy);
+lab.tick = function(deltat) {
+    deltat = deltat / simaccuracy;
+    for (var i = 0; i < simaccuracy; i++) {
+        lab.tick1(deltat);
+        simtime += deltat;
         cs_simulationstep();
     }
 };
@@ -21698,7 +25120,7 @@ labObjects.Spring = {
             beh.l0 = (Math.sqrt((pta.x - ptb.x) * (pta.x - ptb.x) + (pta.y - ptb.y) * (pta.y - ptb.y)));
         }
         beh.env = labObjects.env; //TODO Environment
-
+        beh.ldiff = 0;
 
     },
 
@@ -21739,6 +25161,7 @@ labObjects.Spring = {
         var l = (Math.sqrt((xa - xb) * (xa - xb) + (ya - yb) * (ya - yb)));
 
         var lact = beh.l0; //TODO Motor
+        beh.ldiff = l - lact;
         var mytype = beh.stype;
 
         if (mytype === 1) {
@@ -21972,8 +25395,8 @@ labObjects.Environment = {
         if (typeof(beh.gravity) === 'undefined') beh.gravity = 0;
         if (typeof(beh.friction) === 'undefined') beh.friction = 0;
         if (typeof(beh.springstrength) === 'undefined') beh.springstrength = 1;
-        if (typeof(beh.accuracy) === 'undefined') beh.accuracy = 10;
-        if (typeof(beh.deltat) === 'undefined') beh.deltat = 0.3;
+        if (typeof(beh.accuracy) !== 'undefined') simaccuracy = beh.accuracy;
+        if (typeof(beh.deltat) !== 'undefined') setSpeed(beh.deltat / 0.6);
         if (typeof(beh.charges) === 'undefined') beh.charges = false;
         if (typeof(beh.balls) === 'undefined') beh.balls = false;
         if (typeof(beh.newton) === 'undefined') beh.newton = false;
@@ -21982,7 +25405,6 @@ labObjects.Environment = {
         beh.errorbound = 0.001;
         beh.lowestdeltat = 0.0000001;
         beh.slowdownfactor = 2;
-
 
     },
 
@@ -22098,7 +25520,7 @@ labObjects.Environment = {
             var m = masses[i];
 
             m.behavior.fx += 0;
-            m.behavior.fy += -beh.gravity;
+            m.behavior.fy += -beh.gravity * m.behavior.mass;
             m.behavior.fz += 0;
 
 
@@ -22136,4 +25558,4 @@ labObjects.Environment = {
         typeof module.exports !== "undefined" &&
         typeof window === "undefined")
         module.exports = CindyJS;
-//# sourceMappingURL=Cindy.js.map
+//# sourceMappingURL=Cindy.plain.js.map

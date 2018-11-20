@@ -11,6 +11,21 @@
 </head>
 <body>
 <div class="app-fixedsize">
+  <script id="app_cinderella_04_cssimulationstep" type="text/x-cindyscript">
+  if(pressed2,
+    if(simulationtime()>lastsimulationtime+.008,
+      lastsimulationtime = simulationtime();
+      if(l_1!=C.xy,
+        l=[C.xy]++l;
+      );
+
+      if(length(l)>n,
+      l=apply(1..(length(l)-1),l_#);
+      );
+    );
+);
+
+  </script>
   <script id="app_cinderella_04_csdraw" type="text/x-cindyscript">
  if(pressed1,
 B.pinned=true;
@@ -45,14 +60,6 @@ drawtext(button2_1+(3,.5),international("TRACE"),color->(1,1,1),size->34, align-
 draw(F,G, arrow->true,size->7,color->(1,1,1));
 
 if(pressed2,
-n=300;
-if(l_1!=C.xy,
-  l=[C.xy]++l;
-);
-
-if(length(l)>n,
-l=apply(1..(length(l)-1),l_#);
-);
 
 forall(reverse(1..length(l)),
 r=exp(-#*.01)*0.4;
@@ -70,7 +77,7 @@ oldc=C.xy;
   <script id="app_cinderella_04_csmousedown" type="text/x-cindyscript">
 mpo=mouse().xy;
 if(mpo.x>button1_1_1 & mpo.x<button1_2_1 & mpo.y>button1_1_2 & mpo.y<button1_3_2,
-if(pressed1,stopanimation(),playanimation());
+if(pressed1,stopanimation(),lastsimulationtime = 0; l=[]; playanimation());
 pressed1=!pressed1);
 if(mpo.x>button2_1_1 & mpo.x<button2_2_1 & mpo.y>button2_1_2 & mpo.y<button2_3_2,pressed2=!pressed2);
 
@@ -87,11 +94,11 @@ oldb=B.xy;
 oldc=C.xy;
 
 
-
-
+n=300;
+lastsimulationtime = 0;
 
 reset():=(
-
+lastsimulationtime = 0;
 stopanimation();
 A.homog=(4, -2.40740, 0.462962);
 B.homog=(8, 4, 1);
@@ -107,7 +114,7 @@ pause():=(
   pauseanimation();
 );
 resume():=(
-  if(pressed1, playanimation(););
+  if(pressed1, lastsimulationtime = 0; l=[]; playanimation(););
 );
 
 </script>

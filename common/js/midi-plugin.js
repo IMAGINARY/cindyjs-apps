@@ -2,9 +2,12 @@
 CindyJS.registerPlugin(1, "midi", function(api) {
     "use strict";
 
-    //var soundfont = CindyJS.getBaseDir() + "soundfont/";
-   // var soundfont = "http://cindyjs.org/extras/midi-js-soundfonts/MusyngKite/";
-    var soundfont = "../common-music/sf/MusyngKite/";
+    var soundfont = CindyJS.getBaseDir() + "soundfonts/";
+    //var soundfont = "http://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/";
+    //var soundfont = "http://cindyjs.org/extras/midi-js-soundfonts/MusyngKite/";
+    
+    
+    console.log(soundfont);
 
     var midijsStatus = -2; // wait for two scripts to load
 
@@ -27,78 +30,6 @@ CindyJS.registerPlugin(1, "midi", function(api) {
         /* 14: */ 17, // Perc Organ
         /* 15: */ 65, // Alto Sax
     ];
-
-//DRUMSET
-/*
-27 Deep Bass
-28 Shot 
-29 Deep Wush
-
-30 Deep Ratsch
-31 Click
-32 Hollow Click
-33 High Click
-34 Pling
-35 Bass Drum 2  
-36 Bass Drum 1  
-37 Side Stick   
-38 Snare Drum 1 
-39 Hand Clap    
-
-40 Snare Drum 2 
-41 Low Tom 2    
-42 Closed Hi-hat
-43 Low Tom 1    
-44 Pedal Hi-hat 
-45 Mid Tom 2    
-46 Open Hi-hat      
-47 Mid Tom 1    
-48 High Tom 2   
-49 Crash Cymbal 1   
-
-50 High Tom 1   
-51 Ride Cymbal 1
-52 Chinese Cymbal
-53 Ride Bell
-54 Tambourine
-55 Splash Cymbal
-56 Cowbell
-57 Crash Cymbal 2
-58 Vibra Slap   
-59 Ride Cymbal 2
-
-60 High Bongo   
-61 Low Bongo    
-62 Mute High Conga
-63 Open High Conga
-64 Low Conga    
-65 High Timbale 
-66 Low Timbale  
-67 High Agogo   
-68 Low Agogo    
-69 Cabs 
-
-70 Maracas
-71 Short Whistle
-72 Long Whistle
-73 Short Guiro
-74 Long Guiro
-75 Claves
-76 High Wood Block
-77 Low Wood Block
-78 Mute Cuica
-79 Open Cuica
-
-80 Mute Triangle
-81 Open Triangle
-82 Maracash (Egg)
-83 Sleigh bells
-84 Chime rain
-85 Kastagnette
-86 Deep Drum
-87 Very Deep Drum
-*/
-
 
     var instrumentStatus = [];
 
@@ -383,7 +314,7 @@ CindyJS.registerPlugin(1, "midi", function(api) {
     });
 
     function playMelody(t0, melody) {
-        var melodyStartTime = t0;
+        melodyStartTime = t0;
         var maxChunk = 20;
         if (melody.length > maxChunk) {
             var delta = (melody[maxChunk].time + t0 - MIDI.now()) * 1000 - 200;
