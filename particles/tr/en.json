@@ -1,6 +1,6 @@
 {
-  "charge": "charge",
-  "radius": "radius",
-  "temp": "temperature",
-  "frict": "friction"
+  "charge": "Charge",
+  "radius": "Radius",
+  "temp": "Temperature",
+  "frict": "Friction"
 }
