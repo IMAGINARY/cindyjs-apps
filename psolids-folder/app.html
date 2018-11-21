@@ -187,8 +187,8 @@ if(F.y>=D.y,F.xy=D.xy);
 if(F.y<=E.y,F.xy=E.xy);
 
 allthedrawing();
-drawimage(B,"image5",scale->2.5);
-drawimage(B1,"image6",scale->2.5);
+drawimage(B+(0,0.4),"image5",scale->0.5);
+drawimage(B1+(0,-0.5),"image6",scale->0.5);
 </script>
 <script id="cstick" type="text/x-cindyscript">
  wx=wx*0.998;
@@ -1039,7 +1039,7 @@ drawtext((17,5),international("Hexa"),size->30,color->colchoice(2));
 drawtext((17,3.5),international("Icosa"),size->30,color->colchoice(3));
 drawtext((17,2),international("Dodeca"),size->30,color->colchoice(4));
 
-drawtext((16.1,-10.4),international("Fold"),size->30,color->colchoice(7));
+drawtext((17.3,-10.4),international("Fold"),size->30,color->colchoice(7),align->"mid");
 
 
 drawtext((-4,-12),international("Move"),color->(1,1,1),align->"center",size->26,family->"Arial");
