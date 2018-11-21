@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+            <title>Cindy JS</title>
+    <script type="text/javascript" src="../../build/js/Cindy.js"></script>
+    <script type="text/javascript" src="../../build/lang.js"></script>
+            <script type="text/javascript" src="Languages.js"></script>
+                
+            </head>
+    
+	<body style="font-family:Arial;margin:0">
+
+                     <script id='csmousedown' type='cindyscript'>
+                       feed=mouse().x<10;
+                               </script>
+
+               <script id='csmouseup' type='cindyscript'>
+               feed=false;
+        </script>
+
+               <script id='csinit' type='cindyscript'>
+                use("lang");
+
+                              feed=false;
+
+               pts=allmasses()--[K,L,J];
+pts=select(pts,(#.size)<9);
+apply(pts,#:"vold"=#.v);
+
+      sizes=apply(pts,random()*.9+.8);
+      colors=apply(pts,random());
+      
+        </script>
+        
+<script id='csdraw' type='cindyscript'>
+fillpolygon([[-10,-10],[-10,10],[10.5,10],[10.5,-10]],color->(.8,1,1));
+          x=S.x;
+          if(x<S1.x,x=S1.x);
+          if(x>S2.x,x=S2.x);
+          S.xy=(x,S1.y);
+          
+          x=R.x;
+          if(x<R1.x,x=R1.x);
+          if(x>R2.x,x=R2.x);
+          R.xy=(x,R1.y);
+          
+          x=T.x;
+          if(x<T1.x,x=T1.x);
+          if(x>T2.x,x=T2.x);
+          T.xy=(x,T1.y);
+       
+          x=U.x;
+          if(x<U1.x,x=U1.x);
+          if(x>U2.x,x=U2.x);
+          U.xy=(x,U1.y);
+       
+others=|S,S1|/|S1,S2|;
+dirothers=|R,R1|/|R1,R2|;
+anz=round(|T,T1|/|T1,T2|*14)+1;
+
+mspeed=|U,U1|/|U1,U2|*.5+.1;
+
+pts=allmasses();
+pts=select(pts,(#.size)<9);
+
+n=10;
+nn=anz;
+s1=others*1;
+s2=dirothers*1;
+s=sum(pts,#.xy);
+forall(pts,m,
+   vold=m.v;
+   sorted=sort(pts,abs(m.xy-#.xy));  
+ 
+   near=sorted_(2..(nn));
+   numb=length(near);
+  // if(Text0.pressed,
+  //   apply(near,draw(#,m,color->(1,1,0)));
+  // );
+   if(numb!=0, 
+     mid=sum(near,#.xy)/(numb);
+     speed=sum(near,#.v)/(numb),
+     mid=m.xy;
+     speed=(0,0);
+   );
+
+  // if((isreal(speed_1)&isreal(speed_2)),     
+   if(true,     
+     m.v=m.v+s1*(mid-m.xy);
+     m.v=m.v+s2*speed;
+     middir=(B+C+D+E)/4-m.xy;
+     m.v=m.v+middir*0.02;
+     if(feed,
+       m.v=m.v+(mouse().xy-m.xy);
+     
+     );
+     m.color=hue(|m.v|);
+     m.v=m.v/|m.v|*mspeed*3;
+  );
+//vold=m:"vold";
+
+//   if(true,
+//    vold=vold/|vold|;
+//    errc(vold);
+//    vnew=m.v;
+//    l=((vnew*vold+1)/2)^2;
+//    l=max(l,.3);
+//    vv= l*vnew+(1-l)*vold;
+//    m.v=vv/|vv|;
+//   );
+//m:"vold"=m.v;
+);
+
+
+
+nn=length(pts);
+forall(1..nn,p=pts_#;
+ang=arctan2(p.vx,-p.vy);
+drawimage(p,"fishr",angle->ang,scale->sizes_#*.6,alpha->colors_#);
+drawimage(p,"fishb",angle->ang,scale->sizes_#*.6,alpha->1-colors_#);
+//draw(p,p-p.v,color->(0,0,0));
+//fillcircle(p,.3,color->hue(|p.v|*.2));
+//drawcircle(p,.3,color->(0,0,0));
+);
+//X.xy=[4,3];
+//Y.xy=[-5,4];
+//Z.xy=[5,-4];
+K.v=(0,0);
+J.v=(0,0);
+L.v=(0,0);
+
+drawtext(S1+(.0,-1.2),trans("pos"),size->18);
+drawtext(S+(0,.7),format(others,2),size->16);
+
+drawtext(R1+(.0,-1.2),trans("dir"),size->18);
+drawtext(R+(0,.7),format(dirothers,2),size->16);
+
+drawtext(T1+(.0,-1.2),trans("neighbours"),size->18);
+drawtext(T+(0,.7),format(anz,0),size->16);
+
+drawtext(U1+(.0,-1.2),trans("speed"),size->18);
+
+draw((10.5,-10),(10.5,10),color->(0,0,0),size->2);
+draw((-10,-10),(-10,10),color->(0,0,0),size->2);
+draw((-10,-10),(10.5,-10),color->(0,0,0),size->2);
+
+        </script>
+
+
+
+        <canvas  id="CSCanvas"   ></canvas>
+
+
+        <script type="text/javascript">
+            nn=30;
+            b=10;
+            var gslp=[
+                      {name:"B", type:"Free", pos:[-b,b],color:[0,0,0],size:3,pinned:true,visible:false},
+                      {name:"C", type:"Free", pos:[-b,-b],color:[0,0,0],size:3,pinned:true,visible:false},
+                      {name:"D", type:"Free", pos:[b,-b],color:[0,0,0],size:3,pinned:true,visible:false},
+                      {name:"E", type:"Free", pos:[b,b],color:[0,0,0],size:3,pinned:true,visible:false},
+                      {name:"K", type:"Free", pos:[-6,-2],color:[.7,.7,1],size:13,narrow:40},
+                      {name:"J", type:"Free", pos:[4,3],color:[.7,.7,1],size:13,narrow:40},
+                      {name:"L", type:"Free", pos:[-2,7],color:[.7,.7,1],size:13,narrow:40},
+
+                      
+    {name:"S1", type:"Free", pos:[11+2,6],color:[0,0,0],pinned:true,size:1},
+    {name:"S2", type:"Free", pos:[16+2,6],color:[0,0,0],pinned:true,size:1},
+    {name:"S", type:"Free", pos:[12.5+2,6],color:[0,0,0],pinned:false,size:6,narrow:40},
+    {name:"l", type:"Segment", args:["S1","S2"],color:[0,0,0],pinned:false,size:2},
+   {name:"R1", type:"Free", pos:[11+2,2],color:[0,0,0],pinned:true,size:1},
+    {name:"R2", type:"Free", pos:[16+2,2],color:[0,0,0],pinned:true,size:1},
+    {name:"R", type:"Free", pos:[12+2,2],color:[0,0,0],pinned:false,size:6,narrow:40},
+    {name:"m", type:"Segment", args:["R1","R2"],color:[0,0,0],pinned:false,size:2},
+   {name:"T1", type:"Free", pos:[11+2,-3],color:[0,0,0],pinned:true,size:1},
+    {name:"T2", type:"Free", pos:[16+2,-3],color:[0,0,0],pinned:true,size:1},
+    {name:"T", type:"Free", pos:[12.5+2,-3],color:[0,0,0],pinned:false,size:6,narrow:40},
+    {name:"o", type:"Segment", args:["T1","T2"],color:[0,0,0],pinned:false,size:2},
+
+   {name:"U1", type:"Free", pos:[11+2,-7],color:[0,0,0],pinned:true,size:1},
+    {name:"U2", type:"Free", pos:[16+2,-7],color:[0,0,0],pinned:true,size:1},
+    {name:"U", type:"Free", pos:[12.5+2,-7],color:[0,0,0],pinned:false,size:6,narrow:40},
+    {name:"r", type:"Segment", args:["U1","U2"],color:[0,0,0],pinned:false,size:2},
+
+                      {name:"a", type:"Segment", args:["B","C"],color:[0,0,0],size:1 ,visible:false},
+                      {name:"b", type:"Segment", args:["C","D"],color:[0,0,0],size:1,visible:false },
+                      {name:"c", type:"Segment", args:["D","E"],color:[0,0,0],size:1 ,visible:false},
+                      {name:"d", type:"Segment", args:["E","B"],color:[0,0,0],size:1 ,visible:false}
+                    
+
+
+                      
+                    ];
+                    
+    for(var i=0;i<nn;i++){
+    gslp.push(
+              {name:"A"+i, type:"Free", 
+              pos:[(Math.random()-.5)*14,(Math.random()-.5)*14],
+              color:[1,.5,.5],size:.1,visible:false}
+              )
+    
+};
+            var physics=[
+                       {behavior:{type:"Environment",gravity:0,
+                       accuracy:10,deltat:0.2,
+                       balls:false,charges:true,friction:0}},
+
+                       {name:"a", behavior:{type:"Bouncer"}},
+                       {name:"b", behavior:{type:"Bouncer"}},
+                       {name:"c", behavior:{type:"Bouncer"}},
+                       {name:"d", behavior:{type:"Bouncer"}},
+                       {name:"K", behavior:{type:"Mass",charge:1,fixed:true}},
+                       {name:"L", behavior:{type:"Mass",charge:1,fixed:true}},
+                       {name:"J", behavior:{type:"Mass",charge:1,fixed:true}},
+                       ];
+                       
+                       
+for(var i=0;i<nn;i++){
+    physics.push(
+              {name:"A"+i, behavior:{
+              type:"Mass",
+              vx:Math.random()-.5,
+              vy:Math.random()-.5,
+              charge:1.2},
+              } 
+              )
+    
+};
+
+
+
+
+var cdy = CindyJS({
+  scripts: "cs*",
+  plugins:["lang"],
+  defaultAppearance: {
+    dimDependent: 0.7,
+    fontFamily: "sans-serif",
+    lineSize: 1,
+    pointSize: 5.0,
+    textsize: 12.0
+  },
+  angleUnit: "°",
+  geometry:gslp,
+  behavior:physics,
+  images:{fishr:"fish/fishr.png",
+  fishb:"fish/fishb.png",
+  water:"Water.png",
+
+},
+
+  animation: {
+    autoplay: true,
+    controls: false,
+    speed: 0.5,
+    speedRange: [0.0, 1.0],
+    accuracy: 1
+  },
+  autoplay: true,
+  animcontrols: false,
+  ports: [{
+    id: "CSCanvas",
+    width: 1136,
+    height: 640,
+    transform: [{visibleRect: [-15,-10,20,10]}],
+    background: "rgb(255,255,255)"
+  }],
+  csconsole: false,
+  cinderella: {build: 1901, version: [2, 9, 1901]}
+});
+
+
+
+        </script>
+   
+
+	</body>
+</html>
