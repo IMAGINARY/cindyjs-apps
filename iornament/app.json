@@ -1,7 +1,7 @@
 {
   "id": "iornament",
   "version": "1.4.0",
-  "main": "app.html",
+  "main": "index.html",
   "name": {
     "en": "iOrnament",
     "de": "iOrnament",
