@@ -1022,13 +1022,13 @@ drawtext(P-(0,.7),align->"center",dirs_6,color->(1,1,1),size->10);
 
 
 text="";
-if(choice==1,text="Volle Würfelsymmetrie (Granat)");
-if(choice==3,text="Würfel mit 2-symmetrischen Seiten (Pyrit)");
-if(choice==2,text="Tetraedersymmetrie");
-if(choice==4,text="Drei senkrechte Spiegelachsen");
-if(choice==5,text="Hexagonale Symmetrie (Quartz)");
-if(choice==6,text="Quasikristalline Struktur");
-drawtext((8.5,-11.5),text,color->(1,1,1),size->14);
+if(choice==1,text=international("VOLLE_WURFEL"));
+if(choice==3,text=international("WURFEL_2_SEITEN"));
+if(choice==2,text=international("TETRAEDER"));
+if(choice==4,text=international("3_SENKRECHTE"));
+if(choice==5,text=international("HEXAGONALE"));
+if(choice==6,text=international("QUASI"));
+drawtext((15,-11.5),text,color->(1,1,1),size->14,align->"mid");
 
 
 mark(val,col):=(
@@ -1155,8 +1155,21 @@ dragging=|mouse().xy,C|>.3 & |mouse().xy,F|>.3& |mouse().xy,K|>.3&
 ;
 </script>
 <script type="text/javascript">
-  var cdy = CindyJS({
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  var cdy = createCindy({
     scripts: "cs*",
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations,
     defaultAppearance: {
       dimDependent: 0.7,
       fontFamily: "sans-serif",
