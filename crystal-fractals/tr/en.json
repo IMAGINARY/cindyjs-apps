@@ -1,7 +1,6 @@
 {
-  "Alpha": "opacity",
-  "Persp": "perspective",
-  "Iter": "iteration depth",
-  "Displace": "displacement",
-  "Move": "move object with your finger"
+  "Alpha": "Opacity",
+  "Persp": "Perspective",
+  "Iter": "Iteration depth",
+  "Displace": "Displacement"
 }
