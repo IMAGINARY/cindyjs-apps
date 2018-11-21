@@ -1,20 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Platonische Körper</title>
-  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
-  <script type="text/javascript" src="../common/js/quickhull3d/quickhull3d.nocache.js"></script>
-  <script type="text/javascript" src="../common/js/Cindy.js"></script>
-  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
-</head>
-<body>
-  <script id="csmouseup" type="text/x-cindyscript">
+    <meta charset="UTF-8">
+<link rel="StyleSheet"  href="../widget.css" type="text/css" />
+    <title>Schachteln15.cdy</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #CSConsole {
+            background-color: #FAFAFA;
+            border-top: 1px solid #333333;
+            bottom: 0px;
+            height: 200px;
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+        <script type="text/javascript" src="../../build/js/quickhull3d/quickhull3d.nocache.js"></script>
+
+    <script type="text/javascript" src="../../build/js/Cindy.js"></script>
+    <script type="text/javascript" src="Languages.js"></script>
+    <script id="csmouseup" type="text/x-cindyscript">
 
 if(|(wx,wy)|>=0.08,
   playanimation(),
-  pauseanimation();stopanimation();
+  pauseanimation();stopanimation(); 
 )
 ;
 
@@ -74,12 +88,12 @@ if(|xx|<13,
 
 
 
- pauseanimation();stopanimation();
+ pauseanimation();stopanimation(); 
 
 );
 )
 ;
- if(dragging&false,
+ if(dragging&false, 
 
  xx=mouse().x;
  yy=mouse().y;
@@ -120,10 +134,10 @@ starty=yy;
 
 
 </script>
-  <script id="csdraw" type="text/x-cindyscript">
+<script id="csdraw" type="text/x-cindyscript">
 
-//fillpoly(((-100,-100),(-14,-100),(-14,100),(-100,100)),color->(1,1,1)*.2);
-//fillpoly(((100,-100),(14,-100),(14,100),(100,100)),color->(1,1,1)*.2);
+//fillpoly(((-100,-100),(-14,-100),(-14,100),(-100,100)),color->(1,1,1)*.2);  
+//fillpoly(((100,-100),(14,-100),(14,100),(100,100)),color->(1,1,1)*.2);  
 //clrscr();
 Dummy.xy=(0,0);
 if(S.x>=R.x,S.xy=R.xy);
@@ -205,9 +219,9 @@ fillpoly((
 
 );
 
-drawtext(Q+(-.7,6.6),international("REMOVE_OUTER"),size->30,color->(1,1,1));
-drawtext(Q+(-.7,1.9),international("REMOVE_INNER"),size->30,color->(1,1,1));
-drawtext(Q+(-.7,-.9),international("PERSPECTIVE"),size->30,color->(1,1,1));
+drawtext(Q+(-.7,6.6),international("Outer"),size->30,color->(1,1,1));
+drawtext(Q+(-.7,1.9),international("Inner"),size->30,color->(1,1,1));
+drawtext(Q+(-.7,-.9),international("Persp"),size->30,color->(1,1,1));
 
 highlight(but):= connect(
     (
@@ -284,7 +298,7 @@ if(length(sequenz)==1,dehighlight(DelOut);dehighlight(DelIn));
 
 ;
 </script>
-  <script id="cstick" type="text/x-cindyscript">
+<script id="cstick" type="text/x-cindyscript">
  wx=wx*0.998;
  wy=wy*0.998;
 
@@ -338,7 +352,7 @@ mat=mmmx*mmmy*mat;
 
 ;
 </script>
-  <script id="csmousedown" type="text/x-cindyscript">
+<script id="csmousedown" type="text/x-cindyscript">
 dragging=false;
 if(|mouse().x|<13,
  startx=mouse().x;
@@ -365,10 +379,10 @@ presspos=mouse().xy;
 
 ;
 </script>
-  <script id="csmousedrag" type="text/x-cindyscript">
+<script id="csmousedrag" type="text/x-cindyscript">
 if(|mouse().x|<13,
 
-if(dragging,
+if(dragging, 
 
 xx=mouse().x;
 yy=mouse().y;
@@ -411,7 +425,7 @@ starty=yy;
 
 
 </script>
-  <script id="csinit" type="text/x-cindyscript">
+<script id="csinit" type="text/x-cindyscript">
 
 
 
@@ -448,7 +462,7 @@ scal=0.15;
 init=0;
 
 
-mat=[
+mat=[ 
   [1,0,0],
   [0,1,0],
   [0,0,1]
@@ -510,14 +524,14 @@ renderLine(po,depth,col,siz):=(
 
  ptest=(pol_1+pol_2)/2;
 //rr=|ptest|^2;
-//zz=ptest_3;
+//zz=ptest_3; 
 //if(rr/dist>zz,col=(1,1,1));
  po1=pol_1;
  po2=pol_2;
  ll=|po1,po2|;
  if(ll>0,
   dd1=1/ll*1.4*size1;
-  dd2=1/ll*1.4*size2;
+  dd2=1/ll*1.4*size2; 
 
   pb1=(dd2*po1+(1-dd2)*po2);
   pb2=(dd1*po2+(1-dd1)*po1);
@@ -535,12 +549,12 @@ renderLine(po,depth,col,siz):=(
   if(|dis1|<600&|dis2|<600&dis1>0&dis2>0,
   if(col_2<col_3&false,
 
-   draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->(0,0,0),size->8*sipre,alpha->1);
+   draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->(0,0,0),size->8*sipre,alpha->1); 
 //   draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->col*bb*.3,size->7*sipre,alpha->1,dashing->5);
 //   draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->col*bb*.8,size->6*sipre,alpha->1,dashing->5);
    draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->col*bb,size->4*sipre,alpha->1,dashing->5);
    ,
-   draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->(0,0,0),size->8*sipre,alpha->1);
+   draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->(0,0,0),size->8*sipre,alpha->1); 
    draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->col*bb*.5,size->7*sipre,alpha->1);
    draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->col*bb*.8,size->6*sipre,alpha->1);
    draw((pb1_1,pb1_2)*dis1,(pb2_1,pb2_2)*dis2,color->col*bb,size->4*sipre,alpha->1);
@@ -583,7 +597,7 @@ pp=pol;
   nn=cross(bb-aa,bb-cc);
   nn=nn/abs(nn);
   rgb=ambient;
-
+ 
   forall(lights,(
       shade=-sin(nn*#_1);
       if(nn*#_1>0,shade=0);
@@ -662,24 +676,24 @@ render3d():=(
 
    renderlist=
    apply(objects,ll,
-     [ll_1,center(ll_1)_3,ll_2,ll_3]
-   );
+     [ll_1,center(ll_1)_3,ll_2,ll_3]   
+   );  
    init=1;
   ,
    ii=1;
    forall(objects,ll,
      (renderlist_ii)_2=center(renderlist_ii_1)_3;
      ii=ii+1;
-   );
+   );    
   );
   rl=sort(renderlist,depthfun(#));
 
   forall(rl,pol,
       if(edges&length(pol_1)==2,
-       renderLine(pol_1,pol_2,pol_3,pol_4)
+       renderLine(pol_1,pol_2,pol_3,pol_4)   
       );
       if(length(pol_1)==1,
-       renderPoint(pol_1,pol_2,pol_3,pol_4)
+       renderPoint(pol_1,pol_2,pol_3,pol_4)   
       );
   );
 // drawfronthull();
@@ -838,7 +852,7 @@ reset():=(
  list=[];
  objects=[];
  count=1;
- celllist=[];
+ celllist=[]; 
 );
 
 
@@ -908,7 +922,7 @@ cell20=(definepoly(cell20),(.8,0,0),4.7);
 
 
 
-//erzeugt listen:
+//erzeugt listen: 
 //ptoints ==> Liste aller beteiligten Atome
 //sizes ==> Liste der Atomgrößen
 //pr ==> Liste zu rendernden Kanten und Punkte
@@ -957,7 +971,7 @@ createsplit(i,j):=(
        segstmp=segstmp++[s]
      ,
        ptstmp=ptstmp++pp;
-       nn=nn+1;
+       nn=nn+1;        
        segstmp=segstmp++[[s_1,nn],[s_2,nn]]
      );
   );
@@ -990,7 +1004,7 @@ addcell(next,count):=(
  );
  addcell(cells_next,siz,count);
  cur=next;
- depth=depth*.8;
+ depth=depth*.8; 
 );
 
 
@@ -1026,299 +1040,294 @@ javascript("loaded()");
 
 </script>
 
-  <script type="text/javascript">
-    var data = {
-      "background": "rgb(0,0,0)",
-      "geometry": [
-        {
-          "name": "Q",
-          "type": "Free",
-          "pos": [
-            -19.5,-1.2
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "visible": false,
-          "labeled": true,
-          "pinned": true
-
-        },
-        {
-          "name": "R",
-          "type": "Free",
-          "pos": [
-            -15,-1.2
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "visible": false,
-          "labeled": true,
-          "pinned": true
-
-        },
-        {
-          "name": "a",
-          "type": "Segment",
-          "pos": [
-            0.0,
-            3.225806451612903,
-            4.0
-          ],
-          "color": [
-            1.0,
-            1.0,
-            1.0
-          ],
-          "args": [
-            "Q",
-            "R"
-          ],
-          "size": 3
-        },
-        {
-          "name": "S",
-          "type": "PointOnLine",
-          "pos": [
-            4.0,
-            0.3131313111544739,
-            -0.25252525093102735
-          ],
-          "color": [
-            1.0,
-            1.0,
-            1.0
-          ],
-          "args": [
-            "a"
-          ],
-          "size": 4.0,
-          "narrow":true
-        },
-        {
-          "name": "C4",
-          "type": "Free",
-          "pos": [
-            17,8
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "plane": 1,
-          "pinned": true,
-          "visible":false
-        },
-        {
-          "name": "C6",
-          "type": "Free",
-          "pos": [
-            17,3.5
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "plane": 1,
-          "pinned": true,
-          "visible":false
-
-        },
-        {
-          "name": "C8",
-          "type": "Free",
-          "pos": [
-            17,-1
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "plane": 1,
-          "pinned": true,
-          "visible":false
-
-        },
-        {
-          "name": "C12",
-          "type": "Free",
-          "pos": [
-            17,-5.5
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "plane": 1,
-          "pinned": true,
-          "visible":false
-
-        },
-        {
-          "name": "C20",
-          "type": "Free",
-          "pos": [
-            17,-10
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "plane": 1,
-          "pinned": true,
-          "visible":false
-
-        },
-        {
-          "name": "DelOut",
-          "type": "Free",
-          "pos": [
-            -18,8
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "pinned": true,
-          "visible":false
-
-        },
-        {
-          "name": "DelIn",
-          "type": "Free",
-          "pos": [
-            -18,3.2
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "pinned": true,
-          "visible":false
-
-        },
-        {
-          "name": "NoEdges",
-          "type": "Free",
-          "pos": [
-            -18,-5.5
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "pinned": true,
-          "visible":false
-
-        },
-        {
-          "name": "YesEdges",
-          "type": "Free",
-          "pos": [
-            -18,-10
-
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "pinned": true,
-          "visible":false
-
-        },
-        {
-          "name": "Dummy",
-          "type": "Free",
-          "pos": [
-            0.0,
-            0.355889724310776,
-            -0.2506265664160401
-          ],
-          "color": [
-            1.0,
-            0.0,
-            0.0
-          ],
-          "pinned": false,
-          "visible":false
-        }
+    <script type="text/javascript">
+            var data = {
+  "background": "rgb(0,0,0)",
+  "geometry": [
+    {
+      "name": "Q",
+      "type": "Free",
+      "pos": [
+         -19.5,-1.2
 
       ],
-      "height": 768,
-      "originX": 510.0,
-      "originY": 406.0,
-      "scale": 26,
-      "scripts": {},
-      "width": 1024
-    };
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "visible": false,
+      "labeled": true,
+            "pinned": true
 
-    var ready = createCindy.waitFor('i18n');
-    var translations = {};
-    IMAGINARY.i18n.init().then(function(lang){
-      translations[lang] = IMAGINARY.i18n.getStrings();
-      ready();
-    }).catch(function(err){
-      console.log("Error loading translation: " + err);
-      throw err;
-    });
+    },
+    {
+      "name": "R",
+      "type": "Free",
+      "pos": [
+         -15,-1.2
 
-    cdy=createCindy({
-      language: IMAGINARY.i18n.getLang(),
-      translations: translations,
-      ports: [{
-        id: "CSCanvas",
-        width: 1920,
-        height: 1080,
-        transform: [{visibleRect: [-18, 10.5, 17, -12.5]}],
-        background: "rgb(0,0,0)"
-      }],
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "visible": false,
+      "labeled": true,
+            "pinned": true
 
-      scripts: "cs*",
-      defaultAppearance: {
-      },
-      geometry: data.geometry,
-      images:{
-        image11:"img/image-11.png",
-        image12:"img/image-12.png",
-        image13:"img/image-13.png",
-        image14:"img/image-14.png",
-        image15:"img/image-15.png",
-        image16:"img/image-16.png",
-        image17:"img/image-17.png",
-        image18:"img/image-18.png",
-        image19:"img/image-19.png",
-        image20:"img/image-20.png"
-      }
-    });
-    var loaded=function(){
-      if(window.hasOwnProperty('webkit'))
-        window.webkit.messageHandlers.interOp.postMessage({loaded:1});
+    },
+    {
+      "name": "a",
+      "type": "Segment",
+      "pos": [
+        0.0,
+        3.225806451612903,
+        4.0
+      ],
+      "color": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "args": [
+        "Q",
+        "R"
+      ],
+      "size": 3
+    },
+    {
+      "name": "S",
+      "type": "PointOnLine",
+      "pos": [
+        4.0,
+        0.3131313111544739,
+        -0.25252525093102735
+      ],
+      "color": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "args": [
+        "a"
+      ],
+      "size": 4.0,
+      "narrow":true
+    },
+    {
+      "name": "C4",
+      "type": "Free",
+      "pos": [
+        17,8
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "plane": 1,
+      "pinned": true,
+      "visible":false
+    },
+    {
+      "name": "C6",
+      "type": "Free",
+      "pos": [
+        17,3.5
+
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "plane": 1,
+      "pinned": true,
+            "visible":false
+
+    },
+    {
+      "name": "C8",
+      "type": "Free",
+      "pos": [
+        17,-1
+
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "plane": 1,
+      "pinned": true,
+            "visible":false
+
+    },
+    {
+      "name": "C12",
+      "type": "Free",
+      "pos": [
+        17,-5.5
+
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "plane": 1,
+      "pinned": true,
+            "visible":false
+
+    },
+    {
+      "name": "C20",
+      "type": "Free",
+      "pos": [
+        17,-10
+
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "plane": 1,
+      "pinned": true,
+            "visible":false
+
+    },
+    {
+      "name": "DelOut",
+      "type": "Free",
+      "pos": [
+        -18,8
+
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "pinned": true,
+            "visible":false
+
+    },
+    {
+      "name": "DelIn",
+      "type": "Free",
+      "pos": [
+        -18,3.2
+
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "pinned": true,
+            "visible":false
+
+    },
+    {
+      "name": "NoEdges",
+      "type": "Free",
+      "pos": [
+         -18,-5.5
+
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "pinned": true,
+            "visible":false
+
+    },
+    {
+      "name": "YesEdges",
+      "type": "Free",
+      "pos": [
+         -18,-10
+
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "pinned": true,
+            "visible":false
+
+    },
+    {
+      "name": "Dummy",
+      "type": "Free",
+      "pos": [
+        0.0,
+        0.355889724310776,
+        -0.2506265664160401
+      ],
+      "color": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "pinned": false,
+      "visible":false
     }
 
-  </script>
-  <canvas id="CSCanvas"></canvas>
+  ],
+  "height": 768,
+  "originX": 510.0,
+  "originY": 406.0,
+  "scale": 26,
+  "scripts": {},
+  "width": 1024
+};
+
+           
+
+            cdy=createCindy({
+                            translations: languages,
+                            language:"en",
+                            ports: [{
+                                    id: "CSCanvas",
+                                    width: 1920,
+                                    height: 1080,
+                                    transform: [{visibleRect: [-18, 10.5, 17, -12.5]}],
+                                    background: "rgb(0,0,0)"
+                                    }],
+
+                  scripts: "cs*",
+                defaultAppearance: {
+                },
+                geometry: data.geometry,
+                images:{
+                image11:"image-11.png",
+                image12:"image-12.png",
+                image13:"image-13.png",
+                image14:"image-14.png",
+                image15:"image-15.png",
+                image16:"image-16.png",
+                image17:"image-17.png",
+                image18:"image-18.png",
+                image19:"image-19.png",
+                image20:"image-20.png"
+                }
+            });
+            var loaded=function(){
+                if(window.hasOwnProperty('webkit'))
+                window.webkit.messageHandlers.interOp.postMessage({loaded:1});
+            }
+
+    </script>
+</head>
+<body>
+    <canvas id="CSCanvas"></canvas>
+    <!-- <div id="CSConsole"></div> -->
 </body>
 </html>
