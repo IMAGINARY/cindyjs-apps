@@ -262,11 +262,11 @@ dehighlight(but):= drawpoly(
 highlight(but);
 
 
-drawimage(O1.xy,"image10",scale->2.5);
-drawimage(O2.xy,"image9",scale->2.5);
-drawimage(O3.xy,"image8",scale->2.5);
-drawimage(O4.xy,"image7",scale->2.5);
-drawimage(O5.xy,"image6",scale->2.5);
+drawimage(O1.xy,"image10",scale->0.8);
+drawimage(O2.xy,"image9",scale->0.8);
+drawimage(O3.xy,"image8",scale->0.8);
+drawimage(O4.xy,"image7",scale->0.8);
+drawimage(O5.xy,"image6",scale->0.8);
 
 
 
@@ -284,7 +284,6 @@ drawtext((16,-4.4+10/4),color->(1,1,1),size->28,international("Alpha"));
 drawtext((16,-4.4),color->(1,1,1),size->28,international("Persp"));
 drawtext((16,-4.4-10/4),color->(1,1,1),size->28,international("Iter"));
 drawtext((16,-4.4-20/4),color->(1,1,1),size->28,international("Displace"));
-//drawtext((-.5,-12.5),color->(1,1,1),size->12,"Körper mit der Maus drehen");
 drawtext((3,-13),international("Move"),color->(1,1,1),align->"center",size->24,family->"Helvetica");
 
 
@@ -573,7 +572,7 @@ renderPolygonF(pp,col):=(
   );
   pp=apply(pp,zentral(#));
   fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->alpha);
-  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->1.4);
+  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->2);
 //draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
 );
 
