@@ -764,11 +764,11 @@ if(orth_3<0,
 
 colchoice(i):=if(i==choice,(1,1,1),(1,1,1)*.5);
 
-drawtext((15,8),"Tetraeder",size->14,color->colchoice(0));
-drawtext((15,6.5),"Oktaeder",size->14,color->colchoice(1));
-drawtext((15,5),"Würfel",size->14,color->colchoice(2));
-drawtext((15,3.5),"Ikosaeder",size->14,color->colchoice(3));
-drawtext((15,2),"Dodekaeder",size->14,color->colchoice(4));
+drawtext((15,8),international("Tetraeder"),size->14,color->colchoice(0));
+drawtext((15,6.5),international("Oktaeder"),size->14,color->colchoice(1));
+drawtext((15,5),international("Würfel"),size->14,color->colchoice(2));
+drawtext((15,3.5),international("Ikosaeder"),size->14,color->colchoice(3));
+drawtext((15,2),international("Dodekaeder"),size->14,color->colchoice(4));
 
 
 tchoice(i):=if(i==tchoice,(1,1,1),(1,1,1)*.5);
@@ -1129,7 +1129,20 @@ dragging=|mouse().xy,F|>.3
 ;
 </script>
 <script type="text/javascript">
-  var cdy = CindyJS({
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  var cdy = createCindy({
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations,
     scripts: "cs*",
     defaultAppearance: {
       dimDependent: 0.7,
