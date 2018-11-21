@@ -1156,12 +1156,12 @@ repeat(10,i,
 colchoice(i):=if(i==choice,(1,1,1),(1,1,1)*.7);
 
 dd=-1;
-drawtext((15,8+dd),"Simplex",size->14,color->colchoice(0));
-drawtext((15,6.5+dd),"Kreuzpolytop",size->14,color->colchoice(1));
-drawtext((15,5+dd),"Hyperwürfel",size->14,color->colchoice(2));
-drawtext((15,3.5+dd),"24-Zell",size->14,color->colchoice(3));
-drawtext((15,2+dd),"120-Zell",size->14,color->colchoice(4));
-drawtext((15,.5+dd),"600-Zell",size->14,color->colchoice(5));
+drawtext((15,8+dd),international("Simplex"),size->14,color->colchoice(0));
+drawtext((15,6.5+dd),international("Kreuzpolytop"),size->14,color->colchoice(1));
+drawtext((15,5+dd),international("Hyperwürfel"),size->14,color->colchoice(2));
+drawtext((15,3.5+dd),international("24-Zell"),size->14,color->colchoice(3));
+drawtext((15,2+dd),international("120-Zell"),size->14,color->colchoice(4));
+drawtext((15,.5+dd),international("600-Zell"),size->14,color->colchoice(5));
 
 
 tchoice(i):=if(i==tchoice,(1,1,1),(1,1,1)*.7);
@@ -1170,12 +1170,12 @@ tchoice(i):=if(i==tchoice,(1,1,1),(1,1,1)*.7);
 drawtext((12,6.8),"zw",align->"center",size->14,color->colchoice(8));
 drawtext((12,3.8),"yw",align->"center",size->14,color->colchoice(8));
 drawtext((12,0.8),"xw",align->"center",size->14,color->colchoice(8));
-drawtext((12,-1.8),"yz",align->"center",size->14,color->colchoice(8));
-drawtext((12,-4.8),"xz",align->"center",size->14,color->colchoice(8));
-drawtext((12,-7.8),"xy",align->"center",size->14,color->colchoice(8));
-drawtext(Y-(0,1),"minclip",align->"center",size->12,color->(1,1,1));
-drawtext(X+(0,.5),"maxclip",align->"center",size->12,color->(1,1,1));
-drawtext(S+(0,.5),"Projektionsart",align->"center",size->12,color->(1,1,1));
+drawtext((12,-2.1),"yz",align->"center",size->14,color->colchoice(8));
+drawtext((12,-5.1),"xz",align->"center",size->14,color->colchoice(8));
+drawtext((12,-8.1),"xy",align->"center",size->14,color->colchoice(8));
+drawtext(Y-(0,1),international("minclip"),align->"center",size->12,color->(1,1,1));
+drawtext(X+(0,.5),international("maxclip"),align->"center",size->12,color->(1,1,1));
+drawtext(S+(0,.5),international("Projektionsart"),align->"center",size->12,color->(1,1,1));
 
 
 
@@ -1189,11 +1189,11 @@ rect1=([[14,-11],[20,-11],[20,-9.7],[14,-9.7]]);
 fillpoly(rect1,color->if(pressed,(1,1,1),(0,0,0)),alpha->.3);
 drawpoly(rect1,color->(0,0,0),size->2);
 
-drawtext([14.5,-10.5],"Eine Seite markieren",color->if(pressed,(1,1,1),(1,1,1)*.7));
+drawtext([14.5,-10.5],international("Eine Seite markieren"),color->if(pressed,(1,1,1),(1,1,1)*.7));
 rect2=([[21,-11],[24,-11],[24,-9.7],[21,-9.7]]);
 fillpoly(rect2,color->if(false,(1,1,1),(0,0,0)),alpha->.3);
 drawpoly(rect2,color->(0,0,0),size->2);
-drawtext([21.5,-10.5],"Reset",color->if(false,(1,1,1),(1,1,1)*.7));
+drawtext([21.5,-10.5],international("Reset"),color->if(false,(1,1,1),(1,1,1)*.7));
 
 ;
 </script>
@@ -1261,7 +1261,20 @@ dragging=
 ;
 </script>
 <script type="text/javascript">
-  var cdy = CindyJS({
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  var cdy = createCindy({
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations,
     scripts: "cs*",
     defaultAppearance: {
       dimDependent: 0.7,
