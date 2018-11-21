@@ -906,9 +906,9 @@ drawtext(E-(0,.9),align->"center","(1,0,0)",color->(1,1,1),size->16);
 drawtext(B-(0,.9),align->"center","(1,1,1)",color->(1,1,1),size->16);
 drawtext(G-(0,.9),align->"center","(1,1,0)",color->(1,1,1),size->16);
 
-drawtext(D+(0,.7),align->"center","off",color->(1,1,1),size->16);
-drawtext(A+(0,.7),align->"center","off",color->(1,1,1),size->16);
-drawtext(H+(0,.7),align->"center","off",color->(1,1,1),size->16);
+drawtext(D+(0,.7),align->"center",international("OFF"),color->(1,1,1),size->16);
+drawtext(A+(0,.7),align->"center",international("OFF"),color->(1,1,1),size->16);
+drawtext(H+(0,.7),align->"center",international("OFF"),color->(1,1,1),size->16);
 
 
 
@@ -998,7 +998,20 @@ dragging=|mouse().xy,C|>.3 & |mouse().xy,F|>.3& |mouse().xy,K|>.3&
 ;
 </script>
 <script type="text/javascript">
-  var cdy = CindyJS({
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  var cdy = createCindy({
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations,
     scripts: "cs*",
     defaultAppearance: {
       dimDependent: 0.7,
