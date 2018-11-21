@@ -1,13 +1,12 @@
 {
-  "id": "app-id",
+  "id": "4d-rotation",
   "version": "1.0.0",
   "main": "app.html",
-  "width": 1920,
-  "height": 1080,
+  "width": 858,
+  "height": 527,
   "name": {
-    "en": "App name",
-    "de": "App name",
-    "es": "App name"
+    "en": "4D rotations",
+    "de": "4D rotations"
   },
   "description": {
     "en": "",

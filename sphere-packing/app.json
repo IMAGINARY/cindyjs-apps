@@ -1,0 +1,15 @@
+{
+  "id": "sphere-packing",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1024,
+  "height": 554,
+  "name": {
+    "en": "Sphere packing",
+    "de": "Sphere packing"
+  },
+  "description": {
+    "en": "",
+    "de": ""
+  }
+}

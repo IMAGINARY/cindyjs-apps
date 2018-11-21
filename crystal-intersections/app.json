@@ -1,0 +1,15 @@
+{
+  "id": "crystal-intersections",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 886,
+  "height": 566,
+  "name": {
+    "en": "Intersections",
+    "de": "Intersections"
+  },
+  "description": {
+    "en": "",
+    "de": ""
+  }
+}

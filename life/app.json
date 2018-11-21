@@ -1,13 +1,12 @@
 {
-  "id": "app-id",
+  "id": "life",
   "version": "1.0.0",
   "main": "app.html",
-  "width": 1920,
-  "height": 1080,
+  "width": 1024,
+  "height": 554,
   "name": {
-    "en": "App name",
-    "de": "App name",
-    "es": "App name"
+    "en": "Life",
+    "de": "Life"
   },
   "description": {
     "en": "",

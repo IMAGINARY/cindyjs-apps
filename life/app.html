@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Life</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
+</head>
+<body>
+<script id="csmouseup" type="text/x-cindyscript">
+if(pressed1,clear());
+if(pressed2,randomfill());
+if(pressed3,randomfill2());
+if(pressed4,startit(););
+if(pressed5,stopit(););
+pressed1=false;
+pressed2=false;
+pressed3=false;
+pressed4=false;
+pressed5=false;
+
+x=floor(mouse().x/((w+1)*dd))+1;
+y=floor(mouse().y/((w+1)*dd))+1;
+if(x>0&x<=n&y>0&y<=n,
+  m_x_y=1-m_x_y;
+  prep();
+);
+
+
+//testschalter(schalter,mouse().xy);
+testschalter(schalter,downmouse);
+
+if(|downmouse,(-3,-.4+1)|<0.3,
+  rnumb=rnumb+1;
+  if(rnumb>length(rules),rnumb=1);
+);
+
+if(|downmouse,(-7,-.4+1)|<0.3,
+  rnumb=rnumb-1;
+  if(rnumb<1,rnumb=length(rules));
+);
+
+
+if(rnumb!=rnumbo,
+  rr2=rules_rnumb_1;
+  rr1=rules_rnumb_2;
+  apply(1..8,if(indexof(rr1,""+#)!=0,
+     parse("live"+#+"=true"),
+     parse("live"+#+"=false")
+  ));
+  apply(1..8,if(indexof(rr2,""+#)!=0,
+     parse("ulive"+#+"=true"),
+     parse("ulive"+#+"=false")
+  ));
+
+);
+
+rnumbo=rnumb;
+
+
+//repaint();
+
+
+
+
+//prep();
+
+
+
+
+;
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+
+Dummy.xy=(0,0);
+if(M.x>=K.x,M.xy=K.xy);
+if(M.x<=L.x,M.xy=L.xy);
+
+if(C.y<=A.y,C.xy=A.xy);
+if(C.y>=B.y,C.xy=B.xy);
+
+//töne 1..127;
+//penta 1..50;
+//playtone(127,channel->3,velocity->1);
+linesize(2);
+fillpoly(button1,color->gray(if(pressed1,.3,.5)));
+drawpoly(button1,color->gray(.8),size->2);
+fillpoly(button2,color->gray(if(pressed2,.3,.5)));
+drawpoly(button2,color->gray(.8),size->2);
+fillpoly(button3,color->gray(if(pressed3,.3,.5)));
+drawpoly(button3,color->gray(.8),size->2);
+fillpoly(button4,color->gray(if(pressed4,.3,.5)));
+drawpoly(button4,color->gray(.8),size->2);
+fillpoly(button5,color->gray(if(pressed5,.3,.5)));
+drawpoly(button5,color->gray(.8),size->2);
+drawtext(button1_1+(.3,.2),international("Erase"),color->(1,1,1),size->14);
+drawtext(button2_1+(.3,.2),international("Random1"),color->(1,1,1),size->14);
+drawtext(button3_1+(.3,.2),international("Random2"),color->(1,1,1),size->14);
+drawtext(button4_1+(.3,.3),international("Start"),color->(1,1,1),size->24);
+drawtext(button5_1+(.3,.3),international("Stop"),color->(1,1,1),size->24);
+
+
+nn=round(|A,C|/|A,B|*55+5);
+cellmin=|G,P|/|G,F|;
+cellmax=|G,O|/|G,F|;
+sndmin=|N,R|/|N,H|;
+sndmax=|N,Q|/|N,H|;
+
+//drawtext(F+(0,.3),n*n,size->12,color->(1,1,1)*.7,align->"center");
+//drawtext(G-(-.05,.6),1,size->12,color->(1,1,1)*.7,align->"center");
+//drawtext(H+(0,.3),if(!up,"hoch","tief"),size->12,color->(1,1,1)*.7,align->"center");
+//drawtext(N-(-.05,.6),if(up,"hoch","tief"),size->12,color->(1,1,1)*.7,align->"center");
+
+n=nn;
+nmax=n*n;
+if(nno!=nn,
+ oldma=m;
+ w=board/n;
+ w=w-1;
+ m=zeromatrix(n,n);
+ mx=zeromatrix(n,n);
+ nx=zeromatrix(n,n);
+ if(nno<n,
+   shift=(round((n-nno)/2));
+   if(n==nno+1,if(iseven(n),shift=1,shift=-1));
+   repeat(nno,i,
+     repeat(nno,j,
+       m_(i+shift)_(j+shift)=oldma_i_j
+     )
+    );
+   prep();
+ );
+ if(nno>n,
+   shift=(round(nno-n));
+   repeat(n,i,
+     repeat(n,j,
+       m_i_j=oldma_(i+shift)_(j+shift);
+     )
+    );
+   prep();
+ );
+
+// randomfill2();
+);
+
+nno=nn;
+
+
+
+
+
+
+drawtext(C+(.3,0),nn,color->(1,1,1),size->16);
+
+
+
+drawschalter(schalter);
+
+
+up=updown;
+
+//if((reltone>0)&(reltone<1)&sound,
+// if(!pent,
+//   sound1(reltone,sndmin,sndmax),
+//   sound2(reltone,sndmin,sndmax);
+//  );
+//);
+
+
+
+
+
+dd=1/25;
+min=0-3*dd;
+max=n*(w+1)*dd+2*dd;
+fillpoly(
+  ((min,min),(min,max),(max,max),(max,min)),color->(1,1,1)*.7
+);
+
+min=min+2*dd;
+max=max-2*dd;
+
+fillpoly(
+  ((min,min),(min,max),(max,max),(max,min)),color->(0,0,0)
+);
+
+
+
+
+//n=200;
+//err("XX"+seconds());
+
+drawcells();
+drawtext((-8,12.4+2),international("Survive"),align->"center",color->(1,1,1)*.9,size->16);
+drawtext((-4.5,12.4+2),international("Create"),align->"center",color->(1,1,1)*.9,size->16);
+
+
+drawtext((-7,-.5+1),"<<",align->"center",color->(1,1,1)*.9,size->14);
+drawtext((-3,-.5+1),">>",align->"center",color->(1,1,1)*.9,size->14);
+drawtext((-6.5,-.5+1),rules_rnumb_1+"/"+rules_rnumb_2,align->"center",color->(1,1,1)*.9,size->14);
+
+
+pt=G+sum/nmax*(F-G);
+//draw(pt-(+0.2,0),pt-(-.2,0),color->(1,0,0),size->2);
+
+if(running,draw((16.6,3.3),size->8,color->(0.6,0,0)*(sin(seconds()*3)+1)/2));
+
+
+drawtext(L+(0,.4),international("Speed"),color->(1,1,1)*.9,size->12);
+
+
+
+
+;
+</script>
+<script id="cstick" type="text/x-cindyscript">
+lim=round(|M,L|/|K,L|*10);
+if(anims>=lim,
+ next();
+ prep();
+ anims=0,
+ anims=anims+1
+ )
+
+
+
+
+
+;
+</script>
+<script id="csmousedown" type="text/x-cindyscript">
+//draw(mouse().xy,size->30);
+downmouse=mouse().xy;
+mpo=mouse().xy;
+
+if(mpo.x>button1_1_1 & mpo.x<button1_2_1 & mpo.y>button1_1_2 & mpo.y<button1_3_2,pressed1=true);
+if(mpo.x>button2_1_1 & mpo.x<button2_2_1 & mpo.y>button2_1_2 & mpo.y<button2_3_2,pressed2=true);
+if(mpo.x>button3_1_1 & mpo.x<button3_2_1 & mpo.y>button3_1_2 & mpo.y<button3_3_2,pressed3=true);
+if(mpo.x>button4_1_1 & mpo.x<button4_2_1 & mpo.y>button4_1_2 & mpo.y<button4_3_2,pressed4=true);
+if(mpo.x>button5_1_1 & mpo.x<button5_2_1 & mpo.y>button5_1_2 & mpo.y<button5_3_2,pressed5=true);
+
+;
+</script>
+<script id="cskeytype" type="text/x-cindyscript">
+next();
+prep();
+if(key()=="c",m=zeromatrix(n,n);prep());
+
+
+
+
+
+;
+</script>
+<script id="csmousedrag" type="text/x-cindyscript">
+x=floor(mouse().x/((w+1)*dd))+1;
+y=floor(mouse().y/((w+1)*dd))+1;
+if(x>0&x<=n&y>0&y<=n,
+  m_x_y=1;
+);
+
+
+
+
+
+
+
+;
+</script>
+<script id="csinit" type="text/x-cindyscript">
+anims=0;
+rules=[
+  ["23","3"],
+  ["236","3"],
+  ["125","36"],
+  ["1358","357"],
+  ["4567","345"],
+  ["2345678","378"],
+  ["45678","3"],
+  ["34678","3678"],
+  ["5678","35678"],
+  ["1","1"],
+  ["23","36"],
+  ["5","345"],
+  ["12345","3"],
+  ["1234","3"],
+  ["245","368"],
+  ["238","357"],
+  ["1357","1357"],
+  ["","2"],
+  ["","234"],
+  ["235678","3678"],
+  ["2345","45678"],
+  ["35678","367"]
+];
+rnumb=1;
+rnumbo=1;
+button1=[[17,9+3],[20,9+3],[20,9.7+3],[17,9.7+3]];
+button2=[[17,7+3],[20,7+3],[20,7.7+3],[17,7.7+3]];
+button3=[[17,5+3],[20,5+3],[20,5.7+3],[17,5.7+3]];
+button4=[[17,3],[20,3],[20,4.2],[17,4.2]];
+button5=[[17,1],[20,1],[20,2.2],[17,2.2]];
+
+pressed1=false;
+pressed2=false;
+pressed3=false;
+pressed4=false;
+pressed5=false;
+
+running=false;
+
+
+sq(i,j,col):=(
+  fillpoly(((i,j),(i+1,j),(i+1,j+1),(i,j+1)),color->col);
+);
+
+
+randominit():=  (
+    sum=0;
+    repeat(n,i,
+     repeat(n,j,
+       m_i_j=round(random());
+       if(m_i_j==1,sum=sum+1);
+     );
+   );
+
+);
+
+
+randominit(r):=  (
+    sum=0;
+    repeat(n,i,
+     repeat(n,j,
+       m_i_j=round(random(r));
+       if(m_i_j==1,sum=sum+1);
+     );
+   );
+
+);
+
+
+cf(i,j):=if(m_i_j==1,hue(nx_i_j/8)*.6,(1,1,1));
+mo(x):=mod(x-1,n)+1;
+
+drawm():=(
+   repeat(n,i,
+     repeat(n,j,
+       //draw((i,j),color->cf(m_i_j),size->8);
+       sq(i,j,cf(i,j));
+     )
+   )
+);
+
+
+
+
+prep():=(
+
+
+  i1=n;
+  i2=2;
+  repeat(n,i,
+    j1=n;
+    j2=2;
+    repeat(n,j,
+      nx_i_j=m_i1_j1+m_i1_j+m_i1_j2+m_i_j2+m_i2_j2+m_i2_j+m_i2_j1+m_i_j1;
+      j1=j1+1;
+      j2=j2+1;
+      if(j1>n,j1=1);
+      if(j2>n,j2=1);
+    );
+    i1=i1+1;
+    i2=i2+1;
+    if(i1>n,i1=1);
+    if(i2>n,i2=1);
+  );
+
+);
+
+
+
+
+next():=(
+sum=0;
+
+  datalive=select(1..8,(live1,live2,live3,live4,live5,live6,live7,live8)_#);
+  dataulive=select(1..8,(ulive1,ulive2,ulive3,ulive4,ulive5,ulive6,ulive7,ulive8)_#);
+
+
+  repeat(n,i,
+    repeat(n,j,
+      m_i_j=if(or((m_i_j==0&contains(datalive,nx_i_j)),
+                  (m_i_j==1&contains(dataulive,nx_i_j))),1,0);
+      sum=sum+m_i_j;
+    );
+  );
+);
+
+
+drawcells():=(
+repeat(n,ii,
+  repeat(n,jj,
+    i=(ii-1)*dd*(w+1);
+    j=(jj-1)*dd*(w+1);
+    d=dd*w;
+    if(m_ii_jj!=0,
+    fillpoly(
+     ((i,j),(i+d,j),(i+d,j+d),(i,j+d)),color->cf(ii,jj)
+    )
+   )
+  )
+ )
+);
+
+running=true;
+
+
+
+clear():=(m=zeromatrix(n,n);prep());
+randomfill():=(randominit(1);prep());
+randomfill2():=(randominit(.7);prep());
+
+startit():=(playanimation();running=true);
+stopit():=(pauseanimation();stopanimation();running=false);
+
+
+
+
+
+;schalter=(off=(0,2);
+  ((-3.5,1)+off,"1","live1"),
+  ((-3.5,2.5)+off,"2","live2"),
+  ((-3.5,4)+off,"3","live3"),
+  ((-3.5,5.5)+off,"4","live4"),
+  ((-3.5,7)+off,"5","live5"),
+  ((-3.5,8.5)+off,"6","live6"),
+  ((-3.5,10)+off,"7","live7"),
+  ((-3.5,11.5)+off,"8","live8"),
+
+  ((-7,1)+off,"1","ulive1"),
+  ((-7,2.5)+off,"2","ulive2"),
+  ((-7,4)+off,"3","ulive3"),
+  ((-7,5.5)+off,"4","ulive4"),
+  ((-7,7)+off,"5","ulive5"),
+  ((-7,8.5)+off,"6","ulive6"),
+  ((-7,10)+off,"7","ulive7"),
+  ((-7,11.5)+off,"8","ulive8")
+
+//  ((-7,16.5),"Sound","sound"),
+//  ((-7,15.5),"Pentatonic","pent"),
+//  ((-7,14.5),"up/down","updown")
+
+);
+
+initschalter(schalter):=(
+  apply(schalter,
+     parse(#_3+"=false;");
+  );
+);
+
+
+drawschalter(schalter):=(
+  apply(schalter,
+     drawtext(#_1+(0.5,-0.2),size->16,#_2,color->(1,1,1)*.9);
+     if(parse(#_3),
+        fillcircle(#_1,.30,color->(1,1,1)*.3,size->2);
+        fillcircle(#_1,.25,color->(1,1,1)*.7,size->2);
+        fillcircle(#_1,.18,color->(0,1,1)),
+        fillcircle(#_1,.3,color->(1,1,1)*.2,size->2);
+        fillcircle(#_1,.25,color->(1,1,1)*.5,size->2);
+        fillcircle(#_1,.18,color->(0,0,0));
+     );
+  );
+);
+
+testschalter(schalter,xy):=(
+
+  apply(schalter,
+    if(|#_1,xy|<.7,     parse(#_3+"=!"+#_3+";");)
+  )
+);
+
+
+
+
+
+initschalter(schalter);
+
+
+ulive3=true;
+ulive2=true;
+live3=true;
+
+
+
+;nn=round(|A,C|/|A,B|*70+5);
+nno=nn;
+board=400;
+n=nn;
+ w=board/n;
+ w=w-1;
+
+
+m=zeromatrix(n,n);
+mx=zeromatrix(n,n);
+nx=zeromatrix(n,n);
+
+up=true;
+snd=true;
+
+
+
+randomfill2();
+
+javascript("loaded()");
+
+;
+</script>
+
+<script type="text/javascript">
+  var data = {
+    "background": "rgb(0,0,0)",
+    "geometry": [
+      {
+        "name": "A\u0027",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.28,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "B\u0027",
+        "type": "Free",
+        "pos": [
+          4.0,
+          0.16,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "a\u0027",
+        "type": "Segment",
+        "pos": [
+          -0.16,
+          -0.0,
+          4.0
+        ],
+        "color": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "args": [
+          "A\u0027",
+          "B\u0027"
+        ],
+        "size": 1
+      },
+      {
+        "name": "C\u0027",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          0.630050784,
+          0.16
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "a\u0027"
+        ]
+      },
+      {
+        "name": "A\u0027\u0027",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.28,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "B\u0027\u0027",
+        "type": "Free",
+        "pos": [
+          4.0,
+          0.16,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "a\u0027\u0027",
+        "type": "Segment",
+        "pos": [
+          -0.16,
+          -0.0,
+          4.0
+        ],
+        "color": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "args": [
+          "A\u0027\u0027",
+          "B\u0027\u0027"
+        ],
+        "size": 1
+      },
+      {
+        "name": "C\u0027\u0027",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          0.5780635200000002,
+          0.16
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "a\u0027\u0027"
+        ]
+      },
+      {
+        "name": "A3",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.28,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "B3",
+        "type": "Free",
+        "pos": [
+          4.0,
+          0.16,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "a3",
+        "type": "Segment",
+        "pos": [
+          -0.16,
+          -0.0,
+          4.0
+        ],
+        "color": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "args": [
+          "A3",
+          "B3"
+        ],
+        "size": 1
+      },
+      {
+        "name": "C3",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          0.5281050239999999,
+          0.16
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "a3"
+        ]
+      },
+      {
+        "name": "A4",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.28,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "B4",
+        "type": "Free",
+        "pos": [
+          4.0,
+          0.16,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "a4",
+        "type": "Segment",
+        "pos": [
+          -0.16,
+          -0.0,
+          4.0
+        ],
+        "color": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "args": [
+          "A4",
+          "B4"
+        ],
+        "size": 1
+      },
+      {
+        "name": "C4",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          0.47259558400000007,
+          0.16
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "a4"
+        ]
+      },
+      {
+        "name": "A5",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.28,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "B5",
+        "type": "Free",
+        "pos": [
+          4.0,
+          0.16,
+          0.16
+        ],
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "size": 2.0
+      },
+      {
+        "name": "a5",
+        "type": "Segment",
+        "pos": [
+          -0.16,
+          -0.0,
+          4.0
+        ],
+        "color": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "args": [
+          "A5",
+          "B5"
+        ],
+        "size": 1
+      },
+      {
+        "name": "C5",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          0.4170861887999999,
+          0.16
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "a5"
+        ]
+      },
+      {
+        "name": "K",
+        "type": "Free",
+        "pos": [
+          -2.9690721649484537,
+          -4.0,
+          -0.23772314704047123
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "L",
+        "type": "Free",
+        "pos": [
+          -1.0804123711340206,
+          -4.0,
+          -0.23772314704047123
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "e",
+        "type": "Segment",
+        "pos": [
+          0.0,
+          -0.23772314704047123,
+          4.0
+        ],
+        "color": [
+          0.5019608,
+          0.5019608,
+          0.5019608
+        ],
+        "args": [
+          "K",
+          "L"
+        ],
+        "size": 3
+      },
+      {
+        "name": "M",
+        "type": "PointOnLine",
+        "pos": [
+          -1.2378750375257732,
+          -4.0,
+          -0.23772314704047123
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "e"
+        ],
+        "size": 4.0
+      },
+      {
+        "name": "A",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -0.0,
+          -2.6666666666666665
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "B",
+        "type": "Free",
+        "pos": [
+          0.375,
+          -4.0,
+          -0.25
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "a",
+        "type": "Segment",
+        "pos": [
+          2.6666666666666665,
+          -0.0,
+          4.0
+        ],
+        "color": [
+          0.5019608,
+          0.5019608,
+          0.5019608
+        ],
+        "args": [
+          "A",
+          "B"
+        ],
+        "size": 3
+      },
+      {
+        "name": "C",
+        "type": "PointOnLine",
+        "pos": [
+          1.281063658615324,
+          -5.0,
+          -0.8540424390768825
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "a"
+        ]
+      },
+      {
+        "name": "D",
+        "type": "Free",
+        "pos": [
+          2.5185185185185186,
+          -4.0,
+          -0.2962962962962963
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "E",
+        "type": "Free",
+        "pos": [
+          0.6272493573264782,
+          -4.0,
+          -0.2963900419399192
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "F",
+        "type": "Free",
+        "pos": [
+          4.0,
+          3.7777777777777777,
+          0.2222222222222222
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "G",
+        "type": "Free",
+        "pos": [
+          4.0,
+          2.111111111111111,
+          0.2222222222222222
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "H",
+        "type": "Free",
+        "pos": [
+          4.0,
+          3.317073170731707,
+          0.1951219512195122
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "N",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.853658536585366,
+          0.1951219512195122
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true
+      },
+      {
+        "name": "Dummy",
+        "type": "Free",
+        "pos": [
+          0,
+          0,
+          1
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": false,
+        "visible":false
+      }
+    ],
+    "height": 768,
+    "originX": 303.0,
+    "originY": 100.0,
+    "scale": 35,
+    "scripts": {},
+    "width": 1024
+  };
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  cdy=createCindy({
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations,
+    ports: [{
+      id: "CSCanvas",
+      width: 1024,
+      height: 554,
+      transform: [{visibleRect: [-8, 18, 18, -.5]}],
+      background: "rgb(0,0,0)"
+    }],
+    scripts: "cs*",
+    defaultAppearance: {
+    },
+    geometry: data.geometry,
+    transform: [{ scaleAndOrigin: [data.scale, data.originX, data.originY] }]
+  });
+  var loaded=function(){
+    if(window.hasOwnProperty('webkit'))
+      window.webkit.messageHandlers.interOp.postMessage({loaded:1});
+  }
+
+</script>
+<canvas id="CSCanvas"></canvas>
+</body>
+</html>

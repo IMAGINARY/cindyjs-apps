@@ -1,0 +1,15 @@
+{
+  "id": "slicer-3d",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 825,
+  "height": 541,
+  "name": {
+    "en": "Slicer",
+    "de": "Slicer"
+  },
+  "description": {
+    "en": "",
+    "de": ""
+  }
+}

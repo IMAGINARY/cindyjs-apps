@@ -1,17 +1,15 @@
 {
-  "id": "app-id",
+  "id": "crystal-packing",
   "version": "1.0.0",
   "main": "app.html",
   "width": 1920,
   "height": 1080,
   "name": {
-    "en": "App name",
-    "de": "App name",
-    "es": "App name"
+    "en": "Crystal packing",
+    "de": "Crystal packing"
   },
   "description": {
     "en": "",
-    "de": "",
-    "es": ""
+    "de": ""
   }
 }

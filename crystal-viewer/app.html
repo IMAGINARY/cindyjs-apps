@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Crystal viewer</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
+</head>
+<body>
+
+<script id="csinit" type="text/x-cindyscript">
+wx=0;
+wy=0;
+oldparamv=(0,0,0,0,0,0,0,0);
+choice=3;
+multicol=1;
+next():=(choice=choice+1;if(choice==5,choice=1));
+anim=false;
+
+scal=0.15;
+
+init=0;
+
+
+mat=[
+  [1,0,0],
+  [0,1,0],
+  [0,0,1]
+];
+
+mat0=[
+  [1,0,0],
+  [0,1,0],
+  [0,0,1]
+];
+
+rmat0=[
+  [1,0,0],
+  [0,1,0],
+  [0,0,1]
+
+ ];
+
+rmat=[
+  [1,0,0],
+  [0,1,0],
+  [0,0,1]
+
+ ];
+
+
+mmmx=mat0;
+mmmy=mat0;
+
+rmmmx=rmat0;
+rmmmy=rmat0;
+
+
+
+
+
+edgecol=(0.76,0.78,0.54);
+edgecol=(.9,.9,.9);
+edgecol=(0.4,0.3,0.3);
+
+//Das Malt einen Punkt aus homogenen Koordinaten
+renderPoint(p):=(
+  pp=mat*p;
+  draw((pp_1,pp_2),color->edgecol,border->false,size->3)
+);
+
+//Das Malt ein Segment aus homogenen Koordinaten
+renderLine(p,q):=(
+  pp=mat*p;
+  qq=mat*q;
+  draw((pp_1,pp_2),(qq_1,qq_2));
+);
+
+
+
+
+norm(p):=(p_1,p_2,p_3);
+
+
+
+
+renderPolygon(pol,col):=(
+//  pp=apply(pol,mat*#);
+
+pp=pol;
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,(#_1,#_2));
+  aa=pol_1;bb=pol_2,cc=pol_3;
+
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->.8);
+  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->1);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+renderPolygonB(pp,col):=(
+//  pp=apply(pol,mat*#);
+
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,(#_1,#_2));
+
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->alpha);
+  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->1);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+renderPolygonF(pp,col):=(
+//  pp=apply(pol,mat*#);
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,(#_1,#_2));
+
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->alpha);
+  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->2);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+
+
+
+
+
+
+
+
+renderPolygonX(pol,col):=(
+//  pp=apply(pol,mat*#);
+
+pp=pol;
+  pp=apply(pp,(#_1,#_2));
+  fillpoly(pp,alpha->1);
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+init3d():=(
+// renderlist=[];
+// pr=[];
+);
+
+center(ll):=sum(ll)/length(ll);
+
+
+poly3d(l):=(l);
+
+
+
+draw3d(a,b):=();
+
+
+pro(vert):=(vert_1,vert_2,1);
+
+ori(pol):=(
+  det(pro(pol_1),pro(pol_2),pro(pol_3))
+);
+
+render3d():=(
+mati=transpose(mat);
+
+  if(init==0,
+  renderlist=
+  apply(pr,ll,
+    mll=apply(ll_1,mat*(#))/scal;
+    [mll,center(mll)_3,ll_2]
+  );
+  init=1;
+  ,
+  ii=1;
+
+  forall(pr,ll,
+    mll=ll_1*mati/scal;
+
+    (renderlist_ii)_1=mll;
+    (renderlist_ii)_2=center(mll)_3;
+    (renderlist_ii)_3=ll_2;
+      ii=ii+1;
+  );
+
+
+
+);
+
+
+
+  rl=sort(renderlist,#_2);
+rl=renderlist;
+  forall(rl,pol,
+      if(ori(pol_1)~>=0,
+       renderPolygonB(pol_1,pol_3*(pol_2+10)/10)
+      );
+  );
+
+
+ forall(rl,pol,
+      if(ori(pol_1)~<=0,
+       renderPolygonF(pol_1,pol_3*(pol_2+10)/10)
+      );
+  ) ;
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+//berechnet innkugel und umkugelradius
+
+minmax(obj):= (
+ if(length(obj)>3,
+  ch=convexhull3d(obj);
+  obj=ch_1;
+  maxval=1/(-sort(apply(ch_1,-|#|))_1);
+  ff=ch_2;
+  dual=apply(ff,f,
+    linearsolve((obj_(f_1),obj_(f_2),obj_(f_3)),(1,1,1));
+  );
+  ch=convexhull3d(dual);
+  minval=-sort(apply(ch_1,-|#|))_1;
+  (minval,maxval);
+  ,
+  (|obj_1|,|obj_1|);
+ );
+);
+
+
+perm(a,b,c):=(
+  (a,b,c),
+  (a,c,b),
+  (b,a,c),
+  (b,c,a),
+  (c,a,b),
+  (c,b,a)
+);
+
+
+perm1(a,b,c):=(
+  (a,b,c),
+  (b,c,a),
+  (c,a,b)
+);
+
+
+
+
+matrz(w):=(
+(cos(w),sin(w),0),
+(-sin(w),cos(w),0),
+(0,0,1)
+);
+
+matrx(w):=(
+(1,0,0),
+(0,cos(w),sin(w)),
+(0,-sin(w),cos(w))
+);
+
+matry(w):=(
+(cos(w),0,-sin(w)),
+(0,1,0),
+(sin(w),0,cos(w))
+);
+
+
+
+
+nn(v):=v/|v|;
+
+assigncolor(obj,col,oldcol):=if(max(apply(obj,o,nn(o)*nn(norm)))~=1,col,oldcol);
+
+colorize(obj):=(
+
+  nf=length(faces);
+  repeat(nf,fi,
+
+   data=faces_fi_1;
+   norm=linearsolve([obj_(data_1),obj_(data_2),obj_(data_3)],[1,1,1]);
+   col=actcol;
+   col=assigncolor(obj1,colf1,col);
+   col=assigncolor(obj2,colf2,col);
+   col=assigncolor(obj3,colf3,col);
+   col=assigncolor(obj4,colf4,col);
+   col=assigncolor(obj5,colf5,col);
+   col=assigncolor(obj6,colf6,col);
+   faces_fi_2=col;
+ );
+);
+
+
+
+
+
+
+;   colf1=(1,.5,.5);
+   colf2=(.5,.8,1);
+   colf3=(1,.8,.5);
+   colf4=(.5,1,.5);
+   colf5=(1,.7,1);
+   colf6=(0.5,.5,1);
+
+
+
+;
+</script>
+<script id="csmousedrag" type="text/x-cindyscript">
+if(dragging,
+
+xx=mouse().x;
+yy=mouse().y;
+wy=(startx-xx)*.3;
+wx=-(starty-yy)*.3;
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+rmmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+];
+
+
+rmmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+  mat=mmmx*mmmy*mat;
+
+
+
+startx=xx;
+starty=yy;
+
+
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="cskeytyped" type="text/x-cindyscript">
+if(dragging,
+
+xx=mouse().x;
+yy=mouse().y;
+wy=(startx-xx)*.3;
+wx=-(starty-yy)*.3;
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+rmmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+];
+
+
+rmmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+  mat=mmmx*mmmy*mat;
+
+
+
+startx=xx;
+starty=yy;
+
+
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csmouseclick" type="text/x-cindyscript">
+xx=mouse().x;
+yy=mouse().y;
+wy=(startx-xx)*.5;
+wx=-(starty-yy)*.5;
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+rmmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+];
+
+
+rmmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+mat=mmmx*mmmy*mat;
+rmat=rmmmx*rmmmy*rmat;
+
+
+startx=xx;
+starty=yy;
+
+
+
+
+
+
+if(|mouse().xy-T1|<0.9,choice=2);
+if(|mouse().xy-T2|<0.9,choice=3);
+if(|mouse().xy-T3|<0.9,choice=1);
+if(|mouse().xy-T4|<0.9,choice=4);
+if(|mouse().xy-T5|<0.9,choice=5);
+if(|mouse().xy-T6|<0.9,choice=6);
+
+if(|mouse().xy-F1|<0.9,multicol=1);
+if(|mouse().xy-F2|<0.9,multicol=0);
+
+
+
+
+pauseanimation();stopanimation();
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csmouseup" type="text/x-cindyscript">
+
+if(|(wx,wy)|>0.02,
+err("startit");
+  playanimation(),
+  pauseanimation();stopanimation();
+)
+
+
+
+
+
+
+;
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+alpha=|U,W|/|U,V|;
+
+
+
+F.color=colf1*.8;
+C.color=colf2*.8;
+K.color=colf3*.8;
+R.color=colf4*.8;
+S.color=colf5*.8;
+T.color=colf6*.8;
+
+
+param1=1-|E,F|/|D,E|*.99+0.005;
+param2=|B,C|/|A,B|*.999+0.0005;
+param3=|G,K|/|G,H|*.999+0.0005;
+param4=|L,R|/|L,M|*.999+0.0005;
+param5=|N,S|/|N,O|*.999+0.0005;
+param6=|P,T|/|P,Q|*.999+0.0005;
+paramv=(param1,param2,param3,param4,param5,param6,choice,multicol);
+
+
+dirs=[
+[1,0,0],
+[1,1,1],
+[1,1,0],
+[1,2,0],
+[1,1,2],
+[1,2,3]
+];
+
+if(choice==5,
+dirs=[
+[1,0,0],
+[-1,0,1],
+[0,0,1],
+[1,0,1],
+[2,0,1],
+[6,5,-3]
+];
+);
+
+
+
+col1=[0,0,1];
+col2=[.1,1,0]*0;
+col3=[1,0,1]*0;
+actcol=(1,1,1);
+
+
+col1=[.9,.9,1]*.5;
+col2=[1,.9,.9]*.5;
+col3=[1,1,1]*0;
+actcol=(.5,.8,1);
+
+
+fcol=(1,0.5,0.5);
+kcol=(0.5,1,0.5);
+ecol=(0.5,0.5,1);
+
+//fcol=(1,1,0.5);
+//kcol=(.5,1,1);
+//ecol=(1,0.5,1);
+
+
+amb=0.2;
+
+lights=[
+   [[-cos(30°),-sin(30°),-.5],col1],
+   [[-cos(150°),-sin(150°),-.5],col2],
+   [[-cos(270°),-sin(270°),-.5],col3]
+];
+ambient=(1,1,1)*amb;
+
+setfcolor(col):=(actcol=col);
+
+
+
+
+group1(a,b,c):=flatten((
+  perm(a,b,c),
+  perm(a,b,-c),
+  perm(a,-b,c),
+  perm(a,-b,-c),
+  perm(-a,b,c),
+  perm(-a,b,-c),
+  perm(-a,-b,c),
+  perm(-a,-b,-c)
+),levels->1);
+
+
+
+group2(a,b,c):=flatten(( //tetra
+ // perm(a,b,c),
+  perm(a,b,-c),
+  perm(a,-b,c),
+//  perm(a,-b,-c),
+  perm(-a,b,c),
+//  perm(-a,b,-c),
+//  perm(-a,-b,c)//,
+  perm(-a,-b,-c)
+),levels->1);
+
+
+group3(a,b,c):=flatten((
+  perm1(a,b,c),
+  perm1(a,b,-c),
+  perm1(a,-b,c),
+  perm1(a,-b,-c),
+  perm1(-a,b,c),
+  perm1(-a,b,-c),
+  perm1(-a,-b,c),
+  perm1(-a,-b,-c)
+),levels->1);
+
+
+
+
+
+group4(a,b,c):=(
+  (a,b,c),
+  (a,b,-c),
+  (a,-b,c),
+  (a,-b,-c),
+  (-a,b,c),
+  (-a,b,-c),
+  (-a,-b,c),
+  (-a,-b,-c)
+);
+
+
+group5(a,b,c):=(
+mz=matrz(2*pi/3);
+mx=matrx(pi);
+mx=((-1,0,0),(0,-1,0),(0,0,-1));
+(
+  (a,b,c),
+//  (a,b,c)*mz,
+  (a,b,c)*mz*mz,
+//  -(a,b,c),
+  -(a,b,c)*mz,
+//  -(a,b,c)*mz*mz,
+  (a,b,c)*mx,
+//  (a,b,c)*mz*mx,
+  (a,b,c)*mz*mz*mx,
+//  -(a,b,c)*mx,
+  -(a,b,c)*mz*mx//,
+//  -(a,b,c)*mz*mz*mx
+)
+);
+
+
+rot(a,b,c,d):=[
+[a^2+b^2-c^2-d^2,-2*a*d+2*b*c,2*a*c+2*b*d],
+[2*a*d+2*b*c,a^2-b^2+c^2-d^2,-2*a*b+2*c*d],
+[-2*a*c+2*b*d,2*a*b+2*c*d,a^2-b^2-c^2+d^2]
+];
+
+
+rot(v,w):=(
+ v=v/|v|*sin(w);
+ rot(cos(w),v_1,v_2,v_3);
+);
+
+permi(a,b,c):=(
+tau=(sqrt(5)-1)/2;
+
+m2=rot((1,tau,0),2*pi/5);
+m3=m2*m2;
+m4=m3*m2;
+m5=m4*m2;
+
+m=rot((1,1,1),2*pi/3);
+(
+ (a,b,c),
+ (a,b,c)*m,
+ (a,b,c)*m*m,
+ (a,b,c)*m2,
+ (a,b,c)*m*m2,
+ (a,b,c)*m*m*m2,
+ (a,b,c)*m3,
+ (a,b,c)*m*m3,
+ (a,b,c)*m*m*m3,
+ (a,b,c)*m4,
+ (a,b,c)*m*m4,
+ (a,b,c)*m*m*m4,
+ (a,b,c)*m5,
+ (a,b,c)*m*m5,
+ (a,b,c)*m*m*m5
+);
+);
+
+
+group6(aa,bb,cc):=(
+tau=(sqrt(5)-1)/2;
+vv=
+ aa*(0,1,tau)+
+ bb*(tau,0,1)+
+ cc*(1,tau,0);
+a=vv_1;
+b=vv_2;
+c=vv_3;
+erg=flatten((
+  permi(a,b,c),
+  permi(a,b,-c),
+  permi(a,-b,c),
+  permi(a,-b,-c),
+  permi(-a,b,c),
+  permi(-a,b,-c),
+  permi(-a,-b,c),
+  permi(-a,-b,-c)
+),levels->1);
+convexhull3d(erg)_1;
+
+);
+
+
+
+
+
+
+
+
+group(v):=group(v_1,v_2,v_3);
+
+group(a,b,c):=(
+ if(choice==1,erg=group1(a,b,c));
+ if(choice==2,erg=group2(a,b,c));
+ if(choice==3,erg=group3(a,b,c));
+ if(choice==4,erg=group4(a,b,c));
+ if(choice==5,erg=group5(a,b,c));
+ if(choice==6,erg=group6(a,b,c));
+erg);
+
+
+
+
+if(|paramv,oldparamv|>0.0001,
+ init=0;
+
+
+
+param1=1/(1-param1);
+obj1=set(group(0,0,1))*param1;
+
+
+
+
+if((choice!=4)&(choice!=5), //Choice=4 muss nochmal extra gecoded werden
+ mmcur=minmax(obj1);
+ obj2=set(group(1,1,1));
+ mmnew=minmax(obj2);
+ parammin=1/(mmcur_2/mmnew_1);
+ parammax=1/(mmcur_1/mmnew_2);
+ param2=(param2*(parammin)+(1-param2)*(parammax));
+ obj2=obj2*param2;
+ objx=obj1++obj2;
+
+ mmcur=minmax(objx);
+ obj3=set(group(1,1,0));
+ mmnew=minmax(obj3);
+ parammin=1/(mmcur_2/mmnew_1);
+ parammax=1/(mmcur_1/mmnew_2);
+ param3=(param3*(parammin)+(1-param3)*(parammax));
+ obj3=obj3*param3;
+ objx=objx++obj3;
+
+ mmcur=minmax(objx);
+ obj4=set(group(1,2,0));
+ mmnew=minmax(obj4);
+ parammin=1/(mmcur_2/mmnew_1);
+ parammax=1/(mmcur_1/mmnew_2);
+ param4=(param4*(parammin)+(1-param4)*(parammax));
+ obj4=obj4*param4;
+ objx=objx++obj4;
+
+ mmcur=minmax(objx);
+ obj5=set(group(1,1,2));
+ mmnew=minmax(obj5);
+ parammin=1/(mmcur_2/mmnew_1);
+ parammax=1/(mmcur_1/mmnew_2);
+ param5=(param5*(parammin)+(1-param5)*(parammax));
+ obj5=obj5*param5;
+ objx=objx++obj5;
+
+
+ mmcur=minmax(objx);
+ obj6=set(group(1,2,3));
+ mmnew=minmax(obj6);
+ parammin=1/(mmcur_2/mmnew_1);
+ parammax=1/(mmcur_1/mmnew_2);
+ param6=(param6*(parammin)+(1-param6)*(parammax));
+ obj6=obj6*param6;
+ objx=objx++obj6;
+);
+
+
+if(choice==4,
+
+ param2=1/(1-param2);
+ obj2=set(group(1,1,1))*param2;
+ objx=obj1++obj2;
+
+ param3=1/(1-param3);
+ obj3=set(group(1,1,0))*param3;
+ objx=objx++obj3;
+
+ param4=1/(1-param4);
+ obj4=set(group(1,2,0))*param4/4;
+ objx=objx++obj4;
+
+ param5=1/(1-param5);
+ obj5=set(group(1,1,2))*param5/4;
+ objx=objx++obj5;
+
+
+ param6=1/(1-param6);
+ obj6=set(group(1,2,3))*param6/4;
+ objx=objx++obj6;
+
+
+);
+
+if(choice==5,
+
+
+
+v1=(1,0,0);
+v2=(0,1,0);
+v3=(0,0,1);
+
+obj1=set(group(1,0,0))*param1;
+
+ param2=1/(1-param2);
+ obj2=set(group(dirs_2))*param2;
+ objx=obj1++obj2;
+
+ param3=1/(1-param3);
+ obj3=set(group(dirs_3))*param3;
+ objx=objx++obj3;
+
+ param4=1/(1-param4);
+ obj4=set(group(dirs_4))*param4/4;
+ objx=objx++obj4;
+
+ param5=1/(1-param5);
+ obj5=set(group(dirs_5))*param5/4;
+ objx=objx++obj5;
+
+
+ param6=1/(1-param6);
+ obj6=set(group(dirs_6))*param6/4;
+ objx=objx++obj6;
+
+
+);
+
+
+
+//objx=group6(1,0,0);
+
+ ch=convexhull3d(objx);
+
+ obj=ch_1;
+ ff=ch_2;
+ dual=apply(ff,f,
+   linearsolve((obj_(f_1),obj_(f_2),obj_(f_3)),(1,1,1));
+ );
+
+
+ ch=convexhull3d(dual);
+ maxval=-sort(apply(ch_1,-|#|))_1;
+ obj=ch_1/maxval*1.3;
+//  obj=ch_1;
+ ff=ch_2;
+
+
+
+
+ ff=apply(ff,reverse(#));
+  faces=apply(ff,[#,actcol]);
+
+
+
+
+
+
+if(multicol==1,
+   colorize(obj);//Achtung hat impliziten Nebeneffect auf Faces
+);
+);//end if rendering
+
+
+
+ object(obj,faces):=(
+      pr= apply(faces,fa,[apply(fa_1,obj_#),fa_2])
+ );
+
+oldparamv=paramv;
+
+
+init3d();
+if(init==0,
+ object(obj,faces);
+);
+
+
+render3d();
+
+
+
+
+drawtext(E-(0,.7),align->"center",dirs_1,color->(1,1,1),size->10);
+drawtext(B-(0,.7),align->"center",dirs_2,color->(1,1,1),size->10);
+drawtext(G-(0,.7),align->"center",dirs_3,color->(1,1,1),size->10);
+drawtext(L-(0,.7),align->"center",dirs_4,color->(1,1,1),size->10);
+drawtext(N-(0,.7),align->"center",dirs_5,color->(1,1,1),size->10);
+drawtext(P-(0,.7),align->"center",dirs_6,color->(1,1,1),size->10);
+
+
+text="";
+if(choice==1,text="Volle Würfelsymmetrie (Granat)");
+if(choice==3,text="Würfel mit 2-symmetrischen Seiten (Pyrit)");
+if(choice==2,text="Tetraedersymmetrie");
+if(choice==4,text="Drei senkrechte Spiegelachsen");
+if(choice==5,text="Hexagonale Symmetrie (Quartz)");
+if(choice==6,text="Quasikristalline Struktur");
+drawtext((8.5,-11.5),text,color->(1,1,1),size->14);
+
+
+mark(val,col):=(
+ draw((0,-9),(val/scal,-9),color->col);
+ draw((val/scal,9),(val/scal,-9),color->col);
+);
+
+//mark(mino,(0,1,0));
+//mark(maxo,(0,0.6,0));
+//mark(minc,(1,0,0));
+//mark(maxc,(0.6,0,0));
+
+
+highlight(a):=(
+repeat(10,i,
+
+  fillcircle(a,-i*.1+1.9,alpha->i/10,color->(0.6,0.6,.9)*.6);
+
+ );
+);
+if(choice==2,highlight(T1));
+if(choice==3,highlight(T2));
+if(choice==1,highlight(T3));
+if(choice==4,highlight(T4));
+if(choice==5,highlight(T5));
+if(choice==6,highlight(T6));
+
+
+
+if(multicol==1,highlight(F1));
+if(multicol==0,highlight(F2));
+
+
+
+
+
+drawimage(T1+(-1,-1),T1+(1,-1),"image3");
+drawimage(T2+(-1,-1),T2+(1,-1),"image4");
+drawimage(T3+(-1,-1),T3+(1,-1),"image5");
+drawimage(T4+(-1,-.5),T4+(1,-.5),"image6");
+drawimage(T5+(-1,-1),T5+(1,-1),"image1");
+drawimage(T6+(-1,-1),T6+(1,-1),"image2");
+drawimage(A3+(-1,-1)*.8,A3+(1,-1)*.8,"image9");
+drawimage(A'+(-1,-1)*.8,A'+(1,-1)*.8,"image10");
+drawimage(F2+(-1,-1),F2+(1,-1),"image8");
+drawimage(F1+(-1,-1),F1+(1,-1),"image7");
+
+
+
+
+
+;
+</script>
+<script id="cstick" type="text/x-cindyscript">
+ wx=wx*0.995;
+ wy=wy*0.995;
+
+if(|(wx,wy)|<0.001,err("stopit");pauseanimation();stopanimation(););
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+mat=mmmx*mmmy*mat;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csmousedown" type="text/x-cindyscript">
+startx=mouse().x;
+starty=mouse().y;
+dragging=|mouse().xy,C|>.3 & |mouse().xy,F|>.3& |mouse().xy,K|>.3&
+         |mouse().xy,R|>.3 & |mouse().xy,S|>.3& |mouse().xy,T|>.3&
+         |mouse().xy,W|>.3
+&mouse().x<11
+;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script type="text/javascript">
+  var cdy = CindyJS({
+    scripts: "cs*",
+    defaultAppearance: {
+      dimDependent: 0.7,
+      fontFamily: "sans-serif",
+      lineSize: 1,
+      pointSize: 5.0,
+      textsize: 12.0
+    },
+    angleUnit: "°",
+    geometry: [
+      {name: "A", type: "Free", pos: [4.0, 2.1333333333333333, 0.26666666666666666], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "B", type: "Free", pos: [4.0, 0.5333333333333335, 0.26666666666666666], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "a", type: "Segment", color: [0.0, 0.0, 1.0], args: ["A", "B"], size: 3},
+      {name: "C", type: "PointOnSegment", pos: [4.0, 1.3439999893333336, 0.2666666666666667], dimDependent: 1, color: [0.4, 0.639, 0.8], args: ["a"], size: 7.0,narrow:80},
+      {name: "D", type: "Free", pos: [4.0, 2.4615384615384617, 0.3076923076923077], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "E", type: "Free", pos: [4.0, 0.6153846153846156, 0.3076923076923077], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "b", type: "Segment", color: [0.0, 0.0, 1.0], args: ["D", "E"], size: 3},
+      {name: "F", type: "PointOnSegment", pos: [4.0, 0.6153846153846158, 0.30769230769230776], dimDependent: 1, color: [0.8, 0.4, 0.4], args: ["b"], size: 7.0,narrow:80},
+      {name: "G", type: "Free", pos: [4.0, 0.47058823529411786, 0.23529411764705882], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "H", type: "Free", pos: [4.0, 1.8823529411764706, 0.23529411764705882], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "c", type: "Segment", color: [0.0, 0.0, 1.0], args: ["G", "H"], size: 3},
+      {name: "K", type: "PointOnSegment", pos: [4.0, 0.8470588423529413, 0.23529411764705882], dimDependent: 1, color: [0.8, 0.639, 0.4], args: ["c"], size: 7.0,narrow:80},
+      {name: "L", type: "Free", pos: [4.0, -1.8461538461538465, 0.30769230769230776], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "M", type: "Free", pos: [4.0, 2.7328566760003855E-16, 0.3076923076923077], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "d", type: "Segment", color: [0.0, 0.0, 1.0], args: ["L", "M"], size: 3},
+      {name: "N", type: "Free", pos: [4.0, -1.5999999999999996, 0.26666666666666666], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "O", type: "Free", pos: [4.0, 2.3684757858670006E-16, 0.26666666666666666], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "e", type: "Segment", color: [0.0, 0.0, 1.0], args: ["N", "O"], size: 3},
+      {name: "P", type: "Free", pos: [4.0, -1.4117647058823528, 0.23529411764705882], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "Q", type: "Free", pos: [4.0, 2.0898315757650005E-16, 0.23529411764705882], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "f", type: "Segment", color: [0.0, 0.0, 1.0], args: ["P", "Q"], size: 3},
+      {name: "R", type: "PointOnSegment", pos: [4.0, -1.3784615446153847, 0.3076923076923077], dimDependent: 1, color: [0.4, 0.8, 0.4], args: ["d"], size: 7.0,narrow:80},
+      {name: "S", type: "PointOnSegment", pos: [4.0, -1.2479999999999996, 0.2666666666666667], dimDependent: 1, color: [0.8, 0.557, 0.8], args: ["e"], size: 7.0,narrow:80},
+      {name: "T", type: "PointOnSegment", pos: [4.0, -1.110588225882353, 0.23529411764705882], dimDependent: 1, color: [0.4, 0.4, 0.8], args: ["f"], size: 7.0,narrow:80},
+      {name: "U", type: "Free", pos: [-0.907801418439715, -4.0, 0.3546099290780141], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "V", type: "Free", pos: [0.5106382978723407, -4.0, 0.3546099290780141], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "g", type: "Segment", color: [0.0, 0.0, 1.0], args: ["U", "V"], size: 3},
+      {name: "W", type: "PointOnSegment", pos: [0.07092198581560351, -4.0, 0.35460992907801414], color: [1.0, 1.0, 1.0], args: ["g"], size: 7.0,narrow:80},
+      {name: "T5", type: "Free", pos: [4.0, -0.9523809523809523, 0.19047619047619047], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "T6", type: "Free", pos: [4.0, -1.5238095238095237, 0.19047619047619047], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "T1", type: "Free", pos: [4.0, 1.3333333333333333, 0.19047619047619047], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "T2", type: "Free", pos: [4.0, 0.7619047619047619, 0.19047619047619047], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "T3", type: "Free", pos: [4.0, 0.19047619047619047, 0.19047619047619047], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "T4", type: "Free", pos: [4.0, -0.38095238095238093, 0.19047619047619047], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "F1", type: "Free", pos: [-3.7446808510638303, -4.0, 0.3546099290780142], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "F2", type: "Free", pos: [-2.3745583038869253, -4.0, 0.3533568904593639], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "A3", type: "Free", pos: [-1.3427561837455828, -4.0, 0.3533568904593639], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "A'", type: "Free", pos: [1.017667844522968, -4.0, 0.3533568904593639], color: [1.0, 0.0, 0.0], pinned: true,visible:false}
+    ],
+    animation: {
+      autoplay: false,
+      controls: true,
+      speed: 0.5,
+      speedRange: [0.0, 1.0],
+      accuracy: 1
+    },
+    autoplay: false,
+    animcontrols: true,
+    ports: [{
+      id: "CSCanvas",
+      width: 917,
+      height: 569,
+      transform: [{visibleRect: [-12.66, 9.78, 24.02, -12.98]}],
+      axes: true,
+      grid: 1.0,
+      snap: true,
+      background: "rgb(0,0,0)"
+    }],
+    csconsole: false,
+    cinderella: {build: 1901, version: [2, 9, 1901]},
+    images: {
+      "image1":"img/image-1.png",
+      "image2":"img/image-2.png",
+      "image3":"img/image-3.png",
+      "image4":"img/image-4.png",
+      "image5":"img/image-5.png",
+      "image6":"img/image-6.png",
+      "image7":"img/image-7.png",
+      "image8":"img/image-8.png",
+      "image9":"img/image-9.png",
+      "image10":"img/image-10.png"
+
+    }
+  });
+</script>
+<div id="CSCanvas"></div>
+</body>
+</html>

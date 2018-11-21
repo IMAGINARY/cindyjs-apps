@@ -1,17 +1,15 @@
 {
-  "id": "app-id",
+  "id": "particles",
   "version": "1.0.0",
   "main": "app.html",
   "width": 1920,
   "height": 1080,
   "name": {
-    "en": "App name",
-    "de": "App name",
-    "es": "App name"
+    "en": "Particles",
+    "de": "Particles"
   },
   "description": {
     "en": "",
-    "de": "",
-    "es": ""
+    "de": ""
   }
 }

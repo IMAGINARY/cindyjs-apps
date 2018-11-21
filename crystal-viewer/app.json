@@ -1,0 +1,15 @@
+{
+  "id": "crystal-viewer",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 917,
+  "height": 569,
+  "name": {
+    "en": "Crystal viewer",
+    "de": "Crystal viewer"
+  },
+  "description": {
+    "en": "",
+    "de": ""
+  }
+}

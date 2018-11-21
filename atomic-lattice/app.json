@@ -1,0 +1,15 @@
+{
+  "id": "atomic-lattice",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 1024,
+  "height": 554,
+  "name": {
+    "en": "Atomic lattice",
+    "de": "Atomic lattice"
+  },
+  "description": {
+    "en": "",
+    "de": ""
+  }
+}

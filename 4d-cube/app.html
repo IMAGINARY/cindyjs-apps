@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Hypercube</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
+</head>
+<body>
+<script id="csinit" type="text/x-cindyscript">
+pts=apply([0,1],x,
+     apply([0,1],y,
+       apply([0,1],z,
+         apply([0,1],w,
+           [x,y,z,w]
+         )
+        )
+       )
+      );
+
+pts=flatten(pts,levels->3);
+
+
+
+
+segs=pairs(pts);
+k1=select(segs,(#_1)_(2,3,4)==(#_2)_(2,3,4));
+k2=select(segs,(#_1)_(1,3,4)==(#_2)_(1,3,4));
+k3=select(segs,(#_1)_(1,2,4)==(#_2)_(1,2,4));
+k4=select(segs,(#_1)_(1,2,3)==(#_2)_(1,2,3));
+
+proj(p):=transpose([w1,w2,w3,w4])*p+w0;
+projf(p):=transpose([B.xy-w0,C.xy-w0,D.xy-w0,E.xy-w0])*p+w0;
+
+drawpt(p):=(
+  draw(proj(p),color->(1,1,1),size->5);
+);
+
+
+drawln(l,col):=(
+  p1=proj(l_1);
+  p2=proj(l_2);
+  draw(p1,p2,size->3,color->(col));
+);
+
+
+
+
+label(p,st):=(
+  n=p-center;
+  n=n/|n|;
+  drawtext(p+n*1.2,offset->(0,-8),align->center,st,color->(1,1,1),size->18);
+);
+
+
+;
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+layer(3);
+clrscr();
+//pts=allpoints();
+
+
+
+
+dim=4;
+slilen=|S,T|;
+snap=.05;
+
+preval=|S,U|/|S,T|;
+if(
+  |round(preval*dim)/dim-preval|<snap/dim,
+  preval=round(preval*dim)/dim;
+  U.xy=(1-preval)*S+preval*T;
+);
+
+apply(0..dim,i,
+  pp=i/dim;
+  pt=(1-pp)*S+pp*T;
+  drawtext(pt+(1,-.2),i,size->16,color->(1,1,1));
+  draw(pt,pt+(.6,0),size->3,color->(1,1,1)*.6)
+);
+draw(U.xy,size->8,color->(1,1,1));
+
+
+val=preval*dim;
+
+
+
+
+d1=min(val,1);
+d2=max(0,min(val-1,1));
+d3=max(0,min(val-2,1));
+d4=max(0,min(val-3,1));
+
+
+w0=A.xy;
+w1=(B.xy-w0)*d1;
+w2=(C.xy-w0)*d2;
+w3=(D.xy-w0)*d3;
+w4=(E.xy-w0)*d4;
+
+full=apply(pts,projf(#));
+
+center=sum(full)/length(full);
+
+forall(k1,drawln(#,(1,.6,0)));
+forall(k2,drawln(#,(0,.6,0)));
+forall(k3,drawln(#,(.7,0,0)));
+forall(k4,drawln(#,(0,.7,.7)));
+
+forall(pts,drawpt(#));
+B.visible=(d1~=1);
+C.visible=(d2~=1);
+D.visible=(d3~=1);
+E.visible=(d4~=1);
+
+label(A,"O");
+if(d1~=1,label(B,"A"));
+if(d2~=1,label(C,"B"));
+if(d3~=1,label(D,"C"));
+if(d4~=1,label(E,"D"));
+
+drawtext(T-(0,1.2),align->"left",color->(1,1,1)*.7,"Dimension",size->14);
+
+;
+</script>
+<script type="text/javascript">
+  var cdy = CindyJS({
+    scripts: "cs*",
+    defaultAppearance: {
+      dimDependent: 1.0,
+      fontFamily: "sans-serif",
+      lineSize: 1,
+      pointSize: 5.0,
+      textsize: 12.0
+    },
+    angleUnit: "°",
+    geometry: [
+      {name: "A", type: "Free", pos: [4.0, 2.0, -1.0], color: [1.0, 1.0, 1.0], size: 6.0},
+      {name: "B", type: "Free", pos: [4.0, -2.6666666666666665, 1.3333333333333333], color: [1.0, 1.0, 1.0], visible: false, size: 6.0},
+      {name: "C", type: "Free", pos: [3.2, -4.0, -0.8], color: [1.0, 1.0, 1.0], visible: false, size: 6.0},
+      {name: "D", type: "Free", pos: [-1.3571428571428572, -4.0, 0.5952380952380953], color: [1.0, 1.0, 1.0], visible: false, size: 6.0},
+      {name: "E", type: "Free", pos: [4.0, 2.6117647058823534, 0.5882352941176471], color: [1.0, 1.0, 1.0], visible: false, size: 6.0},
+      {name: "S", type: "Free", pos: [4.0, 2.4, 0.2], color: [1.0, 0.0, 0.0], visible: false, size: 4.0},
+      {name: "T", type: "Free", pos: [4.0, -0.9999999999999993, 0.2], color: [1.0, 0.0, 0.0], visible: false, size: 4.0},
+      {name: "S28", type: "Segment", color: [0.502, 0.502, 0.502], args: ["S", "T"], size: 3, printname: "$S_{28}$"},
+      {name: "U", type: "PointOnSegment", pos: [4.0, 2.3999999999999986, 0.19999999999999996], color: [1.0, 1.0, 1.0], args: ["S28"], size: 8.0}
+    ],
+    ports: [{
+      id: "CSCanvas",
+      width: 835,
+      height: 570,
+      transform: [{visibleRect: [-9.34, 14.26, 24.06, -8.54]}],
+      axes: true,
+      grid: 1.0,
+      snap: true,
+      background: "rgb(0,0,0)"
+    }],
+    csconsole: false,
+    cinderella: {build: 1901, version: [2, 9, 1901]}
+  });
+</script>
+<div id="CSCanvas"></div>
+</body>
+</html>

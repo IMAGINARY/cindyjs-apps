@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Crystal packing</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
+</head>
+<body>
+<script id="csmouseup" type="text/x-cindyscript">
+if(dragging,
+if(|(wx,wy)|>0.08,
+  playanimation(),
+  pauseanimation();stopanimation();
+)
+
+);
+
+
+
+
+if(seconds()-presstime<0.2,
+
+
+xx=mouse().x;
+yy=mouse().y;
+wy=(startx-xx)*.5;
+wx=-(starty-yy)*.5;
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+
+
+mat=mmmx*mmmy*mat;
+
+
+startx=xx;
+starty=yy;
+);
+
+d=1.5;
+prevchoice=choice;
+if(|mouse().xy,O1|<2,choice=0);
+if(|mouse().xy,O2|<2,choice=1);
+if(|mouse().xy,O3|<2,choice=2);
+if(|mouse().xy,O4|<2,choice=3);
+if(|mouse().xy,O5|<2,choice=4);
+
+pauseanimation();stopanimation();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+//layer(0);
+//clrscr();
+//draw((14,0));
+Dummy.xy=(0,0);
+if(W.x>=V.x,W.xy=V.xy);
+if(W.x<=U.x,W.xy=U.xy);
+if(C.x<=A.x,C.xy=A.xy);
+if(C.x>=B.x,C.xy=B.xy);
+if(F.x>=D.x,F.xy=D.xy);
+if(F.x<=E.x,F.xy=E.xy);
+if(K.x<=G.x,K.xy=G.xy);
+if(K.x>=H.x,K.xy=H.xy);
+
+
+errf(c):=err(c);
+errf(c):=();
+faces=[];
+
+psp=|G,K|/|G,H|;
+spread=psp*3+.00001;
+
+
+
+if(choice==0,definebody(cube);but=O1);
+if(choice==1,definebody(rbd);but=O2);
+if(choice==2,definebody(fcc);but=O3);
+if(choice==3,definebody(hexa);but=O4);
+if(choice==4,definebody(hexa2);but=O5);
+
+
+
+objr=body*(1+spread/2)*ispr;
+
+
+alpha=|U,W|/|U,V|;
+pdi=1-|A,C|/|A,B|;
+dist=1/((1-pdi)+0.01)*30;
+
+
+pari=|D,F|/|D,E|;
+iter=nmax-round(pari*(nmax-1));
+iter=(1-pari)/2+.001;
+
+
+params=(choice,iter,spread);
+
+fcol=(1,0.5,0.5);
+kcol=(0.5,1,0.5);
+ecol=(0.5,0.5,1);
+
+amb=0.2;
+
+lights=[
+   [[-cos(30°),-sin(30°),-.5],col1],
+   [[-cos(150°),-sin(150°),-.5],col2],
+   [[-cos(270°),-sin(270°),-.5],col3]
+];
+ambient=(1,1,1)*amb;
+
+   objs=[];
+   faces=[];
+
+actcol=(.5,.5,1);
+
+
+//addface(((1,1,1),(1,1,-1),(1,-1,-1),(1,-1,1)));
+//addface(((-1,1,1),(-1,1,-1),(-1,-1,-1),(-1,-1,1)));
+//addface(((1,1,1),(1,1,-1),(-1,1,-1),(-1,1,1)));
+//addface(((1,-1,1),(1,-1,-1),(-1,-1,-1),(-1,-1,1)));
+
+
+//addbody(body,bfaces);
+
+cube(trans,mat,scale):=(
+   pts=apply(body,trans+#*scale);
+   addbody(pts,bfaces);
+
+//   apply(bfaces,fa,(pts_(fa_1),pts_(fa_2),pts_(fa_3)));
+);
+
+
+cuberec(grid,mat,scale,n):=(
+  apply(grid,
+    cube(#,mat,scale)
+//    cube(#,mat*rmat,scale)
+  );
+);
+
+umat=[[1,0,0],[0,1,0],[0,0,1]];
+
+if((init==0)%(params!=oldparams),
+oldparams=params;
+
+
+nob=0;
+nfa=0;
+
+// iter=5;
+
+grid=select(grid,|#|<iter*10);
+ cuberec(grid*(1+spread),umat,1,iter);
+
+
+
+objs=ocache_(1..nob);
+faces=fcache_(1..nfa);
+
+
+ init=0;
+// dia=abs((sort(objs,-|#|))_1);
+dia=5;
+ objs=objs/dia*1.8*dim;
+ object(objs,faces);
+
+);
+
+ gsave();
+ scale(1.1);
+ translate((1,0));
+  render3d();
+
+grestore();
+
+highlight(a):=(
+repeat(10,i,
+//  fillcircle(a,-i*.1+1.9,alpha->i/10,color->(0.6,0.6,.9)*.6);
+  fillcircle(a,-i*.1+1.9,alpha->i/10,color->(0.8,0.6,.6)*.6);
+ );
+);
+
+//err("A4 "+seconds());
+
+
+
+
+
+
+
+
+
+//drawpoly(((15,-4),(100,-4),(100,20),(15,20)),color->(0.3,0.4,0.5));
+
+colchoice(i):=if(i==choice,(1,1,1),(1,1,1)*.5);
+
+
+
+
+
+off=(-.05,0);
+w=1.2;
+
+//layer(4);
+//clrscr();
+
+highlightX(but):= connect(
+    (
+      off+but+(1,1)*w,
+      off+but+(-1,1)*w,
+      off+but+(-1,-1)*w,
+      off+but+(1,-1)*w,
+      off+but+(1,1)*w
+  ),color->(1,1,1)*.7,size->2
+);
+
+dehighlight(but):= drawpoly(
+    (
+      off+but+(1,1)*w,
+      off+but+(-1,1)*w,
+      off+but+(-1,-1)*w,
+      off+but+(1,-1)*w,
+      off+but+(1,1)*w
+  ),color->(1,1,1)*.0,size->2,alpha->0.6
+);
+
+
+//if(length(objx)>1500,dehighlight(Wand));
+
+//layer(-1);
+//clrscr();
+highlight(but);
+
+
+drawimage(O1.xy,"image10",scale->2.5);
+drawimage(O2.xy,"image9",scale->2.5);
+drawimage(O3.xy,"image8",scale->2.5);
+drawimage(O4.xy,"image7",scale->2.5);
+drawimage(O5.xy,"image6",scale->2.5);
+
+
+
+
+
+
+
+//drawtext(O1.xy-(0,.6),"1",color->(1,1,1),size->40,align->"center");
+//drawtext(O2.xy-(0,.6),"2",color->(1,1,1),size->40,align->"center");
+//drawtext(O3.xy-(0,.6),"3",color->(1,1,1),size->40,align->"center");
+//drawtext(O4.xy-(0,.6),"4",color->(1,1,1),size->40,align->"center");
+//drawtext(O5.xy-(0,.6),"5",color->(1,1,1),size->40,align->"center");
+
+drawtext((16,-4.4+10/4),color->(1,1,1),size->28,international("Alpha"));
+drawtext((16,-4.4),color->(1,1,1),size->28,international("Persp"));
+drawtext((16,-4.4-10/4),color->(1,1,1),size->28,international("Iter"));
+drawtext((16,-4.4-20/4),color->(1,1,1),size->28,international("Displace"));
+//drawtext((-.5,-12.5),color->(1,1,1),size->12,"Körper mit der Maus drehen");
+drawtext((3,-13),international("Move"),color->(1,1,1),align->"center",size->24,family->"Helvetica");
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="cstick" type="text/x-cindyscript">
+ wx=wx*0.998;
+ wy=wy*0.998;
+
+if(|(wx,wy)|<0.001,pauseanimation();stopanimation(););
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+mat=mmmx*mmmy*mat;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csmousedown" type="text/x-cindyscript">
+startx=mouse().x;
+starty=mouse().y;
+dragging=
+|mouse().xy,W|>.3&
+|mouse().xy,F|>.3&
+|mouse().xy,K|>.3&
+|mouse().xy,C|>.3&
+mouse().x<15
+
+;
+
+
+
+
+
+
+
+presstime=seconds();
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csmousedrag" type="text/x-cindyscript">
+if(dragging,
+
+xx=mouse().x;
+yy=mouse().y;
+
+ wy=(startx-xx)*.2;
+ wx=-(starty-yy)*.2;
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+
+  mat=mmmx*mmmy*mat;
+
+
+
+startx=xx;
+starty=yy;
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csinit" type="text/x-cindyscript">
+
+
+
+
+wx=0;
+wy=0;
+oldparamv=(0,0,0,0,0,0);
+oldcolparams=(0,0);
+
+choice=2;
+multicol=1;
+next():=(choice=choice+1;if(choice==5,choice=1));
+anim=false;
+
+scal=0.15;
+
+init=0;
+
+
+mat=[
+  [1,0,0],
+  [0,1,0],
+  [0,0,1]
+];
+
+mat0=[
+  [1,0,0],
+  [0,1,0],
+  [0,0,1]
+];
+
+
+
+mmmx=mat0;
+mmmy=mat0;
+
+
+
+
+
+edgecol=(0.76,0.78,0.54);
+edgecol=(.9,.9,.9);
+edgecol=(0.4,0.3,0.3);
+
+//Das Malt einen Punkt aus homogenen Koordinaten
+renderPoint(p):=(
+  pp=mat*p;
+  draw((pp_1,pp_2),color->edgecol,border->false,size->3)
+);
+
+//Das Malt ein Segment aus homogenen Koordinaten
+renderLine(p,q):=(
+  pp=mat*p;
+  qq=mat*q;
+  draw((pp_1,pp_2),(qq_1,qq_2));
+);
+
+
+
+
+norm(p):=(p_1,p_2,p_3);
+zentral(p):=(p_1,p_2)*(dist/(dist-p_3));
+//zentral(p):=(p_1,p_2);
+
+
+
+renderPolygon(pol,col):=(
+//  pp=apply(pol,mat*#);
+
+pp=pol;
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,zentral(#));
+  aa=pol_1;bb=pol_2,cc=pol_3;
+
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->.8);
+  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->1);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+renderPolygonB(pp,col):=(
+//  pp=apply(pol,mat*#);
+
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,zentral(#));
+
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->alpha);
+  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->1);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+renderPolygonF(pp,col):=(
+//  pp=apply(pol,mat*#);
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,zentral(#));
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->alpha);
+  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->1.4);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+
+
+
+
+
+
+
+
+renderPolygonX(pol,col):=(
+//  pp=apply(pol,mat*#);
+
+pp=pol;
+  pp=apply(pp,(#_1,#_2));
+  drawpoly(pp,alpha->1);
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+init3d():=(
+// renderlist=[];
+// pr=[];
+);
+
+center(ll):=sum(ll)/length(ll);
+
+
+poly3d(l):=(l);
+
+
+
+draw3d(a,b):=();
+
+
+pro(vert):=(vert_1,vert_2,1);
+pro(vert):=zentral(vert);
+
+ori(pol):=(
+  det(pro(pol_1),pro(pol_2),pro(pol_3))
+);
+
+render3d():=(
+mati=transpose(mat);
+
+  if(init==0,
+
+  renderlist=
+  apply(pr,ll,
+    mll=apply(ll_1,mat*(#))/scal;
+    [mll,center(mll)_3,ll_2]
+  );
+  init=1;
+  ,
+  ii=1;
+
+  forall(pr,ll,
+    mll=ll_1*mati/scal;
+
+    (renderlist_ii)_1=mll;
+    (renderlist_ii)_2=center(mll)_3;
+    (renderlist_ii)_3=ll_2;
+      ii=ii+1;
+  );
+
+
+
+);
+
+
+  rl=sort(renderlist,#_2);
+
+  forall(rl,pol,
+      if(ori(pol_1)~>=0,
+       renderPolygonB(pol_1,pol_3*(pol_2+10)/10),
+       renderPolygonF(pol_1,pol_3*(pol_2+10)/10)
+
+      );
+  );
+
+
+
+//err("B4 "+seconds());
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+//berechnet innkugel und umkugelradius
+
+minmax(obj):= (
+ if(length(obj)>3,
+  ch=convexhull3d(obj);
+  obj=ch_1;
+  maxval=1/(-sort(apply(ch_1,-|#|))_1);
+  ff=ch_2;
+  dual=apply(ff,f,
+    linearsolve((obj_(f_1),obj_(f_2),obj_(f_3)),(1,1,1));
+  );
+  ch=convexhull3d(dual);
+  minval=-sort(apply(ch_1,-|#|))_1;
+  (minval,maxval);
+  ,
+  (|obj_1|,|obj_1|);
+ );
+);
+
+
+perm(a,b,c):=(
+  (a,b,c),
+  (a,c,b),
+  (b,a,c),
+  (b,c,a),
+  (c,a,b),
+  (c,b,a)
+);
+
+
+perm1(a,b,c):=(
+  (a,b,c),
+  (b,c,a),
+  (c,a,b)
+);
+
+
+
+
+matrz(w):=(
+(cos(w),sin(w),0),
+(-sin(w),cos(w),0),
+(0,0,1)
+);
+
+matrx(w):=(
+(1,0,0),
+(0,cos(w),sin(w)),
+(0,-sin(w),cos(w))
+);
+
+matry(w):=(
+(cos(w),0,-sin(w)),
+(0,1,0),
+(sin(w),0,cos(w))
+);
+
+
+
+
+nn(v):=v/|v|;
+
+
+
+
+iterdepth=0;
+
+definebody(zell):=(
+  body=zell_1;
+  segs=zell_2;
+  faces=zell_3;
+if(choice!=6, initdirs=apply(body,#/|#|));
+);
+
+spanfactor=(0.24,.38,.38,0.78,0.78,0,0,0,0);
+spanfac():=(
+  sf=1;
+  if(choice<6,sf=spanfactor_(choice+1));
+  sfold=of;
+  if(choice==6,sf=sfold);
+  sf;1
+);
+
+
+
+colorf(obj,ff):=actcol;
+colorf(obj,ff):=(
+
+nn=linearsolve((obj_(ff_1),obj_(ff_2),obj_(ff_3)),(1,1,1));
+nn=nn/|nn|;
+dd=-sort(apply(initdirs,-#*nn))_1;
+hue(colspan*spanfactor_(choice+1)*(dd-1)+(angle+colspan)/(2*pi));
+);
+
+
+colorfx(obj,ff):=(
+nn=linearsolve((obj_(ff_1),obj_(ff_2),obj_(ff_3)),(1,1,1));
+
+hue(4*1/|nn|);
+);
+
+
+
+ object(obj,faces):=(
+
+      pr= apply(faces,fa,[apply(fa_1,obj_#),fa_2])
+ );
+
+
+
+
+
+
+addface(list):=(
+  if(det(list_1,list_2,list_3)>0,list=reverse(list));
+
+
+  n=length(objs);
+  objs=objs++list;
+  faces=faces++[[n+1..n+length(list),actcol]];
+);
+
+
+
+addbody(bo,fa):=(
+  nn=nob;
+  forall(bo,
+    nob=nob+1;
+    ocache_nob=#;
+  );
+//  objs=objs++bo;
+
+  forall(fa,f,
+    nfa=nfa+1;
+    fcache_nfa=[apply(f,#+nn),actcol]
+  )
+//  faces=faces++apply(fa,f,[apply(f,#+nn),actcol]);
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+ambient=(0.2,0.2,0.2);
+params=(0,0,0);
+oldparams=(0,0,0);
+
+
+
+
+col1=[0,0,1];
+col2=[.1,1,0]*0;
+col3=[1,0,1]*0;
+actcol=(1,1,1);
+
+
+col1=[.9,.9,1]*.5;
+col2=[1,.9,.9]*.5;
+col3=[1,1,1]*0;
+actcol=(.5,.8,1);
+
+
+col1=[.9,.9,1];
+col2=[.0,1,1]*0.5;
+col3=[1,.9,1]*.9;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;choice=0;
+tchoice=1;
+
+
+
+ocache=zerovector(10000);
+fcache=zerovector(10000);
+
+nob=0;
+nfa=0;
+
+
+
+
+perm3(b,c,d):=(
+ (b,c,d),
+ (b,d,c),
+ (c,b,d),
+ (c,d,b),
+ (d,b,c),
+ (d,c,b)
+);
+
+
+perm3ev(b,c,d):=(
+ (b,c,d),
+ (c,d,b),
+ (d,b,c)
+);
+
+
+
+pm1(b,c,d):=(
+   (b,c,d),
+   (-b,c,d));
+
+pm2(b,c,d):=
+pm1(b,c,d)++pm1(b,-c,d);
+pm3(b,c,d):=
+pm2(b,c,d)++pm2(b,c,-d);
+
+tau=(sqrt(5)-1)/2;
+
+s1=0.5;
+
+cell4=2*s1*[(1,1,1),(1,-1,-1),(-1,1,-1),(-1,-1,1)];
+cell8=s1*set(flatten(apply(pm1(1,0,0),perm3(#_1,#_2,#_3)),levels->1));
+cell6=s1*set(pm3(1,1,1));
+cell12=(set(flatten(apply(pm2(1+tau,tau,0),perm3ev(#_1,#_2,#_3))/2,levels->1))++cell6)*s1;
+cell20=s1*set(flatten(apply(pm2(tau,1,0),perm3ev(#_1,#_2,#_3)),levels->1));
+
+rhombodo=cell6++2*cell8;
+bfcc=s1*set(flatten(apply(pm3(1,2,0),perm3(#_1,#_2,#_3)),levels->1));
+
+bhexa=apply(0..5,(sin(#*60°),sqrt(3/4),cos(#*60°)))++apply(0..5,(sin(#*60°),-sqrt(3/4),cos(#*60°)));
+bhexa2=[
+  (0,3,0),
+  (0,-3,0),
+  (2,1,2),
+  (-2,1,2),
+  (-2,1,-2),
+  (2,1,-2),
+  (2,-1,2),
+  (-2,-1,2),
+  (-2,-1,-2),
+  (2,-1,-2),
+  (2,2,0),
+  (-2,2,0),
+  (0,2,2),
+  (0,2,-2),
+  (2,-2,0),
+  (-2,-2,0),
+  (0,-2,2),
+  (0,-2,-2)
+]/2;
+
+
+
+createb(zell,nmax,dim,isp,grid):=(
+  ch=convexhull3d(zell);
+  fa=apply(ch_2,reverse(#));
+  (ch_1,fa,nmax,dim,isp,grid)
+);
+
+
+definebody(zell):=(
+nmax=zell_3;
+body=zell_1;
+bfaces=zell_2;
+dim=zell_4;
+ispr=zell_5;
+grid=zell_6;
+);
+
+n=2;
+cubegrid=flatten(
+apply(-n..n,i,
+ apply(-n..n,j,
+  apply(-n..n,k,
+     (i,j,k)
+  );
+ );
+),
+levels->2);
+
+rbdgrid=select(cubegrid,iseven(sum(#)));
+
+n=2;
+fccgrid=flatten(
+apply(-n..n,i,
+ apply(-n..n,j,
+  apply(-n..n,k,
+     [(i,j,k),(i+1/2,j+1/2,k+1/2)]
+  );
+ );
+),
+levels->3);
+
+fccgrid=select(fccgrid,max((|#_1|,|#_2|,|#_3|))~<=1.4);
+
+
+n=2;
+hexagrid=flatten(
+apply(-n..n,i,
+ apply(-n..n,j,
+  apply(-n..n,k,
+     i*(0,sqrt(3/4),0)+j*(1,0,0)/sqrt(4/3)+k*(.5,0,sqrt(3/4))/sqrt(4/3);
+  );
+ );
+),
+levels->2);
+
+//hexagrid=select(hexagrid,max((|#_1|,|#_2|,|#_3|))~<=2.3);
+hexagrid=select(hexagrid,|#|~<=2);
+
+
+n=2;
+hexagrid2=flatten(
+apply(-n..n,i,
+ apply(-n..n,j,
+  apply(-n..n,k,
+     if(iseven(j),(i,j,k)*2,(i,j,k)*2+(1,0,1));
+  );
+ );
+),
+levels->2);
+
+
+
+//err(fccgrid);
+cube=createb(cell6,3,.8,.8,cubegrid);
+rbd=createb(rhombodo,3,.7,1,rbdgrid);
+fcc=createb(bfcc,3,.6,1,fccgrid*2);
+hexa=createb(bhexa,3,.5,1,hexagrid*2);
+hexa2=createb(bhexa2,3,.4,1,hexagrid2);
+
+
+
+
+
+javascript("loaded()");
+
+
+
+;
+</script>
+
+<script type="text/javascript">
+  var data = {
+    "background": "rgb(0,0,0)",
+    "geometry": [
+      {
+        "name": "U",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -0.24999999999999978,
+          0.25
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "visible": false,
+        "size": 2.0,
+        "pinned": true
+
+      },
+      {
+        "name": "V",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -0.15999999999999986,
+          0.16
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "visible": false,
+        "size": 2.0,
+        "pinned": true
+      },
+      {
+        "name": "A5",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.5294117647058822,
+          0.23529411764705882
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "visible": false,
+        "size": 3.0,
+        "pinned": true
+      },
+      {
+        "name": "A4",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.2682926829268295,
+          0.19512195121951223
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "visible": false,
+        "size": 3.0,
+        "pinned": true
+      },
+      {
+        "name": "A3",
+        "type": "Free",
+        "pos": [
+          4.0,
+          1.083333333333333,
+          0.16666666666666663
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "visible": false,
+        "size": 3.0
+      },
+      {
+        "name": "g",
+        "type": "Segment",
+        "pos": [
+          0.0,
+          -4.0,
+          -3.9999999999999964
+        ],
+        "color": [
+          0.5019608,
+          0.5019608,
+          0.5019608
+        ],
+        "args": [
+          "U",
+          "V"
+        ],
+        "size": 3
+      },
+      {
+        "name": "W",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          -0.1797457363547416,
+          0.17974573635474173
+        ],
+        "narrow": 120,
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "g"
+        ]
+      },
+      {
+        "name": "A",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -0.8749999999999998,
+          0.25
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true,
+        "pinned": true
+      },
+      {
+        "name": "B",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -0.5599999999999998,
+          0.16
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true,
+        "pinned": true
+      },
+      {
+        "name": "a",
+        "type": "Segment",
+        "pos": [
+          0.0,
+          1.142857142857143,
+          4.0
+        ],
+        "color": [
+          0.5019608,
+          0.5019608,
+          0.5019608
+        ],
+        "args": [
+          "A",
+          "B"
+        ],
+        "labeled": true,
+        "size": 3
+      },
+      {
+        "name": "C",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          -0.6776964657980215,
+          0.1936275616565776
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "narrow": 120,
+        "args": [
+          "a"
+        ],
+        "labeled": true
+      },
+      {
+        "name": "D",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -0.9599999999999999,
+          0.16
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true,
+        "pinned": true
+      },
+      {
+        "name": "E",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -1.4999999999999998,
+          0.25
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true,
+        "pinned": true
+      },
+      {
+        "name": "b",
+        "type": "Segment",
+        "pos": [
+          0.0,
+          0.6666666666666667,
+          4.0
+        ],
+        "color": [
+          0.5019608,
+          0.5019608,
+          0.5019608
+        ],
+        "args": [
+          "D",
+          "E"
+        ],
+        "labeled": true,
+        "size": 3
+      },
+      {
+        "name": "F",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          -1.255375259246629,
+          0.20922920987443822
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "narrow": 120,
+        "args": [
+          "b"
+        ],
+        "labeled": true
+      },
+      {
+        "name": "G",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -2.125,
+          0.25
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true,
+        "pinned": true
+      },
+      {
+        "name": "H",
+        "type": "Free",
+        "pos": [
+          4.0,
+          -1.36,
+          0.16
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "visible": false,
+        "labeled": true,
+        "pinned": true
+      },
+      {
+        "name": "c",
+        "type": "Segment",
+        "pos": [
+          0.0,
+          0.4705882352941177,
+          4.0
+        ],
+        "color": [
+          0.5019608,
+          0.5019608,
+          0.5019608
+        ],
+        "args": [
+          "G",
+          "H"
+        ],
+        "labeled": true,
+        "size": 3
+      },
+      {
+        "name": "K",
+        "type": "PointOnLine",
+        "pos": [
+          4.0,
+          -1.9101123595505614,
+          0.2247191011235955
+        ],
+        "narrow": 120,
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "args": [
+          "c"
+        ],
+        "labeled": true
+      },
+      {
+        "name": "A\u0027\u0027",
+        "type": "Free",
+        "pos": [
+          4.0,
+          0.7058823529411765,
+          0.23529411764705882
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "visible": false,
+        "labeled": true,
+        "size": 3.0
+      },
+      {
+        "name": "A\u0027",
+        "type": "Free",
+        "pos": [
+          4.0,
+          0.5853658536585366,
+          0.1951219512195122
+        ],
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "visible": false,
+        "labeled": true,
+        "size": 3.0
+      },
+      {
+        "name": "O5",
+        "type": "Free",
+        "pos": [
+          17,3
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible":false
+
+      },
+      {
+        "name": "O4",
+        "type": "Free",
+        "pos": [
+          20.5,3
+
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible":false
+
+      },
+      {
+        "name": "O3",
+        "type": "Free",
+        "pos": [
+          24,7
+
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible":false
+
+      },
+      {
+        "name": "O2",
+        "type": "Free",
+        "pos": [
+          20.5,7
+
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible":false
+
+      },
+      {
+        "name": "O1",
+        "type": "Free",
+        "pos": [
+          17,7
+
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": true,
+        "visible":false
+
+      },
+      {
+        "name": "Dummy",
+        "type": "Free",
+        "pos": [
+          0.0,
+          0.355889724310776,
+          -0.2506265664160401
+        ],
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "pinned": false,
+        "visible":false
+      }
+
+    ],
+    "height": 768,
+    "originX": 196.0,
+    "originY": 428.0,
+    "scale": 30,
+    "scripts": {},
+    "width": 1024
+  };
+
+  var ready = createCindy.waitFor('i18n');
+  var translations = {};
+  IMAGINARY.i18n.init().then(function(lang){
+    translations[lang] = IMAGINARY.i18n.getStrings();
+    ready();
+  }).catch(function(err){
+    console.log("Error loading translation: " + err);
+    throw err;
+  });
+
+  cdy=createCindy({
+    language: IMAGINARY.i18n.getLang(),
+    translations: translations,
+    ports: [{
+      id: "CSCanvas",
+      width: 1920,
+      height: 1080,
+      transform: [{visibleRect: [-8, 11, 25, -11]}],
+      background: "rgb(0,0,0)"
+    }],
+
+    scripts: "cs*",
+    defaultAppearance: {
+    },
+    geometry: data.geometry,
+    images:{
+      image6:"img/image-6.png",
+      image7:"img/image-7.png",
+      image8:"img/image-8.png",
+      image9:"img/image-9.png",
+      image10:"img/image-10.png"
+    },
+
+
+  });
+  var loaded=function(){
+    if(window.hasOwnProperty('webkit'))
+      window.webkit.messageHandlers.interOp.postMessage({loaded:1});
+  }
+
+</script>
+<canvas id="CSCanvas"></canvas>
+</body>
+</html>

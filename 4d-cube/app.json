@@ -1,0 +1,15 @@
+{
+  "id": "4d-cube",
+  "version": "1.0.0",
+  "main": "app.html",
+  "width": 835,
+  "height": 570,
+  "name": {
+    "en": "Hypercube",
+    "de": "Hypercube"
+  },
+  "description": {
+    "en": "",
+    "de": ""
+  }
+}

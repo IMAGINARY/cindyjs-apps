@@ -1,0 +1,9 @@
+{
+  "Tetra": "Tetrahedron",
+  "Okta": "Octahedron",
+  "Hexa": "Cube",
+  "Icosa": "Icosahedron",
+  "Dodeca": "Dodecahedron",
+  "Move": "Move solid with your finger. Use slider to fold.",
+  "Fold": "fold"
+}

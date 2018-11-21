@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Slicer</title>
+  <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
+  <script type="text/javascript" src="../common/js/Cindy.js"></script>
+  <script type="text/javascript" src="../common/js/i18n4js-1.3.0.min.js"></script>
+</head>
+<body>
+<script id="csinit" type="text/x-cindyscript">
+
+Text0.pressed=true;
+Text1.pressed=true;
+
+wx=0;
+wy=0;
+oldparamv=(0,0,0);
+oldcolparams=(0,0);
+morphing=false;
+
+
+multicol=1;
+next():=(choice=choice+1;if(choice==5,choice=1));
+anim=false;
+
+scal=0.15;
+
+init=0;
+
+
+mat=[
+  [1,0,0],
+  [0,1,0],
+  [0,0,1]
+];
+
+mat0=[
+  [1,0,0],
+  [0,1,0],
+  [0,0,1]
+];
+
+
+
+mat=[[-0.30524086326913,-0.01078529084769,0.952214100343],[0.46359835145278,0.8717563811085,0.15848463814158],[-0.83180802107275,0.48982087491035,-0.261095627273]] ;
+
+mmmx=mat0;
+mmmy=mat0;
+
+
+
+
+
+edgecol=(0.76,0.78,0.54);
+edgecol=(.9,.9,.9);
+edgecol=(0.4,0.3,0.3);
+
+//Das Malt einen Punkt aus homogenen Koordinaten
+renderPoint(p):=(
+  pp=mat*p;
+  draw((pp_1,pp_2),color->edgecol,border->false,size->3)
+);
+
+//Das Malt ein Segment aus homogenen Koordinaten
+renderLine(p,q):=(
+  pp=mat*p;
+  qq=mat*q;
+  draw((pp_1,pp_2),(qq_1,qq_2));
+);
+
+
+
+
+norm(p):=(p_1,p_2,p_3);
+
+
+
+
+renderPolygon(pol,col):=(
+//  pp=apply(pol,mat*#);
+
+pp=pol;
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,(#_1,#_2));
+  aa=pol_1;bb=pol_2,cc=pol_3;
+
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->.8);
+  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.5,size->1);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+dist=20;
+
+zentral(p):=(
+
+(p_1,p_2)*(dist+p_3)/dist;
+);
+renderPolygonB(pp,col,col2):=(
+//  pp=apply(pol,mat*#);
+
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,zentral(#));
+
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->alpha);
+  connect(pp++[pp_1],color->col2*sum(col)*.5,size->1);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+renderPolygonF(pp,col,col2):=(
+//  pp=apply(pol,mat*#);
+  aa=pp_1;bb=pp_2,cc=pp_3;
+  nn=cross(bb-aa,bb-cc);
+  nn=nn/abs(nn);
+  rgb=ambient;
+
+  forall(lights,(
+      shade=-sin(nn*#_1);
+      if(nn*#_1>0,shade=0);
+      rgb=rgb+#_2*shade;
+    )
+  );
+  pp=apply(pp,zentral(#));
+
+  fillpoly(pp,color->(rgb_1*col_1,rgb_2*col_2,rgb_3*col_3),alpha->alpha);
+//  connect(pp++[pp_1],color->(1,1,1)*sum(col)*.0,size->4);
+  connect(pp++[pp_1],color->col2*sum(col)*.5,size->2);
+//  drawall(pp,color->(1,1,1)*sum(col)*.5,size->3);
+//draw(center(pp),(nn_1,nn_2)*1+center(pp),color->(1,1,1));
+);
+
+
+
+
+
+
+
+
+
+renderPolygonX(pol,col):=(
+//  pp=apply(pol,mat*#);
+
+pp=pol;
+  pp=apply(pp,(#_1,#_2));
+  fillpoly(pp,alpha->1);
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+init3d():=(
+// renderlist=[];
+// pr=[];
+);
+
+center(ll):=sum(ll)/length(ll);
+
+
+poly3d(l):=(l);
+
+
+
+draw3d(a,b):=();
+
+
+pro(vert):=zentral(vert);
+
+ori(pol):=(
+  det(pro(pol_1),pro(pol_2),pro(pol_3))
+);
+
+
+render3d(pr):=(
+
+mati=transpose(mat);
+//err("B1 "+seconds());
+  renderlist=
+  apply(pr,ll,
+    mll=apply(ll_1,mat*(#))/scal;
+    [mll,center(mll)_3,ll_2,ll_3]
+  );
+
+  forall(renderlist,pol,
+      if(ori(pol_1)~>=0,
+       renderPolygonB(pol_1,pol_3*(pol_2+10)/10,pol_4)
+      );
+  );
+
+
+ forall(renderlist,pol,
+      if(ori(pol_1)~<=0,
+       renderPolygonF(pol_1,pol_3*(pol_2+10)/10,pol_4)
+      );
+  ) ;
+
+
+//err("B4 "+seconds());
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+
+
+
+perm(a,b,c):=(
+  (a,b,c),
+  (a,c,b),
+  (b,a,c),
+  (b,c,a),
+  (c,a,b),
+  (c,b,a)
+);
+
+
+perm1(a,b,c):=(
+  (a,b,c),
+  (b,c,a),
+  (c,a,b)
+);
+
+
+
+
+matrz(w):=(
+(cos(w),sin(w),0),
+(-sin(w),cos(w),0),
+(0,0,1)
+);
+
+matrx(w):=(
+(1,0,0),
+(0,cos(w),sin(w)),
+(0,-sin(w),cos(w))
+);
+
+matry(w):=(
+(cos(w),0,-sin(w)),
+(0,1,0),
+(sin(w),0,cos(w))
+);
+
+
+
+
+nn(v):=v/|v|;
+
+
+
+
+
+
+definebody(zell):=(
+  body=zell_1;
+  segs=zell_2;
+);
+
+
+
+
+
+colorf(obj,ff):=actcol;
+colorf(obj,ff):=(
+nn=linearsolve((obj_(ff_1),obj_(ff_2),obj_(ff_3)),(1,1,1));
+
+nn=nn/|nn|;
+//err(nn*initdirs_1);
+//err(ff);
+dd=-sort(apply(initdirs,-#*nn))_1;
+//err(dd);
+hue(colspan*spanfactor_(choice+1)_tchoice*(1-dd)+angle/(2*pi));
+);
+
+
+
+
+
+rotatebody(v1):=(
+  v2=(v1_2,-v1_1,0);
+  v3=cross(v1,v2);
+  v1=v1/|v1|;
+  v2=v2/|v2|;
+  v3=v3/|v3|;
+  matr=inverse((v2,v1,v3))*.8;
+//  body=body*matr;
+  matr;
+);
+
+rotatevert(body,segs):=(
+  v1=body_1;
+  v1/|v1|;
+);
+
+rotateedge(body,segs):=(
+  v1=body_(segs_1_1)+body_(segs_1_2);
+  v1/|v1|;
+);
+
+rotateface(body,segs):=(
+  ch=convexhull3d(body);
+  v1=sum(ch_2_1,(ch_1)_#);
+  v1/|v1|;
+);
+
+
+
+
+
+
+
+
+
+
+
+;
+ambient=(0.2,0.2,0.2);
+
+
+
+
+
+
+
+
+
+
+
+
+;choice=2;
+tchoice=1;
+
+
+
+perm3(b,c,d):=(
+ (b,c,d),
+ (b,d,c),
+ (c,b,d),
+ (c,d,b),
+ (d,b,c),
+ (d,c,b)
+);
+
+
+perm3ev(b,c,d):=(
+ (b,c,d),
+ (c,d,b),
+ (d,b,c)
+);
+
+
+
+pm1(b,c,d):=(
+   (b,c,d),
+   (-b,c,d));
+
+pm2(b,c,d):=
+pm1(b,c,d)++pm1(b,-c,d);
+pm3(b,c,d):=
+pm2(b,c,d)++pm2(b,c,-d);
+
+tau=(sqrt(5)-1)/2;
+
+s1=0.5;
+
+cell4=s1*[(1,1,1),(1,-1,-1),(-1,1,-1),(-1,-1,1)];
+cell8=s1*set(flatten(apply(pm1(1,0,0),perm3(#_1,#_2,#_3)),levels->1));
+cell6=s1*set(pm3(1,1,1));
+cell12=(s1*set(flatten(apply(pm2(1+tau,tau,0),perm3ev(#_1,#_2,#_3)),levels->1))++cell6)*s1;
+cell20=s1*set(flatten(apply(pm2(1,tau,0),perm3ev(#_1,#_2,#_3)),levels->1))++vell6;
+
+
+
+
+calcsegs(body):=(
+  ch=convexhull3d(body);
+  pts=ch_1;
+  faces=ch_2;
+  segs=apply(faces,f,ff=f++[f_1];apply(1..length(f),set([ff_#,ff_(#+1)])));
+  segs=set(flatten(segs,levels->1));
+  (pts,segs);
+);
+
+definepoly(body):=(
+  q=calcsegs(body);
+  q
+);
+
+cell4=(definepoly(cell4));
+cell8=(definepoly(cell8*1.3));
+cell6=(definepoly(cell6*0.8));
+cell12=(definepoly(cell12*1.5));
+cell20=(definepoly(cell20*1.1));
+
+
+
+
+
+
+
+
+;choice=2;
+tchoice=3;
+
+setcurrentbody(choice):=(
+
+
+ if(choice==0,currentbody=cell4);
+ if(choice==1,currentbody=cell8);
+ if(choice==2,currentbody=cell6);
+ if(choice==3,currentbody=cell20);
+ if(choice==4,currentbody=cell12);
+
+);
+
+initdata(choice,tchoice):=(
+definebody(currentbody);
+
+
+if(choice==0,
+
+ if(tchoice==3,rotdir=rotatevert(body,segs));
+ if(tchoice==2,rotdir=rotateedge(body,segs));
+ if(tchoice==1,rotdir=rotateface(body,segs));
+,
+ if(tchoice==1,rotdir=rotatevert(body,segs));
+ if(tchoice==2,rotdir=rotateedge(body,segs));
+ if(tchoice==3,rotdir=rotateface(body,segs));
+);
+
+
+oldchoice=choice;
+oldtchoice=tchoice;
+oldrotdir=rotdir;
+
+);
+
+setcurrentbody(choice);
+initdata(choice,tchoice);
+
+
+
+;allthedrawing():=(
+//body und rotdir bestimmen das Bild
+
+
+//err(rotdir);
+
+
+
+//err("A1 "+seconds());
+//err(choice);
+//err(tchoice);
+
+
+//err(body);
+
+
+//err(rotdir);
+bodyx=body*rotatebody(rotdir);
+
+//err(body);
+
+alp=|U,W|/|U,V|;
+
+
+col1=[0,0,1];
+col2=[.1,1,0]*0;
+col3=[1,0,1]*0;
+actcol=(1,1,1);
+
+
+col1=[.9,.9,1]*.5;
+col2=[1,.9,.9]*.5;
+col3=[1,1,1]*0;
+actcol=(.5,.8,1);
+
+
+amb=0.2;
+
+lights=[
+   [[-cos(30°),-sin(30°),-.5],col1],
+   [[-cos(150°),-sin(150°),-.5],col2],
+   [[-cos(270°),-sin(270°),-.5],col3]
+];
+ambient=(1,1,1)*amb;
+
+
+F.color=colf1*.8;
+C.color=colf2*.8;
+K.color=colf3*.8;
+R.color=colf4*.8;
+S.color=colf5*.8;
+T.color=colf6*.8;
+
+
+param1=|E,F|/|D,E|;
+param2=|B,C|/|A,B|;
+
+paramv=(choice,tchoice,param1);
+
+
+drf(p):=(
+px=-(p_1,p_3)*4+(8,-9);
+px
+);
+
+//err("A2 "+seconds());
+
+//if(|paramv,oldparamv|>0.0001,
+if(true,
+
+//err("recalc "+ seconds());
+
+//max=sort(apply(body,dir*#))_1;
+
+pts=body;
+
+
+
+w=(param1*2-1)*max*0.999+.000001;
+
+w=F.y*.1+0.00001;
+bodyx=apply(bodyx,#+(0,w,0));
+
+
+
+ss=select(segs,((bodyx_(#_1))_2)*((bodyx_(#_2))_2)~<0);
+
+
+
+cut=apply(ss,
+  p1=bodyx_(#_1);
+  p2=bodyx_(#_2);
+  cc=-(p1*p2_2-p2*p1_2)/(p1_2-p2_2);
+ // err(det(p1,p2,cc));
+  cc;
+);
+above=select(bodyx,#_2>0);
+below=select(bodyx,#_2<0);
+
+
+
+//err(cut);
+//err(above);
+//err(below);
+
+
+
+
+ init=0;
+ objx=cut++above;
+ptsabove=[];
+ if(length(objx)>3,
+  ch=convexhull3d(objx);
+  obj=ch_1;
+  ff=ch_2;
+  ff=apply(ff,reverse(#));
+  faces=apply(ff,[#,(1,1,0),[1,1,1]]);
+  ptsabove=apply(faces,fa,[apply(fa_1,obj_#),fa_2,fa_3]);
+
+ );
+
+ptsbelow=[];
+
+ objx=cut++below;
+ if(length(objx)>3,
+  ch=convexhull3d(objx);
+  obj=ch_1;
+  ff=ch_2;
+  ff=apply(ff,reverse(#));
+  faces=apply(ff,[#,(1,0,0),[1,1,1]]);
+  ptsbelow=apply(faces,fa,[apply(fa_1,obj_#),fa_2,fa_3]);
+ );
+
+
+
+
+a=1;
+plane=[[reverse([(a,0,a),(a,0,-a),(-a,0,-a),(-a,0,a)]),[0,0,1],[1,1,1]]];
+  oldparamv=paramv;
+);//End recalc
+
+cutpolygon=[];
+
+if(length(cut)>2,
+ ch=convexhull3d([[0,1,0]]++cut);
+ obj=ch_1;
+ ff=ch_2;
+
+ ff=select(ff,!contains(#,1))_1;
+ cutpolygon=[[apply(ff,obj_#),(0,1,1),(1,1,1)]];
+
+fillpoly(apply(cutpolygon_1_1,drf(#)),color->(0,1,1)*.2);
+
+ ff=ff++[ff_1];
+
+ apply(1..(length(ff)-1),
+   draw(drf(obj_(ff_#)),drf(obj_(ff_(#+1))),color->(1,1,1),size->1);
+ )
+
+ );
+
+
+//err("A3 "+seconds());
+
+orth=(0,1,0)*transpose(mat);
+
+rcutpolygon=cutpolygon;
+if(rcutpolygon!=[],
+ rcutpolygon_1_1=reverse(rcutpolygon_1_1);
+);
+//err(cutpolygon);
+if(orth_3<0,
+ alpha=alp;
+ if(Text0.pressed,
+  render3d(ptsabove););
+ alpha=max(.7,alp);
+ render3d(cutpolygon);
+ render3d(plane);
+ render3d(rcutpolygon);
+ alpha=alp;
+ if(Text1.pressed,
+  render3d(ptsbelow); );
+,
+ alpha=alp;
+ if(Text1.pressed,
+   render3d(ptsbelow););
+ alpha=max(.7,alp);
+ render3d(rcutpolygon);
+ render3d(plane);
+ render3d(cutpolygon);
+ alpha=alp;
+ if(Text0.pressed,
+   render3d(ptsabove););
+);
+
+
+
+
+
+
+
+
+
+//fillpoly(((15,-4),(100,-4),(100,20),(15,20)),color->(0.3,0.4,0.5));
+
+colchoice(i):=if(i==choice,(1,1,1),(1,1,1)*.5);
+
+drawtext((15,8),"Tetraeder",size->14,color->colchoice(0));
+drawtext((15,6.5),"Oktaeder",size->14,color->colchoice(1));
+drawtext((15,5),"Würfel",size->14,color->colchoice(2));
+drawtext((15,3.5),"Ikosaeder",size->14,color->colchoice(3));
+drawtext((15,2),"Dodekaeder",size->14,color->colchoice(4));
+
+
+tchoice(i):=if(i==tchoice,(1,1,1),(1,1,1)*.5);
+
+
+de=2.3;
+xx=15.5;
+yy=1;
+draw((xx,yy-3),color->tchoice(1),border->false);
+
+xx=xx+de;
+draw((xx-.5,yy-3.5),color->tchoice(2),border->false);
+draw((xx+.5,yy-2.5),color->tchoice(2),border->false);
+draw((xx-.5,yy-3.5),(xx+.5,yy-2.5),color->tchoice(2),border->false);
+
+xx=xx+de;
+draw((xx-.6,yy-3.5),color->tchoice(3),border->false);
+draw((xx,yy-2.5),color->tchoice(3),border->false);
+draw((xx+.6,yy-3.5),color->tchoice(3),border->false);
+
+draw((xx+.6,yy-3.5),(xx-.6,yy-3.5),color->tchoice(3),border->false);
+draw((xx-.6,yy-3.5),(xx,yy-2.5),color->tchoice(3),border->false);
+draw((xx+.6,yy-3.5),(xx,yy-2.5),color->tchoice(3),border->false);
+
+
+);
+
+
+
+;
+</script>
+<script id="csmousedrag" type="text/x-cindyscript">
+if(dragging,
+
+xx=mouse().x;
+yy=mouse().y;
+wy=(startx-xx)*.3;
+wx=-(starty-yy)*.3;
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+
+  mat=mmmx*mmmy*mat;
+
+
+
+startx=xx;
+starty=yy;
+
+
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csmouseclick" type="text/x-cindyscript">
+xx=mouse().x;
+yy=mouse().y;
+wy=(startx-xx)*.5;
+wx=-(starty-yy)*.5;
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+
+
+mat=mmmx*mmmy*mat;
+rmat=rmmmx*rmmmy*rmat;
+
+
+startx=xx;
+starty=yy;
+
+
+d=1.5;
+
+if(mouse().x>15 & mouse().y>7.5  & mouse().y<8.7,choice=0);
+if(mouse().x>15 & mouse().y>7.5-d  & mouse().y<8.7-d,choice=1);
+if(mouse().x>15 & mouse().y>7.5-2*d  & mouse().y<8.7-2*d,choice=2);
+if(mouse().x>15 & mouse().y>7.5-3*d  & mouse().y<8.7-3*d,choice=3);
+if(mouse().x>15 & mouse().y>7.5-4*d  & mouse().y<8.7-4*d,choice=4);
+
+de=2.3;
+xx=15.5;
+if(|mouse().x-xx| < 1.2 & |mouse().y+2|<1.2 ,tchoice=1);
+xx=xx+de;
+if(|mouse().x-xx| < 1.2 & |mouse().y+2|<1.2 ,tchoice=2);
+xx=xx+de;
+if(|mouse().x-xx| < 1.2 & |mouse().y+2|<1.2 ,tchoice=3);
+xx=xx+de;
+
+
+morphsizes=[
+[[1,1],[1,1],[1,1],[1,1],[1,1]],
+[[1,1],[1,1],[1,1],[1,1],[1,1]],
+[[1,1],[1,1],[1,1],[.8,.8],[1,.62]],
+[[1,1],[1,1],[1,1],[1,1],[1,1]],
+[[1,1],[1,1],[.62,1],[1,1],[1,1]]
+];
+
+
+if(choice!=oldchoice,
+ err("morph the choice");
+
+
+ body2=currentbody;
+ oldnewrotdir=rotdir;
+
+ setcurrentbody(choice);
+ body1=currentbody;
+ definebody(currentbody);
+ if(choice==0,
+  if(tchoice==3,rotdir=rotatevert(body,segs));
+  if(tchoice==2,rotdir=rotateedge(body,segs));
+  if(tchoice==1,rotdir=rotateface(body,segs));
+ ,
+  if(tchoice==1,rotdir=rotatevert(body,segs));
+  if(tchoice==2,rotdir=rotateedge(body,segs));
+  if(tchoice==3,rotdir=rotateface(body,segs));
+ );
+
+ newrotdir=rotdir;
+
+err(newrotdir);
+err(oldrotdir);
+
+  repeat(10,tt= #/10;
+    rotdir=oldrotdir;
+
+    interim=(1-tt*.9)*(body2_1);
+    bodyinterim=(definepoly(interim));
+    definebody(bodyinterim);
+
+
+    repaint(20);
+
+    clrscr();
+    allthedrawing();
+  );
+ setcurrentbody(choice);
+
+  repeat(10,tt= #/10;
+    rotdir=newrotdir;
+
+    interim=(.1+tt*.9)*(body1_1);
+    bodyinterim=(definepoly(interim));
+    definebody(bodyinterim);
+
+
+    repaint(20);
+
+    clrscr();
+    allthedrawing();
+  )
+
+);
+
+
+
+
+if((tchoice!=oldtchoice),
+ err("morph tchoice");
+ definebody(currentbody);
+
+ if(choice==0,
+  if(tchoice==3,rotdir=rotatevert(body,segs));
+  if(tchoice==2,rotdir=rotateedge(body,segs));
+  if(tchoice==1,rotdir=rotateface(body,segs));
+ ,
+  if(tchoice==1,rotdir=rotatevert(body,segs));
+  if(tchoice==2,rotdir=rotateedge(body,segs));
+  if(tchoice==3,rotdir=rotateface(body,segs));
+ );
+
+ newrotdir=rotdir;
+
+  repeat(30,tt= #/30;
+//    interim=tt*(body1_1)++(1-tt)*(body2_1);
+
+
+  rotdir=tt*newrotdir+(1-tt)*oldrotdir;
+
+  repaint(20);
+
+  clrscr();
+  allthedrawing();
+
+ //   wait(100);
+  )
+
+);
+
+
+
+setcurrentbody(choice);
+
+initdata(choice,tchoice);
+
+pauseanimation();stopanimation();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csmouseup" type="text/x-cindyscript">
+
+if(|(wx,wy)|>0.02,
+err("startit");
+  playanimation(),
+  pauseanimation();stopanimation();
+)
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+allthedrawing();
+drawimage(B.xy+(-.75,-.75),B.xy+(.75,-.75),"full");
+drawimage(B'.xy+(-.75,-.75),B'.xy+(.75,-.75),"transp");
+
+
+
+;
+</script>
+<script id="cstick" type="text/x-cindyscript">
+ wx=wx*0.998;
+ wy=wy*0.998;
+
+if(|(wx,wy)|<0.001,err("stopit");pauseanimation();stopanimation(););
+
+mmmx=[
+  [1,0,0],
+  [0,cos(wx),sin(wx)],
+  [0,-sin(wx),cos(wx)]
+
+];
+
+
+mmmy=[
+  [cos(wy),0,-sin(wy)],
+  [0,1,0],
+  [sin(wy),0,cos(wy)]
+];
+
+
+mat=mmmx*mmmy*mat;
+
+
+
+
+
+
+
+
+;
+</script>
+<script id="csmousedown" type="text/x-cindyscript">
+startx=mouse().x;
+starty=mouse().y;
+dragging=|mouse().xy,F|>.3
+&|mouse().xy,W|>.3
+&mouse().x<11;
+
+
+
+
+
+
+
+
+
+
+;
+</script>
+<script type="text/javascript">
+  var cdy = CindyJS({
+    scripts: "cs*",
+    defaultAppearance: {
+      dimDependent: 0.7,
+      fontFamily: "sans-serif",
+      lineSize: 1,
+      pointSize: 5.0,
+      textsize: 12.0
+    },
+    angleUnit: "°",
+    geometry: [
+      {name: "U", type: "Free", pos: [4.0, -2.237623762376238, 0.24752475247524763], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "V", type: "Free", pos: [4.0, -1.793650793650794, 0.19841269841269846], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "g", type: "Segment", color: [0.0, 0.0, 1.0], args: ["U", "V"], size: 3},
+      {name: "W", type: "PointOnSegment", pos: [4.0, -1.944086021505377, 0.21505376344086033], color: [1.0, 1.0, 1.0], args: ["g"], size: 7.0,narrow:80},
+      {name: "D", type: "Free", pos: [4.0, 2.804123711340207, 0.34364261168384885], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "E", type: "Free", pos: [4.0, -3.326460481099656, 0.34364261168384885], color: [1.0, 0.0, 0.0], pinned: true, size: 0.0},
+      {name: "b", type: "Segment", color: [0.502, 0.502, 0.502], args: ["D", "E"], size: 3},
+      {name: "F", type: "PointOnSegment", pos: [4.0, 1.3745704252920967, 0.34364261168384885], color: [1.0, 1.0, 1.0], args: ["b"], size: 7.0,narrow:80},
+      {name: "B", type: "Free", pos: [4.0, -1.6814814814814814, 0.18518518518518517], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "B'", type: "Free", pos: [4.0, -2.4390243902439024, 0.2710027100271003], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
+      {name: "Text0", type: "ToggleButton", pos: [4.0, -1.6246498599439776, 0.2801120448179272], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, pressed: true, pinned: true, minwidth: 61, text: "Oberhalb", textsize: 14.0},
+      {name: "Text1", type: "ToggleButton", pos: [4.0, -1.213389121338912, 0.20920502092050208], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, pressed: true, pinned: true, minwidth: 61, text: "Unterhalb", textsize: 14.0}
+    ],
+    animation: {
+      autoplay: false,
+      controls: false,
+      speed: 0.5,
+      speedRange: [0.0, 1.0],
+      accuracy: 1
+    },
+    images: {full:"img/full.png",transp:"img/transp.png"},
+
+    autoplay: false,
+    animcontrols: false,
+    ports: [{
+      id: "CSCanvas",
+      width: 825,
+      height: 541,
+      transform: [{visibleRect: [-8.66, 10.14, 24.34, -11.5]}],
+      background: "rgb(0,0,0)"
+    }],
+    csconsole: false,
+    cinderella: {build: 1901, version: [2, 9, 1901]},
+  });
+</script>
+<div id="CSCanvas"></div>
+</body>
+</html>

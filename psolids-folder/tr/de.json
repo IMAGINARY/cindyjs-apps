@@ -1,0 +1,9 @@
+{
+  "Tetra": "Tetraeder",
+  "Octa": "Oktaeder",
+  "Hexa": "Würfel",
+  "Icosa": "Ikosaeder",
+  "Dodeca": "Dodekaeder",
+  "Move":"Körper durch Anfassen bewegen. Am Schieber zusammenfalten.",
+  "Fold":"falten"
+}

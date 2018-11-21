@@ -26,32 +26,12 @@ Since these apps come from the CindyJS distribution or external sources our modi
 
 ## Apps included
 
-### Classic apps
+Included collections:
+- Classic apps
+- Math & Music apps
+- MiMa Musem apps
 
-- ausparken
-- doppelpendel
-- fish
-- image-spiral
-- iornament
-- kaleidoskop
-- platonic-solids
-- polytope-morpher
-- solitaire
-- sphere-chaos
-- tree
-
-### Music apps
-
-- euclidian-rhythm
-- pachelbel-canon
-- mozart-dice
-- whitney
-- sequenzer
-
-### Auxiliary apps
-
-- info
-- sample
+See index.html for the full list of apps and available languages.
 
 ## Installation
 
@@ -132,7 +112,7 @@ Some standard steps performed to adapt fixed size apps (those that require a spe
 
     ```
     language: IMAGINARY.i18n.getLang(),
-    translations: translations
+    translations: translations,
     ```
     
 # License
