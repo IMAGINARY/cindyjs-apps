@@ -9753,12 +9753,12 @@ repeat(10,i,
 
 colchoice(i):=if(i==choice,(1,1,1),(1,1,1)*.5);
 
-drawtext((15,8),"Simplex",size->14,color->colchoice(0));
-drawtext((15,6.5),"Kreuzpolytop",size->14,color->colchoice(1));
-drawtext((15,5),"Hyperwürfel",size->14,color->colchoice(2));
-drawtext((15,3.5),"24-Zell",size->14,color->colchoice(3));
-drawtext((15,2),"120-Zell",size->14,color->colchoice(4));
-drawtext((15,.5),"600-Zell",size->14,color->colchoice(5));
+drawtext((15,8),international("Simplex"),size->20,color->colchoice(0));
+drawtext((15,6.5),international("Kreuzpolytop"),size->20,color->colchoice(1));
+drawtext((15,5),international("Hyperwürfel"),size->20,color->colchoice(2));
+drawtext((15,3.5),international("24-Zell"),size->20,color->colchoice(3));
+drawtext((15,2),international("120-Zell"),size->20,color->colchoice(4));
+drawtext((15,.5),international("600-Zell"),size->20,color->colchoice(5));
 
 
 tchoice(i):=if(i==tchoice,(1,1,1),(1,1,1)*.5);

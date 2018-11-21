@@ -1,7 +1,8 @@
 {
-  "Alpha": "Transparenz",
-  "Persp": "Perspektive",
-  "Iter": "Aufbau",
-  "Displace": "Versatz:",
-  "Move": "Objekt durch Anfassen bewegen"
+  "Simplex": "Simplex",
+  "Kreuzpolytop": "Kreuzpolytop",
+  "Hyperwürfel": "Hyperwürfel",
+  "24-Zell": "24-Zell",
+  "120-Zell": "120-Zell",
+  "600-Zell": "600-Zell"
 }
