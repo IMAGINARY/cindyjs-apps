@@ -4,14 +4,14 @@
   "Iter": "number of atoms",
   "Persp": "perspective",
   "Move": "move object with your finger",
-  "text1": "*This arrangement of*atoms is for instance*found in ordinary salt (NaCl)*Similar to a checker*board a 3D structure arises*in which two types of*atoms alternate.*Very often this structure*creates cubic crystal forms.",
+  "text1": "*This arrangement of*atoms is for instance*found in rock-salt (NaCl)*Similar to a checker*board a 3D structurarises*in which two types of*atoms alternate.*Very often this structure*creates cubic crystal forms.",
   "head1":"Simple cubic grid",
   "text2": "*This structure is identical*to a pile of oranges in*a super market.*It is the structure with*the highest packing density.*It is often found in*crystaline metals.**",
   "head2":"Face centered\ncubic grid",
-  "text3": "*This structure arises*from a simple cubic grid*if one places another*atom in the center of*each cube. It for instance*occurs in crystals of*caesium chloride.",
+  "text3": "*This structure arises*from a simple cubic grid*if one places another*atom in the center of*each cube. For instance, it *occurs in crystals of*caesium chloride.",
   "head3":"Body centered\ncubic grid",
-  "text4": "*In a diamond the four*valent atoms of carbon*form a very special*arrangement. For each atom*its four neighbors form a*regular tetrahedron.*This grid can also be*considered as two combined*face centered cubic grids.",
+  "text4": "*In a diamond, the four*valent atoms of carbon*form a very special*arrangement. For each atom*its four neighbors form a*regular tetrahedron.*This grid can also be*considered as two combined*face centered cubic grids.",
   "head4":"Diamond grid",
-  "text5": "*The positions of the atoms*of zinc blende are structurally*identical to the diamond grid.*However, this time two different*types of atoms are involved.*The atoms of each type form*a face centerd cubic grid.*This structure is often*found in semi-conductors.*",
-  "head5":"Zinc blende\nstructure"
+  "text5": "*The positions of the atoms*of Zincblende are structurally*identical to the diamond grid.*However, this time two different*types of atoms are involved.*The atoms of each type form*a face centerd cubic grid.*This structure is often*found in semi-conductors.*",
+  "head5":"Zincblende\nstructure"
 }

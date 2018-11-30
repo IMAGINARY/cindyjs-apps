@@ -1,7 +1,7 @@
 {
   "Erase": "clear",
-  "Random1": "random",
-  "Random2": "random light",
+  "Random1": "random pattern",
+  "Random2": "random pattern (sparse)",
   "Start": "start",
   "Stop": "stop",
   "Survive": "survive",

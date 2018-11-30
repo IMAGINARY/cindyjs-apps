@@ -1,17 +1,17 @@
 {
-  "KAlpha": "Kantentransparenz",
-  "Alpha": "Transparenz",
+  "KAlpha": "Kantendeckkraft",
+  "Alpha": "Deckkraft",
   "Iter": "Aufbau",
   "Persp": "Perspektive",
   "Move": "Objekt durch Anfassen bewegen",
-  "text1": "*Diese Atomanordnung*findet man beispielsweise*in Kochsalz (NaCl).*Analog zu einem Schach-*brett bildet sich eine*dreidimensionale Struktur*heraus, bei der die Atome*beider Sorten abwechselnd*platziert sind.*Bevorzugt bildet diese*Struktur würfelförmige*Kristalle.*",
+  "text1": "*Diese Atomanordnung*findet man beispielsweise*in Kochsalz (NaCl).*Analog zu einem Schachbrett*bildet sich eine*dreidimensionale Struktur*heraus, bei der die Atome*beider Atomarten abwechselnd*platziert sind.*Bevorzugt bildet diese*Struktur würfelförmige*Kristalle.*",
   "head1":"Einfaches\nkubisches Gitter",
-  "text2": "*Die Struktur dieser*Anordung gleicht einem*Orangenstapel im*Supermarkt.*Es ist die dichtest-*mögliche reguläre*Packung von Atomen.*Man findet sie häufig*bei kristalinen Metallen.**",
+  "text2": "*Die Struktur dieser*Anordung gleicht einem*Orangenstapel im*Supermarkt.*Es ist die dichteste reguläre*Packung von Atomen.*Man findet sie häufig*bei kristalinen Metallen.**",
   "head2":"Flächenzentriertes\nkubisches Gitter",
   "text3": "*Diese Struktur entsteht,*wenn man bei einem einfachen*kubischen Gitter in die*Mitte jedes Würfels ein*weiteres Atom packt.*Die Struktur tritt*beispielsweise in*Caesiumchloridkristallen*auf.*",
   "head3":"Körperzentrierters\nKubisches Gitter",
   "text4": "*Die viervalenten*Kohlenstoffatome in*Diamantkristallen formen*eine spezielle Gitter-*struktur, bei der jedes*Atom tetraederförmig mit*weiteren Atomen*verbunden ist.*Man kann dieses Gitter*auch als zwei gegen-*einander verschobene*flächenzentrierte*kubische Gitter auffassen.*",
   "head4":"Diamantgitter",
-  "text5": "*Die Position der Atome*in Zinkblende Kristallen*ist strukturgleich mit den*Atomen im Diamantgitter.*Im Gegensatz dazu wird*diese aber aus zwei*verschiedenen Atomtypen*geformt, von denen jeder*für sich ein flächen-*zentriertes kubisches*Gitter bildet.*Man findet diese Struktur*auch häufig bei Halbleiter-*Kristallen.*",
+  "text5": "*Die Position der Atome*in Zinkblende-Kristallen*ist strukturgleich mit den*Atomen im Diamantgitter.*Im Gegensatz dazu wird*diese aber aus zwei*verschiedenen Atomarten*geformt, von denen jeder*für sich ein flächen-*zentriertes kubisches*Gitter bildet.*Man findet diese Struktur*auch häufig bei Halbleiter-*Kristallen.*",
   "head5": "Zinkblende-\nStruktur"
 }
