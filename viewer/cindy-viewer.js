@@ -67,6 +67,18 @@ window.IMAGINARY.CindyViewer = (function(){
     iframe.style.transform = 'translate(' + xOffset + 'px, 0) scale(' + scaleFactor + ')';
   }
 
+  function appendQS(url, params) {
+    var qsSub = Object.keys(params).map(function (key) {
+      return encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
+    });
+
+    if (url.indexOf('?') === -1) {
+      return url + '?' + qsSub;
+    } else {
+      return url + '&' + qsSub;
+    }
+  }
+
   /**
    * Creates a Cindy app viewer
    *
@@ -86,18 +98,11 @@ window.IMAGINARY.CindyViewer = (function(){
       appHeight = 1170;
     }
 
-    var langParam = '';
-    if(lang) {
-      langParam = ('?lang=' + encodeURIComponent(lang));
-    } else {
-      var qs = getQueryString();
-      if(qs['lang'] !== undefined) {
-        langParam = ('?lang=' + encodeURIComponent(qs['lang']));
-      }
-    }
-
+    var qs = getQueryString();
     var iframe = document.createElement('iframe');
-    iframe.setAttribute('src', src + langParam);
+    iframe.setAttribute('src', appendQS(src, {
+      lang: qs['lang'] !== undefined ? qs['lang'] : lang
+    }));
     iframe.setAttribute('width', appWidth);
     iframe.setAttribute('height', appHeight);
     iframe.style.border = 'none';
