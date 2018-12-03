@@ -11,9 +11,6 @@
 <body>
 <script id="csinit" type="text/x-cindyscript">
 
-Text0.pressed=true;
-Text1.pressed=true;
-
 wx=0;
 wy=0;
 oldparamv=(0,0,0);
@@ -730,26 +727,22 @@ if(rcutpolygon!=[],
 //err(cutpolygon);
 if(orth_3<0,
  alpha=alp;
- if(Text0.pressed,
-  render3d(ptsabove););
+ render3d(ptsabove);
  alpha=max(.7,alp);
  render3d(cutpolygon);
  render3d(plane);
  render3d(rcutpolygon);
  alpha=alp;
- if(Text1.pressed,
-  render3d(ptsbelow); );
+ render3d(ptsbelow);
 ,
  alpha=alp;
- if(Text1.pressed,
-   render3d(ptsbelow););
+ render3d(ptsbelow);
  alpha=max(.7,alp);
  render3d(rcutpolygon);
  render3d(plane);
  render3d(cutpolygon);
  alpha=alp;
- if(Text0.pressed,
-   render3d(ptsabove););
+ render3d(ptsabove);
 );
 
 
@@ -1163,8 +1156,6 @@ dragging=|mouse().xy,F|>.3
       {name: "F", type: "PointOnSegment", pos: [4.0, 1.3745704252920967, 0.34364261168384885], color: [1.0, 1.0, 1.0], args: ["b"], size: 7.0,narrow:80},
       {name: "B", type: "Free", pos: [4.0, -1.6814814814814814, 0.18518518518518517], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
       {name: "B'", type: "Free", pos: [4.0, -2.4390243902439024, 0.2710027100271003], color: [1.0, 0.0, 0.0], pinned: true,visible:false},
-      {name: "Text0", type: "ToggleButton", pos: [4.0, -1.6246498599439776, 0.2801120448179272], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, pressed: true, pinned: true, minwidth: 61, text: "Oberhalb", textsize: 14.0},
-      {name: "Text1", type: "ToggleButton", pos: [4.0, -1.213389121338912, 0.20920502092050208], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, pressed: true, pinned: true, minwidth: 61, text: "Unterhalb", textsize: 14.0}
     ],
     animation: {
       autoplay: false,
