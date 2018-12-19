@@ -218,7 +218,7 @@ if(Zalpha.x<Xalpha.x,Zalpha.xy=Xalpha.xy);
 if(Zalpha.x>Y.x,Zalpha.xy=Yalpha.xy);
 if(Zblur.x<Xblur.x,Zblur.xy=Xblur.xy);
 if(Zblur.x>Yblur.x,Zblur.xy=Yblur.xy);
-size=(|X,Z|/|X,Y|)^1.5*2+.3;
+size=(|X,Z|/|X,Y|)^1.5*2+.03;
 color=cols_pencolor;
 setdot();
 
@@ -440,7 +440,7 @@ pp(v):=(v.y,-v.x);
 
 draggingActionInLoop(st,en):=(
 
-  n=round(|en-st|*50)+1;
+  n=round(|en-st|*200)+1;
   apply(1..(n),l=#/n;
      drawpt(l*st+(1-l)*en);
   )
@@ -455,7 +455,7 @@ draggingAction(st,en):=(
 if(dragging,
  sc2=|D-F|;
    canvas(A,B,C,"tile",
-     n=round(|en-st|*50)+1;
+     n=round(|en-st|*200)+1;
      apply(1..(n),l=#/n;
        drawpt(l*st+(1-l)*en);
 
