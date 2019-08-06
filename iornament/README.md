@@ -2,12 +2,12 @@
 
 # Credits
 
-Created by 
+Created by
 Jürgen Richter-Gebert
 [science-to-touch.com](http://www.science-to-touch.com/).
 
 Adapted by
-[Eric Londaits](mailto:eric.londaits@imaginary.org) for [IMAGINARY gGmbH](http://www.imaginary.org)
+[Eric Londaits](mailto:eric.londaits@imaginary.org) and [Aaron Montag](mailto:aaron.montag@imaginary.org) for [IMAGINARY gGmbH](http://www.imaginary.org)
 
 ![https://itunes.apple.com/app/id1175925608?mt=8](../common/img/science_to_touch-qr.png)
 
@@ -18,4 +18,3 @@ Adapted by
 Licensed under the Apache 2 license.
 
 Copyright 2013-2017 Jürgen Richter-Gebert
-
