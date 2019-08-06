@@ -147,65 +147,12 @@ colorplot(
   annotcol*annotcol_4+(1-annotcol_4)*piccol;
 );
 
-//renderWebGL();
-
-
-/*
-
-
-
-void main( void ) {
-      position = ((gl_FragCoord.xy-translate )/ scale);
-      vec2 z=divc(vec2(position.x,position.y)-posb,(posa-posb))*2.0;
-      z=z/str;
-     // z=mod(z,2.0);
-      vec4 annotcol= texture2D(u_image0, z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));
-      vec4 piccol= texture2D(u_image1,   z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));
-      gl_FragColor =annotcol*annotcol.a+(1.0-annotcol.a)*piccol;
-
-
-  }
-
-
-//drawimage(lowerleft,lowerright,"WEBGL");
-//THE WebGL canvas is displayed behind the CindyJS applet
-
-
-
-
-mati=inverse(bas);
-if(group>12,
-   mati=mati*transpose(((1,0),(0.5,sqrt(3/4))));
-);
-
-rr=round(1/(|posa-posb|/2))+1;
-ct=0;
-apply(-5..5,xxx,
-apply(-5..5,yyy,
-  pp=mati*(xxx,yyy)*rr;
-  if(or(pp.x>-0.1,pp.y<0.1)&pp.x<20&pp.y>-20,
-    drawimage((-wsi,0)+pp,(0,0)+pp,"WEBGL");ct=ct+1;
-    )
-  )
-);
-*/
-
 
 drawing();
 
-//drawtext((-9,9),">>> "+ct,color->(1,1,1));
-
-
-//draw(lowerright);
-//draw(lowerleft);
-
-
-//javascript("initTexture()");
 </script>
     <script id="app_cinderella_07_csmousedown" type="text/x-cindyscript">
-      //	startWebGL();
 
-use8bittextures();//accellerate CindyGL
 
 if(dragging,
    strokelist=strokelist++[stroke];
@@ -308,6 +255,7 @@ st=en;
 
 </script>
     <script id="app_cinderella_07_csinit" type="text/x-cindyscript">
+    use8bittextures();//accellerate CindyGL
       offset = (0,0);
   lastoffset = (0,0);
   shiftedmouse() := (
