@@ -1,135 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>iOrnament</title>
   <link rel="stylesheet" href="../common/css/default.css" media="screen" type="text/css">
   <script type="text/javascript" src="../common/js/Cindy.js"></script>
-  <script type="text/javascript" src="js/WebGLAdaptor.js"></script>
+  <script type="text/javascript" src="../common/js/CindyGL.js"></script>
+  <!--<script type="text/javascript" src="js/WebGLAdaptor.js"></script>-->
 </head>
+
 <body>
-<div>
+  <div>
+    <script id="app_cinderella_07_csmouseupX" type="text/x-cindyscript">
 
-  <script id='shader-fs-declare' type='x-shader/x-fragment'>
-	precision highp float;
-
-	uniform float time;
-	uniform float speed;
-	uniform vec2 resolution;
-	uniform vec2 mouse;
-	uniform vec2 translate;
-	uniform float scale;
-	uniform sampler2D u_image0;
-	uniform sampler2D u_image1;
-    vec3 colors[8];
-	varying vec2 v_texCoord;
-
-	</script>
-
-
-
-
-  <script id='shader-fs-pre' type='x-shader/x-fragment'>
-
-
-	vec2 position;
-
-	float pi;
-
-
-
-	vec3 rgb2hsv(vec3 c)
-	{
-		vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-		vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
-		vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
-
-		float d = q.x - min(q.w, q.y);
-		float e = 1.0e-10;
-		return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
-	}
-
-	vec3 hsv2rgb(vec3 c)
-	{
-		vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-		vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-		return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-	}
-
-
-
-
-
-
-
-
-
-	vec2 addc(vec2 a, vec2 b){
-		return vec2(a.x+b.x,a.y+b.y);
-	}
-
-	vec2 subc(vec2 a, vec2 b){
-		return vec2(a.x-b.x,a.y-b.y);
-	}
-
-	vec2 negc(vec2 a){
-		return vec2(-a.x,-a.y);
-	}
-
-	vec2 multc(vec2 a, vec2 b){
-		return vec2(a.x*b.x-a.y*b.y+0.0000000000000001,a.y*b.x+a.x*b.y);
-	}
-
-	vec2 invc(vec2 a){
-		float n=a.x*a.x+a.y*a.y;
-		return vec2(a.x/n,-a.y/n);
-	}
-
-	vec2 divc(vec2 a, vec2 b){
-		return multc(a,invc(b));
-	}
-
-
-
-
-
-
-
-	</script>
-
-
-
-  <script id='shader-fs-main' type='x-shader/x-fragment'>
-
-  </script>
-
-
-
-
-  <script id='shader-fs-post' type='x-shader/x-fragment'>
-
-
-	void main( void ) {
-        position = ((gl_FragCoord.xy-translate )/ scale);
-        vec2 z=divc(vec2(position.x,position.y)-posb,(posa-posb))*2.0;
-        z=z/str;
-       // z=mod(z,2.0);
-        vec4 annotcol= texture2D(u_image0, z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));
-        vec4 piccol= texture2D(u_image1, z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));//*(2.0-(position.x+11.0)/11.0);
-        gl_FragColor =annotcol*annotcol.a+(1.0-annotcol.a)*piccol;
-
-
-    }
-
-
-	</script>
-
-
-
-  <script id="app_cinderella_07_csmouseupX" type="text/x-cindyscript">
-
-//	stopWebGL();
+      //	stopWebGL();
 if(dragging,
    strokelist=strokelist++[stroke];
 );
@@ -181,8 +67,8 @@ if(length(hits)==1,
 
 
 </script>
-  <script id="app_cinderella_07_csdraw" type="text/x-cindyscript">
-  upperleft=(screenbounds()_1).xy;
+    <script id="app_cinderella_07_csdraw" type="text/x-cindyscript">
+      upperleft=(screenbounds()_1).xy;
   upperright=(screenbounds()_2).xy;
   lowerright=(screenbounds()_3).xy;
   lowerleft=(screenbounds()_4).xy;
@@ -244,52 +130,29 @@ posa=F.xy;
 posb=D.xy;
  drawtile();
 
-javascript("callhandle()");
-
-renderWebGL();
 
 
-/*
+//javascript("callhandle()");
 
 
 
-//drawimage(lowerleft,lowerright,"WEBGL");
-//THE WebGL canvas is displayed behind the CindyJS applet
-
-
-
-
-mati=inverse(bas);
-if(group>12,
-   mati=mati*transpose(((1,0),(0.5,sqrt(3/4))));
+colorplot(
+  position = #;//TODO?
+  z = complex(position-posb)/complex(posa-posb)*2;
+  z = complex([re(z)/str_1, im(z)/str_2]);
+  //z = z*complex((1.0,-1.0))/2+i;
+  z = z/2;
+  annotcol= imagergba((0,0),(1,0),"annot", z, repeat->true);
+  piccol = imagergba((0,0),(1,0),"tile", z, repeat->true);
+  annotcol*annotcol_4+(1-annotcol_4)*piccol;
 );
-
-rr=round(1/(|posa-posb|/2))+1;
-ct=0;
-apply(-5..5,xxx,
-apply(-5..5,yyy,
-  pp=mati*(xxx,yyy)*rr;
-  if(or(pp.x>-0.1,pp.y<0.1)&pp.x<20&pp.y>-20,
-    drawimage((-wsi,0)+pp,(0,0)+pp,"WEBGL");ct=ct+1;
-    )
-  )
-);
-*/
 
 
 drawing();
 
-//drawtext((-9,9),">>> "+ct,color->(1,1,1));
-
-
-//draw(lowerright);
-//draw(lowerleft);
-
-
-//javascript("initTexture()");
 </script>
-  <script id="app_cinderella_07_csmousedown" type="text/x-cindyscript">
-//	startWebGL();
+    <script id="app_cinderella_07_csmousedown" type="text/x-cindyscript">
+
 
 if(dragging,
    strokelist=strokelist++[stroke];
@@ -365,9 +228,9 @@ stroke=[[size,alpha,cols_pencolor,glowing,blur],[st]];
 
 </script>
 
-  <script id="app_cinderella_07_csmousedrag" type="text/x-cindyscript">
+    <script id="app_cinderella_07_csmousedrag" type="text/x-cindyscript">
 en=mouse().xy;
-  en=bas*(en-cell_1);
+en=bas*(en-cell_1);
 
 if(dragging,
  stroke_2=stroke_2++[en];
@@ -391,15 +254,16 @@ olddist=F-D;
 st=en;
 
 </script>
-  <script id="app_cinderella_07_csinit" type="text/x-cindyscript">
-  offset = (0,0);
+    <script id="app_cinderella_07_csinit" type="text/x-cindyscript">
+    use8bittextures();//accellerate CindyGL
+      offset = (0,0);
   lastoffset = (0,0);
   shiftedmouse() := (
     mouse().xy-offset;
   );
-createimage("WEBGL",1170,1170);
-use("WebGLExperiments");
-WebGLvariables(posa->"point",posb->"point",str->"point");
+//createimage("WEBGL",1170,1170);
+//use("WebGLExperiments");
+//WebGLvariables(posa->"point",posb->"point",str->"point");
 dragging=false;
 setstr(x,y):=(
  str=(x,y);
@@ -407,7 +271,7 @@ setstr(x,y):=(
  stry=(0,y);
 );
 setstr(1,1);
-WebGLcode();
+//WebGLcode();
 
 createimage("pen",300,300);
 
@@ -478,7 +342,7 @@ groups=["p1","p2","pm","pg","cm","pmm","pmg","pgg","cmm","p4","p4m","p4g","p3","
 strokelist=[];
 buttons=["fund","sym","glow","undo","redo","trash"];
 
-group=17;
+group=12;
 
 
 res=1000;
@@ -1311,7 +1175,7 @@ drawtile2():=(
 drawing():=(
   drawtile2();
           translate(offset);
-	        
+
             fillpoly([[10,-100],[20,-100],[20,100],[10,100]],color->(1,1,1)*.05);
             drawpoly([[10,-100],[20,-100],[20,100],[10,100]],color->(1,1,1)*.3);
             xx=0;
@@ -1382,7 +1246,7 @@ greset();
             drawimage(Xdark-(1,0),"dark",scale->.7,alpha->.8);
             drawimage(Xalpha-(1,0),"alpha",scale->.7,alpha->.8);
             drawimage(Xblur-(1,0),"blur",scale->.7,alpha->.8);
-            
+
             if(length(strokelist)<5,drawimage(lowerleft+(.5,.5),lowerleft+(7,.5),"iO",scale->.4,alpha->.8));
 //draw((10,-8.4),(20,-8.4),color->(1,1,1)*.5);
             );
@@ -1533,9 +1397,9 @@ symannot=false;
 
 </script>
 
-  <script id="app_cinderella_07_cstick" type="text/x-cindyscript">
+    <script id="app_cinderella_07_cstick" type="text/x-cindyscript">
 
-    if(strokecount>length(strokelist),pauseanimation(),
+      if(strokecount>length(strokelist),pauseanimation(),
         canvas(A,B,C,"tile",
             strox=strokelist_strokecount;
      size=strox_1_1;
@@ -1562,166 +1426,357 @@ symannot=false;
 </script>
 
 
-  <script>
 
-    var setuptexture=function(image,slot,mipmap){
-      var gl=handle.gl;
-      var currentProgram=handle.currentProgram;
-      gl.useProgram(currentProgram);
-
-      var texCoordBuffer = gl.createBuffer();
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-
-
-
-      // Create a texture.
-      var texture = gl.createTexture();
-      if(slot==0){
-        gl.activeTexture(gl.TEXTURE0);
-        gl.uniform1i(gl.getUniformLocation(currentProgram, "u_image0"), 0);
-      }
-      if(slot==1){
-        gl.activeTexture(gl.TEXTURE1);
-        gl.uniform1i(gl.getUniformLocation(currentProgram, "u_image1"), 1);
-      }
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-
-      // Set the parameters so we can render any size image.
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      if(mipmap){
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-        gl.generateMipmap(gl.TEXTURE_2D);
-      };
-
-      //   gl.bindTexture(gl.TEXTURE_2D, null);
-    };
-
-
-
-
-  </script>
-
-
-  <script type="text/javascript">
-
+    <script type="text/javascript">
+      /*
     var callhandle=function(){
 
       setuptexture(document.getElementById("tile"),1,false);
       setuptexture(document.getElementById("annot"),0,true);
     }
+*/
+
+      var ypos = 4.8;
+      var ydiff = 1.3;
+      var cdy;
+      (function() {
+        var uid = 'app_cinderella_07_iOrnament_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
+        document.write("<canvas id=\"" + uid + "\"></canvas>");
+
+        var cdy07 = pancha = createCindy({
+          scripts: "app_cinderella_07_cs*",
+          defaultAppearance: {},
+          ports: [{
+            id: uid,
+            fill: "window",
+            transform: [{
+              visibleRect: [-8.5, 11, 16, -11]
+            }],
+          }],
+          geometry: [{
+              "name": "A",
+              "type": "Free",
+              "pos": [-10, -10],
+              "color": [1, 0, 0],
+              "visible": false,
+              "pinned": true
+            },
+            {
+              "name": "B",
+              "type": "Free",
+              "pos": [10, -10],
+              "color": [1, 0, 0],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "C",
+              "type": "Free",
+              "pos": [-10, 10],
+              "color": [1, 0, 0],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "D",
+              "type": "Free",
+              "pos": [0, 0],
+              "color": [.4, .4, .4],
+              "pinned": true,
+              "visible": true,
+              "narrow": 100
+            },
+            {
+              "name": "E",
+              "type": "Free",
+              "pos": [1, 0],
+              "color": [.4, .4, .4],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "F",
+              "type": "Free",
+              "pos": [5.5, 1.5],
+              "color": [1, 1, 1],
+              "pinned": false,
+              "visible": true,
+              "narrow": 100
+            },
+
+            {
+              "name": "X",
+              "type": "Free",
+              "pos": [12.5, ypos],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "Y",
+              "type": "Free",
+              "pos": [17.5, ypos],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "r",
+              "type": "Segment",
+              "args": ["X", "Y"],
+              "color": [.6, .6, .6],
+              "visible": true,
+              size: 1.5
+            },
+            {
+              "name": "Z",
+              "type": "PointOnLine",
+              "pos": [14, ypos],
+              "args": ["r"],
+              "color": [1, 1, 1],
+              "visible": true,
+              "narrow": 100,
+              size: 9
+            },
+            {
+              "name": "rx",
+              "type": "Segment",
+              "args": ["X", "Z"],
+              "color": [1, 1, 1],
+              "visible": true,
+              size: 2.5
+            },
+
+            {
+              "name": "Xsat",
+              "type": "Free",
+              "pos": [12.5, ypos - ydiff],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "Ysat",
+              "type": "Free",
+              "pos": [17.5, ypos - ydiff],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "rsat",
+              "type": "Segment",
+              "args": ["Xsat", "Ysat"],
+              "color": [.6, .6, .6],
+              "visible": true,
+              size: 1.5
+            },
+            {
+              "name": "Zsat",
+              "type": "PointOnLine",
+              "pos": [17, ypos - ydiff],
+              "args": ["rsat"],
+              "color": [1, 1, 1],
+              "visible": true,
+              "narrow": 100,
+              size: 9
+            },
+            {
+              "name": "rxsat",
+              "type": "Segment",
+              "args": ["Xsat", "Zsat"],
+              "color": [1, 1, 1],
+              "visible": true,
+              size: 2.5
+            },
+
+            {
+              "name": "Xdark",
+              "type": "Free",
+              "pos": [12.5, ypos - ydiff * 2],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "Ydark",
+              "type": "Free",
+              "pos": [17.5, ypos - ydiff * 2],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "rdark",
+              "type": "Segment",
+              "args": ["Xdark", "Ydark"],
+              "color": [.6, .6, .6],
+              "visible": true,
+              size: 1.5
+            },
+            {
+              "name": "Zdark",
+              "type": "PointOnLine",
+              "pos": [17.5, ypos - ydiff * 2],
+              "args": ["rdark"],
+              "color": [1, 1, 1],
+              "visible": true,
+              "narrow": 100,
+              size: 9
+            },
+            {
+              "name": "rxdark",
+              "type": "Segment",
+              "args": ["Xdark", "Zdark"],
+              "color": [1, 1, 1],
+              "visible": true,
+              size: 2.5
+            },
+
+            {
+              "name": "Xalpha",
+              "type": "Free",
+              "pos": [12.5, ypos - ydiff * 3],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "Yalpha",
+              "type": "Free",
+              "pos": [17.5, ypos - ydiff * 3],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "ralpha",
+              "type": "Segment",
+              "args": ["Xalpha", "Yalpha"],
+              "color": [.6, .6, .6],
+              "visible": true,
+              size: 1.5
+            },
+            {
+              "name": "Zalpha",
+              "type": "PointOnLine",
+              "pos": [17.5, ypos - ydiff * 3],
+              "args": ["ralpha"],
+              "color": [1, 1, 1],
+              "visible": true,
+              "narrow": 100,
+              size: 9
+            },
+            {
+              "name": "rxalpha",
+              "type": "Segment",
+              "args": ["Xalpha", "Zalpha"],
+              "color": [1, 1, 1],
+              "visible": true,
+              size: 2.5
+            },
+
+            {
+              "name": "Xblur",
+              "type": "Free",
+              "pos": [12.5, ypos - ydiff * 4],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "Yblur",
+              "type": "Free",
+              "pos": [17.5, ypos - ydiff * 4],
+              "color": [1, 1, 1],
+              "pinned": true,
+              "visible": false
+            },
+            {
+              "name": "rblur",
+              "type": "Segment",
+              "args": ["Xblur", "Yblur"],
+              "color": [.6, .6, .6],
+              "visible": true,
+              size: 1.5
+            },
+            {
+              "name": "Zblur",
+              "type": "PointOnLine",
+              "pos": [13, ypos - ydiff * 4],
+              "args": ["rblur"],
+              "color": [1, 1, 1],
+              "visible": true,
+              "narrow": 100,
+              size: 9
+            },
+            {
+              "name": "rxblur",
+              "type": "Segment",
+              "args": ["Xblur", "Zblur"],
+              "color": [1, 1, 1],
+              "visible": true,
+              size: 2.5
+            },
 
 
-    var ypos=4.8;
-    var ydiff=1.3;
-var cdy;
-    (function(){
-      var uid = 'app_cinderella_07_iOrnament_' + new Date().getTime() + '_' + Math.floor((Math.random() * 100) + 1);
-      document.write( "<canvas id=\"" + uid + "\"></canvas>" );
-
-      var cdy07 = pancha = createCindy({
-        scripts: "app_cinderella_07_cs*",
-        defaultAppearance: {},
-        ports: [{
-          id: uid,
-          fill: "window",
-          transform: [{visibleRect: [-8.5, 11, 16, -11]}],
-        }],
-        geometry: [
-          {"name": "A","type": "Free","pos": [-10,-10],"color": [1,0,0],"visible":false,"pinned":true},
-          {"name": "B","type": "Free","pos": [10,-10],"color": [1,0,0],"pinned":true,"visible":false},
-          {"name": "C","type": "Free","pos": [-10,10],"color": [1,0,0],"pinned":true,"visible":false},
-          {"name": "D","type": "Free","pos": [0,0],"color": [.4,.4,.4],"pinned":true,"visible":true,"narrow":100},
-          {"name": "E","type": "Free","pos": [1,0],"color": [.4,.4,.4],"pinned":true,"visible":false},
-          {"name": "F","type": "Free","pos": [5.5,1.5],"color": [1,1,1],"pinned":false,"visible":true,"narrow":100},
-
-          {"name": "X","type": "Free","pos": [ 12.5,ypos],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "Y","type": "Free","pos": [ 17.5,ypos],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "r","type": "Segment","args": ["X","Y"],"color": [.6,.6,.6],"visible":true,size:1.5},
-          {"name": "Z","type": "PointOnLine","pos": [ 14,ypos],"args":["r"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
-          {"name": "rx","type": "Segment","args": ["X","Z"],"color": [1,1,1],"visible":true,size:2.5},
-
-          {"name": "Xsat","type": "Free","pos": [ 12.5,ypos-ydiff],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "Ysat","type": "Free","pos": [ 17.5,ypos-ydiff],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "rsat","type": "Segment","args": ["Xsat","Ysat"],"color": [.6,.6,.6],"visible":true,size:1.5},
-          {"name": "Zsat","type": "PointOnLine","pos": [ 17,ypos-ydiff],"args":["rsat"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
-          {"name": "rxsat","type": "Segment","args": ["Xsat","Zsat"],"color": [1,1,1],"visible":true,size:2.5},
-
-          {"name": "Xdark","type": "Free","pos": [ 12.5,ypos-ydiff*2],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "Ydark","type": "Free","pos": [ 17.5,ypos-ydiff*2],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "rdark","type": "Segment","args": ["Xdark","Ydark"],"color": [.6,.6,.6],"visible":true,size:1.5},
-          {"name": "Zdark","type": "PointOnLine","pos": [ 17.5,ypos-ydiff*2],"args":["rdark"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
-          {"name": "rxdark","type": "Segment","args": ["Xdark","Zdark"],"color": [1,1,1],"visible":true,size:2.5},
-
-          {"name": "Xalpha","type": "Free","pos": [ 12.5,ypos-ydiff*3],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "Yalpha","type": "Free","pos": [ 17.5,ypos-ydiff*3],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "ralpha","type": "Segment","args": ["Xalpha","Yalpha"],"color": [.6,.6,.6],"visible":true,size:1.5},
-          {"name": "Zalpha","type": "PointOnLine","pos": [ 17.5,ypos-ydiff*3],"args":["ralpha"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
-          {"name": "rxalpha","type": "Segment","args": ["Xalpha","Zalpha"],"color": [1,1,1],"visible":true,size:2.5},
-
-          {"name": "Xblur","type": "Free","pos": [ 12.5,ypos-ydiff*4],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "Yblur","type": "Free","pos": [ 17.5,ypos-ydiff*4],"color": [1,1,1],"pinned":true,"visible":false},
-          {"name": "rblur","type": "Segment","args": ["Xblur","Yblur"],"color": [.6,.6,.6],"visible":true,size:1.5},
-          {"name": "Zblur","type": "PointOnLine","pos": [ 13,ypos-ydiff*4],"args":["rblur"],"color": [1,1,1],"visible":true,"narrow":100,size:9},
-          {"name": "rxblur","type": "Segment","args": ["Xblur","Zblur"],"color": [1,1,1],"visible":true,size:2.5},
 
 
+            {
+              "name": "Dummy",
+              "type": "Free",
+              "pos": [0, 0],
+              "color": [1, 0, 0],
+              "visible": false,
+              "pinned": false
+            },
+          ],
+          images: {
+            "trash": "img/Trash.png",
+            "fund": "img/Fund.png",
+            "fundh": "img/FundHig.png",
+            "undo": "img/Undo.png",
+            "redo": "img/Redo.png",
+            "sat": "img/SSat.png",
+            "blur": "img/SBlur.png",
+            "alpha": "img/SAlpha.png",
+            "size": "img/SBlurX.png",
+            "dark": "img/SDark.png",
+            "dot": "img/qParticle.png",
+            "cm": "img/qcm.png",
+            "cmm": "img/qcmm.png",
+            "p1": "img/qp1.png",
+            "p2": "img/qp2.png",
+            "p3": "img/qp3.png",
+            "p3m1": "img/qp3m1.png",
+            "p4": "img/qp4.png",
+            "p4g": "img/qp4g.png",
+            "p4m": "img/qp4m.png",
+            "p6": "img/qp6.png",
+            "p6m": "img/qp6m.png",
+            "p31m": "img/qp31m.png",
+            "pg": "img/qpg.png",
+            "pgg": "img/qpgg.png",
+            "pm": "img/qpm.png",
+            "pmg": "img/qpmg.png",
+            "pmm": "img/qpmm.png",
+            "iO": "img/iO6.png",
+            "glow": "img/GlowPen1B.png",
+            "noglow": "img/GlowPen1.png",
+            "sym": "img/MathButtonB.png",
+            "nosym": "img/MathButton.png"
 
+          }
+        });
 
-          {"name": "Dummy","type": "Free","pos": [0,0],"color": [1,0,0],"visible":false,"pinned":false},
-        ],
-        images:{
-          "trash":"img/Trash.png",
-          "fund":"img/Fund.png",
-          "fundh":"img/FundHig.png",
-          "undo":"img/Undo.png",
-          "redo":"img/Redo.png",
-          "sat":"img/SSat.png",
-          "blur":"img/SBlur.png",
-          "alpha":"img/SAlpha.png",
-          "size":"img/SBlurX.png",
-          "dark":"img/SDark.png",
-          "dot":"img/qParticle.png",
-          "cm":"img/qcm.png",
-          "cmm":"img/qcmm.png",
-          "p1":"img/qp1.png",
-          "p2":"img/qp2.png",
-          "p3":"img/qp3.png",
-          "p3m1":"img/qp3m1.png",
-          "p4":"img/qp4.png",
-          "p4g":"img/qp4g.png",
-          "p4m":"img/qp4m.png",
-          "p6":"img/qp6.png",
-          "p6m":"img/qp6m.png",
-          "p31m":"img/qp31m.png",
-          "pg":"img/qpg.png",
-          "pgg":"img/qpgg.png",
-          "pm":"img/qpm.png",
-          "pmg":"img/qpmg.png",
-          "pmm":"img/qpmm.png",
-          "iO":"img/iO6.png",
-          "glow":"img/GlowPen1B.png",
-          "noglow":"img/GlowPen1.png",
-          "sym":"img/MathButtonB.png",
-          "nosym":"img/MathButton.png"
-
-        }
-      });
-
-      // Ugly ad-hoc reset to fix a visualization bug where the tiling is off
-      // until the symmetry group is changed to something and then back
-      setTimeout(function(){
-        cdy07.evokeCS('reset();strokelist=[];lastoffset=(0,0);Z.x=14.x;Zsat.x=17.x;Zdark.x=17.5.x;Zalpha.x=17.5.x;Zblur.x=13.x;pencolor=1;color=cols_1;setdot();group=17;setgr(groups_group);fundsel=false;symannot=false;glowing=false');
-        cdy07.evokeCS('reset();strokelist=[];');
-      }, 0);
-    })();
-  </script>
-</div>
+        // Ugly ad-hoc reset to fix a visualization bug where the tiling is off
+        // until the symmetry group is changed to something and then back
+        setTimeout(function() {
+          cdy07.evokeCS('reset();strokelist=[];lastoffset=(0,0);Z.x=14.x;Zsat.x=17.x;Zdark.x=17.5.x;Zalpha.x=17.5.x;Zblur.x=13.x;pencolor=1;color=cols_1;setdot();group=17;setgr(groups_group);fundsel=false;symannot=false;glowing=false');
+          cdy07.evokeCS('reset();strokelist=[];');
+        }, 0);
+      })();
+    </script>
+  </div>
 </body>
 </html>
