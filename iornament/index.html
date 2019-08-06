@@ -160,7 +160,7 @@ void main( void ) {
       z=z/str;
      // z=mod(z,2.0);
       vec4 annotcol= texture2D(u_image0, z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));
-      vec4 piccol= texture2D(u_image1, z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));
+      vec4 piccol= texture2D(u_image1,   z*vec2(1.0,-1.0)/2.0+vec2(0.0,1.0));
       gl_FragColor =annotcol*annotcol.a+(1.0-annotcol.a)*piccol;
 
 
@@ -204,6 +204,8 @@ drawing();
 </script>
     <script id="app_cinderella_07_csmousedown" type="text/x-cindyscript">
       //	startWebGL();
+
+use8bittextures();//accellerate CindyGL
 
 if(dragging,
    strokelist=strokelist++[stroke];
