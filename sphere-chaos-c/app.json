@@ -1,0 +1,24 @@
+{
+  "id": "sphere-chaos-c",
+  "version": "1.8.0",
+  "main": "app.html",
+  "width": 1560,
+  "height": 1170,
+  "name": {
+    "en": "Light beam",
+    "de": "Lichtstrahl",
+    "es": "Rayo de luz",
+    "fr": "Le faisceau lumineux",
+    "zh": "光束",
+    "ru": "Луч света",
+    "ro": "Rază de lumină",
+    "it": "Raggio di luce"
+  },
+  "description": {
+    "en": "",
+    "de": "Wenn sich ein Lichtstrahl zwischen kreisförmigen Spiegeln reflektiert, entsteht deterministisches Chaos: eine kleine Änderung kann unvorhersehbare Auswirkungen haben. Was passiert, wenn der Lichtstrahl im Inneren eines Kreises startet?",
+    "es": "",
+    "zh": "",
+    "ru": ""
+  }
+}
